@@ -11,6 +11,7 @@ public class World : MonoBehaviour
 {
     public Texture2D heightmap;
     public GameObject chunkPrefab;
+    public LocalNavMeshBuilder navMeshBuilder;
 
     //tweakables
     public int worldSize = 64;  //tiles per side of the world
@@ -41,13 +42,15 @@ public class World : MonoBehaviour
         Debug.Log("Building Terrain");
         //generate the terrain!
         GenerateTerrain();
-        
+
         //tell all the chunks to draw their share of the mesh
         for (int i = 0; i < chunks.GetLength(0); i++)
         {
             chunks[i].tileSize = tileSize;
             chunks[i].DrawTiles(map);
         }
+
+        navMeshBuilder.UpdateNavMesh(false);
     }
 
     // Generate a chunk, fill it with necessary data and return the Chunk object
