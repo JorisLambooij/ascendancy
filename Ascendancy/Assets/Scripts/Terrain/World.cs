@@ -50,6 +50,7 @@ public class World : MonoBehaviour
         }
     }
 
+    // Generate a chunk, fill it with necessary data and return the Chunk object
     Chunk GenerateChunk()
     {
         GameObject chunkGO = Instantiate(chunkPrefab, transform);
