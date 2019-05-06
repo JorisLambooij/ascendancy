@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using NavMeshBuilder = UnityEngine.AI.NavMeshBuilder;
 
 // Build and update a localized navmesh from the sources marked by NavMeshSourceTag
-[DefaultExecutionOrder(-102)]
 public class LocalNavMeshBuilder : MonoBehaviour
 {
     // The center of the build
@@ -26,8 +25,8 @@ public class LocalNavMeshBuilder : MonoBehaviour
             UpdateNavMesh(true);
             yield return m_Operation;
         }
-    }*/
-
+    }
+    */
     void OnEnable()
     {
         // Construct and add navmesh
@@ -37,14 +36,14 @@ public class LocalNavMeshBuilder : MonoBehaviour
             m_Tracked = transform;
         UpdateNavMesh(false);
     }
-
+    
     void OnDisable()
     {
         // Unload navmesh and clear handle
         m_Instance.Remove();
     }
 
-    void UpdateNavMesh(bool asyncUpdate = false)
+    public void UpdateNavMesh(bool asyncUpdate = false)
     {
         NavMeshSourceTag.Collect(ref m_Sources);
         var defaultBuildSettings = NavMesh.GetSettingsByID(0);

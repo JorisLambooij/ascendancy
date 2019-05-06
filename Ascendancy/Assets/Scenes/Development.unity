@@ -167,6 +167,7 @@ MonoBehaviour:
   heightmap: {fileID: 2800000, guid: 349cdc16da065a44fbeff8f250fbb40f, type: 3}
   chunkPrefab: {fileID: 6959487059621137888, guid: 247a833afaa29a143b752c9c302aacde,
     type: 3}
+  navMeshBuilder: {fileID: 2020007787}
   worldSize: 16
   tileSize: 1
   noiseScale: 1
