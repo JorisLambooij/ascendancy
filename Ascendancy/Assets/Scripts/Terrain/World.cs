@@ -28,11 +28,11 @@ public class World : MonoBehaviour
     {
         //initiate things
         map = new Tile[worldSize, worldSize];
-        chunks = new Chunk[worldSize];
+        chunks = new Chunk[1];
+        chunks[0] = GenerateChunk();
 
         for (int x = 0; x < worldSize; x++)
         {
-            chunks[x] = GenerateChunk();
             for (int z = 0; z < worldSize; z++)
             {
                 map[x, z] = new Tile(x, z, 0f, tileSize);
