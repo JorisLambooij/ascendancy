@@ -49,7 +49,7 @@ public class Unit : MonoBehaviour
         }
     }
 
-    private void IssueOrder(UnitOrder order, bool enqueue)
+    public void IssueOrder(UnitOrder order, bool enqueue)
     {
         if (enqueue)
             controller.orders.Enqueue(order);
