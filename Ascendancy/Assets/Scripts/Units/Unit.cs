@@ -5,7 +5,6 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     public UnitInfo unitInfo;
-    public int owner = 1;
 
     private float currentHealth;
     private UnitController controller;
@@ -68,6 +67,11 @@ public class Unit : MonoBehaviour
     public UnitController Controller
     {
         get { return controller; }
+    }
+
+    public Player Owner
+    {
+        get { return transform.parent.parent.GetComponent<Player>(); }
     }
 
     /*

@@ -40,7 +40,6 @@ public class UnitController : MonoBehaviour
     {
         currentOrder = order;
         order.Execute();
-        Debug.Log("Executing New Order...");
     }
 
     public NavMeshAgent NavAgent

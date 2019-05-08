@@ -112,7 +112,7 @@ public class GameMode : ControlMode
                 if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Unit")
                 {
                     UnitSelector u = hit.transform.GetComponent<UnitSelector>();
-                    if (u.GetComponentInParent<Unit>().owner == gameManager.playerNo)
+                    if (u.GetComponentInParent<Unit>().Owner.playerNo == gameManager.playerNo)
                     {
                         u.Selected = true;
                         selectedUnits.Add(u);
@@ -222,7 +222,7 @@ public class GameMode : ControlMode
 
     private bool IsHostileUnit(Unit unit)
     {
-        return unit.owner != gameManager.playerNo;
+        return unit.Owner.playerNo != gameManager.playerNo;
     }
     
     private void DeselectAll()
