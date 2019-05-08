@@ -158,6 +158,16 @@ public class GameMode : ControlMode
                 draggingM2 = false;
 
                 int count = selectedUnits.Count;
+                Vector3 orientation = Vector3.Cross(dragStopPosM2 - dragStartPosM2, Vector3.up).normalized;
+                
+                // Create a copy of the selectedUnits List, so we can later sort the units for shortest paths
+                UnitSelector[] unitsArray = new UnitSelector[selectedUnits.Count];
+                selectedUnits.CopyTo(unitsArray);
+
+                List<Unit> units = new List<Unit>();
+                foreach (UnitSelector unitSelector in unitsArray)
+                    units.Add(unitSelector.GetComponentInParent<Unit>());
+
                 for (int i = 0; i < count; i++)
                 {
                     float lerpFactor;
@@ -166,10 +176,27 @@ public class GameMode : ControlMode
                     else
                         lerpFactor = 0.5f;
                     Vector3 lerpedPos = Vector3.Lerp(dragStartPosM2, dragStopPosM2, lerpFactor);
+
+                    // Find the nearest Unit per position, and issue orders accordingly.
+                    // This is a greedy process, so might not be optimal, but should still be good in most cases.
+                    Unit nearestUnit = null;
+                    float nearestDistance = Mathf.Infinity;
+
+                    foreach (Unit unit in units)
+                    {
+                        float distance = Vector3.Distance(unit.transform.position, lerpedPos);
+                        if (distance < nearestDistance)
+                        {
+                            nearestDistance = distance;
+                            nearestUnit = unit;
+                        }
+                    }
+
+                    units.Remove(nearestUnit);
                     
                     bool enqueue = Input.GetKey(KeyCode.LeftShift);
-                    Unit u = selectedUnits[i].GetComponentInParent<Unit>();
-                    u.IssueOrder(new MoveOrder(u, lerpedPos), false);
+                    nearestUnit.IssueOrder(new MoveOrder(nearestUnit, lerpedPos), false);
+                    nearestUnit.IssueOrder(new RotateOrder(nearestUnit, orientation), true);
                 }
             }
             else

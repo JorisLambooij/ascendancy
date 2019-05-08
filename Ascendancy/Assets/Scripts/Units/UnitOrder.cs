@@ -16,6 +16,8 @@ public abstract class UnitOrder
         get;
     }
 
+    public abstract void Execute();
+
     public abstract bool Fulfilled
     {
         get;
@@ -30,7 +32,7 @@ public class MoveOrder : UnitOrder
     {
         this.destination = destination;
     }
-
+    
     public override Vector3 CurrentDestination
     {
         get { return destination; }
@@ -41,13 +43,46 @@ public class MoveOrder : UnitOrder
         destination = dest;
     }
 
+    public override void Execute()
+    {
+        unit.Controller.NavAgent.SetDestination(CurrentDestination);
+    }
+
     public override bool Fulfilled
     {
-        get
-        {
-            float distance = Vector3.Distance(unit.transform.position, destination);
-            return distance < 0.5f;
-        }
+        get { return unit.Controller.NavAgent.remainingDistance == 0;  }
+    }
+
+
+}
+
+public class RotateOrder : UnitOrder
+{
+    private Vector3 orientation;
+
+    public RotateOrder(Unit unit, Vector3 orientation) : base(unit)
+    {
+        this.orientation = orientation;
+    }
+
+    public override Vector3 CurrentDestination
+    {
+        get { return unit.transform.position; }
+    }
+
+    public override bool Fulfilled
+    {
+        get { return Vector3.Angle(unit.transform.forward, orientation) < 6; }
+    }
+
+    public override void Execute()
+    {
+        unit.transform.GetComponent<UnitRotator>().LookAt(orientation);
+    }
+
+    public Vector3 TargetOrientation
+    {
+        get { return orientation; }
     }
 }
 
@@ -68,6 +103,11 @@ public class AttackOrder : UnitOrder
     public void SetTarget(Unit u)
     {
         target = u;
+    }
+
+    public override void Execute()
+    {
+        throw new System.NotImplementedException();
     }
 
     public override bool Fulfilled

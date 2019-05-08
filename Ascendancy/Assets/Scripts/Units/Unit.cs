@@ -65,6 +65,11 @@ public class Unit : MonoBehaviour
         get { return currentHealth; }
     }
 
+    public UnitController Controller
+    {
+        get { return controller; }
+    }
+
     /*
     public int Owner
     {

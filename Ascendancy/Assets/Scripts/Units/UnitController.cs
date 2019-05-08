@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class UnitController : MonoBehaviour
 {
-    NavMeshAgent navMeshAgent;
+    private NavMeshAgent navMeshAgent;
 
     public Queue<UnitOrder> orders;
     public UnitOrder currentOrder;
@@ -39,7 +39,12 @@ public class UnitController : MonoBehaviour
     public void NewOrder(UnitOrder order)
     {
         currentOrder = order;
-        navMeshAgent.SetDestination(order.CurrentDestination);
+        order.Execute();
         Debug.Log("Executing New Order...");
+    }
+
+    public NavMeshAgent NavAgent
+    {
+        get { return navMeshAgent; }
     }
 }
