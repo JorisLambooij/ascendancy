@@ -15,4 +15,12 @@ MonoBehaviour:
   unitName: Dummy Tank
   description: Super duper debug tank
   maxHealth: 100
+  armor: 10
+  meleeAttack: 40
+  meleeDefense: 50
+  meleeStrength: 2
+  meleeRange: 2
+  attackSpeed: 1
+  speed: 4
+  acceleration: 4
   thumbnail: {fileID: 0}

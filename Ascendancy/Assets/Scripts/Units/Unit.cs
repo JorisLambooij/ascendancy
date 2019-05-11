@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit : MonoBehaviour
+/// <summary>
+/// The master class for Units.
+/// </summary>
+public class Unit : Entity
 {
+    /// <summary>
+    /// Holds all the stats for this Unit.
+    /// </summary>
     public UnitInfo unitInfo;
-    public int owner = 1;
-
-    private float currentHealth;
     private UnitController controller;
 
     // Start is called before the first frame update
@@ -20,7 +23,7 @@ public class Unit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     /// <summary>
@@ -33,14 +36,20 @@ public class Unit : MonoBehaviour
         switch (hit.collider.tag)
         {
             case ("Unit"):
-                Unit target = hit.collider.GetComponentInParent<Unit>();
-                AttackOrder attackOrder = new AttackOrder(this, target);
-                IssueOrder(attackOrder, enqueue);
+                Unit targetU = hit.collider.GetComponentInParent<Unit>();
+                MeleeAttackOrder attackOrderU = new MeleeAttackOrder(this, targetU);
+                IssueOrder(attackOrderU, enqueue);
                 break;
             case ("Ground"):
                 MoveOrder moveOrder = new MoveOrder(this, hit.point);
                 IssueOrder(moveOrder, enqueue);
                 break;
+            case ("Building"):
+                Building targetB = hit.collider.GetComponentInParent<Building>();
+                MeleeAttackOrder attackOrderB = new MeleeAttackOrder(this, targetB);
+                IssueOrder(attackOrderB, enqueue);
+                break;
+
             default:
                 //Unknown tag
                 Debug.Log("Unknown tag hit with ray cast");
@@ -49,7 +58,12 @@ public class Unit : MonoBehaviour
         }
     }
 
-    private void IssueOrder(UnitOrder order, bool enqueue)
+    /// <summary>
+    /// Relay an order to this Unit.
+    /// </summary>
+    /// <param name="order">The order that is being issued.</param>
+    /// <param name="enqueue">Whether the order should be queued or replace the current order queue. </param>
+    public void IssueOrder(UnitOrder order, bool enqueue)
     {
         if (enqueue)
             controller.orders.Enqueue(order);
@@ -59,17 +73,9 @@ public class Unit : MonoBehaviour
             controller.NewOrder(order);
         }
     }
-
-    public float CurrentHealth
+    
+    public UnitController Controller
     {
-        get { return currentHealth; }
+        get { return controller; }
     }
-
-    /*
-    public int Owner
-    {
-        get { return owner; }
-        set { owner = value; }
-    }
-    */
 }
