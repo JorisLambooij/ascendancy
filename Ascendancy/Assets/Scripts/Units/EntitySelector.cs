@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitSelector : MonoBehaviour
+/// <summary>
+/// This class enables the selection of an Entity. Does not handle Input, only Visuals.
+/// </summary>
+[RequireComponent(typeof(SpriteRenderer))]
+public class EntitySelector : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
     private bool selected;

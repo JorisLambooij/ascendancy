@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+/// Unit AI
+/// </summary>
 public class UnitController : MonoBehaviour
 {
     private NavMeshAgent navMeshAgent;
@@ -25,15 +28,15 @@ public class UnitController : MonoBehaviour
         if (currentOrder == null)
         {
             if (orders.Count > 0)
-            {
                 NewOrder(orders.Dequeue());
-            }
             else
                 return;
         }
-        
+
         if (currentOrder.Fulfilled)
             currentOrder = null;
+        else
+            currentOrder.Update();
     }
 
     public void NewOrder(UnitOrder order)
@@ -45,5 +48,16 @@ public class UnitController : MonoBehaviour
     public NavMeshAgent NavAgent
     {
         get { return navMeshAgent; }
+    }
+
+    public void EnterMelee(Unit enemy)
+    {
+        if (currentOrder == null)
+        {
+            Unit thisUnit = GetComponent<Unit>();
+            MeleeAttackOrder defendOrder = new MeleeAttackOrder(thisUnit, enemy, true);
+
+            NewOrder(defendOrder);
+        }
     }
 }

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Camera controls.
+/// </summary>
 [RequireComponent(typeof(Camera))]
 public class CameraScript : MonoBehaviour
 {

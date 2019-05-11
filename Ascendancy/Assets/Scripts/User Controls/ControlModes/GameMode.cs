@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// This should be the standard mode for when the game is running.
+/// </summary>
 public class GameMode : ControlMode
 {
-    private List<UnitSelector> selectedUnits;
+    private List<EntitySelector> selectedUnits;
 
     private Vector3 dragStartPosM1, dragStopPosM1;
     private bool startDragM1, draggingM1;
@@ -22,7 +25,7 @@ public class GameMode : ControlMode
 
     public GameMode() : base()
     {
-        selectedUnits = new List<UnitSelector>(8);
+        selectedUnits = new List<EntitySelector>(8);
         cam = gameManager.camScript.transform.GetComponent<Camera>();
         selectionBox = GameObject.Find("SelectionRect").GetComponent<Image>();
         selectionBox.enabled = false;
@@ -93,11 +96,11 @@ public class GameMode : ControlMode
 
                 DeselectAll();
 
-                foreach (UnitSelector u in player.GetComponentsInChildren<UnitSelector>())
-                    if (PositionInSelection(u.transform.position))
+                foreach (EntitySelector e in player.GetComponentsInChildren<EntitySelector>())
+                    if (PositionInSelection(e.transform.position))
                     {
-                        selectedUnits.Add(u);
-                        u.Selected = true;
+                        selectedUnits.Add(e);
+                        e.Selected = true;
                     }
             }
             else
@@ -109,13 +112,14 @@ public class GameMode : ControlMode
 
                 DeselectAll();
 
-                if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Unit")
+                if (Physics.Raycast(ray, out hit) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
                 {
-                    UnitSelector u = hit.transform.GetComponent<UnitSelector>();
-                    if (u.GetComponentInParent<Unit>().Owner.playerNo == gameManager.playerNo)
+                    EntitySelector e = hit.transform.GetComponent<EntitySelector>();
+                    
+                    if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
                     {
-                        u.Selected = true;
-                        selectedUnits.Add(u);
+                        e.Selected = true;
+                        selectedUnits.Add(e);
                     }
                 }
             }
@@ -161,11 +165,11 @@ public class GameMode : ControlMode
                 Vector3 orientation = Vector3.Cross(dragStopPosM2 - dragStartPosM2, Vector3.up).normalized;
                 
                 // Create a copy of the selectedUnits List, so we can later sort the units for shortest paths
-                UnitSelector[] unitsArray = new UnitSelector[selectedUnits.Count];
+                EntitySelector[] unitsArray = new EntitySelector[selectedUnits.Count];
                 selectedUnits.CopyTo(unitsArray);
 
                 List<Unit> units = new List<Unit>();
-                foreach (UnitSelector unitSelector in unitsArray)
+                foreach (EntitySelector unitSelector in unitsArray)
                     units.Add(unitSelector.GetComponentInParent<Unit>());
 
                 for (int i = 0; i < count; i++)
@@ -203,7 +207,7 @@ public class GameMode : ControlMode
             {
                 // probably a redundant raycast, can be optimized
                 RaycastHit hit = MouseRaycast();
-                foreach (UnitSelector u in selectedUnits)
+                foreach (EntitySelector u in selectedUnits)
                 {
                     bool enqueue = Input.GetKey(KeyCode.LeftShift);
                     u.GetComponentInParent<Unit>().ClickOrder(hit, enqueue);
@@ -227,7 +231,7 @@ public class GameMode : ControlMode
     
     private void DeselectAll()
     {
-        foreach (UnitSelector unitSelector in selectedUnits)
+        foreach (EntitySelector unitSelector in selectedUnits)
             unitSelector.Selected = false;
 
         selectedUnits.Clear();
