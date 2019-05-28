@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class Economy : MonoBehaviour
 {
-    private Dictionary<Resource, float> resourceStorage;
+    public Dictionary<Resource, float> resourceStorage;
+
+    public List<Resource> availableResources;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         resourceStorage = new Dictionary<Resource, float>();
-        //resourceStorage.Add()
+
+        foreach (Resource resource in availableResources)
+            resourceStorage.Add(resource, 0);
     }
 
     // Update is called once per frame
