@@ -23,4 +23,5 @@ MonoBehaviour:
   attackSpeed: 1
   speed: 4
   acceleration: 4
+  prefab: {fileID: 7551204154752481065, guid: 204dd92974604ec4bb53de31b1bfaa9b, type: 3}
   thumbnail: {fileID: 0}

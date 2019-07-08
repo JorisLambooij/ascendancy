@@ -9,5 +9,7 @@ public class BuildingInfo : ScriptableObject
 
     public float goldCost;
 
+    public int maxHealth;
+
     public List<BuildingFeature> features;
 }

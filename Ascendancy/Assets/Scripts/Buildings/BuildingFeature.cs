@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingFeature
+public abstract class BuildingFeature : ScriptableObject
 {
-    
 }

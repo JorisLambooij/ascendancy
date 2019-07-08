@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingMode : MonoBehaviour
+public class BuildingMode
 {
     // Start is called before the first frame update
     void Start()

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53812a508e45da8409e1937447f40206, type: 3}
+  m_Name: Command Center
+  m_EditorClassIdentifier: 
+  buildingName: Command Center
+  goldCost: 0
+  maxHealth: 1000
+  features:
+  - {fileID: 11400000, guid: da90567d28ee4cc479116c97090f6450, type: 2}
