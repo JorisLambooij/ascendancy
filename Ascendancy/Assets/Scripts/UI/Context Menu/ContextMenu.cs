@@ -15,7 +15,6 @@ public class ContextMenu : MonoBehaviour
         {
             img.alphaHitTestMinimumThreshold = 0.5f;
         }
-        Debug.Log("fixed it!");
     }
 
     // Update is called once per frame
