@@ -52,7 +52,9 @@ public class GameMode : ControlMode
             Debug.LogError("ConMenuHandler not found");
         }
         else
-            conMenuHandler.Hide();
+        {
+            //conMenuHandler.Hide();
+        }
     }
 
     public override void HandleInput()
@@ -229,10 +231,33 @@ public class GameMode : ControlMode
                 {
                     // probably a redundant raycast, can be optimized
                     RaycastHit hit = MouseRaycast();
-                    foreach (EntitySelector u in selectedUnits)
+
+                    if (hit.collider != null)
                     {
-                        bool enqueue = Input.GetKey(KeyCode.LeftShift);
-                        u.GetComponentInParent<Unit>().ClickOrder(hit, enqueue);
+                        foreach (EntitySelector u in selectedUnits)
+                        {
+                            //some errors here, I think we should split building and unit selection:
+                            //1+ unit among entities: only units selected
+                            //TODO seperate selections
+
+                            bool enqueue = Input.GetKey(KeyCode.LeftShift);
+                            u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
+
+
+                            //if (u.GetComponentInParent<Entity>().GetType() == typeof(Unit))
+                            //{
+                            //    bool enqueue = Input.GetKey(KeyCode.LeftShift);
+                            //    u.GetComponentInParent<Unit>().ClickOrder(hit, enqueue);
+                            //}
+                            //else
+                            //{
+                            //    Debug.Log("Building " + u.GetComponentInParent<Entity>().name + " could not receive order!");
+                            //}
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("Raycast missed hit.collider");
                     }
                 }
             }
@@ -274,6 +299,7 @@ public class GameMode : ControlMode
                     if (e == null)
                     {
                         Debug.LogError("Entity Selector is NULL!");
+                        Debug.LogError("(FAIL)Name is " + hit.transform.name);
                     }
                     else if (e.GetComponentInParent<Entity>().GetType() == typeof(Unit))
                     {

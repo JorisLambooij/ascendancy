@@ -10,6 +10,11 @@ public class Building : Entity
     /// </summary>
     public UnitInfo unitInfo;
 
+    public override void ClickOrder(RaycastHit hit, bool enqueue)
+    {
+        throw new System.NotImplementedException();
+    }
+
     // Start is called before the first frame update
     void Start()
     {

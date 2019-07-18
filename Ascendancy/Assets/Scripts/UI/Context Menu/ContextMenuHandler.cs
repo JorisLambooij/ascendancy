@@ -14,19 +14,23 @@ public class ContextMenuHandler : MonoBehaviour
     {
         
         conMenuButtonPos = new Vector3[8];
-        int i = 0;
-        foreach (Button g in GetComponentsInChildren<Button>())
+
+        Button[] buttons = GetComponentsInChildren<Button>(true);
+
+        for (int i = 0; i < buttons.Length; i++)
         {
-            g.image.color = new Color(255f, 255f, 255f, .2f);
-            g.image.alphaHitTestMinimumThreshold = 0.5f;
 
+            buttons[i].image.color = new Color(255f, 255f, 255f, .2f);
+            buttons[i].image.alphaHitTestMinimumThreshold = 0.5f;
 
-            conMenuButtonPos[i] = g.transform.position - new Vector3(GetComponentInParent<Canvas>().pixelRect.width, GetComponentInParent<Canvas>().pixelRect.height) / 2;
-            i++;
+            conMenuButtonPos[i] = buttons[i].transform.position - new Vector3(GetComponentInParent<Canvas>().pixelRect.width, GetComponentInParent<Canvas>().pixelRect.height) / 2;
         }
+
 
         GetComponentInChildren<Image>().color = new Color(255f, 255f, 255f, .1f);
 
+
+        Hide();
     }
 
     public void Show(int numberOfButtons)

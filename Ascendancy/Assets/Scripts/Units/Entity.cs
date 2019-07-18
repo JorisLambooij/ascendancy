@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Entity : MonoBehaviour
+public abstract class Entity : MonoBehaviour
 {
     /// <summary>
     /// The current health status of this Entity.
@@ -24,6 +24,11 @@ public class Entity : MonoBehaviour
     {
         get { return currentHealth; }
     }
+
+    /// <summary>
+    /// Receive an order
+    /// </summary>
+    public abstract void ClickOrder(RaycastHit hit, bool enqueue);
 
     /// <summary>
     /// Deal damage to this Entity.

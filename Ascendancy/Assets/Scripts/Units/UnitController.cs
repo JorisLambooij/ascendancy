@@ -27,6 +27,11 @@ public class UnitController : MonoBehaviour
     {
         if (currentOrder == null)
         {
+            if (orders == null)
+            {
+                Debug.LogError("orders is NULL");
+            }
+
             if (orders.Count > 0)
                 NewOrder(orders.Dequeue());
             else

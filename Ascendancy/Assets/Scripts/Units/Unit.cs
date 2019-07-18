@@ -31,8 +31,14 @@ public class Unit : Entity
     /// </summary>
     /// <param name="hit">The RayCastHit from the Camera.</param>
     /// <param name="enqueue">Whether or not the order should be placed in the queue (true), or replace the current order queue entirely (false).</param>
-    public void ClickOrder(RaycastHit hit, bool enqueue)
+    public override void ClickOrder(RaycastHit hit, bool enqueue)
     {
+        if (hit.collider == null)
+        {
+            Debug.LogError("No hit.collider!");
+            return;
+        }
+
         switch (hit.collider.tag)
         {
             case ("Unit"):
@@ -73,7 +79,7 @@ public class Unit : Entity
             controller.NewOrder(order);
         }
     }
-    
+
     public UnitController Controller
     {
         get { return controller; }
