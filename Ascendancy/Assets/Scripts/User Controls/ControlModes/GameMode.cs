@@ -22,12 +22,11 @@ public class GameMode : ControlMode
     private LineRenderer formationLine;
     private Image selectionBox;
     private Camera cam;
-    private Canvas contextMenuCanvas;
+    //private Canvas contextMenuCanvas;
+    private ContextMenuHandler conMenuHandler;
 
 
-    //private bool contextMenuOpen = false;
-
-    private Vector3[] conMenuButtonPos;
+    //private Vector3[] conMenuButtonPos;
 
     public GameMode() : base()
     {
@@ -36,7 +35,8 @@ public class GameMode : ControlMode
         selectionBox = GameObject.Find("SelectionRect").GetComponent<Image>();
         selectionBox.enabled = false;
 
-        contextMenuCanvas = GameObject.Find("Canvas_ConMenu").GetComponent<Canvas>();
+        //contextMenuCanvas = GameObject.Find("Canvas_ConMenu").GetComponent<Canvas>();
+        conMenuHandler = GameObject.Find("Canvas_ConMenu").GetComponent<ContextMenuHandler>();
 
         formationLine = GameObject.Find("FormationLine").GetComponent<LineRenderer>();
 
@@ -47,25 +47,12 @@ public class GameMode : ControlMode
             Debug.LogError("FormationLine not found");
         else
             formationLine.enabled = false;
-
-        if (contextMenuCanvas == null)
-            Debug.LogError("Canvas_ConMenu not found");
-        else
+        if (conMenuHandler == null)
         {
-            contextMenuCanvas.gameObject.SetActive(false);
-
-            conMenuButtonPos = new Vector3[8];
-            int i = 0;
-            foreach (Button g in contextMenuCanvas.GetComponentsInChildren<Button>())
-            {
-                g.image.color = new Color(255f, 255f, 255f, .2f);
-                g.image.alphaHitTestMinimumThreshold = 0.5f;
-                conMenuButtonPos[i] = g.transform.position - new Vector3(contextMenuCanvas.pixelRect.width, contextMenuCanvas.pixelRect.height) / 2;
-                i++;
-            }
-
-            contextMenuCanvas.GetComponentInChildren<Image>().color = new Color(255f, 255f, 255f, .1f);
+            Debug.LogError("ConMenuHandler not found");
         }
+        else
+            conMenuHandler.Hide();
     }
 
     public override void HandleInput()
@@ -77,7 +64,7 @@ public class GameMode : ControlMode
 
     private void Mouse1()
     {
-        if (!contextMenuCanvas.gameObject.activeSelf)
+        if (!conMenuHandler.IsVisible())
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -164,7 +151,7 @@ public class GameMode : ControlMode
     /// </summary>
     private void Mouse2()
     {
-        if (!contextMenuCanvas.gameObject.activeSelf)
+        if (!conMenuHandler.IsVisible())
         {
             if (Input.GetMouseButtonDown(1))
             {
@@ -254,8 +241,7 @@ public class GameMode : ControlMode
         {
             if (Input.GetMouseButtonUp(1))
             {
-                contextMenuCanvas.gameObject.SetActive(false);
-                //contextMenuOpen = false;
+                conMenuHandler.Hide();
             }
         }
     }
@@ -266,7 +252,7 @@ public class GameMode : ControlMode
     /// </summary>
     private void Mouse3()
     {
-        if (!contextMenuCanvas.gameObject.activeSelf)
+        if (!conMenuHandler.IsVisible())
         {
             if (Input.GetMouseButtonUp(2))
             {
@@ -296,31 +282,12 @@ public class GameMode : ControlMode
                     else
                         Debug.LogError("No Unit found in Object" + e.name);
 
-                    if (thismanybuttons > 0)    //open menu only if options are available
+                    if (thismanybuttons > 0 && thismanybuttons < 9)    //open menu only if options are available
                         if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
                         {
                             //here we open the context menu
 
-                            //first, move the context menu to cursor position
-                            //move'dot'-image in the middle
-                            contextMenuCanvas.GetComponentInChildren<Image>().transform.position = Input.mousePosition;
-
-                            //move all the buttons
-                            //deactivate some
-                            int i = 0;
-                            foreach (Component g in contextMenuCanvas.GetComponentsInChildren<Button>())
-                            {
-                                g.transform.position = conMenuButtonPos[i] + Input.mousePosition;
-
-                                if (thismanybuttons <= i)
-                                    g.gameObject.SetActive(false);
-                                else
-                                    g.gameObject.SetActive(true);
-                                i++;
-                            }
-
-                            //contextMenuOpen = true;
-                            contextMenuCanvas.gameObject.SetActive(true);
+                            conMenuHandler.Show(thismanybuttons);
                         }
                 }
             }

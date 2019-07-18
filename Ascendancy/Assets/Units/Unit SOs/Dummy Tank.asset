@@ -24,3 +24,4 @@ MonoBehaviour:
   speed: 4
   acceleration: 4
   thumbnail: {fileID: 0}
+  contextMenuOptions: 6
