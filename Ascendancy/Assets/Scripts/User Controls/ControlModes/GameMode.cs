@@ -54,16 +54,17 @@ public class GameMode : ControlMode
         {
             contextMenuCanvas.gameObject.SetActive(false);
 
-            contextMenuCanvas.GetComponentInChildren<Image>().color = new Color(255f, 255f, 255f, .5f);
-
             conMenuButtonPos = new Vector3[8];
             int i = 0;
             foreach (Button g in contextMenuCanvas.GetComponentsInChildren<Button>())
             {
-                g.image.color = new Color(255f, 255f, 255f, .5f);
+                g.image.color = new Color(255f, 255f, 255f, .2f);
+                g.image.alphaHitTestMinimumThreshold = 0.5f;
                 conMenuButtonPos[i] = g.transform.position - new Vector3(contextMenuCanvas.pixelRect.width, contextMenuCanvas.pixelRect.height) / 2;
                 i++;
             }
+
+            contextMenuCanvas.GetComponentInChildren<Image>().color = new Color(255f, 255f, 255f, .1f);
         }
     }
 
@@ -278,26 +279,49 @@ public class GameMode : ControlMode
                 if (Physics.Raycast(ray, out hit) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
                 {
                     EntitySelector e = hit.transform.GetComponent<EntitySelector>();
+                    DeselectAll();
 
-                    if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
+                    int thismanybuttons = 0;    //zero button as default 
+
+                    if (e.GetComponentInParent<Unit>() != null)
                     {
-                        //here we open the context menu
-
-                        //first, move the context menu to cursor position
-                        //move'dot'-image in the middle
-                        contextMenuCanvas.GetComponentInChildren<Image>().transform.position = Input.mousePosition;
-
-                        //move all the buttons
-                        int i = 0;
-                        foreach (Component g in contextMenuCanvas.GetComponentsInChildren<Button>())
-                        {
-                            g.transform.position = conMenuButtonPos[i] + Input.mousePosition;
-                            i++;
-                        }
-
-                        //contextMenuOpen = true;
-                        contextMenuCanvas.gameObject.SetActive(true);
+                        UnitInfo uInfo = e.GetComponentInParent<Unit>().unitInfo;
+                        thismanybuttons = uInfo.contextMenuOptions;
                     }
+                    else
+                    if (e.GetComponentInParent<Building>() != null)
+                    {
+                        Debug.Log("Building clicked: We need BuildingInfo!");
+                    }
+                    else
+                        Debug.LogError("No Unit found in Object" + e.name);
+
+                    if (thismanybuttons > 0)    //open menu only if options are available
+                        if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
+                        {
+                            //here we open the context menu
+
+                            //first, move the context menu to cursor position
+                            //move'dot'-image in the middle
+                            contextMenuCanvas.GetComponentInChildren<Image>().transform.position = Input.mousePosition;
+
+                            //move all the buttons
+                            //deactivate some
+                            int i = 0;
+                            foreach (Component g in contextMenuCanvas.GetComponentsInChildren<Button>())
+                            {
+                                g.transform.position = conMenuButtonPos[i] + Input.mousePosition;
+
+                                if (thismanybuttons <= i)
+                                    g.gameObject.SetActive(false);
+                                else
+                                    g.gameObject.SetActive(true);
+                                i++;
+                            }
+
+                            //contextMenuOpen = true;
+                            contextMenuCanvas.gameObject.SetActive(true);
+                        }
                 }
             }
         }
