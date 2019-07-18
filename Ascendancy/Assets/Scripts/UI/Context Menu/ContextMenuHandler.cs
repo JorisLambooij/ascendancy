@@ -21,36 +21,45 @@ public class ContextMenuHandler : MonoBehaviour
             g.image.alphaHitTestMinimumThreshold = 0.5f;
 
 
-            //conMenuButtonPos[i] = g.transform.position - new Vector3(GetComponent<Canvas>().pixelRect.width, GetComponent<Canvas>().pixelRect.height) / 2;
             conMenuButtonPos[i] = g.transform.position - new Vector3(GetComponentInParent<Canvas>().pixelRect.width, GetComponentInParent<Canvas>().pixelRect.height) / 2;
             i++;
         }
 
         GetComponentInChildren<Image>().color = new Color(255f, 255f, 255f, .1f);
 
-        //gameObject.SetActive(false);
     }
 
     public void Show(int numberOfButtons)
     {
+
+        //Debug.Log("Show(" + numberOfButtons + ")");
+
         //first, move the context menu to cursor position
         GetComponentInChildren<Image>().transform.position = Input.mousePosition;
 
         //move all the buttons
         //deactivate some
-        int i = 0;
-        foreach (Component g in GetComponentsInChildren<Button>())
-        {
-            g.transform.position = conMenuButtonPos[i] + Input.mousePosition;
+        Button[] buttons = GetComponentsInChildren<Button>(true);
 
-            if (numberOfButtons <= i)
-                g.gameObject.SetActive(false);
-            else
-                g.gameObject.SetActive(true);
-            i++;
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            {
+                buttons[i].transform.position = conMenuButtonPos[i] + Input.mousePosition;
+
+                if (numberOfButtons <= i)
+                {
+                    buttons[i].gameObject.SetActive(false);
+                    //Debug.Log("numberofbuttons["+ numberOfButtons + "] <= i[" + i + "] deactivate:" + i);
+                }
+                else
+                {
+                    buttons[i].gameObject.SetActive(true);
+                    //Debug.Log("activate:" + i);
+                }
+            }
         }
 
-        gameObject.SetActive(true);
+            gameObject.SetActive(true);
     }
 
     public void Hide()

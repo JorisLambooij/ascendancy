@@ -269,18 +269,24 @@ public class GameMode : ControlMode
 
                     int thismanybuttons = 0;    //zero button as default 
 
-                    if (e.GetComponentInParent<Unit>() != null)
+                    
+
+                    if (e == null)
+                    {
+                        Debug.LogError("Entity Selector is NULL!");
+                    }
+                    else if (e.GetComponentInParent<Entity>().GetType() == typeof(Unit))
                     {
                         UnitInfo uInfo = e.GetComponentInParent<Unit>().unitInfo;
                         thismanybuttons = uInfo.contextMenuOptions;
                     }
-                    else
-                    if (e.GetComponentInParent<Building>() != null)
+                    else if (e.GetComponentInParent<Entity>().GetType() == typeof(Building))
                     {
-                        Debug.Log("Building clicked: We need BuildingInfo!");
+                        UnitInfo uInfo = e.GetComponentInParent<Building>().unitInfo;
+                        thismanybuttons = uInfo.contextMenuOptions;
                     }
                     else
-                        Debug.LogError("No Unit found in Object" + e.name);
+                        Debug.LogError("Wrongly tagged Object: " + e.name + " is of type " + e.GetComponentInParent<Entity>().GetType());
 
                     if (thismanybuttons > 0 && thismanybuttons < 9)    //open menu only if options are available
                         if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)

@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Building : Entity
 {
+
+    /// <summary>
+    /// Holds all the stats for this Unit.
+    /// </summary>
+    public UnitInfo unitInfo;
+
     // Start is called before the first frame update
     void Start()
     {
