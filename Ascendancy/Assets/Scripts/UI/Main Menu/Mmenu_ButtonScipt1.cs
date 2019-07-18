@@ -19,7 +19,7 @@ public class Mmenu_ButtonScipt1 : MonoBehaviour
 
     public void BT1_click()
     {
-        SceneManager.LoadScene("Development");
+        SceneManager.LoadScene("LoadScreen");
     }
 
     public void BT2_click()
