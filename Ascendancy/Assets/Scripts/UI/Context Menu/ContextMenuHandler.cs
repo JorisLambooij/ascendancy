@@ -7,15 +7,18 @@ public class ContextMenuHandler : MonoBehaviour
 {
 
     private Vector3[] conMenuButtonPos;
+    Image centerImage;
+    Button[] buttons;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
         conMenuButtonPos = new Vector3[8];
 
-        Button[] buttons = GetComponentsInChildren<Button>(true);
+        centerImage = GetComponentInChildren<Image>();
+
+        buttons = GetComponentsInChildren<Button>(true);
 
         for (int i = 0; i < buttons.Length; i++)
         {
@@ -26,8 +29,8 @@ public class ContextMenuHandler : MonoBehaviour
             conMenuButtonPos[i] = buttons[i].transform.position - new Vector3(GetComponentInParent<Canvas>().pixelRect.width, GetComponentInParent<Canvas>().pixelRect.height) / 2;
         }
 
+        centerImage.color = new Color(255f, 255f, 255f, .1f);
 
-        GetComponentInChildren<Image>().color = new Color(255f, 255f, 255f, .1f);
 
 
         Hide();
@@ -39,11 +42,15 @@ public class ContextMenuHandler : MonoBehaviour
         //Debug.Log("Show(" + numberOfButtons + ")");
 
         //first, move the context menu to cursor position
-        GetComponentInChildren<Image>().transform.position = Input.mousePosition;
+       
+
+        gameObject.SetActive(true);
+
+        centerImage.transform.position = Input.mousePosition;
 
         //move all the buttons
         //deactivate some
-        Button[] buttons = GetComponentsInChildren<Button>(true);
+        buttons = GetComponentsInChildren<Button>(true);
 
         for (int i = 0; i < buttons.Length; i++)
         {
@@ -63,7 +70,7 @@ public class ContextMenuHandler : MonoBehaviour
             }
         }
 
-            gameObject.SetActive(true);
+            //gameObject.SetActive(true);
     }
 
     public void Hide()
@@ -75,6 +82,5 @@ public class ContextMenuHandler : MonoBehaviour
     {
         return gameObject.activeSelf;
     }
-
 
 }
