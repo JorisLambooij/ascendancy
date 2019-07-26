@@ -58,7 +58,7 @@ public class Unit : Entity
 
             default:
                 //Unknown tag
-                Debug.Log("Unknown tag hit with ray cast");
+                Debug.Log("Unknown tag hit with ray cast: tag '" + tag + "' in "+hit.collider.ToString());
                 controller.orders.Clear();
                 break;
         }
