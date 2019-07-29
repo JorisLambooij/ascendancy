@@ -558,7 +558,7 @@
     "m_PreviewData": {
         "serializedMesh": {
             "m_SerializedMesh": "",
-            "m_Guid": ""
+            "m_Guid": "0000000000000000e000000000000000"
         }
     },
     "m_Path": "Shader Graphs"
