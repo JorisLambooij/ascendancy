@@ -22,6 +22,11 @@ public class GameMode : ControlMode
     private LineRenderer formationLine;
     private Image selectionBox;
     private Camera cam;
+    //private Canvas contextMenuCanvas;
+    private ContextMenuHandler conMenuHandler;
+
+
+    //private Vector3[] conMenuButtonPos;
 
     public GameMode() : base()
     {
@@ -30,115 +35,133 @@ public class GameMode : ControlMode
         selectionBox = GameObject.Find("SelectionRect").GetComponent<Image>();
         selectionBox.enabled = false;
 
+        //contextMenuCanvas = GameObject.Find("Canvas_ConMenu").GetComponent<Canvas>();
+        conMenuHandler = GameObject.Find("Canvas_ConMenu").GetComponent<ContextMenuHandler>();
+
         formationLine = GameObject.Find("FormationLine").GetComponent<LineRenderer>();
-        formationLine.enabled = false;
 
         if (selectionBox == null)
             Debug.LogError("SelectionRect not found");
+
         if (formationLine == null)
             Debug.LogError("FormationLine not found");
+        else
+            formationLine.enabled = false;
+        if (conMenuHandler == null)
+        {
+            Debug.LogError("ConMenuHandler not found");
+        }
+        else
+        {
+            //conMenuHandler.Hide();
+        }
     }
 
     public override void HandleInput()
     {
         Mouse1();
         Mouse2();
+        Mouse3();
     }
 
     private void Mouse1()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (!conMenuHandler.IsVisible())
         {
-            dragStartPosM1 = Input.mousePosition;
-            startDragM1 = true;
-        }
-        if (startDragM1)
-        {
-            if (!draggingM1 && Vector3.Distance(dragStartPosM1, Input.mousePosition) > 4)
+            if (Input.GetMouseButtonDown(0))
             {
-                draggingM1 = true;
-                selectionBox.enabled = true;
+                dragStartPosM1 = Input.mousePosition;
+                startDragM1 = true;
+            }
+            if (startDragM1)
+            {
+                if (!draggingM1 && Vector3.Distance(dragStartPosM1, Input.mousePosition) > 4)
+                {
+                    draggingM1 = true;
+                    selectionBox.enabled = true;
+                }
+
+                if (draggingM1)
+                {
+                    dragStopPosM1 = Input.mousePosition;
+                    rectPos = dragStartPosM1;
+                    rectSize = dragStopPosM1 - dragStartPosM1;
+                    if (rectSize.x < 0)
+                    {
+                        rectPos.x = dragStopPosM1.x;
+                        rectSize.x *= -1;
+                    }
+                    if (rectSize.y < 0)
+                        rectSize.y *= -1;
+                    else
+                        rectPos.y = dragStopPosM1.y;
+
+                    selectionBox.rectTransform.position = rectPos;
+                    selectionBox.rectTransform.sizeDelta = new Vector2(rectSize.x, rectSize.y);
+                }
             }
 
-            if (draggingM1)
+            if (Input.GetMouseButtonUp(0))
             {
-                dragStopPosM1 = Input.mousePosition;
-                rectPos = dragStartPosM1;
-                rectSize = dragStopPosM1 - dragStartPosM1;
-                if (rectSize.x < 0)
+                startDragM1 = false;
+                selectionBox.enabled = false;
+                if (draggingM1)
                 {
-                    rectPos.x = dragStopPosM1.x;
-                    rectSize.x *= -1;
+                    // dragging selection, so check all units if in area
+                    draggingM1 = false;
+
+                    Matrix4x4 selectionMatrix = selectionBox.rectTransform.worldToLocalMatrix;
+                    GameObject player = GameObject.Find("Player " + gameManager.playerNo);
+                    if (player == null)
+                        throw new System.Exception("Invalid Player Number (" + gameManager.playerNo + ")");
+
+                    DeselectAll();
+
+                    bool unitsInSelection = false;
+                    foreach (EntitySelector e in player.GetComponentsInChildren<EntitySelector>())
+                        if (PositionInSelection(e.transform.position))
+                        {
+                            selectedUnits.Add(e);
+                            e.Selected = true;
+                            if (e.ParentEntity is Unit)
+                                unitsInSelection = true;
+                        }
+
+                    // if there is at least one unit in the selection, do not select buildings
+                    List<EntitySelector> toRemove = new List<EntitySelector>();
+                    if (unitsInSelection)
+                    {
+                        foreach (EntitySelector e in selectedUnits)
+                            if (e.ParentEntity is Building)
+                                toRemove.Add(e);
+                        foreach (EntitySelector e in toRemove)
+                        {
+                            selectedUnits.Remove(e);
+                            e.Selected = false;
+                        }
+                    }
+
                 }
-                if (rectSize.y < 0)
-                    rectSize.y *= -1;
                 else
-                    rectPos.y = dragStopPosM1.y;
-
-                selectionBox.rectTransform.position = rectPos;
-                selectionBox.rectTransform.sizeDelta = new Vector2(rectSize.x, rectSize.y);
-            }
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            startDragM1 = false;
-            selectionBox.enabled = false;
-            if (draggingM1)
-            {
-                // dragging selection, so check all units if in area
-                draggingM1 = false;
-
-                Matrix4x4 selectionMatrix = selectionBox.rectTransform.worldToLocalMatrix;
-                GameObject player = GameObject.Find("Player " + gameManager.playerNo);
-                if (player == null)
-                    throw new System.Exception("Invalid Player Number (" + gameManager.playerNo + ")");
-
-                DeselectAll();
-
-                bool unitsInSelection = false;
-                foreach (EntitySelector e in player.GetComponentsInChildren<EntitySelector>())
-                    if (PositionInSelection(e.transform.position))
-                    {
-                        selectedUnits.Add(e);
-                        e.Selected = true;
-                        if (e.ParentEntity is Unit)
-                            unitsInSelection = true;
-                    }
-                
-                // if there is at least one unit in the selection, do not select buildings
-                List<EntitySelector> toRemove = new List<EntitySelector>();
-                if (unitsInSelection)
                 {
-                    foreach (EntitySelector e in selectedUnits)
-                        if (e.ParentEntity is Building)
-                            toRemove.Add(e);
-                    foreach (EntitySelector e in toRemove)
+                    // only one click, so raycast -> see if we hit a unit
+
+                    Ray ray = gameManager.camScript.MouseCursorRay();
+                    RaycastHit hit;
+
+                    DeselectAll();
+
+                    int layerMask = 1 << LayerMask.NameToLayer("Selections");
+                    if (Physics.Raycast(ray, out hit, layerMask) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
                     {
-                        selectedUnits.Remove(e);
-                        e.Selected = false;
-                    }
-                }
-
-            }
-            else
-            {
-                // only one click, so raycast -> see if we hit a unit
-
-                Ray ray = gameManager.camScript.MouseCursorRay();
-                RaycastHit hit;
-
-                DeselectAll();
-
-                int layerMask = 1 << LayerMask.NameToLayer("Selections");
-                if (Physics.Raycast(ray, out hit, layerMask) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
-                {
-                    EntitySelector e = hit.transform.GetComponent<EntitySelector>();
-                    
-                    if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
-                    {
-                        e.Selected = true;
-                        selectedUnits.Add(e);
+                        EntitySelector e = hit.transform.GetComponent<EntitySelector>();
+                        
+                        if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
+                        {
+                            e.Selected = true;
+                            selectedUnits.Add(e);
+                        }
+                        
                     }
                 }
             }
@@ -150,85 +173,143 @@ public class GameMode : ControlMode
     /// </summary>
     private void Mouse2()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (!conMenuHandler.IsVisible())
         {
-            dragStartPosM2 = MouseRaycast().point;
-            formationLine.SetPosition(0, dragStartPosM2 + lineOffset);
-            startDragM2 = true;
-        }
-        if (startDragM2)
-        {
-            dragStopPosM2 = MouseRaycast().point;
-            if (!draggingM2 && Vector3.Distance(dragStartPosM2, dragStopPosM2) > 0.01f)
+            if (Input.GetMouseButtonDown(1))
             {
-                draggingM2 = true;
-                formationLine.enabled = true;
+                dragStartPosM2 = MouseRaycast().point;
+                formationLine.SetPosition(0, dragStartPosM2 + lineOffset);
+                startDragM2 = true;
             }
-
-            if (draggingM2)
+            if (startDragM2)
             {
-                formationLine.SetPosition(1, dragStopPosM2 + lineOffset);
-                Debug.DrawLine(dragStartPosM2, dragStopPosM2);
-            }
-        }
-        if (Input.GetMouseButtonUp(1))
-        {
-            startDragM2 = false;
-            formationLine.enabled = false;
-
-            if (draggingM2)
-            {
-                draggingM2 = false;
-
-                int count = selectedUnits.Count;
-                Vector3 orientation = Vector3.Cross(dragStopPosM2 - dragStartPosM2, Vector3.up).normalized;
-                
-                // Create a copy of the selectedUnits List, so we can later sort the units for shortest paths
-                EntitySelector[] unitsArray = new EntitySelector[selectedUnits.Count];
-                selectedUnits.CopyTo(unitsArray);
-
-                List<Unit> units = new List<Unit>();
-                foreach (EntitySelector unitSelector in unitsArray)
-                    units.Add(unitSelector.GetComponentInParent<Unit>());
-
-                for (int i = 0; i < count; i++)
+                dragStopPosM2 = MouseRaycast().point;
+                if (!draggingM2 && Vector3.Distance(dragStartPosM2, dragStopPosM2) > 0.01f)
                 {
-                    float lerpFactor;
-                    if (count > 1)
-                        lerpFactor = (float)i / (count - 1);
-                    else
-                        lerpFactor = 0.5f;
-                    Vector3 lerpedPos = Vector3.Lerp(dragStartPosM2, dragStopPosM2, lerpFactor);
+                    draggingM2 = true;
+                    formationLine.enabled = true;
+                }
 
-                    // Find the nearest Unit per position, and issue orders accordingly.
-                    // This is a greedy process, so might not be optimal, but should still be good in most cases.
-                    Unit nearestUnit = null;
-                    float nearestDistance = Mathf.Infinity;
-
-                    foreach (Unit unit in units)
-                    {
-                        float distance = Vector3.Distance(unit.transform.position, lerpedPos);
-                        if (distance < nearestDistance)
-                        {
-                            nearestDistance = distance;
-                            nearestUnit = unit;
-                        }
-                    }
-
-                    units.Remove(nearestUnit);
-                    
-                    bool enqueue = Input.GetKey(KeyCode.LeftShift);
-                    nearestUnit.IssueOrder(new MoveOrder(nearestUnit, lerpedPos), false);
-                    nearestUnit.IssueOrder(new RotateOrder(nearestUnit, orientation), true);
+                if (draggingM2)
+                {
+                    formationLine.SetPosition(1, dragStopPosM2 + lineOffset);
+                    Debug.DrawLine(dragStartPosM2, dragStopPosM2);
                 }
             }
-            else
+            if (Input.GetMouseButtonUp(1))
             {
-                // probably a redundant raycast, can be optimized
-                RaycastHit hit = MouseRaycast();
-                foreach (EntitySelector u in selectedUnits)
+                startDragM2 = false;
+                formationLine.enabled = false;
+
+                if (draggingM2)
                 {
-                    Unit unit = u.GetComponentInParent<Unit>();
+                    draggingM2 = false;
+
+                    int count = selectedUnits.Count;
+                    Vector3 orientation = Vector3.Cross(dragStopPosM2 - dragStartPosM2, Vector3.up).normalized;
+
+                    // Create a copy of the selectedUnits List, so we can later sort the units for shortest paths
+                    EntitySelector[] unitsArray = new EntitySelector[selectedUnits.Count];
+                    selectedUnits.CopyTo(unitsArray);
+
+                    List<Unit> units = new List<Unit>();
+                    foreach (EntitySelector unitSelector in unitsArray)
+                        units.Add(unitSelector.GetComponentInParent<Unit>());
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        float lerpFactor;
+                        if (count > 1)
+                            lerpFactor = (float)i / (count - 1);
+                        else
+                            lerpFactor = 0.5f;
+                        Vector3 lerpedPos = Vector3.Lerp(dragStartPosM2, dragStopPosM2, lerpFactor);
+
+                        // Find the nearest Unit per position, and issue orders accordingly.
+                        // This is a greedy process, so might not be optimal, but should still be good in most cases.
+                        Unit nearestUnit = null;
+                        float nearestDistance = Mathf.Infinity;
+
+                        foreach (Unit unit in units)
+                        {
+                            float distance = Vector3.Distance(unit.transform.position, lerpedPos);
+                            if (distance < nearestDistance)
+                            {
+                                nearestDistance = distance;
+                                nearestUnit = unit;
+                            }
+                        }
+
+                        units.Remove(nearestUnit);
+
+                        bool enqueue = Input.GetKey(KeyCode.LeftShift);
+                        nearestUnit.IssueOrder(new MoveOrder(nearestUnit, lerpedPos), false);
+                        nearestUnit.IssueOrder(new RotateOrder(nearestUnit, orientation), true);
+                    }
+                }
+                else
+                {
+                    // probably a redundant raycast, can be optimized
+                    RaycastHit hit = MouseRaycast();
+
+                    if (hit.collider != null)
+                    {
+                        foreach (EntitySelector u in selectedUnits)
+                        {
+                            //some errors here, I think we should split building and unit selection:
+                            //1+ unit among entities: only units selected
+                            //TODO seperate selections
+
+                            bool enqueue = Input.GetKey(KeyCode.LeftShift);
+                            u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
+
+
+                            //if (u.GetComponentInParent<Entity>().GetType() == typeof(Unit))
+                            //{
+                            //    bool enqueue = Input.GetKey(KeyCode.LeftShift);
+                            //    u.GetComponentInParent<Unit>().ClickOrder(hit, enqueue);
+                            //}
+                            //else
+                            //{
+                            //    Debug.Log("Building " + u.GetComponentInParent<Entity>().name + " could not receive order!");
+                            //}
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("Raycast missed hit.collider");
+                    }
+                }
+            }
+        }
+        else //if context menu is open
+        {
+            if (Input.GetMouseButtonUp(1))
+            {
+                conMenuHandler.Hide();
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Bring up ContextMenu
+    /// </summary>
+    private void Mouse3()
+    {
+        if (!conMenuHandler.IsVisible())
+        {
+            if (Input.GetMouseButtonUp(2))
+            {
+                Ray ray = gameManager.camScript.MouseCursorRay();
+                RaycastHit hit;
+
+                DeselectAll();
+
+                //we only open the context menu on valid targets:
+                if (Physics.Raycast(ray, out hit) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
+                {
+                    Unit unit = hit.collider.transform.GetComponentInParent<Unit>();
                     if (unit != null)
                     {
                         bool enqueue = Input.GetKey(KeyCode.LeftShift);
@@ -251,7 +332,7 @@ public class GameMode : ControlMode
     {
         return unit.Owner.playerNo != gameManager.playerNo;
     }
-    
+
     private void DeselectAll()
     {
         foreach (EntitySelector unitSelector in selectedUnits)
@@ -259,7 +340,7 @@ public class GameMode : ControlMode
 
         selectedUnits.Clear();
     }
-    
+
     /// <summary>
     /// Checks whether position is within the Selection Rectangle (Screen Space).
     /// </summary>

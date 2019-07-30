@@ -69,4 +69,9 @@ public class UnitInfo : ScriptableObject
     /// Unit Thumbnail.
     /// </summary>
     public Sprite thumbnail;
+
+    /// <summary>
+    /// How many options the context menu has for this unit.
+    /// </summary>
+    public int contextMenuOptions;
 }
