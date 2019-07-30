@@ -96,12 +96,30 @@ public class GameMode : ControlMode
 
                 DeselectAll();
 
+                bool unitsInSelection = false;
                 foreach (EntitySelector e in player.GetComponentsInChildren<EntitySelector>())
                     if (PositionInSelection(e.transform.position))
                     {
                         selectedUnits.Add(e);
                         e.Selected = true;
+                        if (e.ParentEntity is Unit)
+                            unitsInSelection = true;
                     }
+                
+                // if there is at least one unit in the selection, do not select buildings
+                List<EntitySelector> toRemove = new List<EntitySelector>();
+                if (unitsInSelection)
+                {
+                    foreach (EntitySelector e in selectedUnits)
+                        if (e.ParentEntity is Building)
+                            toRemove.Add(e);
+                    foreach (EntitySelector e in toRemove)
+                    {
+                        selectedUnits.Remove(e);
+                        e.Selected = false;
+                    }
+                }
+
             }
             else
             {
@@ -112,7 +130,8 @@ public class GameMode : ControlMode
 
                 DeselectAll();
 
-                if (Physics.Raycast(ray, out hit) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
+                int layerMask = 1 << LayerMask.NameToLayer("Selections");
+                if (Physics.Raycast(ray, out hit, layerMask) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
                 {
                     EntitySelector e = hit.transform.GetComponent<EntitySelector>();
                     
@@ -209,8 +228,12 @@ public class GameMode : ControlMode
                 RaycastHit hit = MouseRaycast();
                 foreach (EntitySelector u in selectedUnits)
                 {
-                    bool enqueue = Input.GetKey(KeyCode.LeftShift);
-                    u.GetComponentInParent<Unit>().ClickOrder(hit, enqueue);
+                    Unit unit = u.GetComponentInParent<Unit>();
+                    if (unit != null)
+                    {
+                        bool enqueue = Input.GetKey(KeyCode.LeftShift);
+                        unit.ClickOrder(hit, enqueue);
+                    }
                 }
             }
         }

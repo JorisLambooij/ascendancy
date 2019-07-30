@@ -17,12 +17,12 @@ public class Building : Entity
     // Update is called once per frame
     void Update()
     {
-        /*
+        
         if (Input.GetKeyDown(KeyCode.T))
         {
             if (buildingInfo.features.Count > 0)
                 (buildingInfo.features[0] as RecruitmentFeature).Recruit(dummyTank, this);
         }
-        */
+        
     }
 }
