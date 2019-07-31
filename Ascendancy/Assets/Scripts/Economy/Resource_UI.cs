@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Resource_UI : MonoBehaviour
 {
-    public Economy economy;
+    public Player player;
     public GameObject resourceEntryPrefab;
 
     private Dictionary<Resource, Resource_UI_Entry> resourceEntries;
@@ -15,7 +15,7 @@ public class Resource_UI : MonoBehaviour
     {
         resourceEntries = new Dictionary<Resource, Resource_UI_Entry>();
 
-        foreach (KeyValuePair<Resource, float> kvp in economy.resourceStorage)
+        foreach (KeyValuePair<Resource, float> kvp in player.economy.resourceStorage)
         {
             Resource_UI_Entry entry = Instantiate(resourceEntryPrefab, this.transform).GetComponent<Resource_UI_Entry>();
             entry.Sprite = kvp.Key.icon;
@@ -28,7 +28,7 @@ public class Resource_UI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (KeyValuePair<Resource, float> kvp in economy.resourceStorage)
+        foreach (KeyValuePair<Resource, float> kvp in player.economy.resourceStorage)
         {
             // Update the count of each resource
             resourceEntries[kvp.Key].Count = kvp.Value;

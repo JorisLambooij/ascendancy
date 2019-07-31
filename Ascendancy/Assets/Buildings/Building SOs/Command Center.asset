@@ -17,3 +17,4 @@ MonoBehaviour:
   maxHealth: 1000
   features:
   - {fileID: 11400000, guid: da90567d28ee4cc479116c97090f6450, type: 2}
+  - {fileID: 11400000, guid: da90567d28ee4cc479116c97090f6450, type: 2}
