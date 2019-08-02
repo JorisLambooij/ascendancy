@@ -7,6 +7,19 @@ public class RecruitmentFeature : BuildingFeature
 {
     public List<UnitInfo> recruitableUnits;
 
+    public override void Initialize(Building building)
+    {
+        
+    }
+
+    public override void UpdateOverride(Building building)
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Recruit(recruitableUnits[0], building);
+        }
+    }
+
     /// <summary>
     /// Recruits a specific Unit.
     /// </summary>
