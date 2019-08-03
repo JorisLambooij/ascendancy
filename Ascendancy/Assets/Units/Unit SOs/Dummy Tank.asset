@@ -18,9 +18,11 @@ MonoBehaviour:
   armor: 10
   meleeAttack: 40
   meleeDefense: 50
-  meleeStrength: 2
+  meleeStrength: 10
   meleeRange: 2
   attackSpeed: 1
   speed: 4
   acceleration: 4
+  prefab: {fileID: 7551204154752481065, guid: 204dd92974604ec4bb53de31b1bfaa9b, type: 3}
   thumbnail: {fileID: 0}
+  contextMenuOptions: 6

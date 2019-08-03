@@ -76,12 +76,10 @@ public class MeleeAttackOrder : UnitOrder
             int targetDefense = (target as Unit).unitInfo.meleeDefense;
 
             int chanceToHit = Mathf.Clamp(50 + unitAttack - targetDefense, 10, 90);
-
-            Debug.Log("rolling to hit");
+            
             if (Random.Range(0, 100) < chanceToHit)
             {
                 // successful attack
-                Debug.Log("attack success: " + unit.unitInfo.meleeStrength + " dmg");
                 target.TakeDamage(unit.unitInfo.meleeStrength);
             }
         }
