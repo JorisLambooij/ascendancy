@@ -61,6 +61,11 @@ public class UnitInfo : ScriptableObject
         acceleration;
 
     /// <summary>
+    /// The Prefab used to instantiate this Unit.
+    /// </summary>
+    public GameObject prefab;
+
+    /// <summary>
     /// Unit Thumbnail.
     /// </summary>
     public Sprite thumbnail;

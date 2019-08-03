@@ -117,12 +117,30 @@ public class GameMode : ControlMode
 
                     DeselectAll();
 
+                    bool unitsInSelection = false;
                     foreach (EntitySelector e in player.GetComponentsInChildren<EntitySelector>())
                         if (PositionInSelection(e.transform.position))
                         {
                             selectedUnits.Add(e);
                             e.Selected = true;
+                            if (e.ParentEntity is Unit)
+                                unitsInSelection = true;
                         }
+
+                    // if there is at least one unit in the selection, do not select buildings
+                    List<EntitySelector> toRemove = new List<EntitySelector>();
+                    if (unitsInSelection)
+                    {
+                        foreach (EntitySelector e in selectedUnits)
+                            if (e.ParentEntity is Building)
+                                toRemove.Add(e);
+                        foreach (EntitySelector e in toRemove)
+                        {
+                            selectedUnits.Remove(e);
+                            e.Selected = false;
+                        }
+                    }
+
                 }
                 else
                 {
@@ -133,15 +151,17 @@ public class GameMode : ControlMode
 
                     DeselectAll();
 
-                    if (Physics.Raycast(ray, out hit) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
+                    int layerMask = 1 << LayerMask.NameToLayer("Selections");
+                    if (Physics.Raycast(ray, out hit, layerMask) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
                     {
                         EntitySelector e = hit.transform.GetComponent<EntitySelector>();
-
+                        
                         if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
                         {
                             e.Selected = true;
                             selectedUnits.Add(e);
                         }
+                        
                     }
                 }
             }
@@ -290,12 +310,8 @@ public class GameMode : ControlMode
                 if (Physics.Raycast(ray, out hit) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
                 {
                     EntitySelector e = hit.transform.GetComponent<EntitySelector>();
-                    DeselectAll();
-
-                    int thismanybuttons = 0;    //zero button as default 
-
-                    
-
+                    DeselectAll(); int thismanybuttons = 0;
+                    //zero button as default                                     
                     if (e == null)
                     {
                         Debug.LogError("Entity Selector is NULL!");
@@ -308,17 +324,15 @@ public class GameMode : ControlMode
                     }
                     else if (e.GetComponentInParent<Entity>().GetType() == typeof(Building))
                     {
-                        UnitInfo uInfo = e.GetComponentInParent<Building>().unitInfo;
-                        thismanybuttons = uInfo.contextMenuOptions;
+                        BuildingInfo bInfo = e.GetComponentInParent<Building>().buildingInfo;
+                        thismanybuttons = bInfo.contextMenuOptions;
                     }
-                    else
-                        Debug.LogError("Wrongly tagged Object: " + e.name + " is of type " + e.GetComponentInParent<Entity>().GetType());
 
-                    if (thismanybuttons > 0 && thismanybuttons < 9)    //open menu only if options are available
+                    if (thismanybuttons > 0 && thismanybuttons < 9)
+                        //open menu only if options are available  
                         if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
                         {
-                            //here we open the context menu
-
+                            //here we open the context menu    
                             conMenuHandler.Show(thismanybuttons);
                         }
                 }

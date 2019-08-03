@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public int playerNo;
     public CameraScript camScript;
 
-    private ControlMode controlMode;
+    public ControlMode controlMode;
 
     // Might need refactoring
     private Dictionary<ControlModeEnum, ControlMode> controlModeDict;
