@@ -9012,7 +9012,7 @@ GameObject:
   - component: {fileID: 1413112201}
   - component: {fileID: 1413112200}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Damaged Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11122,7 +11122,7 @@ GameObject:
   - component: {fileID: 1926683930}
   - component: {fileID: 1926683929}
   m_Layer: 0
-  m_Name: Cylinder
+  m_Name: Volumetric Light Test
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
