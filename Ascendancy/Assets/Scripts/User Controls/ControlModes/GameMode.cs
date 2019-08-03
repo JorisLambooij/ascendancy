@@ -309,12 +309,32 @@ public class GameMode : ControlMode
                 //we only open the context menu on valid targets:
                 if (Physics.Raycast(ray, out hit) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
                 {
-                    Unit unit = hit.collider.transform.GetComponentInParent<Unit>();
-                    if (unit != null)
+                    EntitySelector e = hit.transform.GetComponent<EntitySelector>();
+                    DeselectAll(); int thismanybuttons = 0;
+                    //zero button as default                                     
+                    if (e == null)
                     {
-                        bool enqueue = Input.GetKey(KeyCode.LeftShift);
-                        unit.ClickOrder(hit, enqueue);
+                        Debug.LogError("Entity Selector is NULL!");
+                        Debug.LogError("(FAIL)Name is " + hit.transform.name);
                     }
+                    else if (e.GetComponentInParent<Entity>().GetType() == typeof(Unit))
+                    {
+                        UnitInfo uInfo = e.GetComponentInParent<Unit>().unitInfo;
+                        thismanybuttons = uInfo.contextMenuOptions;
+                    }
+                    else if (e.GetComponentInParent<Entity>().GetType() == typeof(Building))
+                    {
+                        BuildingInfo bInfo = e.GetComponentInParent<Building>().buildingInfo;
+                        thismanybuttons = bInfo.contextMenuOptions;
+                    }
+
+                    if (thismanybuttons > 0 && thismanybuttons < 9)
+                        //open menu only if options are available  
+                        if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
+                        {
+                            //here we open the context menu    
+                            conMenuHandler.Show(thismanybuttons);
+                        }
                 }
             }
         }

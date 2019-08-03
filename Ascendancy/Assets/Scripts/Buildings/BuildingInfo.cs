@@ -12,4 +12,9 @@ public class BuildingInfo : ScriptableObject
     public int maxHealth;
 
     public List<BuildingFeature> features;
+
+    /// <summary>
+    /// How many options the context menu has for this building.
+    /// </summary>
+    public int contextMenuOptions;
 }
