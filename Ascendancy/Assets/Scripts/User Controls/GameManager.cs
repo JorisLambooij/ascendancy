@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ControlModeEnum { gameMode, menuMode };
+public enum ControlModeEnum { gameMode, menuMode, buildingMode };
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public CameraScript camScript;
 
     public ControlMode controlMode;
+    public World world;
 
     // Might need refactoring
     private Dictionary<ControlModeEnum, ControlMode> controlModeDict;
@@ -21,9 +22,10 @@ public class GameManager : MonoBehaviour
         controlModeDict = new Dictionary<ControlModeEnum, ControlMode>
         {
             { ControlModeEnum.gameMode, new GameMode() },
+            { ControlModeEnum.buildingMode, new BuildingPlacementMode() },
             { ControlModeEnum.menuMode, new MenuMode() }
         };
-        SwitchToMode(ControlModeEnum.gameMode);
+        SwitchToMode(ControlModeEnum.buildingMode);
     }
 
     // Update is called once per frame

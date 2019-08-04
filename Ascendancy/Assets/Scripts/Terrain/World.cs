@@ -108,4 +108,33 @@ public class World : MonoBehaviour
         Debug.Log("Perlin " + x + "," + z + " " + (Mathf.PerlinNoise(perlinX, perlinZ) * heightScale));
         return (Mathf.PerlinNoise(perlinX, perlinZ)) * heightScale;
     }
+
+    public float GetHeight(Vector3 pos)
+    {
+        Vector2Int v = IntVector(pos);
+        return map[v.x, v.y].height;
+    }
+    
+    public bool IsFlat(Vector3 pos)
+    {
+        Vector2Int v = IntVector(pos);
+        return map[v.x, v.y].flatLand;
+    }
+    
+    public Tile GetTile(Vector3 pos)
+    {
+        Vector2Int v = IntVector(pos);
+        return map[v.x, v.y];
+    }
+
+    private Vector2Int IntVector(Vector3 v)
+    {
+        float x = v.x / tileSize;
+        float y = v.z / tileSize;
+
+        int x_int = Mathf.FloorToInt(x);
+        int y_int = Mathf.FloorToInt(y);
+
+        return new Vector2Int(x_int, y_int);
+    }
 }

@@ -152,7 +152,7 @@ public class GameMode : ControlMode
                     DeselectAll();
 
                     int layerMask = 1 << LayerMask.NameToLayer("Selections");
-                    if (Physics.Raycast(ray, out hit, layerMask) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
+                    if (Physics.Raycast(ray, out hit, 100, layerMask) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
                     {
                         EntitySelector e = hit.transform.GetComponent<EntitySelector>();
                         
