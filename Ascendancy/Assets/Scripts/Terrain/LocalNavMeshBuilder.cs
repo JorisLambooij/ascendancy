@@ -11,7 +11,7 @@ public class LocalNavMeshBuilder : MonoBehaviour
     public Transform m_Tracked;
 
     // The size of the build bounds
-    public Vector3 m_Size = new Vector3(80.0f, 20.0f, 80.0f);
+    private Vector3 m_Size;
 
     NavMeshData m_NavMesh;
     AsyncOperation m_Operation;
@@ -29,6 +29,13 @@ public class LocalNavMeshBuilder : MonoBehaviour
     */
     void OnEnable()
     {
+        World w = transform.GetComponentInParent<World>();
+        float scale_xz = w.tileSize * w.worldSize;
+        float scale_y = w.heightScale;
+        m_Size = new Vector3(scale_xz, scale_xz * scale_y * 0.5f, scale_xz);
+
+        transform.position = new Vector3(scale_xz * 0.5f, 0, scale_xz * 0.5f);
+
         // Construct and add navmesh
         m_NavMesh = new NavMeshData();
         m_Instance = NavMesh.AddNavMeshData(m_NavMesh);
