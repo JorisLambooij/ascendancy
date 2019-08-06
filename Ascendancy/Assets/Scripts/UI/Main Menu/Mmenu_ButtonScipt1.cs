@@ -8,7 +8,6 @@ public class Mmenu_ButtonScipt1 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -19,6 +18,7 @@ public class Mmenu_ButtonScipt1 : MonoBehaviour
 
     public void BT1_click()
     {
+        NextSceneStatic.sceneName = "Development";
         SceneManager.LoadScene("LoadScreen");
     }
 
@@ -34,7 +34,8 @@ public class Mmenu_ButtonScipt1 : MonoBehaviour
 
     public void BT4_click()
     {
-
+        NextSceneStatic.sceneName = "MapEditor";
+        SceneManager.LoadScene("LoadScreen");
     }
 
     public void BT5_click()
