@@ -28,4 +28,9 @@ public class EntitySelector : MonoBehaviour
             spriteRenderer.enabled = value;
         }
     }
+
+    public Entity ParentEntity
+    {
+        get { return GetComponentInParent<Entity>(); }
+    }
 }
