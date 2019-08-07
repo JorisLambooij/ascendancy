@@ -17,3 +17,5 @@ MonoBehaviour:
   maxHealth: 100
   features:
   - {fileID: 11400000, guid: fedcee826c899b34fb995c8241ef90f5, type: 2}
+  contextMenuOptions: 0
+  prefab: {fileID: 2021816003209581207, guid: 035922f511e8d284ea8edbbca2ff3b05, type: 3}
