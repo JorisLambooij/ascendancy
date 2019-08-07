@@ -64,6 +64,11 @@ public class GameMode : ControlMode
         Mouse3();
     }
 
+    public override void Stop()
+    {
+        DeselectAll();
+    }
+
     private void Mouse1()
     {
         if (!conMenuHandler.IsVisible())

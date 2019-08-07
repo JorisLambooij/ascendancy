@@ -7,6 +7,8 @@ public enum ControlModeEnum { gameMode, menuMode, buildingMode };
 public class GameManager : MonoBehaviour
 {
     public int playerNo;
+    public Player playerScript;
+
     public CameraScript camScript;
 
     public ControlMode controlMode;
@@ -36,7 +38,11 @@ public class GameManager : MonoBehaviour
 
     public void SwitchToMode(ControlModeEnum mode)
     {
+        if (controlMode != null)
+            controlMode.Stop();
+
         controlMode = controlModeDict[mode];
+        controlMode.Start();
     }
     
 }
