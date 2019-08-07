@@ -17,4 +17,6 @@ public class BuildingInfo : ScriptableObject
     /// How many options the context menu has for this building.
     /// </summary>
     public int contextMenuOptions;
+
+    public GameObject prefab;
 }

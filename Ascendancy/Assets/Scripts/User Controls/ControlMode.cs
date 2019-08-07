@@ -10,5 +10,15 @@ public abstract class ControlMode
 {
     public static GameManager gameManager;
 
+    public virtual void Start()
+    {
+
+    }
+
+    public virtual void Stop()
+    {
+
+    }
+
     public abstract void HandleInput();
 }
