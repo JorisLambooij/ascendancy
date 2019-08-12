@@ -74,4 +74,10 @@ public class UnitInfo : ScriptableObject
     /// How many options the context menu has for this unit.
     /// </summary>
     public int contextMenuOptions;
+
+    /// <summary>
+    /// The Sprite used for the minimap.
+    /// NULL means default marker.
+    /// </summary>
+    public Sprite minimapMarker;
 }

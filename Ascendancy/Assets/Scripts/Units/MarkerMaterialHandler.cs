@@ -13,9 +13,6 @@ public class MarkerMaterialHandler : MonoBehaviour
         if (e == null)
             e = transform.parent.GetComponentInParent<Entity>();
 
-        Debug.Log(e.Owner.name);
-        Debug.Log(e.Owner.playerColor);
-
         Color c = e.Owner.playerColor;
 
         sRenderer.color = c;
