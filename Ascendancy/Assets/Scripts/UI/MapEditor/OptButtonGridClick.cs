@@ -14,18 +14,14 @@ public class OptButtonGridClick : MonoBehaviour
 
         if (world == null)
             Debug.LogError("World not found in map editor.");
-
-        Debug.Log("INITIALIZED");
     }
 
     public void OnClick()
     {
-        Debug.Log("Starting to try to toggleGrid");
-
         if (world == null)
             Debug.LogError("World not found in map editor.");
 
-
-        world.ToggleGrid(!grid);
+        grid = !grid;
+        world.ToggleGrid(grid);
     }
 }

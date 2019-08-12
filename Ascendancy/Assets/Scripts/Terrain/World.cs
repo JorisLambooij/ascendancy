@@ -22,7 +22,8 @@ public class World : MonoBehaviour
 
     private Tile[,] map;    //set of all the tiles that make up the world
     private Chunk[] chunks; //set of all the chunks we're going to use to draw the world
-                           // Use this for initialization
+    private GameObject chunkGO; //the instantiated Chunk
+                            // Use this for initialization
 
     void Start()
     {
@@ -56,7 +57,7 @@ public class World : MonoBehaviour
     // Generate a chunk, fill it with necessary data and return the Chunk object
     Chunk GenerateChunk()
     {
-        GameObject chunkGO = Instantiate(chunkPrefab, transform);
+        chunkGO = Instantiate(chunkPrefab, transform);
         Chunk chunk = chunkGO.GetComponent<Chunk>();
         chunk.tileSize = tileSize;
         chunk.chunkSize = worldSize;
@@ -151,11 +152,6 @@ public class World : MonoBehaviour
             gridfloat = 0;
         }
 
-        foreach (Chunk chunky in chunks)
-        {
-            chunky.GetComponent<Renderer>().material.SetFloat("Grid", gridfloat);
-        }
-
-        //TODO: make this work
+        chunkGO.GetComponent<Renderer>().material.SetFloat("_grid", gridfloat);
     }
 }

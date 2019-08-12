@@ -4,7 +4,7 @@
             "typeInfo": {
                 "fullName": "UnityEditor.ShaderGraph.BooleanShaderProperty"
             },
-            "JSONnodeData": "{\n    \"m_Name\": \"Grid\",\n    \"m_GeneratePropertyBlock\": true,\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"d8a141e1-bccb-4f75-ae0f-176648e99010\"\n    },\n    \"m_DefaultReferenceName\": \"Boolean_38021BFA\",\n    \"m_OverrideReferenceName\": \"\",\n    \"m_Precision\": 0,\n    \"m_Value\": false,\n    \"m_Hidden\": false\n}"
+            "JSONnodeData": "{\n    \"m_Name\": \"Grid\",\n    \"m_GeneratePropertyBlock\": true,\n    \"m_Guid\": {\n        \"m_GuidSerialized\": \"d8a141e1-bccb-4f75-ae0f-176648e99010\"\n    },\n    \"m_DefaultReferenceName\": \"Boolean_38021BFA\",\n    \"m_OverrideReferenceName\": \"_grid\",\n    \"m_Precision\": 0,\n    \"m_Value\": false,\n    \"m_Hidden\": false\n}"
         },
         {
             "typeInfo": {

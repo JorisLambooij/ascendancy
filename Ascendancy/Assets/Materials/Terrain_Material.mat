@@ -45,6 +45,7 @@ Material:
     - Boolean_5E37AC99: 0
     - Vector1_46842222: 0.25
     - Vector1_F0A85FEC: 0.08
+    - _grid: 1
     m_Colors:
     - Color_283B0952: {r: 0.12156863, g: 0.6313726, b: 0.14117648, a: 0}
     - _WorldSpaceLightPos0: {r: 0, g: 0, b: 0, a: 0}
