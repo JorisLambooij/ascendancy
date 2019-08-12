@@ -1528,7 +1528,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNo: 1
   playerName: Alice
-  playerColor: {r: 0, g: 0.754717, b: 0.030186852, a: 0}
+  playerColor: {r: 0, g: 0.754717, b: 0.030186852, a: 1}
   economy: {fileID: 0}
   buildingsGO: {fileID: 2015853046}
   unitsGO: {fileID: 1568851076}
@@ -10330,7 +10330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNo: 2
   playerName: Bob
-  playerColor: {r: 1, g: 0.5254831, b: 0, a: 0}
+  playerColor: {r: 1, g: 0.5254831, b: 0, a: 1}
   economy: {fileID: 0}
   buildingsGO: {fileID: 2143175861}
   unitsGO: {fileID: 2040130332}
@@ -10867,7 +10867,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2871
+    m_Bits: 1536
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 999e41ce99aa9b94f9d8b092a59447b7, type: 2}
   m_TargetDisplay: 0
