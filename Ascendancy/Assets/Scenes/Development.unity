@@ -3052,7 +3052,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNo: 1
+  playerScript: {fileID: 0}
   camScript: {fileID: 2102454448}
+  world: {fileID: 0}
 --- !u!4 &757122381
 Transform:
   m_ObjectHideFlags: 0
@@ -9700,6 +9702,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2263478490423774154, guid: 204dd92974604ec4bb53de31b1bfaa9b,
+        type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 512
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 204dd92974604ec4bb53de31b1bfaa9b, type: 3}
 --- !u!1 &1552291667
@@ -10860,7 +10867,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1536
+    m_Bits: 2871
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 999e41ce99aa9b94f9d8b092a59447b7, type: 2}
   m_TargetDisplay: 0
@@ -11735,7 +11742,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Tracked: {fileID: 2020007788}
-  m_Size: {x: 16, y: 8, z: 16}
 --- !u!4 &2020007788
 Transform:
   m_ObjectHideFlags: 0
@@ -11841,7 +11847,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2871
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
