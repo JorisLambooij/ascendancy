@@ -137,4 +137,25 @@ public class World : MonoBehaviour
 
         return new Vector2Int(x_int, y_int);
     }
+
+    public void ToggleGrid(bool on)
+    {
+        float gridfloat;
+
+        if (on)
+        {
+            gridfloat = 1;
+        }
+        else
+        {
+            gridfloat = 0;
+        }
+
+        foreach (Chunk chunky in chunks)
+        {
+            chunky.GetComponent<Renderer>().material.SetFloat("Grid", gridfloat);
+        }
+
+        //TODO: make this work
+    }
 }
