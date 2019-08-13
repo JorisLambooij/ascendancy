@@ -22,7 +22,8 @@ public class World : MonoBehaviour
 
     private Tile[,] map;    //set of all the tiles that make up the world
     private Chunk[] chunks; //set of all the chunks we're going to use to draw the world
-                           // Use this for initialization
+    //private GameObject chunkGO; //the instantiated Chunk
+                            // Use this for initialization
 
     void Start()
     {
@@ -76,23 +77,23 @@ public class World : MonoBehaviour
                 {
                     break;
                 }
-                active.upperLeft = adjustVector(active.upperLeft);
-                active.upperRight = adjustVector(active.upperRight);
-                active.lowerRight = adjustVector(active.lowerRight);
-                active.lowerLeft = adjustVector(active.lowerLeft);
+                active.upperLeft = AdjustVector(active.upperLeft);
+                active.upperRight = AdjustVector(active.upperRight);
+                active.lowerRight = AdjustVector(active.lowerRight);
+                active.lowerLeft = AdjustVector(active.lowerLeft);
                 active.ReSetStats();
             }
         }
     }
 
-    Vector3 adjustVector(Vector3 input)
+    Vector3 AdjustVector(Vector3 input)
     {
         float newHeight = input.y;
-        newHeight = (int) height(input.x, input.z) * heightScale / heightResolution;
+        newHeight = (int) Height(input.x, input.z) * heightScale / heightResolution;
         return new Vector3(input.x, newHeight, input.z);
     }
 
-    float height(float x, float z)
+    float Height(float x, float z)
     {
         int texX = (int) (x / worldSize * heightmap.width);
         int texY = (int) (z / worldSize * heightmap.height);
@@ -100,7 +101,7 @@ public class World : MonoBehaviour
         return heightmap.GetPixel(texX, texY).grayscale * heightResolution;
     }
 
-    float perlin(float x, float z)
+    float Perlin(float x, float z)
     {
         float perlinX = x * noiseScale;
         float perlinZ = z * noiseScale;
@@ -136,5 +137,21 @@ public class World : MonoBehaviour
         int y_int = Mathf.FloorToInt(y);
 
         return new Vector2Int(x_int, y_int);
+    }
+
+    public void ToggleGrid(bool on)
+    {
+        float gridfloat;
+
+        if (on)
+        {
+            gridfloat = 1;
+        }
+        else
+        {
+            gridfloat = 0;
+        }
+
+        chunks[0].GetComponent<Renderer>().material.SetFloat("_grid", gridfloat);
     }
 }
