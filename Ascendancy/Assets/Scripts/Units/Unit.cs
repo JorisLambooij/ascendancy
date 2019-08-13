@@ -13,11 +13,25 @@ public class Unit : Entity
     public UnitInfo unitInfo;
     private UnitController controller;
 
+    private Sprite minimapMarker;
+
     // Start is called before the first frame update
     void Start()
     {
         currentHealth = unitInfo.maxHealth;
         controller = GetComponent<UnitController>();
+        minimapMarker = unitInfo.minimapMarker;
+
+        GameObject markerObject = Resources.Load("Sprites/MinimapMarker") as GameObject;
+
+        //if a sprite was provided, we use it while keeping the position and settings
+        if (minimapMarker != null)
+        {
+            markerObject.GetComponent<SpriteRenderer>().sprite = minimapMarker;
+            Debug.Log(markerObject.GetComponent <SpriteRenderer > ().sprite.name);
+        }
+
+        Instantiate(markerObject, this.transform);
     }
 
     // Update is called once per frame

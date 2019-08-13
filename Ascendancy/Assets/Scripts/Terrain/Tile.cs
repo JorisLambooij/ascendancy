@@ -12,11 +12,15 @@ public class Tile
     public float height;    //the idealized height of this tile
     public bool isSlope = false;
 
+    public bool flatLand;
+
     public float tileSize = 3f; //tile size in meters
 
     //cached things
     private float centerX;
     private float centerZ;
+
+    public float worldX, worldZ;
 
     //basic constructor
     public Tile(float centerX, float centerZ, float height, float size)
@@ -35,6 +39,8 @@ public class Tile
         lowerRight = new Vector3((centerX * tileSize) + tileSize, height, (centerZ * tileSize));
         lowerLeft = new Vector3((centerX * tileSize), height, (centerZ * tileSize));
 
+        worldX = (centerX + 0.5f) * tileSize;
+        worldZ = (centerZ + 0.5f) * tileSize;
     }
 
     public void recalculate()
@@ -51,8 +57,9 @@ public class Tile
         height = Mathf.Max(upperRight.y, upperLeft.y, lowerLeft.y, lowerRight.y);
 
         if ((upperLeft.y + upperRight.y + lowerLeft.y + lowerRight.y) / 4f != height)
-        {
             isSlope = true;
-        }
+
+        flatLand = (upperLeft.y == upperRight.y && upperRight.y == lowerRight.y && lowerRight.y == lowerLeft.y);
+
     }
 }
