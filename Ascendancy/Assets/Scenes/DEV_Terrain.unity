@@ -1303,6 +1303,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building Option (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2716010733803807128, guid: 0a2960eba42395947b91de896fd53a4f,
+        type: 3}
+      propertyPath: building
+      value: 
+      objectReference: {fileID: 11400000, guid: a659b81c06009b140bd3d1965002faa3,
+        type: 2}
     - target: {fileID: 2716010733803807130, guid: 0a2960eba42395947b91de896fd53a4f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1408,12 +1414,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 2716010733803807128, guid: 0a2960eba42395947b91de896fd53a4f,
-        type: 3}
-      propertyPath: building
-      value: 
-      objectReference: {fileID: 11400000, guid: a659b81c06009b140bd3d1965002faa3,
-        type: 2}
     - target: {fileID: 2716010733278190385, guid: 0a2960eba42395947b91de896fd53a4f,
         type: 3}
       propertyPath: m_Sprite
@@ -6591,7 +6591,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 858608295}
   minimapCamera: {fileID: 1934676499}
-  floorCollider: {fileID: 0}
+  world: {fileID: 1439411476}
   topLeftPosition: {x: 0, y: 0, z: 0}
   topRightPosition: {x: 0, y: 0, z: 0}
   bottomLeftPosition: {x: 0, y: 0, z: 0}

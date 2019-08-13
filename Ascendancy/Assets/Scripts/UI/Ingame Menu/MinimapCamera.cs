@@ -6,9 +6,12 @@ public class MinimapCamera : MonoBehaviour
 {
     public Camera playerCamera;
     public Camera minimapCamera;
-    public Collider floorCollider;
+    //public Collider floorCollider;
+    public World world;
     public Vector3 topLeftPosition, topRightPosition, bottomLeftPosition, bottomRightPosition;
     public Vector3 mousePosition;
+
+    private Collider floorCollider;
 
     public void Start()
     {
@@ -23,19 +26,21 @@ public class MinimapCamera : MonoBehaviour
             Debug.LogError("Unable to determine where the Minimap Camera component is at.");
         }
 
-        if (this.floorCollider == null)
+        if (this.world == null)
         {
             //GameObject floorObject = GameObject.FindGameObjectWithTag("FloorCollider");
             //this.floorCollider = floorObject.GetComponent<Collider>();
 
             GameObject worldGO = GameObject.Find("World");
-            this.floorCollider = worldGO.GetComponent<World>().GetCollider();
+            this.world = worldGO.GetComponent<World>();
 
             if (this.floorCollider == null)
             {
                 Debug.LogError("Cannot set Quad floor collider to this variable. Please check.");
             }
         }
+
+        this.floorCollider = world.GetCollider();
     }
 
     public void Update()
