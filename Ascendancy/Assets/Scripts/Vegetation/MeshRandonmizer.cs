@@ -15,8 +15,8 @@ public class MeshRandonmizer : MonoBehaviour
     public bool randomizeScale = true;
 
     public bool uniformScale = true;
-    public float minScale = 0.8f;
-    public float maxScale = 1.2f;
+    public float minScale = 0.08f;
+    public float maxScale = 0.12f;
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +30,7 @@ public class MeshRandonmizer : MonoBehaviour
                 fix = -90;
             }
 
-            this.transform.localRotation = Quaternion.Euler(this.transform.rotation.x + fix, this.transform.rotation.y, Random.Range(0, 360));
+            this.transform.localRotation = Quaternion.Euler(this.transform.rotation.x + fix, Random.Range(0, 360), this.transform.rotation.z );
         }
 
         // change a bit the seize of the model.

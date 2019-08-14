@@ -7,6 +7,7 @@ TagManager:
   - Unit
   - Ground
   - Building
+  - Vegetation
   layers:
   - Default
   - TransparentFX
@@ -20,8 +21,6 @@ TagManager:
   - Ground
   - Minimap
   - Selections
-  - 
-  - 
   - 
   - 
   - 
