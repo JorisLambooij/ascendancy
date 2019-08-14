@@ -15,8 +15,8 @@ public class MeshRandonmizer : MonoBehaviour
     public bool randomizeScale = true;
 
     public bool uniformScale = true;
-    public float minScale = 0.08f;
-    public float maxScale = 0.12f;
+    public float minScale = 0.8f;
+    public float maxScale = 1.2f;
 
     // Start is called before the first frame update
     void Start()

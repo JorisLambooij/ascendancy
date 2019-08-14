@@ -7,7 +7,7 @@ TagManager:
   - Unit
   - Ground
   - Building
-  - Vegetation
+  - MapObject
   layers:
   - Default
   - TransparentFX
