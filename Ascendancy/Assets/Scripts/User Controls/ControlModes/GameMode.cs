@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// This should be the standard mode for when the game is running.
@@ -64,6 +65,16 @@ public class GameMode : ControlMode
         Mouse3();
     }
 
+    public override void Start()
+    {
+        DeselectAll();
+
+        startDragM1 = false;
+        startDragM2 = false;
+        draggingM1 = false;
+        draggingM2 = false;
+    }
+
     public override void Stop()
     {
         DeselectAll();
@@ -71,106 +82,109 @@ public class GameMode : ControlMode
 
     private void Mouse1()
     {
-        if (!conMenuHandler.IsVisible())
+        // context menu out or pointer over UI element;
+        if (conMenuHandler.IsVisible())
+            return;
+
+
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
-            if (Input.GetMouseButtonDown(0))
+            dragStartPosM1 = Input.mousePosition;
+            startDragM1 = true;
+        }
+        if (startDragM1)
+        {
+            if (!draggingM1 && Vector3.Distance(dragStartPosM1, Input.mousePosition) > 4)
             {
-                dragStartPosM1 = Input.mousePosition;
-                startDragM1 = true;
-            }
-            if (startDragM1)
-            {
-                if (!draggingM1 && Vector3.Distance(dragStartPosM1, Input.mousePosition) > 4)
-                {
-                    draggingM1 = true;
-                    selectionBox.enabled = true;
-                }
-
-                if (draggingM1)
-                {
-                    dragStopPosM1 = Input.mousePosition;
-                    rectPos = dragStartPosM1;
-                    rectSize = dragStopPosM1 - dragStartPosM1;
-                    if (rectSize.x < 0)
-                    {
-                        rectPos.x = dragStopPosM1.x;
-                        rectSize.x *= -1;
-                    }
-                    if (rectSize.y < 0)
-                        rectSize.y *= -1;
-                    else
-                        rectPos.y = dragStopPosM1.y;
-
-                    selectionBox.rectTransform.position = rectPos;
-                    selectionBox.rectTransform.sizeDelta = new Vector2(rectSize.x, rectSize.y);
-                }
+                draggingM1 = true;
+                selectionBox.enabled = true;
             }
 
-            if (Input.GetMouseButtonUp(0))
+            if (draggingM1)
             {
-                startDragM1 = false;
-                selectionBox.enabled = false;
-                if (draggingM1)
+                dragStopPosM1 = Input.mousePosition;
+                rectPos = dragStartPosM1;
+                rectSize = dragStopPosM1 - dragStartPosM1;
+                if (rectSize.x < 0)
                 {
-                    // dragging selection, so check all units if in area
-                    draggingM1 = false;
-
-                    Matrix4x4 selectionMatrix = selectionBox.rectTransform.worldToLocalMatrix;
-                    GameObject player = GameObject.Find("Player " + gameManager.playerNo);
-                    if (player == null)
-                        throw new System.Exception("Invalid Player Number (" + gameManager.playerNo + ")");
-
-                    DeselectAll();
-
-                    bool unitsInSelection = false;
-                    foreach (EntitySelector e in player.GetComponentsInChildren<EntitySelector>())
-                        if (PositionInSelection(e.transform.position))
-                        {
-                            selectedUnits.Add(e);
-                            e.Selected = true;
-                            if (e.ParentEntity is Unit)
-                                unitsInSelection = true;
-                        }
-
-                    // if there is at least one unit in the selection, do not select buildings
-                    List<EntitySelector> toRemove = new List<EntitySelector>();
-                    if (unitsInSelection)
-                    {
-                        foreach (EntitySelector e in selectedUnits)
-                            if (e.ParentEntity is Building)
-                                toRemove.Add(e);
-                        foreach (EntitySelector e in toRemove)
-                        {
-                            selectedUnits.Remove(e);
-                            e.Selected = false;
-                        }
-                    }
-
+                    rectPos.x = dragStopPosM1.x;
+                    rectSize.x *= -1;
                 }
+                if (rectSize.y < 0)
+                    rectSize.y *= -1;
                 else
-                {
-                    // only one click, so raycast -> see if we hit a unit
+                    rectPos.y = dragStopPosM1.y;
 
-                    Ray ray = gameManager.camScript.MouseCursorRay();
-                    RaycastHit hit;
+                selectionBox.rectTransform.position = rectPos;
+                selectionBox.rectTransform.sizeDelta = new Vector2(rectSize.x, rectSize.y);
+            }
+        }
 
-                    DeselectAll();
+        if (Input.GetMouseButtonUp(0))
+        {
+            startDragM1 = false;
+            selectionBox.enabled = false;
+            if (draggingM1)
+            {
+                // dragging selection, so check all units if in area
+                draggingM1 = false;
 
-                    int layerMask = 1 << LayerMask.NameToLayer("Selections");
-                    if (Physics.Raycast(ray, out hit, 100, layerMask) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
+                Matrix4x4 selectionMatrix = selectionBox.rectTransform.worldToLocalMatrix;
+                GameObject player = GameObject.Find("Player " + gameManager.playerNo);
+                if (player == null)
+                    throw new System.Exception("Invalid Player Number (" + gameManager.playerNo + ")");
+
+                DeselectAll();
+
+                bool unitsInSelection = false;
+                foreach (EntitySelector e in player.GetComponentsInChildren<EntitySelector>())
+                    if (PositionInSelection(e.transform.position))
                     {
-                        EntitySelector e = hit.transform.GetComponent<EntitySelector>();
-                        
-                        if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
-                        {
-                            e.Selected = true;
-                            selectedUnits.Add(e);
-                        }
-                        
+                        selectedUnits.Add(e);
+                        e.Selected = true;
+                        if (e.ParentEntity is Unit)
+                            unitsInSelection = true;
                     }
+
+                // if there is at least one unit in the selection, do not select buildings
+                List<EntitySelector> toRemove = new List<EntitySelector>();
+                if (unitsInSelection)
+                {
+                    foreach (EntitySelector e in selectedUnits)
+                        if (e.ParentEntity is Building)
+                            toRemove.Add(e);
+                    foreach (EntitySelector e in toRemove)
+                    {
+                        selectedUnits.Remove(e);
+                        e.Selected = false;
+                    }
+                }
+
+            }
+            else
+            {
+                // only one click, so raycast -> see if we hit a unit
+
+                Ray ray = gameManager.camScript.MouseCursorRay();
+                RaycastHit hit;
+
+                DeselectAll();
+
+                int layerMask = 1 << LayerMask.NameToLayer("Selections");
+                if (Physics.Raycast(ray, out hit, 100, layerMask) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
+                {
+                    EntitySelector e = hit.transform.GetComponent<EntitySelector>();
+                        
+                    if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
+                    {
+                        e.Selected = true;
+                        selectedUnits.Add(e);
+                    }
+                        
                 }
             }
         }
+        
     }
 
     /// <summary>
