@@ -42,7 +42,7 @@ public class ContextMenuHandler : MonoBehaviour
         //Debug.Log("Show(" + numberOfButtons + ")");
 
         //first, move the context menu to cursor position
-       
+
 
         gameObject.SetActive(true);
 
@@ -70,7 +70,7 @@ public class ContextMenuHandler : MonoBehaviour
             }
         }
 
-            //gameObject.SetActive(true);
+        //gameObject.SetActive(true);
     }
 
     public void Hide()
@@ -81,6 +81,14 @@ public class ContextMenuHandler : MonoBehaviour
     public bool IsVisible()
     {
         return gameObject.activeSelf;
+    }
+
+    public void Update()
+    {
+        float distance = Vector2.Distance(centerImage.transform.position, Input.mousePosition);
+
+        if (distance > 100)
+            Hide();
     }
 
 }

@@ -110,6 +110,11 @@ public class World : MonoBehaviour
         return (Mathf.PerlinNoise(perlinX, perlinZ)) * heightScale;
     }
 
+    public Collider GetCollider()
+    {
+        return chunks[0].GetComponent<MeshCollider>();
+    }
+
     public float GetHeight(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);

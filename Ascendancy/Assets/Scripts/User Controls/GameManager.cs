@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
             { ControlModeEnum.buildingMode, new BuildingPlacementMode() },
             { ControlModeEnum.menuMode, new MenuMode() }
         };
-        SwitchToMode(ControlModeEnum.buildingMode);
+        SwitchToMode(ControlModeEnum.gameMode);
     }
 
     // Update is called once per frame
