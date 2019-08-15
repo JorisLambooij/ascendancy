@@ -19,6 +19,10 @@ public class BuildingPlacementMode : ControlMode
             // if Mouse over UI element, do not do anything
             return;
 
+        if (Input.GetMouseButtonUp(1))
+            //RMB, so cancel build mode
+            gameManager.SwitchToMode(ControlModeEnum.gameMode);
+
         Ray ray = gameManager.camScript.MouseCursorRay();
         RaycastHit hit;
         
@@ -33,8 +37,7 @@ public class BuildingPlacementMode : ControlMode
             bool validLocation = tile.flatLand;
 
             preview.GetComponent<BuildingPreview>().valid = validLocation;
-
-
+            
             if (Input.GetMouseButtonDown(0))
                 if (validLocation)
                 {
