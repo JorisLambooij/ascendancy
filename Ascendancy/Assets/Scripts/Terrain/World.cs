@@ -58,6 +58,7 @@ public class World : MonoBehaviour
     Chunk GenerateChunk()
     {
         GameObject chunkGO = Instantiate(chunkPrefab, transform);
+        chunkGO.name = "TerrainMesh";
         Chunk chunk = chunkGO.GetComponent<Chunk>();
         chunk.tileSize = tileSize;
         chunk.chunkSize = worldSize;

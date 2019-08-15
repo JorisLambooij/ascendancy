@@ -1349,6 +1349,7 @@ MonoBehaviour:
   chunkPrefab: {fileID: 6959487059621137888, guid: 247a833afaa29a143b752c9c302aacde,
     type: 3}
   navMeshBuilder: {fileID: 1526930976}
+  meshObject: {fileID: 0}
   worldSize: 128
   tileSize: 1
   noiseScale: 1
