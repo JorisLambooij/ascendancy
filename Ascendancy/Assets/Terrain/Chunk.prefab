@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6959487059621137900}
   - component: {fileID: 6959487059621137901}
   - component: {fileID: 6959487059621137898}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Chunk
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 72200d1b57bd19f4797ab2da8685022d, type: 2}
+  - {fileID: 2100000, guid: 54270b0a81d61424983c398e91da3ace, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -82,6 +82,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0

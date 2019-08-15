@@ -16,3 +16,5 @@ MonoBehaviour:
   goldCost: 100
   maxHealth: 500
   features: []
+  contextMenuOptions: 0
+  prefab: {fileID: 1586468649450910965, guid: 1ac97df6ae5931b4dac455c5c010d352, type: 3}

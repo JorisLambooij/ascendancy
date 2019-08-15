@@ -64,6 +64,11 @@ public class GameMode : ControlMode
         Mouse3();
     }
 
+    public override void Stop()
+    {
+        DeselectAll();
+    }
+
     private void Mouse1()
     {
         if (!conMenuHandler.IsVisible())
@@ -152,7 +157,7 @@ public class GameMode : ControlMode
                     DeselectAll();
 
                     int layerMask = 1 << LayerMask.NameToLayer("Selections");
-                    if (Physics.Raycast(ray, out hit, layerMask) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
+                    if (Physics.Raycast(ray, out hit, 100, layerMask) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
                     {
                         EntitySelector e = hit.transform.GetComponent<EntitySelector>();
                         
@@ -206,42 +211,48 @@ public class GameMode : ControlMode
                     draggingM2 = false;
 
                     int count = selectedUnits.Count;
-                    Vector3 orientation = Vector3.Cross(dragStopPosM2 - dragStartPosM2, Vector3.up).normalized;
+                    Vector3 dragLineDirection = (dragStopPosM2 - dragStartPosM2);
+                    Vector3 orientation = Vector3.Cross(dragLineDirection, Vector3.up).normalized;
 
-                    // Create a copy of the selectedUnits List, so we can later sort the units for shortest paths
-                    EntitySelector[] unitsArray = new EntitySelector[selectedUnits.Count];
-                    selectedUnits.CopyTo(unitsArray);
+                    SortedDictionary<float, Unit> unitsSorted = new SortedDictionary<float, Unit>();
 
-                    List<Unit> units = new List<Unit>();
-                    foreach (EntitySelector unitSelector in unitsArray)
-                        units.Add(unitSelector.GetComponentInParent<Unit>());
-
-                    for (int i = 0; i < count; i++)
+                    // sort units, then issue commands according to units' relative position towards the goal line
+                    foreach (EntitySelector es in selectedUnits)
                     {
+                        Unit u = es.ParentEntity as Unit;
+
+                        // Project the Unit's position onto the drag line
+                        Vector3 startToUnitPos = u.transform.position - dragStartPosM2;
+                        Vector3 projectedVector = Vector3.Project(startToUnitPos, dragLineDirection);
+                        float projectedDistance = projectedVector.magnitude;
+
+                        // if the units projected position is in the "before" the drag line starting pos, correct the projected distance
+                        if (Vector3.Angle(projectedVector, dragLineDirection) > 90)
+                            projectedDistance *= -1;
+
+                        Debug.Log(projectedDistance + " " + u.transform.name);
+
+                        // sort by length of the projected vector
+                        unitsSorted.Add(projectedDistance, u);
+                    }
+
+                    // Make sure nothing has gone horribly wrong
+                    Debug.Assert(unitsSorted.Count == count);
+
+                    int i = 0;
+                    foreach (KeyValuePair<float, Unit> kvp in unitsSorted)
+                    {
+                        // Determine the lerped position on the drag line
                         float lerpFactor;
                         if (count > 1)
                             lerpFactor = (float)i / (count - 1);
                         else
                             lerpFactor = 0.5f;
+                        i++;
                         Vector3 lerpedPos = Vector3.Lerp(dragStartPosM2, dragStopPosM2, lerpFactor);
-
-                        // Find the nearest Unit per position, and issue orders accordingly.
-                        // This is a greedy process, so might not be optimal, but should still be good in most cases.
-                        Unit nearestUnit = null;
-                        float nearestDistance = Mathf.Infinity;
-
-                        foreach (Unit unit in units)
-                        {
-                            float distance = Vector3.Distance(unit.transform.position, lerpedPos);
-                            if (distance < nearestDistance)
-                            {
-                                nearestDistance = distance;
-                                nearestUnit = unit;
-                            }
-                        }
-
-                        units.Remove(nearestUnit);
-
+                        
+                        // Issue an order to the nearest unit to move there
+                        Unit nearestUnit = kvp.Value;
                         bool enqueue = Input.GetKey(KeyCode.LeftShift);
                         nearestUnit.IssueOrder(new MoveOrder(nearestUnit, lerpedPos), false);
                         nearestUnit.IssueOrder(new RotateOrder(nearestUnit, orientation), true);
