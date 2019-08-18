@@ -58,6 +58,7 @@ public class World : MonoBehaviour
     Chunk GenerateChunk()
     {
         GameObject chunkGO = Instantiate(chunkPrefab, transform);
+        chunkGO.name = "TerrainMesh";
         Chunk chunk = chunkGO.GetComponent<Chunk>();
         chunk.tileSize = tileSize;
         chunk.chunkSize = worldSize;
@@ -108,6 +109,11 @@ public class World : MonoBehaviour
 
         Debug.Log("Perlin " + x + "," + z + " " + (Mathf.PerlinNoise(perlinX, perlinZ) * heightScale));
         return (Mathf.PerlinNoise(perlinX, perlinZ)) * heightScale;
+    }
+
+    public Collider GetCollider()
+    {
+        return chunks[0].GetComponent<MeshCollider>();
     }
 
     public float GetHeight(Vector3 pos)

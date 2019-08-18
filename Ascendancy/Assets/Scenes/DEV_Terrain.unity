@@ -1211,6 +1211,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building Option (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2716010733803807128, guid: 0a2960eba42395947b91de896fd53a4f,
+        type: 3}
+      propertyPath: building
+      value: 
+      objectReference: {fileID: 11400000, guid: a659b81c06009b140bd3d1965002faa3,
+        type: 2}
     - target: {fileID: 2716010733803807130, guid: 0a2960eba42395947b91de896fd53a4f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1316,12 +1322,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 2716010733803807128, guid: 0a2960eba42395947b91de896fd53a4f,
-        type: 3}
-      propertyPath: building
-      value: 
-      objectReference: {fileID: 11400000, guid: a659b81c06009b140bd3d1965002faa3,
-        type: 2}
     - target: {fileID: 2716010733278190385, guid: 0a2960eba42395947b91de896fd53a4f,
         type: 3}
       propertyPath: m_Sprite
@@ -6192,7 +6192,7 @@ GameObject:
   - component: {fileID: 1934676500}
   - component: {fileID: 1934676499}
   - component: {fileID: 1934676498}
-  - component: {fileID: 1934676501}
+  - component: {fileID: 1934676502}
   m_Layer: 0
   m_Name: Minimap Camera
   m_TagString: Untagged
@@ -6277,7 +6277,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &1934676501
+--- !u!114 &1934676502
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6286,11 +6286,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1934676497}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f47d41b60d9d6d8438883a2b2234457b, type: 3}
+  m_Script: {fileID: 11500000, guid: b710810320435ae4da365bb62ed642d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerCamera: {fileID: 858608295}
+  minimapCamera: {fileID: 1934676499}
   world: {fileID: 1439411476}
-  yOffset: 100
+  topLeftPosition: {x: 0, y: 0, z: 0}
+  topRightPosition: {x: 0, y: 0, z: 0}
+  bottomLeftPosition: {x: 0, y: 0, z: 0}
+  bottomRightPosition: {x: 0, y: 0, z: 0}
+  mousePosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1994850259
 GameObject:
   m_ObjectHideFlags: 0
