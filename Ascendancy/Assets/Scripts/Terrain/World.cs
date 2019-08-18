@@ -23,10 +23,12 @@ public class World : MonoBehaviour
 
     public Transform ChunkCollector;
 
+    public GameObject fow_plane;
+
     private Tile[,] map;    //set of all the tiles that make up the world
     private Chunk[,] chunks; //set of all the chunks we're going to use to draw the world
-    //private GameObject chunkGO; //the instantiated Chunk
-    
+                             //private GameObject chunkGO; //the instantiated Chunk
+
     void Start()
     {
         //initiate things
@@ -50,6 +52,16 @@ public class World : MonoBehaviour
             }
 
         navMeshBuilder.UpdateNavMesh(false);
+
+        //resize fow_plane
+        if (fow_plane == null)
+            Debug.LogError("FoW_Plane not found, no fog for you! Go fog yourself!");
+        else
+        {
+            //TODO Calculate stuff instead of estimating '25.5'
+            fow_plane.transform.localScale = new Vector3(25.5f, 1, 25.5f);
+            fow_plane.transform.position = new Vector3(worldSize, fow_plane.transform.position.y, worldSize);
+        }
     }
 
     // Generate a chunk, fill it with necessary data and return the Chunk object
@@ -88,14 +100,14 @@ public class World : MonoBehaviour
     Vector3 AdjustVector(Vector3 input)
     {
         float newHeight = input.y;
-        newHeight = (int) Height(input.x, input.z) * heightScale / heightResolution;
+        newHeight = (int)Height(input.x, input.z) * heightScale / heightResolution;
         return new Vector3(input.x, newHeight, input.z);
     }
 
     float Height(float x, float z)
     {
-        int texX = (int) (x / worldSize * heightmap.width);
-        int texY = (int) (z / worldSize * heightmap.height);
+        int texX = (int)(x / worldSize * heightmap.width);
+        int texY = (int)(z / worldSize * heightmap.height);
 
         return heightmap.GetPixel(texX, texY).grayscale * heightResolution;
     }
@@ -119,13 +131,13 @@ public class World : MonoBehaviour
         Vector2Int v = IntVector(pos);
         return map[v.x, v.y].height;
     }
-    
+
     public bool IsFlat(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);
         return map[v.x, v.y].flatLand;
     }
-    
+
     public Tile GetTile(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);

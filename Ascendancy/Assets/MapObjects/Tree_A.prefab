@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3648240512861508504}
-  - {fileID: 6977114402079246777}
+  - {fileID: 1040437380261015219}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -138,18 +138,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &6875287181025132434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1099984986909032928}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e57901da1299494d91696df7c2c82a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3914619095468264943
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,7 +200,7 @@ GameObject:
   - component: {fileID: 3201421285223917599}
   - component: {fileID: 1100118746876688268}
   - component: {fileID: 9006773701196964031}
-  - component: {fileID: 3639993239942474317}
+  - component: {fileID: 6006621190756502133}
   m_Layer: 0
   m_Name: Treetop
   m_TagString: Untagged
@@ -280,7 +268,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &3639993239942474317
+--- !u!114 &6006621190756502133
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -289,12 +277,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4464198702875976006}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 903062d5543fdea429a0f6ce67aae058, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d256d55c5177f94488023ec87c04a3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  randomColor1: {r: 0.5019608, g: 0.29182342, b: 0, a: 1}
-  randomColor2: {r: 0, g: 0.5754717, b: 0.20387633, a: 1}
---- !u!1001 &4743635664483430184
+  randomColor1: {r: 0.7254902, g: 0.72393477, b: 0.20392157, a: 1}
+  randomColor2: {r: 0.049196426, g: 0.49056602, b: 0.04396581, a: 1}
+--- !u!1001 &3420228130162624546
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -363,11 +351,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4298345247353390307, guid: 5655b3e98699c0242af212b23c4bda64,
         type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4298345247353390307, guid: 5655b3e98699c0242af212b23c4bda64,
-        type: 3}
       propertyPath: markerColor.r
       value: 0.039325833
       objectReference: {fileID: 0}
@@ -381,22 +364,11 @@ PrefabInstance:
       propertyPath: markerColor.b
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4298345247353390307, guid: 5655b3e98699c0242af212b23c4bda64,
-        type: 3}
-      propertyPath: markerColor.a
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5655b3e98699c0242af212b23c4bda64, type: 3}
---- !u!1 &1099984986909032928 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5663040160167718600, guid: 5655b3e98699c0242af212b23c4bda64,
-    type: 3}
-  m_PrefabInstance: {fileID: 4743635664483430184}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &6977114402079246777 stripped
+--- !u!4 &1040437380261015219 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2380001856146024081, guid: 5655b3e98699c0242af212b23c4bda64,
     type: 3}
-  m_PrefabInstance: {fileID: 4743635664483430184}
+  m_PrefabInstance: {fileID: 3420228130162624546}
   m_PrefabAsset: {fileID: 0}

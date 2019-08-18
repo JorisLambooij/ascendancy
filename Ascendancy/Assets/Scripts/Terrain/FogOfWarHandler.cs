@@ -23,6 +23,6 @@ public class FogOfWarHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

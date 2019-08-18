@@ -434,8 +434,6 @@ GameObject:
   - component: {fileID: 7551204154752481069}
   - component: {fileID: 7551204154752481066}
   - component: {fileID: -7862923471056111313}
-  - component: {fileID: 7277105223070647237}
-  - component: {fileID: 3122310639298769921}
   m_Layer: 0
   m_Name: Dummy Tank
   m_TagString: Unit
@@ -520,33 +518,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAngularSpeed: 2
---- !u!136 &7277105223070647237
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7551204154752481065}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 1
-  m_Height: 50
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3122310639298769921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7551204154752481065}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45e8466bd96153f4cb22611dadc0adee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewCollider: {fileID: 7277105223070647237}
 --- !u!1 &7551204155716874643
 GameObject:
   m_ObjectHideFlags: 0

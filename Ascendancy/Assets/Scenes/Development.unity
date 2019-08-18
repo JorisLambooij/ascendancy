@@ -579,7 +579,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 1, z: 10}
   m_Children:
-  - {fileID: 981399335}
+  - {fileID: 4341195986090457688}
   m_Father: {fileID: 1133490523}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1054,6 +1054,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b49c04026e1697e438dc46c100f05fd1, type: 3}
+--- !u!1 &249111733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 4341195986090457687}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 981399335}
+  m_Layer: 0
+  m_Name: Missing Prefab (Dummy)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &251835353
 GameObject:
   m_ObjectHideFlags: 0
@@ -1530,10 +1546,12 @@ MonoBehaviour:
     type: 3}
   navMeshBuilder: {fileID: 2020007787}
   worldSize: 16
+  chunkSize: 64
   tileSize: 1
   noiseScale: 1
   heightScale: 2
   heightResolution: 2
+  ChunkCollector: {fileID: 0}
 --- !u!1 &305591637
 GameObject:
   m_ObjectHideFlags: 0
@@ -3934,12 +3952,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 37
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &981399335 stripped
+--- !u!1 &963209916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 4341195986090457687}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4341195986090457688}
+  m_Layer: 0
+  m_Name: FogOfWar (Missing Prefab)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &981399335
 Transform:
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 4341195985653534064, guid: 471048c711d8e5040a843271ee42f10a,
     type: 3}
   m_PrefabInstance: {fileID: 4341195986090457687}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249111733}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4341195986090457688}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &988544825
 GameObject:
   m_ObjectHideFlags: 0
@@ -13555,11 +13598,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 96889249}
     m_Modifications:
-    - target: {fileID: 4341195985653534065, guid: 471048c711d8e5040a843271ee42f10a,
-        type: 3}
-      propertyPath: m_Name
-      value: FogOfWar
-      objectReference: {fileID: 0}
     - target: {fileID: 4341195985653534064, guid: 471048c711d8e5040a843271ee42f10a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -13615,6 +13653,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4341195985653534065, guid: 471048c711d8e5040a843271ee42f10a,
+        type: 3}
+      propertyPath: m_Name
+      value: FogOfWar
+      objectReference: {fileID: 0}
     - target: {fileID: 4341195985653534078, guid: 471048c711d8e5040a843271ee42f10a,
         type: 3}
       propertyPath: terrainMeshFilter
@@ -13627,6 +13670,21 @@ PrefabInstance:
       objectReference: {fileID: 299042401}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 471048c711d8e5040a843271ee42f10a, type: 3}
+--- !u!4 &4341195986090457688
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 4341195986090457687}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963209916}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 981399335}
+  m_Father: {fileID: 96889249}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4962996974470571781
 PrefabInstance:
   m_ObjectHideFlags: 0

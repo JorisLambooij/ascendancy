@@ -121,8 +121,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 936042313310671261}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 903062d5543fdea429a0f6ce67aae058, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d256d55c5177f94488023ec87c04a3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  randomColor1: {r: 0.5566038, g: 0.49096656, b: 0.49096656, a: 1}
-  randomColor2: {r: 0.35686275, g: 0.4447341, b: 0.6039216, a: 1}
+  randomColor1: {r: 0.4962175, g: 0.50120676, b: 0.5943396, a: 1}
+  randomColor2: {r: 0.5188679, g: 0.29125133, b: 0.29125133, a: 1}

@@ -30,6 +30,7 @@ Transform:
   m_Children:
   - {fileID: 5260862268603992479}
   - {fileID: 6963340205685302836}
+  - {fileID: 5380183861754818409}
   m_Father: {fileID: 9139381948257966153}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -62,6 +63,7 @@ GameObject:
   - component: {fileID: 5260862268603992479}
   - component: {fileID: 6847590082350525718}
   - component: {fileID: 6156533970870719112}
+  - component: {fileID: 4576799760058750822}
   m_Layer: 0
   m_Name: Treetop
   m_TagString: Untagged
@@ -129,18 +131,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &6074011502859048409
+--- !u!114 &4576799760058750822
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4831660061259934744}
+  m_GameObject: {fileID: 4659573138516755262}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e57901da1299494d91696df7c2c82a1, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d256d55c5177f94488023ec87c04a3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  randomColor1: {r: 0.0027589954, g: 0.5849056, b: 0.35944355, a: 1}
+  randomColor2: {r: 0.21081907, g: 0.4528302, b: 0, a: 1}
 --- !u!1 &5228330267640228442
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,7 +158,7 @@ GameObject:
   - component: {fileID: 4110437966416188143}
   - component: {fileID: 5155913546020815191}
   - component: {fileID: 4085313585552546068}
-  - component: {fileID: 5151101141199338912}
+  - component: {fileID: 742795572759780522}
   m_Layer: 0
   m_Name: Tree_B
   m_TagString: Untagged
@@ -174,7 +178,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5386446234447949332}
-  - {fileID: 3214971073734698049}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -230,7 +233,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.28653336, y: 0.90807295, z: 0.22237778}
   m_Center: {x: -0.034341812, y: 2.261739, z: 0.003572464}
---- !u!114 &5151101141199338912
+--- !u!114 &742795572759780522
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -239,11 +242,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5228330267640228442}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 903062d5543fdea429a0f6ce67aae058, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e3f405cef2580a4dab0ad3f87d045d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  randomColor1: {r: 0.26775035, g: 0.5019608, b: 0, a: 1}
-  randomColor2: {r: 0, g: 0.5764706, b: 0.4572117, a: 1}
+  randomizeRotation: 1
+  rotationFix: 0
+  randomizeScale: 1
+  uniformScale: 1
+  minScale: 0.8
+  maxScale: 1.2
 --- !u!1 &8159255496618585965
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,12 +329,12 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!1001 &980280846659764944
+--- !u!1001 &7758918908705622520
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 9139381948257966153}
+    m_TransformParent: {fileID: 5386446234447949332}
     m_Modifications:
     - target: {fileID: 5663040160167718600, guid: 5655b3e98699c0242af212b23c4bda64,
         type: 3}
@@ -372,7 +379,7 @@ PrefabInstance:
     - target: {fileID: 2380001856146024081, guid: 5655b3e98699c0242af212b23c4bda64,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2380001856146024081, guid: 5655b3e98699c0242af212b23c4bda64,
         type: 3}
@@ -391,11 +398,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4298345247353390307, guid: 5655b3e98699c0242af212b23c4bda64,
         type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4298345247353390307, guid: 5655b3e98699c0242af212b23c4bda64,
-        type: 3}
       propertyPath: markerColor.r
       value: 0.039325833
       objectReference: {fileID: 0}
@@ -411,15 +413,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5655b3e98699c0242af212b23c4bda64, type: 3}
---- !u!1 &4831660061259934744 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5663040160167718600, guid: 5655b3e98699c0242af212b23c4bda64,
-    type: 3}
-  m_PrefabInstance: {fileID: 980280846659764944}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &3214971073734698049 stripped
+--- !u!4 &5380183861754818409 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2380001856146024081, guid: 5655b3e98699c0242af212b23c4bda64,
     type: 3}
-  m_PrefabInstance: {fileID: 980280846659764944}
+  m_PrefabInstance: {fileID: 7758918908705622520}
   m_PrefabAsset: {fileID: 0}
