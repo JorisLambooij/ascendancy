@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 7551204154032318624}
   - component: {fileID: 7551204154032318625}
   - component: {fileID: 7551204154032318627}
-  m_Layer: 11
+  m_Layer: 9
   m_Name: SelectionMarker
   m_TagString: Unit
   m_Icon: {fileID: 0}
