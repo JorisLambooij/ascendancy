@@ -21,25 +21,21 @@ public class World : MonoBehaviour
     public float heightScale = 1f;   //meters of elevation each new level gives us
     public float heightResolution = 1f;
 
+    public Transform ChunkCollector;
+
     private Tile[,] map;    //set of all the tiles that make up the world
     private Chunk[,] chunks; //set of all the chunks we're going to use to draw the world
     //private GameObject chunkGO; //the instantiated Chunk
-                            // Use this for initialization
-
+    
     void Start()
     {
         //initiate things
         map = new Tile[worldSize, worldSize];
-        chunks = new Chunk[1, 1];
-        chunks[0, 0] = GenerateChunk();
-
+        int chunkAmount = Mathf.CeilToInt(worldSize / chunkSize);
+        chunks = new Chunk[chunkAmount, chunkAmount];
         for (int x = 0; x < worldSize; x++)
-        {
             for (int z = 0; z < worldSize; z++)
-            {
                 map[x, z] = new Tile(x, z, 0f, tileSize);
-            }
-        }
 
         Debug.Log("Building Terrain");
         //generate the terrain!
@@ -47,9 +43,9 @@ public class World : MonoBehaviour
 
         //tell all the chunks to draw their share of the mesh
         for (int i = 0; i < chunks.GetLength(0); i++)
-            for (int j = 0; i < chunks.GetLength(1); i++)
+            for (int j = 0; j < chunks.GetLength(1); j++)
             {
-                chunks[i, j].tileSize = tileSize;
+                chunks[i, j] = GenerateChunk(i, j);
                 chunks[i, j].DrawTiles(map);
             }
 
@@ -57,9 +53,10 @@ public class World : MonoBehaviour
     }
 
     // Generate a chunk, fill it with necessary data and return the Chunk object
-    Chunk GenerateChunk()
+    Chunk GenerateChunk(int x, int z)
     {
-        GameObject chunkGO = Instantiate(chunkPrefab, transform);
+        GameObject chunkGO = Instantiate(chunkPrefab, ChunkCollector);
+        chunkGO.transform.position = new Vector3(x, 0, z) * chunkSize * tileSize;
         Chunk chunk = chunkGO.GetComponent<Chunk>();
         chunk.tileSize = tileSize;
         chunk.chunkSize = chunkSize;
