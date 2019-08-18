@@ -9,8 +9,8 @@ public class SceneLoadingScript : MonoBehaviour
 {
     List<string> sceneNames;
 
-    [SerializeField]
-    private Image progressBarImage;
+    //[SerializeField]
+    public Image progressBarImage;
 
     // Start is called before the first frame update
     void Start()

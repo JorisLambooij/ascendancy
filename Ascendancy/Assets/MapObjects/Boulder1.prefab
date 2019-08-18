@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1495665164719760705}
   - component: {fileID: 1910992340424274542}
   - component: {fileID: 1504997588913879586}
+  - component: {fileID: 3491522321129215563}
   m_Layer: 0
   m_Name: Boulder1
   m_TagString: MapObject
@@ -94,9 +95,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   randomizeRotation: 1
   rotationFix: 0
-  randomizeColor: 1
-  randomColor1: {r: 0.764151, g: 0.33039314, b: 0.16941082, a: 1}
-  randomColor2: {r: 0.31283376, g: 0.31283376, b: 0.6981132, a: 1}
   randomizeScale: 1
   uniformScale: 1
   minScale: 80
@@ -114,3 +112,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.00406133, y: 0.004867479, z: 0.004214293}
   m_Center: {x: -0.00034243072, y: -0.000044866458, z: 0.0010486285}
+--- !u!114 &3491522321129215563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 936042313310671261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 903062d5543fdea429a0f6ce67aae058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  randomColor1: {r: 0.5566038, g: 0.49096656, b: 0.49096656, a: 1}
+  randomColor2: {r: 0.35686275, g: 0.4447341, b: 0.6039216, a: 1}

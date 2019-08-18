@@ -1352,8 +1352,8 @@ MonoBehaviour:
   worldSize: 128
   tileSize: 1
   noiseScale: 1
-  heightScale: 10
-  heightResolution: 10
+  heightScale: 20
+  heightResolution: 20
 --- !u!4 &1297320193
 Transform:
   m_ObjectHideFlags: 0
