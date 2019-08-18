@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4341195985653534064}
   - component: {fileID: 4341195985653534079}
   - component: {fileID: 4341195985653534077}
-  - component: {fileID: 970205340141717522}
+  - component: {fileID: 8896833022621843665}
   m_Layer: 9
   m_Name: FogOfWar
   m_TagString: Untagged
@@ -58,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 38024e2010fb4f64a8bb679081ec4655, type: 2}
+  - {fileID: 2100000, guid: 927a89091746ac44fbddcdfe1c80f1c6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -79,7 +79,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &970205340141717522
+--- !u!114 &8896833022621843665
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,9 +88,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4341195985653534065}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c086bf7f898db14589b0aefa869f223, type: 3}
+  m_Script: {fileID: 11500000, guid: 89ead4dc90c3a0a4d89fdc5fbbebbc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   terrainMeshFilter: {fileID: 0}
-  fogMeshFilter: {fileID: 0}
+  fogMeshFilter: {fileID: 4341195985653534079}
   world: {fileID: 0}
