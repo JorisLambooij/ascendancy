@@ -15,13 +15,14 @@ public class World : MonoBehaviour
 
     //tweakables
     public int worldSize = 64;  //tiles per side of the world
+    public int chunkSize = 64;
     public float tileSize = 5f; //meters per side of each tiles
     public float noiseScale = .125f;
     public float heightScale = 1f;   //meters of elevation each new level gives us
     public float heightResolution = 1f;
 
     private Tile[,] map;    //set of all the tiles that make up the world
-    private Chunk[] chunks; //set of all the chunks we're going to use to draw the world
+    private Chunk[,] chunks; //set of all the chunks we're going to use to draw the world
     //private GameObject chunkGO; //the instantiated Chunk
                             // Use this for initialization
 
@@ -29,8 +30,8 @@ public class World : MonoBehaviour
     {
         //initiate things
         map = new Tile[worldSize, worldSize];
-        chunks = new Chunk[1];
-        chunks[0] = GenerateChunk();
+        chunks = new Chunk[1, 1];
+        chunks[0, 0] = GenerateChunk();
 
         for (int x = 0; x < worldSize; x++)
         {
@@ -46,10 +47,11 @@ public class World : MonoBehaviour
 
         //tell all the chunks to draw their share of the mesh
         for (int i = 0; i < chunks.GetLength(0); i++)
-        {
-            chunks[i].tileSize = tileSize;
-            chunks[i].DrawTiles(map);
-        }
+            for (int j = 0; i < chunks.GetLength(1); i++)
+            {
+                chunks[i, j].tileSize = tileSize;
+                chunks[i, j].DrawTiles(map);
+            }
 
         navMeshBuilder.UpdateNavMesh(false);
     }
@@ -60,7 +62,7 @@ public class World : MonoBehaviour
         GameObject chunkGO = Instantiate(chunkPrefab, transform);
         Chunk chunk = chunkGO.GetComponent<Chunk>();
         chunk.tileSize = tileSize;
-        chunk.chunkSize = worldSize;
+        chunk.chunkSize = chunkSize;
         return chunk;
     }
 
@@ -112,7 +114,7 @@ public class World : MonoBehaviour
 
     public Collider GetCollider()
     {
-        return chunks[0].GetComponent<MeshCollider>();
+        return chunks[0, 0].GetComponent<MeshCollider>();
     }
 
     public float GetHeight(Vector3 pos)
@@ -157,6 +159,6 @@ public class World : MonoBehaviour
             gridfloat = 0;
         }
 
-        chunks[0].GetComponent<Renderer>().material.SetFloat("_grid", gridfloat);
+        chunks[0, 0].GetComponent<Renderer>().material.SetFloat("_grid", gridfloat);
     }
 }
