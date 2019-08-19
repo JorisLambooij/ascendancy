@@ -21,26 +21,30 @@ public class PortalView : MonoBehaviour
         Debug.Assert(thisPortal != null);
 
         // Create a new RenderTexture for this portal
-        portalRenderTexture = new RenderTexture(portalResolution, portalResolution, 24);
+        portalRenderTexture = new RenderTexture(Screen.width, Screen.height, 24);
         portalRenderTexture.Create();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // the relative position of the main cam to the portal
-        Vector3 mainCamOffset = Camera.main.transform.position - thisPortal.transform.position;
+        portalCam.fieldOfView = Camera.main.fieldOfView;
 
-        // set the portal camera to the same position, relative to the partner portal
-        portalCam.transform.position = thisPortal.partnerPortal.transform.position + mainCamOffset;
-
-        // look in the exact same direction
-        //portalCam.transform.rotation = Camera.main.transform.rotation;
+        // look in the same direction, adjusting for portal rotation
         float angularDifferenceOfPortals = Quaternion.Angle(thisPortal.transform.rotation, thisPortal.partnerPortal.transform.rotation);
         Quaternion portalRotationalDifference = Quaternion.AngleAxis(angularDifferenceOfPortals, Vector3.up);
         Vector3 newCameraDirection = portalRotationalDifference * Camera.main.transform.forward;
 
+        // adjust the rotation of the portal camera
         portalCam.transform.rotation = Quaternion.LookRotation(newCameraDirection, Vector3.up);
+        
+        // the relative position of the main cam to this portal
+        Vector3 mainCamOffset = Camera.main.transform.position - thisPortal.transform.position;
+
+        // set the portal camera to the same position, relative to the partner portal
+        portalCam.transform.position = thisPortal.partnerPortal.transform.position + mainCamOffset;
+        //portalCam.transform.RotateAround(thisPortal.partnerPortal.transform.position, Vector3.up, -angularDifferenceOfPortals);
+
     }
 
     /// <summary>
