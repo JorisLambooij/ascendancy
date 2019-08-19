@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4967449510360092690}
   - component: {fileID: 3796841348652996155}
   - component: {fileID: 3838875697145272481}
+  - component: {fileID: 674629966092022669}
   m_Layer: 0
   m_Name: FoW_Plane
   m_TagString: Untagged
@@ -78,6 +79,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &674629966092022669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 953984013981652684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdfc6fef5ef11c7438075e89351ccc32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  world: {fileID: 5752875527943982966}
+  resolution: 2
 --- !u!1 &5752875527943982961
 GameObject:
   m_ObjectHideFlags: 0
