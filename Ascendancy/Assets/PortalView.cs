@@ -30,21 +30,27 @@ public class PortalView : MonoBehaviour
     {
         portalCam.fieldOfView = Camera.main.fieldOfView;
 
+        Vector3 posInLocalSpaceOfThisPortal = thisPortal.transform.worldToLocalMatrix * Camera.main.transform.position;
+        Debug.Log("Local: " + posInLocalSpaceOfThisPortal);
+
+        portalCam.transform.position = thisPortal.partnerPortal.transform.localToWorldMatrix * posInLocalSpaceOfThisPortal;
+
+        
         // look in the same direction, adjusting for portal rotation
         float angularDifferenceOfPortals = Quaternion.Angle(thisPortal.transform.rotation, thisPortal.partnerPortal.transform.rotation);
         Quaternion portalRotationalDifference = Quaternion.AngleAxis(angularDifferenceOfPortals, Vector3.up);
         Vector3 newCameraDirection = portalRotationalDifference * Camera.main.transform.forward;
-
+        
         // adjust the rotation of the portal camera
         portalCam.transform.rotation = Quaternion.LookRotation(newCameraDirection, Vector3.up);
         
         // the relative position of the main cam to this portal
-        Vector3 mainCamOffset = Camera.main.transform.position - thisPortal.transform.position;
+        //Vector3 mainCamOffset = Camera.main.transform.position - thisPortal.transform.position;
 
         // set the portal camera to the same position, relative to the partner portal
-        portalCam.transform.position = thisPortal.partnerPortal.transform.position + mainCamOffset;
+        //portalCam.transform.position = thisPortal.partnerPortal.transform.position + mainCamOffset;
         //portalCam.transform.RotateAround(thisPortal.partnerPortal.transform.position, Vector3.up, -angularDifferenceOfPortals);
-
+        
     }
 
     /// <summary>
