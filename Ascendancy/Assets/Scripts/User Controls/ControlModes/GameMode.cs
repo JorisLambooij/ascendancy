@@ -170,15 +170,16 @@ public class GameMode : ControlMode
 
                 DeselectAll();
 
-                int layerMask = 1 << LayerMask.NameToLayer("Selections");
+                int layerMask = 1 << LayerMask.NameToLayer("Entities");
                 if (Physics.Raycast(ray, out hit, 100, layerMask) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
                 {
-                    EntitySelector e = hit.transform.GetComponent<EntitySelector>();
-                        
-                    if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
+                    Entity e = hit.transform.GetComponentInParent<Entity>();
+                    EntitySelector es = e.GetComponentInChildren<EntitySelector>();
+
+                    if (e.Owner.playerNo == gameManager.playerNo)
                     {
-                        e.Selected = true;
-                        selectedUnits.Add(e);
+                        es.Selected = true;
+                        selectedUnits.Add(es);
                     }
                         
                 }
@@ -243,9 +244,7 @@ public class GameMode : ControlMode
                         // if the units projected position is in the "before" the drag line starting pos, correct the projected distance
                         if (Vector3.Angle(projectedVector, dragLineDirection) > 90)
                             projectedDistance *= -1;
-
-                        Debug.Log(projectedDistance + " " + u.transform.name);
-
+                        
                         // sort by length of the projected vector
                         unitsSorted.Add(projectedDistance, u);
                     }

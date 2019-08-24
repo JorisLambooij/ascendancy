@@ -43,6 +43,17 @@ public abstract class Entity : MonoBehaviour
             Die();
     }
 
+    protected virtual void Start()
+    {
+        GameObject selectionMarkerPrefab = Resources.Load("SelectionMarker") as GameObject;
+        Instantiate(selectionMarkerPrefab, this.transform);
+    }
+
+    protected virtual void Update()
+    {
+
+    }
+
     /// <summary>
     /// Remove this Entity from the game
     /// </summary>
