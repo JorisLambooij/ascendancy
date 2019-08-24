@@ -31,7 +31,7 @@ public class PortalView : MonoBehaviour
         portalCam.fieldOfView = Camera.main.fieldOfView;
 
         Vector3 posInLocalSpaceOfThisPortal = thisPortal.transform.worldToLocalMatrix * Camera.main.transform.position;
-        Debug.Log("Local: " + posInLocalSpaceOfThisPortal);
+        //Debug.Log("Local: " + posInLocalSpaceOfThisPortal);
 
         portalCam.transform.position = thisPortal.partnerPortal.transform.localToWorldMatrix * posInLocalSpaceOfThisPortal;
 
