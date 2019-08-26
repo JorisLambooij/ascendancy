@@ -8,10 +8,20 @@ public class MinimapCamera : MonoBehaviour
     public Camera minimapCamera;
     //public Collider floorCollider;
     public World world;
+    public float yOffset = 64;
+
     public Vector3 topLeftPosition, topRightPosition, bottomLeftPosition, bottomRightPosition;
     public Vector3 mousePosition;
 
+    // The "normal" position, fully zoomed out and centered
+    private Vector3 standardPosition;
+    private float standardSize;
+
     private Collider floorCollider;
+
+    // Read-Properties for standard position and size.
+    public float StandardSize { get => standardSize; }
+    public Vector3 StandardPosition { get => standardPosition; }
 
     public void Start()
     {
@@ -35,12 +45,27 @@ public class MinimapCamera : MonoBehaviour
             this.world = worldGO.GetComponent<World>();
 
             if (this.floorCollider == null)
-            {
                 Debug.LogError("Cannot set Quad floor collider to this variable. Please check.");
-            }
-        }
 
+        }
         this.floorCollider = world.GetCollider();
+
+        // Calculate the "normal" camera state.
+        standardSize = 2 * world.worldSize / world.tileSize;
+        Vector3 center = new Vector3(1, 0, 1) * standardSize;
+        Vector3 yOffsetVector = new Vector3(0, yOffset, 0);
+        standardPosition = world.transform.position + center + yOffsetVector;
+
+        ResetMinimap();
+    }
+    
+    /// <summary>
+    /// Resets the Minimap to the highest zoom level, completely centered.
+    /// </summary>
+    public void ResetMinimap()
+    {
+        this.transform.position = standardPosition;
+        GetComponent<Camera>().orthographicSize = standardSize;
     }
 
     public void Update()

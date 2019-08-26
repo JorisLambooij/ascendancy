@@ -28,7 +28,7 @@ Material:
     - _BaseFill: 3.8
     - _Fresnel: 5
     - _Offset: 0.1
-    - _PatternScale: 4
+    - _PatternScale: 1
     - _Scroll_Speed: 0.02
     m_Colors:
     - _Color_Forcefield: {r: 0, g: 0.8679245, b: 0.8591557, a: 0}

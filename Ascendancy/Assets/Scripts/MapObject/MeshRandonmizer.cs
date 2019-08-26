@@ -8,10 +8,6 @@ public class MeshRandonmizer : MonoBehaviour
     // This is necessary if you import your models from 3ds
     public bool rotationFix = false;
 
-    public bool randomizeColor = false;
-    public Color randomColor1;
-    public Color randomColor2;
-
     public bool randomizeScale = true;
 
     public bool uniformScale = true;
@@ -33,7 +29,7 @@ public class MeshRandonmizer : MonoBehaviour
             this.transform.localRotation = Quaternion.Euler(this.transform.rotation.x + fix, Random.Range(0, 360), this.transform.rotation.z );
         }
 
-        // change a bit the seize of the model.
+        // change the model's size
         if (randomizeScale)
         {
             if (uniformScale)
@@ -48,21 +44,6 @@ public class MeshRandonmizer : MonoBehaviour
                 float vZ = Random.Range(minScale, maxScale);
 
                 this.transform.localScale = new Vector3(vX, vY, vZ);
-            }
-        }
-
-        // change a bit the colors.
-        if (randomizeColor && randomColor1 != randomColor2)
-        {
-            if (this.gameObject.GetComponent<MeshRenderer>() != null)
-            {
-                this.gameObject.GetComponent<MeshRenderer>().material.color = Color.Lerp(randomColor1, randomColor2, Random.value);
-            }
-            else
-            {
-                Debug.Log("ColorA[" + this.name + "]: " + this.gameObject.GetComponentInChildren<MeshRenderer>().material.color);
-                this.gameObject.GetComponentInChildren<MeshRenderer>().material.color = Color.Lerp(randomColor1, randomColor2, Random.value);
-                Debug.Log("ColorB[" + this.name + "]: " + this.gameObject.GetComponentInChildren<MeshRenderer>().material.color);
             }
         }
     }

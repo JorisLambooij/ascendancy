@@ -16,8 +16,10 @@ public class Unit : Entity
     private Sprite minimapMarker;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         currentHealth = unitInfo.maxHealth;
         controller = GetComponent<UnitController>();
         minimapMarker = unitInfo.minimapMarker;
@@ -35,7 +37,7 @@ public class Unit : Entity
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
 
     }

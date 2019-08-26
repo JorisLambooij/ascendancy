@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Scriptable Object to hold basic Unit stats.
 /// </summary>
-[CreateAssetMenu(fileName ="New Unit", menuName = "Unit SO", order = 0)]
+[CreateAssetMenu(fileName = "New Unit", menuName = "Unit SO", order = 0)]
 public class UnitInfo : ScriptableObject
 {
     /// <summary>
@@ -80,4 +80,10 @@ public class UnitInfo : ScriptableObject
     /// NULL means default marker.
     /// </summary>
     public Sprite minimapMarker;
+
+    /// <summary>
+    /// Unit view distance in half tiles.
+    /// </summary>
+    [Range(0, 100)]
+    public int viewDistance = 10;
 }
