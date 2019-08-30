@@ -45,3 +45,15 @@ The following packages were removed:
   com.unity.test-framework@1.0.13
   com.unity.ugui@1.0.0
   com.unity.modules.androidjni@1.0.0
+
+<<<<<<< HEAD
+=== Sun Aug 18 19:13:52 2019
+=======
+=== Mon Aug 19 15:15:44 2019
+>>>>>>> units
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.textmeshpro from version 2.0.0 to 2.0.1
