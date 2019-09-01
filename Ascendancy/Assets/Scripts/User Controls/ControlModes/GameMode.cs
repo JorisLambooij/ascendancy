@@ -161,9 +161,10 @@ public class GameMode : ControlMode
                 }
 
             }
-            else
+            else if (!EventSystem.current.IsPointerOverGameObject())
             {
                 // only one click, so raycast -> see if we hit a unit
+                // only if we didnt click in the UI tho
 
                 Ray ray = gameManager.camScript.MouseCursorRay();
                 RaycastHit hit;

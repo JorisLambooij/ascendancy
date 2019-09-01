@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     private Dictionary<ControlModeEnum, ControlMode> controlModeDict;
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         ControlMode.gameManager = this;
         controlModeDict = new Dictionary<ControlModeEnum, ControlMode>

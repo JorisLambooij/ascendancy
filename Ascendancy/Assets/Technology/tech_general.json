@@ -1,0 +1,62 @@
+{
+    "technologies": [
+        {
+            "name": "Agriculture",
+            "id": 0,
+            "icon": "",
+            "dependencies": [],
+            "cost": 0,
+            "startTech": true
+        },
+        {
+            "name": "Masonry",
+            "id": 1,
+            "icon": "",
+            "dependencies": [
+                0
+            ],
+            "cost": 100,
+            "startTech": false
+        },
+        {
+            "name": "Smithing",
+            "id": 2,
+            "icon": "",
+            "dependencies": [
+                1
+            ],
+            "cost": 400,
+            "startTech": false
+        },
+        {
+            "name": "Writing",
+            "id": 3,
+            "icon": "",
+            "dependencies": [
+                1
+            ],
+            "cost": 1000,
+            "startTech": false
+        },
+        {
+            "name": "Iron Weapons",
+            "id": 4,
+            "icon": "",
+            "dependencies": [
+                2
+            ],
+            "cost": 1000,
+            "startTech": false
+        },
+        {
+            "name": "Navigation",
+            "id": 5,
+            "icon": "",
+            "dependencies": [
+                3
+            ],
+            "cost": 2000,
+            "startTech": false
+        }
+    ]
+}
