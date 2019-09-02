@@ -11,5 +11,7 @@ public class NodeData
 [System.Serializable]
 public class NodeDataCollection
 {
+    public Vector2 initialOffset;
+    public int gridSnap;
     public NodeData[] nodeDataCollection;
 }

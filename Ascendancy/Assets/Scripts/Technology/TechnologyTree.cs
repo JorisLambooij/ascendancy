@@ -10,15 +10,17 @@ public struct TechnologyTree
     public List<Technology> technologies { get; private set; }
     public Dictionary<int, Technology> techDictionary { get; private set; }
     public Dictionary<int, int> techProgress { get; private set; }
+    public Dictionary<int, Vector2> techPosition { get; private set; }
 
-    private Dictionary<int, List<System.Action<int>>> techProgressSubscriptions;
+    private Dictionary<int, List<Action<int>>> techProgressSubscriptions;
 
     public TechnologyTree(int techCount)
     {
         technologies = new List<Technology>(techCount);
         techDictionary = new Dictionary<int, Technology>(techCount);
         techProgress = new Dictionary<int, int>(techCount);
-        techProgressSubscriptions = new Dictionary<int, List<System.Action<int>>>(techCount);
+        techProgressSubscriptions = new Dictionary<int, List<Action<int>>>(techCount);
+        techPosition = new Dictionary<int, Vector2>(techCount);
     }
 
     public void AddTech(Technology t)
@@ -26,7 +28,7 @@ public struct TechnologyTree
         technologies.Add(t);
         techDictionary.Add(t.id, t);
         techProgress.Add(t.id, 0);
-        techProgressSubscriptions.Add(t.id, new List<System.Action<int>>());
+        techProgressSubscriptions.Add(t.id, new List<Action<int>>());
     }
 
     public void AddProgress(int techID, int progress)
@@ -37,12 +39,12 @@ public struct TechnologyTree
         newProgress = Mathf.Min(newProgress, techDictionary[techID].cost);
         techProgress[techID] = newProgress;
 
-        foreach (System.Action<int> callback in techProgressSubscriptions[techID])
+        foreach (Action<int> callback in techProgressSubscriptions[techID])
             callback(techProgress[techID]);
 
     }
 
-    public void Subscribe(int techID, System.Action<int> callback)
+    public void Subscribe(int techID, Action<int> callback)
     {
         techProgressSubscriptions[techID].Add(callback);
     }

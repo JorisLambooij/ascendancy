@@ -10,8 +10,6 @@ public class Node
     public bool isDragged;
     public bool isSelected;
 
-    public const int GRID_SNAP = 100;
-
     // Rect for the title of the node 
     public Rect rectID;
 
@@ -60,11 +58,13 @@ public class Node
         Action<ConnectionPoint> OnClickInPoint, Action<ConnectionPoint> OnClickOutPoint,
         Action<Node> OnClickRemoveNode, Technology technology)
     {
+        position += NodeBasedEditor.instance.Offset;
 
-        Vector2 divPos = position / GRID_SNAP;
+        Vector2 divPos = position / NodeBasedEditor.GRID_SNAP;
         Vector2 roundedPos = new Vector2(Mathf.Round(divPos.x), Mathf.Round(divPos.y));
 
-        position = roundedPos * GRID_SNAP;
+        position = roundedPos * NodeBasedEditor.GRID_SNAP;
+        position -= NodeBasedEditor.instance.Offset;
 
         rect = new Rect(position.x, position.y, width, height);
         style = nodeStyle;
@@ -136,16 +136,16 @@ public class Node
         rectIcon.position += delta;
         rectIconLabel.position += delta;
     }
-
+    
     public void StopDrag()
     {
-        Vector2 divPos = rect.position / GRID_SNAP;
-        Vector2 roundedPos = new Vector2(Mathf.Round(divPos.x), Mathf.Round(divPos.y)) * GRID_SNAP;
+        Vector2 divPos = (rect.position - NodeBasedEditor.instance.Offset) / NodeBasedEditor.GRID_SNAP;
+        Vector2 roundedPos = new Vector2(Mathf.Round(divPos.x), Mathf.Round(divPos.y)) * NodeBasedEditor.GRID_SNAP;
+        roundedPos += NodeBasedEditor.instance.Offset;
 
         Vector2 delta = roundedPos - rect.position;
 
         Drag(delta);
-        
     }
 
     public void Draw()

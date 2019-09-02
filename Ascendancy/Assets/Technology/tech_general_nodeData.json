@@ -1,45 +1,50 @@
 {
+    "initialOffset": {
+        "x": 200.0,
+        "y": 200.0
+    },
+    "gridSnap": 100,
     "nodeDataCollection": [
         {
             "id_Node": 0,
             "position": {
                 "x": 100.0,
-                "y": 200.0
+                "y": 0.0
             }
         },
         {
             "id_Node": 1,
             "position": {
                 "x": 400.0,
-                "y": 200.0
+                "y": 0.0
             }
         },
         {
             "id_Node": 2,
             "position": {
                 "x": 700.0,
-                "y": 100.0
+                "y": -100.0
             }
         },
         {
             "id_Node": 3,
             "position": {
                 "x": 700.0,
-                "y": 200.0
+                "y": 0.0
             }
         },
         {
             "id_Node": 4,
             "position": {
                 "x": 1000.0,
-                "y": 100.0
+                "y": -100.0
             }
         },
         {
             "id_Node": 5,
             "position": {
                 "x": 1000.0,
-                "y": 200.0
+                "y": 0.0
             }
         }
     ]

@@ -5,6 +5,9 @@ using System.IO;
 
 public class NodeBasedEditor : EditorWindow
 {
+    public const int GRID_SNAP = 100;
+    private Vector2 initialOffset;
+
     private List<Node> nodes;
     private List<Connection> connections;
 
@@ -30,17 +33,25 @@ public class NodeBasedEditor : EditorWindow
     private int nodeCount;
     private Dictionary<int, Technology> techDictionary;
 
+    public static NodeBasedEditor instance;
+
+    public Vector2 Offset { get => offset; }
+
     [MenuItem("Window/Node Based Editor")]
     private static void OpenWindow()
     {
         NodeBasedEditor window = GetWindow<NodeBasedEditor>();
         window.titleContent = new GUIContent("Node Based Editor");
+
+        instance = window;
     }
 
     private void OnEnable()
     {
+        instance = this;
         id = 0;
         nodeCount = 0;
+        offset = initialOffset;
 
         nodeStyle = new GUIStyle();
         nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
@@ -71,6 +82,7 @@ public class NodeBasedEditor : EditorWindow
 
     private void ClearNodes()
     {
+        offset = initialOffset;
         nodeCount = 0;
         id = 0;
         if (nodes != null && nodes.Count > 0)
@@ -100,6 +112,8 @@ public class NodeBasedEditor : EditorWindow
             {
                 dataAsJson = File.ReadAllText(nodePath);
                 loadedNodeData = JsonUtility.FromJson<NodeDataCollection>(dataAsJson);
+                initialOffset = loadedNodeData.initialOffset;
+                offset = initialOffset;
                 nodeDataExists = true;
             }
             else
@@ -123,7 +137,7 @@ public class NodeBasedEditor : EditorWindow
                     for (int j = 0; j < loadedNodeData.nodeDataCollection.Length; j++)
                         if (loadedNodeData.nodeDataCollection[j].id_Node == _techTree[i].id)
                         {
-                            position = loadedNodeData.nodeDataCollection[j].position;
+                            position = loadedNodeData.nodeDataCollection[j].position + offset;
                             break;
                         }
                 
@@ -159,6 +173,17 @@ public class NodeBasedEditor : EditorWindow
                         OnClickInPoint(nodes[i].inPoint);
                     }
             id = nodeCount;
+        }
+    }
+
+    private Vector2 SnappedOffset
+    {
+        get
+        {
+            Vector2 divPos = offset / GRID_SNAP;
+            Vector2 roundedPos = new Vector2(Mathf.Round(divPos.x), Mathf.Round(divPos.y)) * GRID_SNAP;
+
+            return roundedPos;
         }
     }
 
@@ -216,13 +241,15 @@ public class NodeBasedEditor : EditorWindow
     private void SaveNodes()
     {
         NodeDataCollection nodeData = new NodeDataCollection();
+        nodeData.initialOffset = SnappedOffset;
+        nodeData.gridSnap = GRID_SNAP;
         nodeData.nodeDataCollection = new NodeData[nodes.Count];
 
         for (int i = 0; i < nodes.Count; ++i)
         {
             nodeData.nodeDataCollection[i] = new NodeData();
             nodeData.nodeDataCollection[i].id_Node = nodes[i].tech.id;
-            nodeData.nodeDataCollection[i].position = nodes[i].rect.position;
+            nodeData.nodeDataCollection[i].position = nodes[i].rect.position - offset;
         }
 
         string json = JsonUtility.ToJson(nodeData, true);
@@ -240,6 +267,7 @@ public class NodeBasedEditor : EditorWindow
     {
         DrawGrid(20, 0.2f, Color.gray);
         DrawGrid(100, 0.4f, Color.gray);
+        DrawAxes(0.6f, Color.red);
         DrawButtons();
 
         DrawNodes();
@@ -265,6 +293,19 @@ public class NodeBasedEditor : EditorWindow
         }
         if (GUI.Button(rectButtonLoad, "Load"))
             LoadNodes();
+    }
+
+    private void DrawAxes(float axisOpacity, Color axisColor)
+    {
+        Handles.BeginGUI();
+        Handles.color = new Color(axisColor.r, axisColor.g, axisColor.b, axisOpacity);
+        
+        Handles.DrawLine(new Vector3(offset.x, -position.height, 0), new Vector3(offset.x, position.height, 0f));
+
+        Handles.DrawLine(new Vector3(-position.width, offset.y, 0), new Vector3(position.width, offset.y, 0f));
+        
+        Handles.color = Color.white;
+        Handles.EndGUI();
     }
 
     private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
@@ -402,26 +443,19 @@ public class NodeBasedEditor : EditorWindow
         drag = delta;
 
         if (nodes != null)
-        {
             for (int i = 0; i < nodes.Count; i++)
-            {
                 nodes[i].Drag(delta);
-            }
-        }
-
+        
         GUI.changed = true;
     }
 
     private void OnClickAddNode(Vector2 mousePosition)
     {
         if (nodes == null)
-        {
             nodes = new List<Node>();
-        }
-
+        
         Technology tech = new Technology("", id, null, 0, false, "");
-
-
+        
         // We create the node with the default info for the node.
         nodes.Add(new Node(mousePosition, 200, 100, nodeStyle, selectedNodeStyle,
             inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode,
@@ -442,9 +476,7 @@ public class NodeBasedEditor : EditorWindow
                 ClearConnectionSelection();
             }
             else
-            {
                 ClearConnectionSelection();
-            }
         }
     }
 
@@ -460,9 +492,7 @@ public class NodeBasedEditor : EditorWindow
                 ClearConnectionSelection();
             }
             else
-            {
                 ClearConnectionSelection();
-            }
         }
     }
 
@@ -473,17 +503,11 @@ public class NodeBasedEditor : EditorWindow
             List<Connection> connectionsToRemove = new List<Connection>();
 
             for (int i = 0; i < connections.Count; i++)
-            {
                 if (connections[i].inPoint == node.inPoint || connections[i].outPoint == node.outPoint)
-                {
                     connectionsToRemove.Add(connections[i]);
-                }
-            }
 
             for (int i = 0; i < connectionsToRemove.Count; i++)
-            {
                 connections.Remove(connectionsToRemove[i]);
-            }
 
             connectionsToRemove = null;
         }
@@ -499,9 +523,7 @@ public class NodeBasedEditor : EditorWindow
     private void CreateConnection()
     {
         if (connections == null)
-        {
             connections = new List<Connection>();
-        }
 
         connections.Add(new Connection(selectedInPoint, selectedOutPoint, OnClickRemoveConnection));
     }

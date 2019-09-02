@@ -6,28 +6,22 @@ using UnityEngine.UI;
 
 public class TechField : MonoBehaviour
 {
-    public Color colorIfNotResearchable;
-    public Color colorIfResearchable;
-    public Color colorIfResearched;
-
-    public bool isCurrentFocus;
+    public bool isCurrentFocus = false;
 
     private Text labelName;
     private Text labelCost;
     private Slider progressBar;
     private Image icon;
     
-    public int technologyID;
     private Technology tech;
     public PlayerTechScreen playerTechScreen;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        isCurrentFocus = false;
 
-        playerTechScreen = GetComponentInParent<PlayerTechScreen>();
-        tech = playerTechScreen.TechTree.techDictionary[technologyID];
+    public Technology Tech { get => tech; private set => tech = value; }
+
+    public void SetTechnology(Technology tech)
+    {
+        this.tech = tech;
+        playerTechScreen = transform.parent.GetComponentInParent<PlayerTechScreen>();
 
         Text[] texts = GetComponentsInChildren<Text>();
         labelName = texts[0];
@@ -44,9 +38,14 @@ public class TechField : MonoBehaviour
 
         foreach (int dependency in tech.dependencies)
             playerTechScreen.Subscribe(dependency, OnDependencyProgressUpdate);
-
         
-        switch (playerTechScreen.TechTree.TechResearchability(tech.id))
+        SetRightColor();
+    }
+
+    #region Color Management
+    public void SetRightColor()
+    {
+        switch (playerTechScreen.TechTree.TechResearchability(Tech.id))
         {
             case Researchability.NotResearchable:
                 SetNotResearchable();
@@ -63,21 +62,39 @@ public class TechField : MonoBehaviour
         }
     }
 
-    #region Color Management
     private void SetNotResearchable()
     {
-        GetComponent<Button>().interactable = false;
-        GetComponent<Image>().color = colorIfNotResearchable;
+        Button button = GetComponent<Button>();
+        button.interactable = false;
+        ColorBlock colors = button.colors;
+        colors.disabledColor = playerTechScreen.colorIfNotResearchable;
+        button.colors = colors;
     }
     private void SetResearchable()
     {
-        GetComponent<Button>().interactable = true;
-        GetComponent<Image>().color = colorIfResearchable;
+        Button button = GetComponent<Button>();
+        button.interactable = true;
+
+        if (isCurrentFocus)
+        {
+            ColorBlock colors = button.colors;
+            colors.normalColor = playerTechScreen.colorIfResearching;
+            button.colors = colors;
+        }
+        else
+        {
+            ColorBlock colors = button.colors;
+            colors.normalColor = playerTechScreen.colorIfResearchable;
+            button.colors = colors;
+        }
     }
     private void SetResearched()
     {
-        GetComponent<Button>().interactable = false;
-        GetComponent<Image>().color = colorIfResearched;
+        Button button = GetComponent<Button>();
+        button.interactable = false;
+        ColorBlock colors = button.colors;
+        colors.disabledColor = playerTechScreen.colorIfResearched;
+        button.colors = colors;
     }
     #endregion
 
@@ -87,22 +104,22 @@ public class TechField : MonoBehaviour
     /// <param name="newProgress">New Progress of the dependency. Not relevant in this function.</param>
     private void OnDependencyProgressUpdate(int newProgress)
     {
-        if (playerTechScreen.TechTree.TechResearchability(tech.id) == Researchability.Researchable)
+        if (playerTechScreen.TechTree.TechResearchability(Tech.id) == Researchability.Researchable)
             SetResearchable();
     }
 
     public void OnClick()
     {
-        playerTechScreen.playerTechLevel.ResearchFocus(tech.id);
+        playerTechScreen.playerTechLevel.ResearchFocus(Tech.id);
 
-
+        playerTechScreen.Focus(Tech.id);
     }
 
     private void OnProgressUpdate(int newProgress)
     {
-        progressBar.value = Mathf.Clamp01((float)newProgress / tech.cost);
+        progressBar.value = Mathf.Clamp01((float)newProgress / Tech.cost);
 
-        if (playerTechScreen.TechTree.TechResearchability(tech.id) == Researchability.Researched)
+        if (playerTechScreen.TechTree.TechResearchability(Tech.id) == Researchability.Researched)
             SetResearched();
     }
 }
