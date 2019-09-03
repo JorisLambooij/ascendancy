@@ -8,7 +8,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: FogOfWarMaterial
+<<<<<<< HEAD
   m_Shader: {fileID: -6465566751694194690, guid: e7835a23ad4932b4e83b317f17804c61,
+=======
+  m_Shader: {fileID: -6465566751694194690, guid: ef27be62f1a39ba42b06f4b11264bfc8,
+>>>>>>> master
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
