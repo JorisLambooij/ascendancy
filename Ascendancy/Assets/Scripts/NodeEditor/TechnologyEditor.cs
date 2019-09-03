@@ -32,7 +32,10 @@ public class TechnologyEditor : EditorWindow
     void OnSelectedNodeChange(Node newNode)
     {
         selectedNode = newNode;
-        tech = newNode.tech;
+        if (selectedNode != null)
+            tech = newNode.tech;
+        else
+            tech = null;
     }
 
     void OnGUI()
@@ -45,24 +48,37 @@ public class TechnologyEditor : EditorWindow
         }
         else
         {
-            if (GUILayout.Button("Save"))
-                SaveData();
-
             GUILayout.Label("Edit Technology:");
             if (selectedNode != null)
             {
                 ///tech.name = EditorGUILayout.TextField(selectedNode.tech.name);
 
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Name: ");
                 tech.name = EditorGUILayout.TextField(selectedNode.tech.name);
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Cost:  ");
                 tech.cost = EditorGUILayout.IntField(selectedNode.tech.cost);
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Icon Path: ");
+                tech.icon = EditorGUILayout.ObjectField(selectedNode.tech.icon, typeof(Sprite), false) as Sprite;
+                GUILayout.EndHorizontal();
 
                 unitList.elements = new List<UnitInfo>(tech.unitsUnlocked);
-                
+                buildingList.elements = new List<BuildingInfo>(tech.buildingsUnlocked);
+                resourceList.elements = new List<Resource>(tech.resourcesUnlocked);
+
                 unitList.OnGUI();
                 buildingList.OnGUI();
                 resourceList.OnGUI();
                 
                 tech.unitsUnlocked = unitList.ElementsArray;
+                tech.buildingsUnlocked = buildingList.ElementsArray;
+                tech.resourcesUnlocked = resourceList.ElementsArray;
             }
         }
         
@@ -72,13 +88,7 @@ public class TechnologyEditor : EditorWindow
     {
         Repaint();
     }
-
-    void SaveData()
-    {
-        //Technology tech = new Technology()
-        //selectedNode.tech
-    }
-
+    
     void RefreshWindow()
     {
         techTreeEditor = TechTreeEditor.instance;

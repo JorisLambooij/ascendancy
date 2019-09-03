@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 
 public class PlayerTechScreen : MonoBehaviour
 {
     public int scale = TechTreeEditor.GRID_SNAP;
     public GameObject techFieldPrefab;
+    public GameObject linePrefab;
     public Transform techFieldsParent;
+    public Transform linesParent;
 
     public int playerID;
     public TechnologyLevel playerTechLevel;
@@ -16,6 +19,8 @@ public class PlayerTechScreen : MonoBehaviour
     public Color colorIfResearchable;
     public Color colorIfResearching;
     public Color colorIfResearched;
+
+    private Dictionary<int, TechField> techFieldsDict;
 
     void Start()
     {
@@ -27,21 +32,38 @@ public class PlayerTechScreen : MonoBehaviour
 
     private void SetUpTechScreen()
     {
+        techFieldsDict = new Dictionary<int, TechField>();
         TechnologyTree techTree = playerTechLevel.techTree;
         
+        // Make a TechField for each Technology
         foreach (KeyValuePair<int, Technology> kvp in TechTree.techDictionary)
         {
             Vector2 screenPosition = TechTree.techPosition[kvp.Key];
-            screenPosition.y *= -1.2f;
+            screenPosition.y *= -3f;
             InstantiateTechField(kvp.Value, screenPosition);
         }
+
+        // Connect the fields to show dependencies
+        foreach (KeyValuePair<int, Technology> kvp in TechTree.techDictionary)
+            foreach (int dependendy in kvp.Value.dependencies)
+            {
+                UILineRenderer line = Instantiate(linePrefab, linesParent).GetComponent<UILineRenderer>();
+
+                Vector2 outPoint = techFieldsDict[dependendy].outPoint.position;
+                Vector2 inPoint = techFieldsDict[kvp.Value.id].inPoint.position;
+
+                Debug.Log(dependendy + "->" + kvp.Value.id + "\n" + outPoint + "->" + inPoint);
+
+                line.Points = new Vector2[] { outPoint, inPoint };
+            }
     }
 
     private void InstantiateTechField(Technology tech, Vector2 screenPosition)
     {
-        GameObject techField = Instantiate(techFieldPrefab, techFieldsParent);
-        techField.GetComponent<TechField>().SetTechnology(tech);
+        TechField techField = Instantiate(techFieldPrefab, techFieldsParent).GetComponent<TechField>();
+        techField.SetTechnology(tech);
         techField.transform.localPosition = screenPosition;
+        techFieldsDict.Add(tech.id, techField);
     }
 
 

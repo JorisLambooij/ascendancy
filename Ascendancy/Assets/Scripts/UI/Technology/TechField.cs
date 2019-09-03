@@ -6,15 +6,18 @@ using UnityEngine.UI;
 
 public class TechField : MonoBehaviour
 {
+    public PlayerTechScreen playerTechScreen;
+    public Transform inPoint;
+    public Transform outPoint;
     public bool isCurrentFocus = false;
 
     private Text labelName;
     private Text labelCost;
     private Slider progressBar;
     private Image icon;
+    private Image backGround;
     
     private Technology tech;
-    public PlayerTechScreen playerTechScreen;
 
     public Technology Tech { get => tech; private set => tech = value; }
 
@@ -28,11 +31,14 @@ public class TechField : MonoBehaviour
         labelCost = texts[1];
 
         progressBar = GetComponentInChildren<Slider>();
-        icon = GetComponentInChildren<Image>();
+        Image[] images = GetComponentsInChildren<Image>();
+        backGround = images[0];
+        icon = images[1];
 
         labelName.text = tech.name.ToString();
         labelCost.text = tech.cost.ToString();
         progressBar.value = tech.startTech ? 1 : 0;
+        icon.sprite = tech.icon;
 
         playerTechScreen.Subscribe(tech.id, OnProgressUpdate);
 
@@ -69,6 +75,8 @@ public class TechField : MonoBehaviour
         ColorBlock colors = button.colors;
         colors.disabledColor = playerTechScreen.colorIfNotResearchable;
         button.colors = colors;
+        
+        //icon.color = playerTechScreen.colorIfNotResearchable;
     }
     private void SetResearchable()
     {
@@ -80,12 +88,16 @@ public class TechField : MonoBehaviour
             ColorBlock colors = button.colors;
             colors.normalColor = playerTechScreen.colorIfResearching;
             button.colors = colors;
+
+            //icon.color = playerTechScreen.colorIfResearching;
         }
         else
         {
             ColorBlock colors = button.colors;
             colors.normalColor = playerTechScreen.colorIfResearchable;
             button.colors = colors;
+
+            //icon.color = playerTechScreen.colorIfResearchable;
         }
     }
     private void SetResearched()
@@ -95,6 +107,8 @@ public class TechField : MonoBehaviour
         ColorBlock colors = button.colors;
         colors.disabledColor = playerTechScreen.colorIfResearched;
         button.colors = colors;
+
+        //icon.color = playerTechScreen.colorIfResearched;
     }
     #endregion
 

@@ -3,7 +3,9 @@
         {
             "name": "Agriculture",
             "id": 0,
-            "icon": "",
+            "icon": {
+                "instanceID": 26068
+            },
             "dependencies": [],
             "cost": 0,
             "startTech": true,
@@ -17,7 +19,9 @@
         {
             "name": "Masonry",
             "id": 1,
-            "icon": "",
+            "icon": {
+                "instanceID": 26268
+            },
             "dependencies": [
                 0
             ],
@@ -33,7 +37,9 @@
         {
             "name": "Smithing",
             "id": 2,
-            "icon": "",
+            "icon": {
+                "instanceID": 26596
+            },
             "dependencies": [
                 1
             ],
@@ -49,7 +55,9 @@
         {
             "name": "Writing",
             "id": 3,
-            "icon": "",
+            "icon": {
+                "instanceID": 26340
+            },
             "dependencies": [
                 1
             ],
@@ -65,7 +73,9 @@
         {
             "name": "Iron Weapons",
             "id": 4,
-            "icon": "",
+            "icon": {
+                "instanceID": 26164
+            },
             "dependencies": [
                 2
             ],
@@ -85,7 +95,9 @@
         {
             "name": "Navigation",
             "id": 5,
-            "icon": "",
+            "icon": {
+                "instanceID": 26264
+            },
             "dependencies": [
                 3
             ],

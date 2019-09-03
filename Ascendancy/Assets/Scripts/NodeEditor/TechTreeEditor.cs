@@ -467,7 +467,7 @@ public class TechTreeEditor : EditorWindow
         if (nodes == null)
             nodes = new List<Node>();
         
-        Technology tech = new Technology("", id, null, 0, false, "");
+        Technology tech = new Technology("", id, null, 0, false, null);
         
         // We create the node with the default info for the node.
         nodes.Add(new Node(mousePosition, 200, 100, nodeStyle, selectedNodeStyle,

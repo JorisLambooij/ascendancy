@@ -18,10 +18,8 @@ public class Technology
 
     /// <summary>
     /// The icon for this Technology.
-    /// Should be stored in Resources/TechIcons
-    /// Subpaths possible (e.g. Resources/TechIcons/Magic/fire.jpg would be "Magic/fire.jpg")
     /// </summary>
-    public string icon;
+    public Sprite icon;
 
     /// <summary>
     /// List of the IDs of the requirements for this Technology.
@@ -38,7 +36,7 @@ public class Technology
     /// </summary>
     public bool startTech;
     
-    public Technology(string name, int id, int[] dependencies, int cost, bool startTech, string icon)
+    public Technology(string name, int id, int[] dependencies, int cost, bool startTech, Sprite icon)
     {
         this.name = name;
         this.id = id;

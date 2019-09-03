@@ -95,33 +95,21 @@ public class Node
         rectNameLabel = new Rect(position.x,
             position.y + 3 * rowHeight, width * wf, rowHeight);
 
-        rectCostLabel = new Rect(position.x,
-            position.y + 4 * rowHeight, width * wf, rowHeight);
-
         rectCost = new Rect(mid,
             position.y + 4 * rowHeight, width * wf / 2 + 20, rowHeight);
 
-        rectStartTech = new Rect(mid + 60 + width * wf - 4,
+        rectCostLabel = new Rect(position.x,
             position.y + 4 * rowHeight, width * wf, rowHeight);
 
-        rectStartTechLabel = new Rect(mid + 60,
-            position.y + 4 * rowHeight + 1, width * wf, rowHeight);
+        rectStartTech = new Rect(mid + 30,
+            position.y + 5 * rowHeight, width * wf / 2 + 20, rowHeight);
+
+        rectStartTechLabel = new Rect(position.x + 30,
+            position.y + 5 * rowHeight, width * wf, rowHeight);
 
         styleField = new GUIStyle();
         styleField.alignment = TextAnchor.UpperRight;
         
-        rectIconLabel = new Rect(position.x,
-            position.y + 5 * rowHeight, width * wf, rowHeight);
-
-        rectIcon = new Rect(mid,
-            position.y + 5 * rowHeight, width * (1 - wf - 0.2f), rowHeight);
-
-        rectSOLabel = new Rect(position.x,
-            position.y + 6 * rowHeight, width * wf, rowHeight);
-
-        rectSO = new Rect(mid,
-            position.y + 6 * rowHeight, width * (1 - wf - 0.2f), rowHeight);
-
         this.startTech = technology.startTech;
 
         //// We create the skill with current node info
@@ -195,30 +183,6 @@ public class Node
         GUI.Label(rectCostLabel, "Cost: ", styleField);
         tech.cost = int.Parse(GUI.TextField(rectCost, tech.cost.ToString()));
         
-        // Print the icon path field
-        GUI.Label(rectIconLabel, "Icon: ", styleField);
-        try
-        {
-            tech.icon = GUI.TextField(rectIcon, tech.icon.ToString());
-        }
-        catch
-        {
-            tech.icon = GUI.TextField(rectIcon, "");
-            Debug.LogError("Error while reading this tech's icon. Please check " + tech.id);
-        }
-
-        // Print the ScriptableObject field
-        //GUI.Label(rectSOLabel, "Scr.Obj: ", styleField);
-        try
-        {
-            //tech.techSO = EditorGUILayout.ObjectField("Label:", tech.techSO, typeof(TechnologySO), false) as TechnologySO;
-            //tech.techSO = EditorGUI.ObjectField(rectSO, tech.techSO, typeof(TechnologySO)) as TechnologySO;
-        }
-        catch
-        {
-            tech.techSO = null;
-            Debug.LogError("Error while reading this tech's ScriptableObject. Please check " + tech.id);
-        }
     }
 
     public bool ProcessEvents(Event e)
