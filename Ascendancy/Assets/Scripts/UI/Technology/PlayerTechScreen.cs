@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerTechScreen : MonoBehaviour
 {
-    public int scale = NodeBasedEditor.GRID_SNAP;
+    public int scale = TechTreeEditor.GRID_SNAP;
     public GameObject techFieldPrefab;
     public Transform techFieldsParent;
 
@@ -42,7 +42,6 @@ public class PlayerTechScreen : MonoBehaviour
         GameObject techField = Instantiate(techFieldPrefab, techFieldsParent);
         techField.GetComponent<TechField>().SetTechnology(tech);
         techField.transform.localPosition = screenPosition;
-        Debug.Log(techField.transform.position);
     }
 
 

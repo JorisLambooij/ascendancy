@@ -18,6 +18,8 @@ public class Technology
 
     /// <summary>
     /// The icon for this Technology.
+    /// Should be stored in Resources/TechIcons
+    /// Subpaths possible (e.g. Resources/TechIcons/Magic/fire.jpg would be "Magic/fire.jpg")
     /// </summary>
     public string icon;
 
@@ -46,9 +48,12 @@ public class Technology
         this.icon = icon;
     }
 
+    public TechnologySO techSO;
+
     // Effects
-    //public List<UnitInfo> unitsUnlocked;
-    //public List<BuildingInfo> buildingsUnlocked;
+    public UnitInfo[] unitsUnlocked;
+    public BuildingInfo[] buildingsUnlocked;
+    public Resource[] resourcesUnlocked;
 
-
+    // maybe also unit/building buffs (+Unit dmg, +Production etc.)
 }

@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.IO;
 
-public class NodeBasedEditor : EditorWindow
+public class TechTreeEditor : EditorWindow
 {
     public const int GRID_SNAP = 100;
     private Vector2 initialOffset;
@@ -26,6 +26,9 @@ public class NodeBasedEditor : EditorWindow
     private Vector2 offset;
     private Vector2 drag;
 
+    private int nodeWidth = 200;
+    private int nodeHeight = 100;
+
     private string techPath = TechTreeReader.techPath;
     private string nodePath = TechTreeReader.nodePath;
 
@@ -33,17 +36,24 @@ public class NodeBasedEditor : EditorWindow
     private int nodeCount;
     private Dictionary<int, Technology> techDictionary;
 
-    public static NodeBasedEditor instance;
+    public static TechTreeEditor instance;
+
+    public SubscribableProperty<Node> selectedNode;
 
     public Vector2 Offset { get => offset; }
 
-    [MenuItem("Window/Node Based Editor")]
+    [MenuItem("Window/Tech Tree Editor")]
     private static void OpenWindow()
     {
-        NodeBasedEditor window = GetWindow<NodeBasedEditor>();
-        window.titleContent = new GUIContent("Node Based Editor");
+        TechTreeEditor window = GetWindow<TechTreeEditor>();
+        window.titleContent = new GUIContent("Tech Tree Editor");
 
         instance = window;
+    }
+
+    void OnInspectorUpdate()
+    {
+        Repaint();
     }
 
     private void OnEnable()
@@ -51,6 +61,7 @@ public class NodeBasedEditor : EditorWindow
         instance = this;
         id = 0;
         nodeCount = 0;
+        selectedNode = new SubscribableProperty<Node>(null);
         offset = initialOffset;
 
         nodeStyle = new GUIStyle();
@@ -82,6 +93,7 @@ public class NodeBasedEditor : EditorWindow
 
     private void ClearNodes()
     {
+        selectedNode.Value = null;
         offset = initialOffset;
         nodeCount = 0;
         id = 0;
@@ -144,7 +156,7 @@ public class NodeBasedEditor : EditorWindow
                 if (nodes == null)
                     nodes = new List<Node>();
                 
-                nodes.Add(new Node(position, 200, 100, nodeStyle, selectedNodeStyle, inPointStyle,
+                nodes.Add(new Node(position, nodeWidth, nodeHeight, nodeStyle, selectedNodeStyle, inPointStyle,
                     outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode,
                     _techTree[i]));
                 ++nodeCount;
@@ -260,7 +272,7 @@ public class NodeBasedEditor : EditorWindow
         
         UnityEditor.AssetDatabase.Refresh();
     }
-
+    
     #region GUI
 
     private void OnGUI()
@@ -277,7 +289,7 @@ public class NodeBasedEditor : EditorWindow
 
         ProcessNodeEvents(Event.current);
         ProcessEvents(Event.current);
-
+        
         if (GUI.changed) Repaint();
     }
 
@@ -357,6 +369,7 @@ public class NodeBasedEditor : EditorWindow
 
     private void ProcessEvents(Event e)
     {
+
         drag = Vector2.zero;
 
         switch (e.type)

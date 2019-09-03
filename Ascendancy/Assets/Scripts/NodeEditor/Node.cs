@@ -13,19 +13,23 @@ public class Node
     // Rect for the title of the node 
     public Rect rectID;
 
-    // Two Rect for the name field (1 for the label and other for the checkbox)
+    // Two Rect for the name field (1 for the label and other for the text field)
     public Rect rectNameLabel;
     public Rect rectName;
 
-    // Two Rect for the icon path field (1 for the label and other for the checkbox)
+    // Two Rect for the icon path field
     public Rect rectIconLabel;
     public Rect rectIcon;
 
-    // Two Rect for the start tech field (1 for the label and other for the checkbox)
-    public Rect rectUnlockLabel;
-    public Rect rectUnlocked;
+    // Two Rect for the Technology ScriptableObject field
+    public Rect rectSOLabel;
+    public Rect rectSO;
 
-    // Two Rect for the cost field (1 for the label and other for the text field)
+    // Two Rect for the start tech field
+    public Rect rectStartTechLabel;
+    public Rect rectStartTech;
+
+    // Two Rect for the cost field
     public Rect rectCostLabel;
     public Rect rectCost;
 
@@ -58,13 +62,13 @@ public class Node
         Action<ConnectionPoint> OnClickInPoint, Action<ConnectionPoint> OnClickOutPoint,
         Action<Node> OnClickRemoveNode, Technology technology)
     {
-        position += NodeBasedEditor.instance.Offset;
+        position += TechTreeEditor.instance.Offset;
 
-        Vector2 divPos = position / NodeBasedEditor.GRID_SNAP;
+        Vector2 divPos = position / TechTreeEditor.GRID_SNAP;
         Vector2 roundedPos = new Vector2(Mathf.Round(divPos.x), Mathf.Round(divPos.y));
 
-        position = roundedPos * NodeBasedEditor.GRID_SNAP;
-        position -= NodeBasedEditor.instance.Offset;
+        position = roundedPos * TechTreeEditor.GRID_SNAP;
+        position -= TechTreeEditor.instance.Offset;
 
         rect = new Rect(position.x, position.y, width, height);
         style = nodeStyle;
@@ -82,35 +86,42 @@ public class Node
         styleID.alignment = TextAnchor.UpperCenter;
 
         // width factor
-        float wf = 1 / 2.5f;
+        float wf = 1 / 3.5f;
+        float mid = position.x + width * wf - 2;
 
-        rectName = new Rect(position.x + width * wf,
+        rectName = new Rect(mid,
             position.y + 3 * rowHeight, width * (1 - wf - 0.1f), rowHeight);
 
         rectNameLabel = new Rect(position.x,
             position.y + 3 * rowHeight, width * wf, rowHeight);
 
-        rectUnlocked = new Rect(position.x + width * wf,
+        rectCostLabel = new Rect(position.x,
             position.y + 4 * rowHeight, width * wf, rowHeight);
 
-        rectUnlockLabel = new Rect(position.x,
+        rectCost = new Rect(mid,
+            position.y + 4 * rowHeight, width * wf / 2 + 20, rowHeight);
+
+        rectStartTech = new Rect(mid + 60 + width * wf - 4,
             position.y + 4 * rowHeight, width * wf, rowHeight);
+
+        rectStartTechLabel = new Rect(mid + 60,
+            position.y + 4 * rowHeight + 1, width * wf, rowHeight);
 
         styleField = new GUIStyle();
         styleField.alignment = TextAnchor.UpperRight;
-
-        rectCostLabel = new Rect(position.x,
+        
+        rectIconLabel = new Rect(position.x,
             position.y + 5 * rowHeight, width * wf, rowHeight);
 
-        rectCost = new Rect(position.x + width * wf,
-            position.y + 5 * rowHeight, width * wf / 2, rowHeight);
-        /*
-        rectIconLabel = new Rect(position.x,
+        rectIcon = new Rect(mid,
+            position.y + 5 * rowHeight, width * (1 - wf - 0.2f), rowHeight);
+
+        rectSOLabel = new Rect(position.x,
             position.y + 6 * rowHeight, width * wf, rowHeight);
 
-        rectIcon = new Rect(position.x + width * wf,
+        rectSO = new Rect(mid,
             position.y + 6 * rowHeight, width * (1 - wf - 0.2f), rowHeight);
-        */
+
         this.startTech = technology.startTech;
 
         //// We create the skill with current node info
@@ -129,19 +140,21 @@ public class Node
         rectID.position += delta;
         rectName.position += delta;
         rectNameLabel.position += delta;
-        rectUnlocked.position += delta;
-        rectUnlockLabel.position += delta;
+        rectStartTech.position += delta;
+        rectStartTechLabel.position += delta;
         rectCost.position += delta;
         rectCostLabel.position += delta;
         rectIcon.position += delta;
         rectIconLabel.position += delta;
+        rectSO.position += delta;
+        rectSOLabel.position += delta;
     }
     
     public void StopDrag()
     {
-        Vector2 divPos = (rect.position - NodeBasedEditor.instance.Offset) / NodeBasedEditor.GRID_SNAP;
-        Vector2 roundedPos = new Vector2(Mathf.Round(divPos.x), Mathf.Round(divPos.y)) * NodeBasedEditor.GRID_SNAP;
-        roundedPos += NodeBasedEditor.instance.Offset;
+        Vector2 divPos = (rect.position - TechTreeEditor.instance.Offset) / TechTreeEditor.GRID_SNAP;
+        Vector2 roundedPos = new Vector2(Mathf.Round(divPos.x), Mathf.Round(divPos.y)) * TechTreeEditor.GRID_SNAP;
+        roundedPos += TechTreeEditor.instance.Offset;
 
         Vector2 delta = roundedPos - rect.position;
 
@@ -170,8 +183,8 @@ public class Node
         }
 
         // Print the unlock field
-        GUI.Label(rectUnlockLabel, "Start Tech: ", styleField);
-        if (GUI.Toggle(rectUnlocked, startTech, ""))
+        GUI.Label(rectStartTechLabel, "StartTech: ", styleField);
+        if (GUI.Toggle(rectStartTech, startTech, ""))
             startTech = true;
         else
             startTech = false;
@@ -181,7 +194,7 @@ public class Node
         // Print the cost field
         GUI.Label(rectCostLabel, "Cost: ", styleField);
         tech.cost = int.Parse(GUI.TextField(rectCost, tech.cost.ToString()));
-        /*
+        
         // Print the icon path field
         GUI.Label(rectIconLabel, "Icon: ", styleField);
         try
@@ -193,7 +206,19 @@ public class Node
             tech.icon = GUI.TextField(rectIcon, "");
             Debug.LogError("Error while reading this tech's icon. Please check " + tech.id);
         }
-        */
+
+        // Print the ScriptableObject field
+        //GUI.Label(rectSOLabel, "Scr.Obj: ", styleField);
+        try
+        {
+            //tech.techSO = EditorGUILayout.ObjectField("Label:", tech.techSO, typeof(TechnologySO), false) as TechnologySO;
+            //tech.techSO = EditorGUI.ObjectField(rectSO, tech.techSO, typeof(TechnologySO)) as TechnologySO;
+        }
+        catch
+        {
+            tech.techSO = null;
+            Debug.LogError("Error while reading this tech's ScriptableObject. Please check " + tech.id);
+        }
     }
 
     public bool ProcessEvents(Event e)
@@ -209,6 +234,8 @@ public class Node
                         GUI.changed = true;
                         isSelected = true;
                         style = selectedNodeStyle;
+
+                        TechTreeEditor.instance.selectedNode.Value = this;
                     }
                     else
                     {

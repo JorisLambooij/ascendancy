@@ -6,7 +6,13 @@
             "icon": "",
             "dependencies": [],
             "cost": 0,
-            "startTech": true
+            "startTech": true,
+            "techSO": {
+                "instanceID": 0
+            },
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
         },
         {
             "name": "Masonry",
@@ -16,7 +22,13 @@
                 0
             ],
             "cost": 100,
-            "startTech": false
+            "startTech": false,
+            "techSO": {
+                "instanceID": 0
+            },
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
         },
         {
             "name": "Smithing",
@@ -26,7 +38,13 @@
                 1
             ],
             "cost": 400,
-            "startTech": false
+            "startTech": false,
+            "techSO": {
+                "instanceID": 0
+            },
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
         },
         {
             "name": "Writing",
@@ -36,7 +54,13 @@
                 1
             ],
             "cost": 1000,
-            "startTech": false
+            "startTech": false,
+            "techSO": {
+                "instanceID": 0
+            },
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
         },
         {
             "name": "Iron Weapons",
@@ -46,7 +70,17 @@
                 2
             ],
             "cost": 1000,
-            "startTech": false
+            "startTech": false,
+            "techSO": {
+                "instanceID": 0
+            },
+            "unitsUnlocked": [
+                {
+                    "instanceID": 14756
+                }
+            ],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
         },
         {
             "name": "Navigation",
@@ -56,7 +90,13 @@
                 3
             ],
             "cost": 2000,
-            "startTech": false
+            "startTech": false,
+            "techSO": {
+                "instanceID": 0
+            },
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
         }
     ]
 }
