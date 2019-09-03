@@ -27,3 +27,10 @@ MonoBehaviour:
   thumbnail: {fileID: 0}
   contextMenuOptions: 6
   minimapMarker: {fileID: 0}
+  viewDistance: 10
+  resource_amount:
+  - resource: {fileID: 11400000, guid: a01bdeeab68f31f488705611ebf4a82b, type: 2}
+    amount: 100
+  - resource: {fileID: 11400000, guid: 73d299aab683abc428b8e867394aa0ce, type: 2}
+    amount: 10
+  build_time: 10

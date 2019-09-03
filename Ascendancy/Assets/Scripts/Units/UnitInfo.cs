@@ -86,4 +86,14 @@ public class UnitInfo : ScriptableObject
     /// </summary>
     [Range(0, 100)]
     public int viewDistance = 10;
+
+    /// <summary>
+    /// Base cost of the unit.
+    /// </summary>
+    public List<Resource_Amount> resource_amount;
+
+    /// <summary>
+    /// Time needed to build the unit in seconds.
+    /// </summary>
+    public float build_time;
 }
