@@ -22,6 +22,7 @@ public class TechnologyEditor : EditorWindow
     private static void OpenWindow()
     {
         TechnologyEditor window = GetWindow<TechnologyEditor>();
+        window.maxSize = new Vector2(200f, 512f);
         window.titleContent = new GUIContent("Technology Editor");
     }
 
@@ -56,34 +57,23 @@ public class TechnologyEditor : EditorWindow
             if (selectedNode != null)
             {
                 ///tech.name = EditorGUILayout.TextField(selectedNode.tech.name);
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Name: ");
-                tech.name = EditorGUILayout.TextField(selectedNode.tech.name);
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Cost:  ");
-                tech.cost = EditorGUILayout.IntField(selectedNode.tech.cost);
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Icon: ");
-
+                
+                tech.name = EditorGUILayout.TextField("Name", selectedNode.tech.name);
+                
+                tech.cost = EditorGUILayout.IntField("Cost", selectedNode.tech.cost);
+                
                 icon = AssetDatabase.LoadAssetAtPath<Sprite>(techSpriteFolder + selectedNode.tech.iconPath);
                 if (icon == null)
                     Debug.LogError("Icon Missing:  " + AssetDatabase.GetAssetPath(icon));
                 
-                icon = EditorGUILayout.ObjectField(icon, typeof(Sprite), false) as Sprite;
+                icon = EditorGUILayout.ObjectField("Icon", icon, typeof(Sprite), false) as Sprite;
 
                 if (icon != null)
                 {
                     string relativePath = Path.GetFileName(AssetDatabase.GetAssetPath(icon));
                     tech.iconPath = relativePath;
                 }
-
-                GUILayout.EndHorizontal();
-
+                
                 unitList.elements     = ConvertFromStringArray<UnitInfo>(tech.unitsUnlocked);
                 buildingList.elements = ConvertFromStringArray<BuildingInfo>(tech.buildingsUnlocked);
                 resourceList.elements = ConvertFromStringArray<Resource>(tech.resourcesUnlocked);
@@ -145,7 +135,6 @@ public class TechnologyEditor : EditorWindow
     void RefreshWindow()
     {
         techTreeEditor = TechTreeEditor.instance;
-        //techTreeEditor = GetWindow<TechTreeEditor>();
         techTreeEditor.selectedNode.Subscribe(OnSelectedNodeChange);
     }
 }

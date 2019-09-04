@@ -26,7 +26,7 @@ public class TechTreeEditor : EditorWindow
     private Vector2 offset;
     private Vector2 drag;
 
-    private int nodeWidth = 200;
+    private int nodeWidth = 160;
     private int nodeHeight = 100;
 
     private string techPath = TechTreeReader.techPath;
@@ -224,7 +224,7 @@ public class TechTreeEditor : EditorWindow
                             for (int k = 0; k < nodes.Count; ++k)
                                 if (connections[j].outPoint == nodes[k].outPoint)
                                 {
-                                    dependenciesList.Add(k);
+                                    dependenciesList.Add(nodes[k].tech.id);
                                     break;
                                 }
                             
@@ -280,12 +280,13 @@ public class TechTreeEditor : EditorWindow
         DrawGrid(20, 0.2f, Color.gray);
         DrawGrid(100, 0.4f, Color.gray);
         DrawAxes(0.6f, Color.red);
-        DrawButtons();
 
         DrawNodes();
         DrawConnections();
 
         DrawConnectionLine(Event.current);
+
+        DrawButtons();
 
         ProcessNodeEvents(Event.current);
         ProcessEvents(Event.current);
@@ -468,12 +469,14 @@ public class TechTreeEditor : EditorWindow
             nodes = new List<Node>();
         
         JSON_Technology tech = new JSON_Technology("", id, null, 0, false, null);
-        
-        // We create the node with the default info for the node.
-        nodes.Add(new Node(mousePosition, 200, 100, nodeStyle, selectedNodeStyle,
-            inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode,
-            tech));
 
+        // We create the node with the default info for the node.
+        Node n = new Node(mousePosition, nodeWidth, nodeHeight, nodeStyle, selectedNodeStyle,
+            inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode,
+            tech);
+        nodes.Add(n);
+        n.StopDrag();
+        
         id++;
     }
 

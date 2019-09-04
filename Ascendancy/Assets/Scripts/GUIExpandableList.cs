@@ -34,11 +34,8 @@ public class GUIExpandableList<T> : GUIContent where T : ScriptableObject
         {
             EditorGUI.indentLevel++;
             EditorGUILayout.BeginVertical();
-
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Count: ");
-            int newCap = EditorGUILayout.IntField(elements.Capacity);
-            EditorGUILayout.EndVertical();
+            
+            int newCap = EditorGUILayout.IntField("Count", elements.Capacity);
             
             if (newCap > elements.Capacity)
                 elements.Capacity = newCap;
@@ -60,11 +57,11 @@ public class GUIExpandableList<T> : GUIContent where T : ScriptableObject
             {
                 if (i < elements.Count)
                 {
-                    elements[i] = EditorGUILayout.ObjectField(elements[i], typeof(T), false) as T;
+                    elements[i] = EditorGUILayout.ObjectField("Element " + i, elements[i], typeof(T), false) as T;
                 }
                 else
                 {
-                    elements.Add(EditorGUILayout.ObjectField(null, typeof(T), false) as T);
+                    elements.Add(EditorGUILayout.ObjectField("Element " + i, null, typeof(T), false) as T);
                 }
             }
             

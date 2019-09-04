@@ -39,7 +39,8 @@ public class PlayerTechScreen : MonoBehaviour
         foreach (KeyValuePair<int, Technology> kvp in TechTree.techDictionary)
         {
             Vector2 screenPosition = TechTree.techPosition[kvp.Key];
-            screenPosition.y *= -3f;
+            screenPosition *= 3f;
+            screenPosition.y *= -1;
             InstantiateTechField(kvp.Value, screenPosition);
         }
 

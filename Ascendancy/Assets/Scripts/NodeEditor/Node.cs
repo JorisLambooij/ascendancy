@@ -86,7 +86,7 @@ public class Node
         styleID.alignment = TextAnchor.UpperCenter;
 
         // width factor
-        float wf = 1 / 3.5f;
+        float wf = 1 / 3f;
         float mid = position.x + width * wf - 2;
 
         rectName = new Rect(mid,
@@ -102,7 +102,7 @@ public class Node
             position.y + 4 * rowHeight, width * wf, rowHeight);
 
         rectStartTech = new Rect(mid + 30,
-            position.y + 5 * rowHeight, width * wf / 2 + 20, rowHeight);
+            position.y + 5 * rowHeight, 20, rowHeight);
 
         rectStartTechLabel = new Rect(position.x + 30,
             position.y + 5 * rowHeight, width * wf, rowHeight);
