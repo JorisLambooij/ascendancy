@@ -3,9 +3,7 @@
         {
             "name": "Agriculture",
             "id": 0,
-            "icon": {
-                "instanceID": 26068
-            },
+            "iconPath": "Advanced_Farming.png",
             "dependencies": [],
             "cost": 0,
             "startTech": true,
@@ -19,9 +17,7 @@
         {
             "name": "Masonry",
             "id": 1,
-            "icon": {
-                "instanceID": 26268
-            },
+            "iconPath": "Masonry.png",
             "dependencies": [
                 0
             ],
@@ -37,9 +33,7 @@
         {
             "name": "Smithing",
             "id": 2,
-            "icon": {
-                "instanceID": 26596
-            },
+            "iconPath": "Metalworking.png",
             "dependencies": [
                 1
             ],
@@ -55,9 +49,7 @@
         {
             "name": "Writing",
             "id": 3,
-            "icon": {
-                "instanceID": 26340
-            },
+            "iconPath": "Books_1.png",
             "dependencies": [
                 1
             ],
@@ -73,9 +65,7 @@
         {
             "name": "Iron Weapons",
             "id": 4,
-            "icon": {
-                "instanceID": 26164
-            },
+            "iconPath": "Swordsmanship.png",
             "dependencies": [
                 2
             ],
@@ -86,7 +76,7 @@
             },
             "unitsUnlocked": [
                 {
-                    "instanceID": 14756
+                    "instanceID": 0
                 }
             ],
             "buildingsUnlocked": [],
@@ -95,9 +85,7 @@
         {
             "name": "Navigation",
             "id": 5,
-            "icon": {
-                "instanceID": 26264
-            },
+            "iconPath": "Compass.png",
             "dependencies": [
                 3
             ],

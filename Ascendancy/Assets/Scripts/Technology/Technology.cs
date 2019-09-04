@@ -17,9 +17,9 @@ public class Technology
     public int id;
 
     /// <summary>
-    /// The icon for this Technology.
+    /// The icon path for this Technology.
     /// </summary>
-    public Sprite icon;
+    public string iconPath;
 
     /// <summary>
     /// List of the IDs of the requirements for this Technology.
@@ -36,14 +36,14 @@ public class Technology
     /// </summary>
     public bool startTech;
     
-    public Technology(string name, int id, int[] dependencies, int cost, bool startTech, Sprite icon)
+    public Technology(string name, int id, int[] dependencies, int cost, bool startTech, string iconPath)
     {
         this.name = name;
         this.id = id;
         this.dependencies = dependencies;
         this.cost = cost;
         this.startTech = startTech;
-        this.icon = icon;
+        this.iconPath = iconPath;
     }
 
     public TechnologySO techSO;

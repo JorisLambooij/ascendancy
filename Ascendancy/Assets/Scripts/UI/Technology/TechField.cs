@@ -38,7 +38,12 @@ public class TechField : MonoBehaviour
         labelName.text = tech.name.ToString();
         labelCost.text = tech.cost.ToString();
         progressBar.value = tech.startTech ? 1 : 0;
-        icon.sprite = tech.icon;
+
+        string path = "Sprites/Technologies/" + System.IO.Path.GetFileNameWithoutExtension(tech.iconPath);
+        icon.sprite = Resources.Load<Sprite>(path);
+
+        if (icon.sprite == null)
+            Debug.Log(path);
 
         playerTechScreen.Subscribe(tech.id, OnProgressUpdate);
 

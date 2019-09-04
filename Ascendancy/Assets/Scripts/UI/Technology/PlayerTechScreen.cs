@@ -51,9 +51,7 @@ public class PlayerTechScreen : MonoBehaviour
 
                 Vector2 outPoint = techFieldsDict[dependendy].outPoint.position;
                 Vector2 inPoint = techFieldsDict[kvp.Value.id].inPoint.position;
-
-                Debug.Log(dependendy + "->" + kvp.Value.id + "\n" + outPoint + "->" + inPoint);
-
+                
                 line.Points = new Vector2[] { outPoint, inPoint };
             }
     }

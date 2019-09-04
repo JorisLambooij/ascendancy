@@ -45,7 +45,7 @@ public abstract class Entity : MonoBehaviour
 
     protected virtual void Start()
     {
-        GameObject selectionMarkerPrefab = Resources.Load("SelectionMarker") as GameObject;
+        GameObject selectionMarkerPrefab = Resources.Load("Prefabs/SelectionMarker") as GameObject;
         Instantiate(selectionMarkerPrefab, this.transform);
     }
 

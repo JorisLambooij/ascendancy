@@ -5,8 +5,11 @@ using UnityEditor;
 
 public class TechnologyEditor : EditorWindow
 {
+    public string techSpriteFolder = "Assets/Resources/Sprites/Technologies/";
+    
     private Node selectedNode;
     private Technology tech;
+    private Sprite icon;
 
     private TechTreeEditor techTreeEditor;
 
@@ -64,8 +67,20 @@ public class TechnologyEditor : EditorWindow
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Icon Path: ");
-                tech.icon = EditorGUILayout.ObjectField(selectedNode.tech.icon, typeof(Sprite), false) as Sprite;
+                GUILayout.Label("Icon: ");
+
+                icon = AssetDatabase.LoadAssetAtPath<Sprite>(techSpriteFolder + selectedNode.tech.iconPath);
+                if (icon == null)
+                    Debug.LogError("Icon Missing:  " + AssetDatabase.GetAssetPath(icon));
+                
+                icon = EditorGUILayout.ObjectField(icon, typeof(Sprite), false) as Sprite;
+
+                if (icon != null)
+                {
+                    string relativePath = AssetDatabase.GetAssetPath(icon).Substring(techSpriteFolder.Length);
+                    tech.iconPath = relativePath;
+                }
+
                 GUILayout.EndHorizontal();
 
                 unitList.elements = new List<UnitInfo>(tech.unitsUnlocked);

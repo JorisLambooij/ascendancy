@@ -24,7 +24,7 @@ public class Unit : Entity
         controller = GetComponent<UnitController>();
         minimapMarker = unitInfo.minimapMarker;
 
-        GameObject markerObject = Resources.Load("Sprites/MinimapMarker") as GameObject;
+        GameObject markerObject = Resources.Load("Prefabs/UI/MinimapMarker") as GameObject;
 
         //if a sprite was provided, we use it while keeping the position and settings
         if (minimapMarker != null)
