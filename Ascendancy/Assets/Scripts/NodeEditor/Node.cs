@@ -49,7 +49,7 @@ public class Node
     public Action<Node> OnRemoveNode;
 
     // Skill linked with the node
-    public Technology tech;
+    public JSON_Technology tech;
 
     // Bool for checking if the node is whether unlocked or not
     private bool startTech = false;
@@ -60,7 +60,7 @@ public class Node
     public Node(Vector2 position, float width, float height, GUIStyle nodeStyle,
         GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle,
         Action<ConnectionPoint> OnClickInPoint, Action<ConnectionPoint> OnClickOutPoint,
-        Action<Node> OnClickRemoveNode, Technology technology)
+        Action<Node> OnClickRemoveNode, JSON_Technology technology)
     {
         position += TechTreeEditor.instance.Offset;
 

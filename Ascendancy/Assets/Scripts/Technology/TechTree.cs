@@ -4,5 +4,5 @@ using System.Collections.Generic;
 [System.Serializable]
 public class JSONTechTree
 {
-    public Technology[] technologies;
+    public JSON_Technology[] technologies;
 }

@@ -27,3 +27,4 @@ MonoBehaviour:
   thumbnail: {fileID: 0}
   contextMenuOptions: 6
   minimapMarker: {fileID: 0}
+  viewDistance: 10

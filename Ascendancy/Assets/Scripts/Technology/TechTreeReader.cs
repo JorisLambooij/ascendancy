@@ -36,8 +36,8 @@ public class TechTreeReader : MonoBehaviour
         JSONTechTree loadedData = JsonUtility.FromJson<JSONTechTree>(dataAsJSON);
 
         TechnologyTree techTree = new TechnologyTree(loadedData.technologies.Length);
-        foreach (Technology t in loadedData.technologies)
-            techTree.AddTech(t);
+        foreach (JSON_Technology t in loadedData.technologies)
+            techTree.AddTech(JSON_To_Tech_Converter.Convert(t));
 
         return techTree;
     }

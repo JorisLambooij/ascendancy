@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//[CreateAssetMenu(fileName = "NewTechnology", menuName = "Technology")]
-[System.Serializable]
 public class Technology
 {
     /// <summary>
@@ -19,34 +17,45 @@ public class Technology
     /// <summary>
     /// The icon path for this Technology.
     /// </summary>
-    public string iconPath;
+    public Sprite icon;
 
     /// <summary>
-    /// List of the IDs of the requirements for this Technology.
-    /// </summary>
-    public int[] dependencies;
-
-    /// <summary>
-    /// How expensive this Technology is.
+    /// The associated cost of this Technology.
     /// </summary>
     public int cost;
 
     /// <summary>
-    /// Whether or not this Technology has been researched at the start of the game;
+    /// Is this tech unlocked at the start of the game.
     /// </summary>
     public bool startTech;
-    
-    public Technology(string name, int id, int[] dependencies, int cost, bool startTech, string iconPath)
+
+    /// <summary>
+    /// The IDs of the technologies this tech depends on.
+    /// </summary>
+    public int[] dependencies;
+
+    public Technology(string name, int id, Sprite icon, int cost, bool startTech, int[] dependencies, UnitInfo[] unitsUnlocked, BuildingInfo[] buildingsUnlocked, Resource[] resourcesUnlocked)
     {
         this.name = name;
         this.id = id;
-        this.dependencies = dependencies;
+        this.icon = icon;
         this.cost = cost;
         this.startTech = startTech;
-        this.iconPath = iconPath;
+        this.dependencies = dependencies;
+        this.unitsUnlocked = unitsUnlocked;
+        this.buildingsUnlocked = buildingsUnlocked;
+        this.resourcesUnlocked = resourcesUnlocked;
     }
 
-    public TechnologySO techSO;
+    public Technology(JSON_Technology tech, Sprite icon)
+    {
+        name = tech.name;
+        id = tech.id;
+        cost = tech.cost;
+        startTech = tech.startTech;
+        dependencies = tech.dependencies;
+        this.icon = icon;
+    }
 
     // Effects
     public UnitInfo[] unitsUnlocked;

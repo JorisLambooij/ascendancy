@@ -7,10 +7,9 @@
             "dependencies": [],
             "cost": 0,
             "startTech": true,
-            "techSO": {
-                "instanceID": 0
-            },
-            "unitsUnlocked": [],
+            "unitsUnlocked": [
+                "ScriptableObjects/Units/Dummy Tank.asset"
+            ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
         },
@@ -23,9 +22,6 @@
             ],
             "cost": 100,
             "startTech": false,
-            "techSO": {
-                "instanceID": 0
-            },
             "unitsUnlocked": [],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
@@ -39,9 +35,6 @@
             ],
             "cost": 400,
             "startTech": false,
-            "techSO": {
-                "instanceID": 0
-            },
             "unitsUnlocked": [],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
@@ -55,9 +48,6 @@
             ],
             "cost": 1000,
             "startTech": false,
-            "techSO": {
-                "instanceID": 0
-            },
             "unitsUnlocked": [],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
@@ -71,13 +61,8 @@
             ],
             "cost": 1000,
             "startTech": false,
-            "techSO": {
-                "instanceID": 0
-            },
             "unitsUnlocked": [
-                {
-                    "instanceID": 0
-                }
+                "ScriptableObjects/Units/Dummy Tank.asset"
             ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
@@ -91,9 +76,6 @@
             ],
             "cost": 2000,
             "startTech": false,
-            "techSO": {
-                "instanceID": 0
-            },
             "unitsUnlocked": [],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []

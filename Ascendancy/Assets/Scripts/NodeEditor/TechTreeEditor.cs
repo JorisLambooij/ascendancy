@@ -34,7 +34,7 @@ public class TechTreeEditor : EditorWindow
 
     private int id;
     private int nodeCount;
-    private Dictionary<int, Technology> techDictionary;
+    private Dictionary<int, JSON_Technology> techDictionary;
 
     public static TechTreeEditor instance;
 
@@ -111,9 +111,9 @@ public class TechTreeEditor : EditorWindow
     private void LoadNodes()
     {
         ClearNodes();
-        Technology[] _techTree;
-        List<Technology> originNode = new List<Technology>();
-        techDictionary = new Dictionary<int, Technology>();
+        JSON_Technology[] _techTree;
+        List<JSON_Technology> originNode = new List<JSON_Technology>();
+        techDictionary = new Dictionary<int, JSON_Technology>();
         NodeDataCollection loadedNodeData = null;
         bool nodeDataExists = false;
         string dataAsJson;
@@ -138,7 +138,7 @@ public class TechTreeEditor : EditorWindow
             JSONTechTree techData = JsonUtility.FromJson<JSONTechTree>(dataAsJson);
             
             // Store the SkillTree as an array of Skill
-            _techTree = new Technology[techData.technologies.Length];
+            _techTree = new JSON_Technology[techData.technologies.Length];
             _techTree = techData.technologies;
 
             // Create nodes
@@ -167,7 +167,7 @@ public class TechTreeEditor : EditorWindow
                 techDictionary.Add(_techTree[i].id, _techTree[i]);
             }
 
-            Technology outSkill;
+            JSON_Technology outSkill;
             Node outNode;
             // Create connections
             for (int i = 0; i < nodes.Count; ++i)
@@ -206,7 +206,7 @@ public class TechTreeEditor : EditorWindow
         {
             // We fill with as many techs as we have nodes
             JSONTechTree newTechTree = new JSONTechTree();
-            newTechTree.technologies = new Technology[nodes.Count];
+            newTechTree.technologies = new JSON_Technology[nodes.Count];
             int[] dependencies;
             List<int> dependenciesList = new List<int>();
 
@@ -467,7 +467,7 @@ public class TechTreeEditor : EditorWindow
         if (nodes == null)
             nodes = new List<Node>();
         
-        Technology tech = new Technology("", id, null, 0, false, null);
+        JSON_Technology tech = new JSON_Technology("", id, null, 0, false, null);
         
         // We create the node with the default info for the node.
         nodes.Add(new Node(mousePosition, 200, 100, nodeStyle, selectedNodeStyle,

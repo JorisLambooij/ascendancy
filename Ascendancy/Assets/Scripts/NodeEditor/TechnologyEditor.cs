@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -8,7 +9,7 @@ public class TechnologyEditor : EditorWindow
     public string techSpriteFolder = "Assets/Resources/Sprites/Technologies/";
     
     private Node selectedNode;
-    private Technology tech;
+    private JSON_Technology tech;
     private Sprite icon;
 
     private TechTreeEditor techTreeEditor;
@@ -77,26 +78,63 @@ public class TechnologyEditor : EditorWindow
 
                 if (icon != null)
                 {
-                    string relativePath = AssetDatabase.GetAssetPath(icon).Substring(techSpriteFolder.Length);
+                    string relativePath = Path.GetFileName(AssetDatabase.GetAssetPath(icon));
                     tech.iconPath = relativePath;
                 }
 
                 GUILayout.EndHorizontal();
 
-                unitList.elements = new List<UnitInfo>(tech.unitsUnlocked);
-                buildingList.elements = new List<BuildingInfo>(tech.buildingsUnlocked);
-                resourceList.elements = new List<Resource>(tech.resourcesUnlocked);
+                unitList.elements     = ConvertFromStringArray<UnitInfo>(tech.unitsUnlocked);
+                buildingList.elements = ConvertFromStringArray<BuildingInfo>(tech.buildingsUnlocked);
+                resourceList.elements = ConvertFromStringArray<Resource>(tech.resourcesUnlocked);
 
                 unitList.OnGUI();
                 buildingList.OnGUI();
                 resourceList.OnGUI();
-                
-                tech.unitsUnlocked = unitList.ElementsArray;
-                tech.buildingsUnlocked = buildingList.ElementsArray;
-                tech.resourcesUnlocked = resourceList.ElementsArray;
+
+                tech.unitsUnlocked     = ConvertToStringArray(unitList.elements);
+                tech.buildingsUnlocked = ConvertToStringArray(buildingList.elements);
+                tech.resourcesUnlocked = ConvertToStringArray(resourceList.elements);
             }
         }
         
+    }
+
+    private List<T> ConvertFromStringArray<T>(string[] oldArray) where T : Object
+    {
+        List<T> newList = new List<T>(oldArray.Length);
+
+        foreach (string s in oldArray)
+        {
+            string path = "Assets/Resources/" + s;
+            T element = AssetDatabase.LoadAssetAtPath<T>(path);
+            if (element != null)
+                newList.Add(element);
+        }
+
+        return newList;
+    }
+
+    private string[] ConvertToStringArray<T>(List<T> oldList) where T : Object
+    {
+        string[] newArray = new string[oldList.Count];
+
+        for (int i = 0; i < oldList.Count; i++)
+        {
+            T t = oldList[i];
+            string s = AssetDatabase.GetAssetPath(t);
+            int index = "Assets/Resources/".Length;
+            if (s.Length > index)
+                s = s.Substring(index);
+            else
+            {
+                Debug.LogError("Something wrong with " + s);
+                s = "";
+            }
+            newArray[i] = s;
+        }
+
+        return newArray;
     }
 
     void OnInspectorUpdate()
