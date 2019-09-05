@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewRecruitmentFeature", menuName = "Building Features/Recruitment Feature", order = 3)]
-public class RecruitmentFeature : BuildingFeature
+public class DEPRECATEDRecruitmentFeature : BuildingFeature
 {
     public List<UnitInfo> recruitableUnits;
     private List<UnitInfo> queue = new List<UnitInfo>();

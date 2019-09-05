@@ -15,11 +15,16 @@ public class BuildingInfo : ScriptableObject, IEntityInfo
     /// </summary>
     public string description;
 
+    public List<BuildingFeature> building_features;
+
+    public List<EntityFeature> entity_features;
+
     //public float goldCost;
 
+    /// <summary>
+    /// Maximum Health of this Building.
+    /// </summary>
     public int maxHealth;
-
-    public List<BuildingFeature> features;
 
     /// <summary>
     /// Base cost of the unit.
@@ -116,6 +121,12 @@ public class BuildingInfo : ScriptableObject, IEntityInfo
     public float Build_time
     {
         get { return build_time; }
+        set { }
+    }
+
+    public List<EntityFeature> EntityFeatures
+    {
+        get { return entity_features; }
         set { }
     }
 }

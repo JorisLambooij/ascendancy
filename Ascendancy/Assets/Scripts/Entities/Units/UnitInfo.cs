@@ -19,6 +19,8 @@ public class UnitInfo : ScriptableObject, IEntityInfo
     /// </summary>
     public string description;
 
+    public List<EntityFeature> entity_features;
+
     /// <summary>
     /// Maximum Health of this Unit.
     /// </summary>
@@ -157,6 +159,12 @@ public class UnitInfo : ScriptableObject, IEntityInfo
     public float Build_time
     {
         get { return build_time; }
+        set { }
+    }
+
+    public List<EntityFeature> EntityFeatures
+    {
+        get { return entity_features; }
         set { }
     }
 }

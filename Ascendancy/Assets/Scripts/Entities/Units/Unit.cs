@@ -34,12 +34,18 @@ public class Unit : Entity
         }
 
         Instantiate(markerObject, this.transform);
+
+        foreach (EntityFeature feature in unitInfo.entity_features)
+            feature.Initialize(this);
+
+        //unit_features?
     }
 
     // Update is called once per frame
     protected override void Update()
     {
-
+        foreach (EntityFeature feature in unitInfo.entity_features)
+            feature.UpdateOverride(this);
     }
 
     /// <summary>

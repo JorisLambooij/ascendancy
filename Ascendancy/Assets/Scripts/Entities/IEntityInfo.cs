@@ -5,7 +5,7 @@ using UnityEngine;
 public interface IEntityInfo
 {
     /// <summary>
-    /// The name of this Unit type.
+    /// The name of this entity type.
     /// </summary>
     string Name { get; }
 
@@ -15,22 +15,22 @@ public interface IEntityInfo
     string Description { get; }
 
     /// <summary>
-    /// Maximum Health of this Unit.
+    /// Maximum Health of this entity.
     /// </summary>
     int MaxHealth { get; }
 
     /// <summary>
-    /// The Prefab used to instantiate this Unit.
+    /// The Prefab used to instantiate this entity.
     /// </summary>
     GameObject Prefab { get; }
 
     /// <summary>
-    /// Unit Thumbnail.
+    /// entity Thumbnail.
     /// </summary>
     Sprite Thumbnail { get; }
 
     /// <summary>
-    /// How many options the context menu has for this unit.
+    /// How many options the context menu has for this entity.
     /// </summary>
     int ContextMenuOptions { get; }
 
@@ -41,18 +41,20 @@ public interface IEntityInfo
     Sprite MinimapMarker { get; }
 
     /// <summary>
-    /// Unit view distance in half tiles.
+    /// entity view distance in half tiles.
     /// </summary>
     int ViewDistance { get; }
 
     /// <summary>
-    /// Base cost of the unit.
+    /// Base cost of the entity.
     /// </summary>
     List<Resource_Amount> Resource_amount { get; }
 
     /// <summary>
-    /// Time needed to build the unit in seconds.
+    /// Time needed to build the entity in seconds.
     /// </summary>
     float Build_time { get; }
+
+    List<EntityFeature> EntityFeatures { get; }
 
 }

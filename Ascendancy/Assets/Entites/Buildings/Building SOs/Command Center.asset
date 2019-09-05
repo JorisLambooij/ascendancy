@@ -13,9 +13,15 @@ MonoBehaviour:
   m_Name: Command Center
   m_EditorClassIdentifier: 
   buildingName: Command Center
-  goldCost: 0
+  description: 
+  building_features: []
+  entity_features:
+  - {fileID: 0}
   maxHealth: 1000
-  features:
-  - {fileID: 11400000, guid: da90567d28ee4cc479116c97090f6450, type: 2}
-  contextMenuOptions: 0
+  resource_amount: []
+  build_time: 0
   prefab: {fileID: 6219651634927193948, guid: ad8347abdc102e64882ea2e51706d9a3, type: 3}
+  thumbnail: {fileID: 0}
+  contextMenuOptions: 0
+  minimapMarker: {fileID: 0}
+  viewDistance: 10
