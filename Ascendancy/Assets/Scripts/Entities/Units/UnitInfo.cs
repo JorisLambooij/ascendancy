@@ -6,10 +6,11 @@ using UnityEngine;
 /// Scriptable Object to hold basic Unit stats.
 /// </summary>
 [CreateAssetMenu(fileName = "New Unit", menuName = "Unit SO", order = 0)]
-public class UnitInfo : ScriptableObject
+public class UnitInfo : ScriptableObject, IEntityInfo
 {
+
     /// <summary>
-    /// The name of this Unit type.
+    /// Short description.
     /// </summary>
     public string unitName;
 
@@ -96,4 +97,66 @@ public class UnitInfo : ScriptableObject
     /// Time needed to build the unit in seconds.
     /// </summary>
     public float build_time;
+
+
+    //implementation if IEntityInfo
+    public string Name
+    {
+        get { return unitName; }
+        set { }
+    }
+
+    public string Description
+    {
+        get { return description; }
+        set { }
+    }
+
+    public int MaxHealth
+    {
+        get { return maxHealth; }
+        set { }
+    }
+
+    public GameObject Prefab
+    {
+        get { return prefab; }
+        set { }
+    }
+
+    public Sprite Thumbnail
+    {
+        get { return thumbnail; }
+        set { }
+    }
+
+    public int ContextMenuOptions
+    {
+        get { return contextMenuOptions; }
+        set { }
+    }
+
+    public Sprite MinimapMarker
+    {
+        get { return minimapMarker; }
+        set { }
+    }
+
+    public int ViewDistance
+    {
+        get { return viewDistance; }
+        set { }
+    }
+
+    public List<Resource_Amount> Resource_amount
+    {
+        get { return resource_amount; }
+        set { }
+    }
+
+    public float Build_time
+    {
+        get { return build_time; }
+        set { }
+    }
 }

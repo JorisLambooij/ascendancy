@@ -42,7 +42,7 @@ public class RecruitmentFeature : BuildingFeature
             else
             {
                 timer -= Time.deltaTime;
-                Debug.Log("TIMER: " + timer + "s / QUEUE: " + queue.Count + " $" + queue[0].name);
+                Debug.Log("TIMER: " + timer + "s / QUEUE: " + queue.Count + " $" + queue[0].unitName);
             }
 
         
@@ -86,13 +86,13 @@ public class RecruitmentFeature : BuildingFeature
 
             queue.Add(unitInfo);
 
-            Debug.Log("Successfully added " + unitInfo.name + " to the queue!");
+            Debug.Log("Successfully added " + unitInfo.unitName + " to the queue!");
 
             return true;
         }
         else
         {
-            Debug.Log("Not enough resources for " + unitInfo.name + "!");
+            Debug.Log("Not enough resources for " + unitInfo.unitName + "!");
             //alert the player
             //TODO
 
