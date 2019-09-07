@@ -13,9 +13,15 @@ MonoBehaviour:
   m_Name: IronMine
   m_EditorClassIdentifier: 
   buildingName: Iron Mine
-  goldCost: 100
-  maxHealth: 100
-  features:
+  description: 
+  building_features:
   - {fileID: 11400000, guid: f77458f3896124e469c924d58516868c, type: 2}
-  contextMenuOptions: 0
+  entity_features: []
+  maxHealth: 100
+  resource_amount: []
+  build_time: 0
   prefab: {fileID: 8267776293835074467, guid: 7aee0876c5381cc4eb368cfc45720fa5, type: 3}
+  thumbnail: {fileID: 0}
+  contextMenuOptions: 0
+  minimapMarker: {fileID: 0}
+  viewDistance: 10

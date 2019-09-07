@@ -13,9 +13,15 @@ MonoBehaviour:
   m_Name: BlackSmith
   m_EditorClassIdentifier: 
   buildingName: Blacksmith
-  goldCost: 500
-  maxHealth: 200
-  features:
+  description: 
+  building_features:
   - {fileID: 11400000, guid: 91c63376520d4da429887e103bb9271d, type: 2}
-  contextMenuOptions: 0
+  entity_features: []
+  maxHealth: 200
+  resource_amount: []
+  build_time: 0
   prefab: {fileID: 6786867742982607769, guid: 1ea388ef2c3ef924ba52a1cd7f8b80f5, type: 3}
+  thumbnail: {fileID: 0}
+  contextMenuOptions: 0
+  minimapMarker: {fileID: 0}
+  viewDistance: 10

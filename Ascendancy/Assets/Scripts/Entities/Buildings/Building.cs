@@ -19,7 +19,10 @@ public class Building : Entity
         currentHealth = buildingInfo.maxHealth;
 
         foreach (EntityFeature feature in buildingInfo.entity_features)
+        {
+            Debug.Log("feature: " + feature);
             feature.Initialize(this);
+        }
 
         foreach (BuildingFeature feature in buildingInfo.building_features)
             feature.Initialize(this);

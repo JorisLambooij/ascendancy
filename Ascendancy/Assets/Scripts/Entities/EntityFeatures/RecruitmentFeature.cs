@@ -6,10 +6,10 @@ using UnityEngine;
 public class RecruitmentFeature : EntityFeature
 {
     public List<UnitInfo> recruitableUnits;
-    private List<UnitInfo> queue = new List<UnitInfo>();
+    private List<QueueObject> queue = new List<QueueObject>();
 
     private float timer = 0f;
-    private int maxQueueSize = 10;
+    private readonly int maxQueueSize = 10;
 
 
     public override void Initialize(Entity entity)
@@ -21,18 +21,18 @@ public class RecruitmentFeature : EntityFeature
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            AddToQueue(recruitableUnits[0], entity);
+            AddToQueue(recruitableUnits[0].prefab.GetComponent<Unit>(), entity);
         }
 
         if (queue.Count > 0)
             if (timer <= 0f)
             {
-                Recruit(queue[0], entity);
+                Recruit(queue[0].BaseUnit, entity);
                 queue.RemoveAt(0);
 
                 if (queue.Count > 0)
                 {
-                    timer = queue[0].build_time;
+                    timer = queue[0].BaseUnit.unitInfo.build_time;
                 }
                 else
                 {
@@ -42,7 +42,7 @@ public class RecruitmentFeature : EntityFeature
             else
             {
                 timer -= Time.deltaTime;
-                Debug.Log("TIMER: " + timer + "s / QUEUE: " + queue.Count + " $" + queue[0].unitName);
+                Debug.Log("TIMER: " + timer + "s / QUEUE: " + queue.Count + " $" + queue[0].BaseUnit.unitInfo.unitName);
             }
 
 
@@ -53,11 +53,11 @@ public class RecruitmentFeature : EntityFeature
     /// </summary>
     /// <param name="unitInfo">The Unit we wish to spawn.</param>
     /// <returns>True on a success, false otherwise.</returns>
-    public bool AddToQueue(UnitInfo unitInfo, Entity entity)
+    public bool AddToQueue(Unit unit, Entity entity)
     {
-        Debug.Log("Add to queue: " + unitInfo.unitName);
+        Debug.Log("Add to queue: " + unit.unitInfo.unitName);
         // if unit is not allowed, abort
-        if (!recruitableUnits.Contains(unitInfo))
+        if (!recruitableUnits.Contains(unit.unitInfo))
             return false;
 
         Debug.Log("Recruitable: YES");
@@ -69,7 +69,7 @@ public class RecruitmentFeature : EntityFeature
         }
 
         //check resource amount
-        List<Resource_Amount> unit_cost = unitInfo.resource_amount;
+        List<Resource_Amount> unit_cost = unit.unitInfo.resource_amount;
 
         bool enough = true;
         foreach (Resource_Amount amount in unit_cost)
@@ -82,17 +82,17 @@ public class RecruitmentFeature : EntityFeature
                 entity.Owner.economy.resourceStorage[amount.resource] -= amount.amount;
 
             if (queue.Count == 0)
-                timer = unitInfo.build_time;
+                timer = unit.unitInfo.build_time;
 
-            queue.Add(unitInfo);
+            queue.Add(new QueueObject(unit, unit.unitInfo.resource_amount));
 
-            Debug.Log("Successfully added " + unitInfo.unitName + " to the queue!");
+            Debug.Log("Successfully added " + unit.unitInfo.unitName + " to the queue!");
 
             return true;
         }
         else
         {
-            Debug.Log("Not enough resources for " + unitInfo.unitName + "!");
+            Debug.Log("Not enough resources for " + unit.unitInfo.unitName + "!");
             //alert the player
             //TODO
 
@@ -100,10 +100,10 @@ public class RecruitmentFeature : EntityFeature
         }
     }
 
-    private void Recruit(UnitInfo unitInfo, Entity entity)
+    private void Recruit(Unit unit, Entity entity)
     {
         Transform parent = entity.Owner.unitsGO.transform;
-        Unit newUnit = Instantiate(unitInfo.prefab, parent).GetComponent<Unit>();
+        Unit newUnit = Instantiate(unit.unitInfo.prefab, parent).GetComponent<Unit>();
         newUnit.transform.position = entity.transform.position;
 
         Debug.Log("Recruitment Success");

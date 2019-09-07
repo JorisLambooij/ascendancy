@@ -13,9 +13,15 @@ MonoBehaviour:
   m_Name: GoldMine
   m_EditorClassIdentifier: 
   buildingName: Gold Mine
-  goldCost: 100
-  maxHealth: 100
-  features:
+  description: 
+  building_features:
   - {fileID: 11400000, guid: fedcee826c899b34fb995c8241ef90f5, type: 2}
-  contextMenuOptions: 0
+  entity_features: []
+  maxHealth: 100
+  resource_amount: []
+  build_time: 0
   prefab: {fileID: 2021816003209581207, guid: 035922f511e8d284ea8edbbca2ff3b05, type: 3}
+  thumbnail: {fileID: 0}
+  contextMenuOptions: 0
+  minimapMarker: {fileID: 0}
+  viewDistance: 10
