@@ -46,7 +46,7 @@ public class ProductionFeature : BuildingFeature
 
         if (consumedResource != null)
         {
-            float inStorage = owner.economy.resourceStorage.Value(consumedResource);
+            float inStorage = owner.economy.resourceStorage.GetValue(consumedResource);
             if (inStorage > consumedAmount)
                 owner.economy.resourceStorage.SetValue(consumedResource, inStorage - consumedAmount);
             else
@@ -55,7 +55,7 @@ public class ProductionFeature : BuildingFeature
         }
         
         
-        float producedInStorage = owner.economy.resourceStorage.Value(producedResource);
+        float producedInStorage = owner.economy.resourceStorage.GetValue(producedResource);
         owner.economy.resourceStorage.SetValue(producedResource, producedInStorage + producedAmount);
         return true;
     }

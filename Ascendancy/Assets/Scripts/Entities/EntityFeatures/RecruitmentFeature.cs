@@ -73,13 +73,16 @@ public class RecruitmentFeature : EntityFeature
 
         bool enough = true;
         foreach (Resource_Amount amount in unit_cost)
-            if (entity.Owner.economy.resourceStorage[amount.resource] < amount.amount)
+            if (entity.Owner.economy.resourceStorage.GetValue(amount.resource) < amount.amount)
                 enough = false;
 
         if (enough == true)
         {
             foreach (Resource_Amount amount in unit_cost)
-                entity.Owner.economy.resourceStorage[amount.resource] -= amount.amount;
+            {
+                float newAmount = entity.Owner.economy.resourceStorage.GetValue(amount.resource) - amount.amount; ;
+                entity.Owner.economy.resourceStorage.SetValue(amount.resource, newAmount);
+            }
 
             if (queue.Count == 0)
                 timer = unit.unitInfo.build_time;

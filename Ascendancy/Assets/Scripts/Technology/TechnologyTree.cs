@@ -32,7 +32,7 @@ public struct TechnologyTree
     {
         if (progress < 0)
             return;
-        int newProgress = techProgress.Value(techID) + progress;
+        int newProgress = techProgress.GetValue(techID) + progress;
         newProgress = Mathf.Min(newProgress, techDictionary[techID].cost);
         techProgress.SetValue(techID, newProgress);
     }
@@ -71,7 +71,7 @@ public struct TechnologyTree
     private bool IsTechResearched(int techID)
     {
         int cost = techDictionary[techID].cost;
-        int progress = techProgress.Value(techID);
+        int progress = techProgress.GetValue(techID);
         return cost == progress;
     }
 

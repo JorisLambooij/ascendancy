@@ -25,7 +25,6 @@ public class JSON_To_Tech_Converter
             string path = System.IO.Path.ChangeExtension(strings[i], "").Remove(strings[i].IndexOf('.'));
             T info = Resources.Load<T>(path);
             infos[i] = info;
-            Debug.Log(path + " - " + info);
         }
         return infos;
     }
