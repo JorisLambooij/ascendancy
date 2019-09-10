@@ -18,7 +18,13 @@ public class Building : Entity
 
         currentHealth = buildingInfo.maxHealth;
 
-        foreach (BuildingFeature feature in buildingInfo.features)
+        foreach (EntityFeature feature in buildingInfo.entity_features)
+        {
+            Debug.Log("feature: " + feature);
+            feature.Initialize(this);
+        }
+
+        foreach (BuildingFeature feature in buildingInfo.building_features)
             feature.Initialize(this);
     }
 
@@ -26,7 +32,10 @@ public class Building : Entity
     protected override void Update()
     {
         base.Update();
-        foreach (BuildingFeature feature in buildingInfo.features)
+        foreach (EntityFeature feature in buildingInfo.entity_features)
+            feature.UpdateOverride(this);
+
+        foreach (BuildingFeature feature in buildingInfo.building_features)
             feature.UpdateOverride(this);
     }
 }
