@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 
-public class PlayerTechScreen : MonoBehaviour
+public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, int>
 {
     public int scale = TechTreeEditor.GRID_SNAP;
     public GameObject techFieldPrefab;
@@ -34,6 +34,7 @@ public class PlayerTechScreen : MonoBehaviour
     {
         techFieldsDict = new Dictionary<int, TechField>();
         TechnologyTree techTree = playerTechLevel.techTree;
+        TechTree.techProgress.Subscribe(this);
         
         // Make a TechField for each Technology
         foreach (KeyValuePair<int, Technology> kvp in TechTree.techDictionary)
@@ -71,11 +72,6 @@ public class PlayerTechScreen : MonoBehaviour
         get { return playerTechLevel.techTree; }
     }
     
-    public void Subscribe(int techID, System.Action<int> callback)
-    {
-        playerTechLevel.techTree.Subscribe(techID, callback);
-    }
-
     public void Focus(int techID)
     {
         TechField[] techFields = GetComponentsInChildren<TechField>();
@@ -92,6 +88,17 @@ public class PlayerTechScreen : MonoBehaviour
                 field.isCurrentFocus = false;
                 field.SetRightColor();
             }
+        }
+    }
+
+    public void Callback(int key, int newValue)
+    {
+        techFieldsDict[key].OnProgressUpdate(newValue);
+
+        foreach (int techID in TechTree.techDictionary[key].leadsToTechs)
+        { 
+            //Debug.Log("Checking " + TechTree.techDictionary)
+            techFieldsDict[techID].OnDependencyProgressUpdate();
         }
     }
 }

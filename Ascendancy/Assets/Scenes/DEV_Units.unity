@@ -1422,6 +1422,7 @@ MonoBehaviour:
   playerName: Alice
   playerColor: {r: 0, g: 0.754717, b: 0.030186852, a: 1}
   economy: {fileID: 0}
+  techLevel: {fileID: 0}
   buildingsGO: {fileID: 2015853046}
   unitsGO: {fileID: 1568851076}
 --- !u!114 &349416433
@@ -1436,11 +1437,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d37627fd4e48c547954dafcddba1ea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  availableResources:
-  - {fileID: 11400000, guid: 73d299aab683abc428b8e867394aa0ce, type: 2}
-  - {fileID: 11400000, guid: 12d5eb5b328016a40993a98535cbbd84, type: 2}
-  - {fileID: 11400000, guid: a01bdeeab68f31f488705611ebf4a82b, type: 2}
-  - {fileID: 11400000, guid: af0ccdf2421900e4b8d65ddb37b02480, type: 2}
 --- !u!114 &349416434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4180,7 +4176,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d37627fd4e48c547954dafcddba1ea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  availableResources: []
 --- !u!1001 &1588996453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4561,6 +4556,7 @@ GameObject:
   - component: {fileID: 1655054079}
   - component: {fileID: 1655054080}
   - component: {fileID: 1655054081}
+  - component: {fileID: 1655054082}
   m_Layer: 0
   m_Name: Player 2
   m_TagString: Untagged
@@ -4600,6 +4596,7 @@ MonoBehaviour:
   playerName: Bob
   playerColor: {r: 1, g: 0.5254831, b: 0, a: 1}
   economy: {fileID: 0}
+  techLevel: {fileID: 0}
   buildingsGO: {fileID: 2143175861}
   unitsGO: {fileID: 2040130332}
 --- !u!114 &1655054081
@@ -4614,7 +4611,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d37627fd4e48c547954dafcddba1ea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  availableResources: []
+--- !u!114 &1655054082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1655054078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94e8c9b71a478444198b935a28ed1757, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentFocus: 0
 --- !u!1 &1679520739
 GameObject:
   m_ObjectHideFlags: 0
@@ -4853,7 +4862,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1744871256
 MonoBehaviour:
   m_ObjectHideFlags: 0

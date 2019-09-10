@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class TechnologyEditor : EditorWindow
+public class TechnologyEditor : EditorWindow, PropertySubscriber<Node>
 {
     public string techSpriteFolder = "Assets/Resources/Sprites/Technologies/";
     
@@ -29,16 +29,13 @@ public class TechnologyEditor : EditorWindow
     private void OnEnable()
     {
         RefreshWindow();
-        unitList     = new GUIExpandableList<UnitInfo>("Units Unlocked", true, 0);
-        buildingList = new GUIExpandableList<BuildingInfo>("Buildings Unlocked", true, 0);
-        resourceList = new GUIExpandableList<Resource>("Resources Unlocked", true, 0);
     }
 
-    void OnSelectedNodeChange(Node newNode)
+    public void Callback(Node newValue)
     {
-        selectedNode = newNode;
+        selectedNode = newValue;
         if (selectedNode != null)
-            tech = newNode.tech;
+            tech = newValue.tech;
         else
             tech = null;
     }
@@ -135,6 +132,11 @@ public class TechnologyEditor : EditorWindow
     void RefreshWindow()
     {
         techTreeEditor = TechTreeEditor.instance;
-        techTreeEditor.selectedNode.Subscribe(OnSelectedNodeChange);
+
+        if (techTreeEditor != null)
+            techTreeEditor.selectedNode.Subscribe(this);
+        unitList = new GUIExpandableList<UnitInfo>("Units Unlocked", true, 0);
+        buildingList = new GUIExpandableList<BuildingInfo>("Buildings Unlocked", true, 0);
+        resourceList = new GUIExpandableList<Resource>("Resources Unlocked", true, 0);
     }
 }

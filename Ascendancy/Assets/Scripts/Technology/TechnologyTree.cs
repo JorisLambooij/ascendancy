@@ -9,17 +9,15 @@ public struct TechnologyTree
 {
     public List<Technology> technologies { get; private set; }
     public Dictionary<int, Technology> techDictionary { get; private set; }
-    public Dictionary<int, int> techProgress { get; private set; }
+
+    public SubscribableDictionary<int, int> techProgress { get; private set; }
     public Dictionary<int, Vector2> techPosition { get; private set; }
-
-    private Dictionary<int, List<Action<int>>> techProgressSubscriptions;
-
+    
     public TechnologyTree(int techCount)
     {
         technologies = new List<Technology>(techCount);
         techDictionary = new Dictionary<int, Technology>(techCount);
-        techProgress = new Dictionary<int, int>(techCount);
-        techProgressSubscriptions = new Dictionary<int, List<Action<int>>>(techCount);
+        techProgress = new SubscribableDictionary<int, int>(techCount);
         techPosition = new Dictionary<int, Vector2>(techCount);
     }
 
@@ -28,25 +26,26 @@ public struct TechnologyTree
         technologies.Add(t);
         techDictionary.Add(t.id, t);
         techProgress.Add(t.id, 0);
-        techProgressSubscriptions.Add(t.id, new List<Action<int>>());
     }
 
     public void AddProgress(int techID, int progress)
     {
         if (progress < 0)
             return;
-        int newProgress = techProgress[techID] + progress;
+        int newProgress = techProgress.Value(techID) + progress;
         newProgress = Mathf.Min(newProgress, techDictionary[techID].cost);
-        techProgress[techID] = newProgress;
-
-        foreach (Action<int> callback in techProgressSubscriptions[techID])
-            callback(techProgress[techID]);
-
+        techProgress.SetValue(techID, newProgress);
     }
 
-    public void Subscribe(int techID, Action<int> callback)
+    public List<Technology> UnlockedTechs()
     {
-        techProgressSubscriptions[techID].Add(callback);
+        List<Technology> unlockedTechs = new List<Technology>();
+
+        foreach (Technology tech in technologies)
+            if (IsTechResearched(tech.id))
+                unlockedTechs.Add(tech);
+
+        return unlockedTechs;
     }
 
     /// <summary>
@@ -72,7 +71,7 @@ public struct TechnologyTree
     private bool IsTechResearched(int techID)
     {
         int cost = techDictionary[techID].cost;
-        int progress = techProgress[techID];
+        int progress = techProgress.Value(techID);
         return cost == progress;
     }
 

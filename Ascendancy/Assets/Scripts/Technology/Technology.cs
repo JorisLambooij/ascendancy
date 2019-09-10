@@ -34,6 +34,11 @@ public class Technology
     /// </summary>
     public int[] dependencies;
 
+    /// <summary>
+    /// The IDs of the technologies that this tech unlocks.
+    /// </summary>
+    public List<int> leadsToTechs;
+
     public Technology(string name, int id, Sprite icon, int cost, bool startTech, int[] dependencies, UnitInfo[] unitsUnlocked, BuildingInfo[] buildingsUnlocked, Resource[] resourcesUnlocked)
     {
         this.name = name;
@@ -45,6 +50,7 @@ public class Technology
         this.unitsUnlocked = unitsUnlocked;
         this.buildingsUnlocked = buildingsUnlocked;
         this.resourcesUnlocked = resourcesUnlocked;
+        this.leadsToTechs = new List<int>();
     }
 
     public Technology(JSON_Technology tech, Sprite icon)
@@ -55,6 +61,7 @@ public class Technology
         startTech = tech.startTech;
         dependencies = tech.dependencies;
         this.icon = icon;
+        this.leadsToTechs = new List<int>();
     }
 
     // Effects

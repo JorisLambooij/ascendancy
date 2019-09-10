@@ -41,11 +41,6 @@ public class TechField : MonoBehaviour
 
         icon.sprite = tech.icon;
         
-        playerTechScreen.Subscribe(tech.id, OnProgressUpdate);
-
-        foreach (int dependency in tech.dependencies)
-            playerTechScreen.Subscribe(dependency, OnDependencyProgressUpdate);
-        
         SetRightColor();
     }
 
@@ -117,7 +112,7 @@ public class TechField : MonoBehaviour
     /// When a dependency of this Technology is updated, check whether this Technology has become researchable as a result.
     /// </summary>
     /// <param name="newProgress">New Progress of the dependency. Not relevant in this function.</param>
-    private void OnDependencyProgressUpdate(int newProgress)
+    public void OnDependencyProgressUpdate()
     {
         if (playerTechScreen.TechTree.TechResearchability(Tech.id) == Researchability.Researchable)
             SetResearchable();
@@ -130,7 +125,7 @@ public class TechField : MonoBehaviour
         playerTechScreen.Focus(Tech.id);
     }
 
-    private void OnProgressUpdate(int newProgress)
+    public void OnProgressUpdate(int newProgress)
     {
         progressBar.value = Mathf.Clamp01((float)newProgress / Tech.cost);
 

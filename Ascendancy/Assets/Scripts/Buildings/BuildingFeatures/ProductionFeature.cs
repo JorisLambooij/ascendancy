@@ -31,16 +31,32 @@ public class ProductionFeature : BuildingFeature
 
     private bool Produce(Player owner)
     {
+        if (consumedResource != null && !owner.economy.availableResources.Contains(consumedResource))
+        // Consumed Resource has not been unlocked yet
+        {
+            Debug.Log("Resource " + consumedResource.resourceName + " not unlocked.");
+            return false;
+        }
+        if (producedResource != null && !owner.economy.availableResources.Contains(producedResource))
+        // Produced Resource has not been unlocked yet
+        {
+            Debug.Log("Resource " + producedResource.resourceName + " not unlocked.");
+            return false;
+        }
+
         if (consumedResource != null)
         {
-            if (owner.economy.resourceStorage[consumedResource] > consumedAmount)
-                owner.economy.resourceStorage[consumedResource] -= consumedAmount;
+            float inStorage = owner.economy.resourceStorage.Value(consumedResource);
+            if (inStorage > consumedAmount)
+                owner.economy.resourceStorage.SetValue(consumedResource, inStorage - consumedAmount);
             else
                 // not enough of the needed Resource, so don't produce anything
                 return false;
         }
-
-        owner.economy.resourceStorage[producedResource] += producedAmount;
+        
+        
+        float producedInStorage = owner.economy.resourceStorage.Value(producedResource);
+        owner.economy.resourceStorage.SetValue(producedResource, producedInStorage + producedAmount);
         return true;
     }
 

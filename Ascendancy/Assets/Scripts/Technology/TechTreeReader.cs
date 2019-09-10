@@ -38,6 +38,11 @@ public class TechTreeReader : MonoBehaviour
         TechnologyTree techTree = new TechnologyTree(loadedData.technologies.Length);
         foreach (JSON_Technology t in loadedData.technologies)
             techTree.AddTech(JSON_To_Tech_Converter.Convert(t));
+        
+        // Add each technology to the leadsToTechs-list of its dependencies.
+        foreach(Technology t in techTree.technologies)
+            foreach(int dep in t.dependencies)
+                techTree.techDictionary[dep].leadsToTechs.Add(t.id);
 
         return techTree;
     }

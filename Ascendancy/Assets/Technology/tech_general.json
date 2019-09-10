@@ -37,7 +37,11 @@
             "startTech": false,
             "unitsUnlocked": [],
             "buildingsUnlocked": [],
-            "resourcesUnlocked": []
+            "resourcesUnlocked": [
+                "ScriptableObjects/Resource/Iron.asset",
+                "ScriptableObjects/Resource/Tools.asset",
+                "ScriptableObjects/Resource/Gold.asset"
+            ]
         },
         {
             "name": "Writing",
@@ -164,7 +168,9 @@
             "startTech": true,
             "unitsUnlocked": [],
             "buildingsUnlocked": [],
-            "resourcesUnlocked": []
+            "resourcesUnlocked": [
+                "ScriptableObjects/Resource/Wood.asset"
+            ]
         },
         {
             "name": "Orichalcum",
@@ -177,7 +183,9 @@
             "startTech": false,
             "unitsUnlocked": [],
             "buildingsUnlocked": [],
-            "resourcesUnlocked": []
+            "resourcesUnlocked": [
+                "ScriptableObjects/Resource/Orichalcum.asset"
+            ]
         },
         {
             "name": "Heavy CavalryM",
