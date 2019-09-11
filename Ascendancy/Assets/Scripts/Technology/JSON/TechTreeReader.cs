@@ -5,8 +5,8 @@ using System.IO;
 
 public class TechTreeReader : MonoBehaviour
 {
-    public static string techPath = "Assets/Technology/tech_general.json";
-    public static string nodePath = "Assets/Technology/tech_general_nodeData.json";
+    public static string techPath = "Assets/_Data/Technology/tech_general.json";
+    public static string nodePath = "Assets/_Data/Technology/tech_general_nodeData.json";
 
     private static TechTreeReader instance;
     public static TechTreeReader Instance
@@ -35,11 +35,12 @@ public class TechTreeReader : MonoBehaviour
         dataAsJSON = File.ReadAllText(techPath);
         JSONTechTree loadedData = JsonUtility.FromJson<JSONTechTree>(dataAsJSON);
 
+        // Add each of the Technologies to the TechTree
         TechnologyTree techTree = new TechnologyTree(loadedData.technologies.Length);
         foreach (JSON_Technology t in loadedData.technologies)
             techTree.AddTech(JSON_To_Tech_Converter.Convert(t));
         
-        // Add each technology to the leadsToTechs-list of its dependencies.
+        // Add each Technology to the leadsToTechs-list of its dependencies.
         foreach(Technology t in techTree.technologies)
             foreach(int dep in t.dependencies)
                 techTree.techDictionary[dep].leadsToTechs.Add(t.id);
