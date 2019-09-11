@@ -369,7 +369,8 @@ public class GameMode : ControlMode
     {
         Ray ray = gameManager.camScript.MouseCursorRay();
         RaycastHit hit;
-        Physics.Raycast(ray, out hit);
+        int layerMask = 1 << LayerMask.NameToLayer("Entities") | 1 << LayerMask.NameToLayer("Ground");
+        Physics.Raycast(ray, out hit, 100, layerMask);
         return hit;
     }
 
