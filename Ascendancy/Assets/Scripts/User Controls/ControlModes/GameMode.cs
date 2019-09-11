@@ -161,9 +161,10 @@ public class GameMode : ControlMode
                 }
 
             }
-            else
+            else if (!EventSystem.current.IsPointerOverGameObject())
             {
                 // only one click, so raycast -> see if we hit a unit
+                // only if we didnt click in the UI tho
 
                 Ray ray = gameManager.camScript.MouseCursorRay();
                 RaycastHit hit;
@@ -244,7 +245,10 @@ public class GameMode : ControlMode
                         // if the units projected position is in the "before" the drag line starting pos, correct the projected distance
                         if (Vector3.Angle(projectedVector, dragLineDirection) > 90)
                             projectedDistance *= -1;
-                        
+
+                        // if, by some chance, two units happen to have the same projected dictance, just move the second one slightly further down.
+                        while (unitsSorted.ContainsKey(projectedDistance))
+                            projectedDistance += 0.0001f;
                         // sort by length of the projected vector
                         unitsSorted.Add(projectedDistance, u);
                     }
@@ -368,7 +372,8 @@ public class GameMode : ControlMode
     {
         Ray ray = gameManager.camScript.MouseCursorRay();
         RaycastHit hit;
-        Physics.Raycast(ray, out hit);
+        int layerMask = 1 << LayerMask.NameToLayer("Entities") | 1 << LayerMask.NameToLayer("Ground");
+        Physics.Raycast(ray, out hit, 100, layerMask);
         return hit;
     }
 

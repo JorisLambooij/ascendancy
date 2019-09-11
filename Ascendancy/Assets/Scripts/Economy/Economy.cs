@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class Economy : MonoBehaviour
 {
-    public Dictionary<Resource, float> resourceStorage;
-
-    public List<Resource> availableResources;
+    public SubscribableDictionary<Resource, float> resourceStorage;
+    public SubscribableList<Resource> availableResources;
     
     public void Initialize()
     {
-        resourceStorage = new Dictionary<Resource, float>();
+        resourceStorage = new SubscribableDictionary<Resource, float>();
+        availableResources = new SubscribableList<Resource>();
 
-        foreach (Resource resource in availableResources)
+        foreach (Resource resource in availableResources.AsList)
             resourceStorage.Add(resource, 0);
+    }
+
+    public void NewAvailableResource(Resource r)
+    {
+        Debug.Log("New Resource: " + r.resourceName);
+        availableResources.Add(r);
+        resourceStorage.Add(r, 0);
     }
 }
