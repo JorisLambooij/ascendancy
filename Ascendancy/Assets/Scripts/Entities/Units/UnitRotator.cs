@@ -7,11 +7,15 @@ using UnityEngine;
 /// </summary>
 public class UnitRotator : MonoBehaviour
 {
+    public float allowedAngleForMovement;
+
     public float maxAngularSpeed;
     
     public void RotateTowards(Vector3 direction)
     {
         Quaternion lookRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * maxAngularSpeed);
+
+        GetComponent<Unit>().Controller.NavAgent.isStopped = Vector3.Angle(transform.forward, direction) < allowedAngleForMovement;
     }
 }
