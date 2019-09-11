@@ -47,7 +47,7 @@ public class MinimapControls : MonoBehaviour
                 newZoom /= 1 + scrollSensitivity;
                 zoomDelta = Mathf.Max(0, zoomDelta - 1);
             }
-            minimapCam.orthographicSize = Mathf.Clamp(newZoom, 16, GetComponent<MinimapCamera>().StandardSize);
+            //minimapCam.orthographicSize = Mathf.Clamp(newZoom, 16, GetComponent<Camera>().StandardSize);
         }
     }
 }
