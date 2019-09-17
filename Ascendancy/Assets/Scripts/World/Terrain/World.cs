@@ -9,28 +9,29 @@ using System.Collections.Generic;
 
 public class World : MonoBehaviour
 {
-    public Texture2D heightmap;
     public GameObject chunkPrefab;
     public LocalNavMeshBuilder navMeshBuilder;
 
     //tweakables
     public int worldSize = 64;  //tiles per side of the world
-    public int chunkSize = 64;
+    public int chunkSize = 64; // tiles per side of each chunk
     public float tileSize = 5f; //meters per side of each tiles
-    public float noiseScale = .125f;
     public float heightScale = 1f;   //meters of elevation each new level gives us
-    public float heightResolution = 1f;
+    public float heightResolution = 1f; // amount of different levels of elevation
 
     public Transform ChunkCollector;
 
     public GameObject fow_plane;
 
+    private float[,] heightmap;
     private Tile[,] map;    //set of all the tiles that make up the world
     private Chunk[,] chunks; //set of all the chunks we're going to use to draw the world
                              //private GameObject chunkGO; //the instantiated Chunk
 
     void Start()
     {
+        heightmap = GetComponent<HeightMapGenerator>().GenerateHeightMap(16, 16);
+
         //initiate things
         map = new Tile[worldSize, worldSize];
         int chunkAmount = Mathf.CeilToInt(worldSize / chunkSize);
@@ -106,21 +107,18 @@ public class World : MonoBehaviour
 
     float Height(float x, float z)
     {
-        int texX = (int)(x / worldSize * heightmap.width);
-        int texY = (int)(z / worldSize * heightmap.height);
+        int texX = (int)(x / worldSize * heightmap.GetLength(0));
+        int texY = (int)(z / worldSize * heightmap.GetLength(1));
 
-        return heightmap.GetPixel(texX, texY).grayscale * heightResolution;
+        texX = Mathf.RoundToInt(texX / tileSize);
+        texY = Mathf.RoundToInt(texY / tileSize);
+
+        texX = Mathf.Clamp(texX, 0, heightmap.GetLength(0) - 1);
+        texY = Mathf.Clamp(texY, 0, heightmap.GetLength(1) - 1);
+
+        return heightmap[texX, texY] * heightResolution;
     }
-
-    float Perlin(float x, float z)
-    {
-        float perlinX = x * noiseScale;
-        float perlinZ = z * noiseScale;
-
-        Debug.Log("Perlin " + x + "," + z + " " + (Mathf.PerlinNoise(perlinX, perlinZ) * heightScale));
-        return (Mathf.PerlinNoise(perlinX, perlinZ)) * heightScale;
-    }
-
+    
     public Collider GetCollider()
     {
         return chunks[0, 0].GetComponent<MeshCollider>();

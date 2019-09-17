@@ -40,12 +40,24 @@ Material:
         m_Texture: {fileID: 2800000, guid: ccc698c13d8c5f9469862edf75240615, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _TerrainHeightGradientTexture:
+        m_Texture: {fileID: 2800000, guid: 62cd5770d738ee04a9f10219aa96eef2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TerrainTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - Boolean_38021BFA: 1
     - Boolean_5E37AC99: 0
     - Vector1_46842222: 0.123
     - Vector1_F0A85FEC: 0.08
+    - _boolTextured: 0
     - _grid: 1
+    - _gridStrength: 0.25
     m_Colors:
     - Color_283B0952: {r: 0.12156863, g: 0.6313726, b: 0.14117648, a: 0}
+    - _PositionRemapRange: {r: 6, g: 11, b: 0.01, a: 0.99}
+    - _TerrainColor: {r: 0.12224097, g: 0.6320754, b: 0.14304477, a: 0}
     - _WorldSpaceLightPos0: {r: 0, g: 0, b: 0, a: 0}
