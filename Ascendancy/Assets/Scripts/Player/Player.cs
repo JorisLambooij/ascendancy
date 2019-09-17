@@ -13,8 +13,10 @@ public class Player : MonoBehaviour
     public GameObject buildingsGO;
     public GameObject unitsGO;
 
-    private void Start()
+    public void Initialize()
     {
+        Debug.Log("init player " + playerNo);
+
         economy = GetComponent<Economy>();
         economy.Initialize();
 

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class Zoom : MonoBehaviour
 {
-    public CanvasScaler zoomTarget;
     public float scrollSensitivity;
 
     private float scrollBuffer;
@@ -14,12 +13,12 @@ public class Zoom : MonoBehaviour
     {
         if (scrollBuffer > 0)
         {
-            zoomTarget.scaleFactor *= 1 + scrollSensitivity;
+            transform.localScale *= 1 + scrollSensitivity;
             scrollBuffer = Mathf.Max(0, scrollBuffer - 1);
         }
         else if (scrollBuffer < 0)
         {
-            zoomTarget.scaleFactor /= 1 + scrollSensitivity;
+            transform.localScale /= 1 + scrollSensitivity;
             scrollBuffer = Mathf.Min(0, scrollBuffer + 1);
         }
     }

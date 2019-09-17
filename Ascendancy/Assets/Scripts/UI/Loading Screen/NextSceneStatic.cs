@@ -8,6 +8,6 @@ public class NextSceneStatic : MonoBehaviour
 
     void Start()
     {
-        sceneName = "not initialized!";
+        //sceneName = "not initialized!";
     }
 }

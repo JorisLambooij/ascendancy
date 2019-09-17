@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>, ListSubscriber<Resource>
 {
-    public Player player;
     public GameObject resourceEntryPrefab;
 
+    private Player player;
     private Dictionary<Resource, Resource_UI_Entry> resourceEntries;
 
     /// <summary>
@@ -36,8 +36,10 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
     // Start is called before the first frame update
     void Start()
     {
-        resourceEntries = new Dictionary<Resource, Resource_UI_Entry>();
+        player = GameManager.Instance.playerScript;
 
+        resourceEntries = new Dictionary<Resource, Resource_UI_Entry>();
+        
         player.economy.resourceStorage.Subscribe(this);
         player.economy.availableResources.Subscribe(this);
         

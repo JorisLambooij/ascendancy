@@ -30,6 +30,14 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, int>
         SetUpTechScreen();
     }
 
+    void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            GetComponentInParent<UI_Canvas>().CloseAllScreens();
+        }
+    }
+
     private void SetUpTechScreen()
     {
         techFieldsDict = new Dictionary<int, TechField>();
