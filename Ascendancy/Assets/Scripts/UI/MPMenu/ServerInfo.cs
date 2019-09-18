@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ServerInfo : MonoBehaviour
+public class ServerInfo
 {
     [SerializeField]
     public string ServerName { get; set; }
