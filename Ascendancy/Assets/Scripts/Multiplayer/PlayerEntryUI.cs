@@ -6,8 +6,7 @@ using UnityEngine.UI;
 public class PlayerEntryUI : MonoBehaviour
 {
     public Image background;
-    public Text playerNameField;
-    public Text playerNamePlaceholder;
+    public Text playerNameText;
 
     private int playerNo;
 
@@ -17,7 +16,7 @@ public class PlayerEntryUI : MonoBehaviour
     {
         get
         {
-            PlayerInfo info = new PlayerInfo(playerNameField.text, PlayerNo, playerColor);
+            PlayerInfo info = new PlayerInfo(playerNameText.text, PlayerNo, playerColor);
             return info;
         }
     }
@@ -27,7 +26,7 @@ public class PlayerEntryUI : MonoBehaviour
         set
         {
             playerNo = value;
-            playerNamePlaceholder.text = "Player " + playerNo;
+            playerNameText.text = "Player " + playerNo;
         }
     }
 
