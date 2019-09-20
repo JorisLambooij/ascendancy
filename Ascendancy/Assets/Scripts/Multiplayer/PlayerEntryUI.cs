@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerEntryUI : MonoBehaviour
 {
-    public Image background;
+    //public Image background;
     public Text playerNameText;
 
     private int playerNo;
@@ -30,12 +30,12 @@ public class PlayerEntryUI : MonoBehaviour
         }
     }
 
-    public Color PlayerColor {
-        get => playerColor;
-        set
-        {
-            playerColor = value;
-            background.color = playerColor;
-        }
-    }
+    //public Color PlayerColor {
+    //    get => playerColor;
+    //    set
+    //    {
+    //        playerColor = value;
+    //        background.color = playerColor;
+    //    }
+    //}
 }
