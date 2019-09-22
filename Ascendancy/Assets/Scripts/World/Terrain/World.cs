@@ -7,35 +7,61 @@ using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
 
-public class World : MonoBehaviour
+public class World : MonoBehaviour_Singleton
 {
+    public enum DisplayMode { Height, Color };
+    public DisplayMode displayMode = DisplayMode.Color;
+
     public GameObject chunkPrefab;
     public LocalNavMeshBuilder navMeshBuilder;
 
     //tweakables
     public int worldSize = 64;  //tiles per side of the world
-    public int chunkSize = 64; // tiles per side of each chunk
+    public int numberOfChunks = 2; // number of chunk per side of the world
+
     public float tileSize = 5f; //meters per side of each tiles
     public float heightScale = 1f;   //meters of elevation each new level gives us
     public float heightResolution = 1f; // amount of different levels of elevation
 
+    //public float seaLevel = 0;
+
     public Transform ChunkCollector;
 
     public GameObject fow_plane;
+    public Texture2D tex;
 
     private float[,] heightmap;
     private Tile[,] map;    //set of all the tiles that make up the world
     private Chunk[,] chunks; //set of all the chunks we're going to use to draw the world
                              //private GameObject chunkGO; //the instantiated Chunk
 
-    void Start()
+    protected void Awake()
     {
-        heightmap = GetComponent<HeightMapGenerator>().GenerateHeightMap(16, 16);
+        base.Start();
+
+        CreateWorld();
+
+        //resize fow_plane
+        if (fow_plane == null)
+            Debug.LogError("FoW_Plane not found, no fog for you! Go fog yourself!");
+        else
+        {
+            //TODO Calculate stuff instead of estimating '25.5'
+            fow_plane.transform.localScale = new Vector3(25.5f, 1, 25.5f);
+            fow_plane.transform.position = new Vector3(worldSize, fow_plane.transform.position.y, worldSize);
+        }
+    }
+
+    public void CreateWorld()
+    {
+        HeightMapGenerator heightMapGenerator = GetComponent<HeightMapGenerator>();
+        heightMapGenerator.GenerateHeightMap(worldSize, worldSize);
+        heightmap = heightMapGenerator.AmplifyCliffs();
 
         //initiate things
         map = new Tile[worldSize, worldSize];
-        int chunkAmount = Mathf.CeilToInt(worldSize / chunkSize);
-        chunks = new Chunk[chunkAmount, chunkAmount];
+
+        chunks = new Chunk[numberOfChunks, numberOfChunks];
         for (int x = 0; x < worldSize; x++)
             for (int z = 0; z < worldSize; z++)
                 map[x, z] = new Tile(x, z, 0f, tileSize);
@@ -50,29 +76,36 @@ public class World : MonoBehaviour
             {
                 chunks[i, j] = GenerateChunk(i, j);
                 chunks[i, j].DrawTiles(map);
+
+                //chunks[i, j].GetComponent<MeshRenderer>().material.SetTexture("_TerrainTexture", heightMapGenerator.HeightTexture(i, j, worldSize / numberOfChunks, displayMode));
             }
+
+
+        chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TerrainTexture", heightMapGenerator.WorldTexture(heightMapGenerator.noise, displayMode));
 
         navMeshBuilder.UpdateNavMesh(false);
 
-        //resize fow_plane
-        if (fow_plane == null)
-            Debug.LogError("FoW_Plane not found, no fog for you! Go fog yourself!");
-        else
-        {
-            //TODO Calculate stuff instead of estimating '25.5'
-            fow_plane.transform.localScale = new Vector3(25.5f, 1, 25.5f);
-            fow_plane.transform.position = new Vector3(worldSize, fow_plane.transform.position.y, worldSize);
-        }
+    }
+
+    public void DestroyWorld()
+    {
+        if (chunks != null)
+            for (int i = 0; i < chunks.GetLength(0); i++)
+                for (int j = 0; j < chunks.GetLength(1); j++)
+                    if (chunks[i, j] != null)
+                    DestroyImmediate(chunks[i, j].gameObject);
     }
 
     // Generate a chunk, fill it with necessary data and return the Chunk object
     Chunk GenerateChunk(int x, int z)
     {
         GameObject chunkGO = Instantiate(chunkPrefab, ChunkCollector);
-        chunkGO.transform.position = new Vector3(x, 0, z) * chunkSize * tileSize;
+        chunkGO.transform.position = new Vector3(x, 0, z) * (worldSize / numberOfChunks) * tileSize;
         Chunk chunk = chunkGO.GetComponent<Chunk>();
+        chunk.Initialize();
         chunk.tileSize = tileSize;
-        chunk.chunkSize = chunkSize;
+        chunk.chunkSize = worldSize / numberOfChunks;
+        chunk.chunkIndex = new Vector2Int(x, z);
         return chunk;
     }
 
