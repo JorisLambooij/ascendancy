@@ -21,21 +21,32 @@ public class HeightMapGenerator : MonoBehaviour
 
     public float[,] GenerateHeightMap()
     {
-        return GenerateHeightMap(mapWidth, mapHeight);
+        return GenerateHeightMap(mapWidth, mapHeight, Vector2.zero);
     }
-    public float[,] GenerateHeightMap(int width, int height)
+    public float[,] GenerateHeightMap(int width, int height, Vector2 offset)
     {
         mapWidth = width;
         mapHeight = height;
+        perlinOffset = offset;
 
-        noise = new float[width, height];
+        noise = GenerateNoiseMap(width, height, offset, octaves, lucanarity, persistance);
+        
+        return noise;
+    }
+
+    public float[,] GenerateNoiseMap(int width, int height, Vector2 offset, int _octaves, float _lucanarity, float _persistance)
+    {
+        float[,] noisemap = new float[width, height];
 
         for (int i = 0; i < width; i++)
             for (int j = 0; j < height; j++)
-                noise[i, j] = HeightAt((float)i / width, (float)j / height);
+            {
+                float x = (float)i / width + offset.x;
+                float y = (float)j / height + offset.y;
+                noisemap[i, j] = HeightAt(x, y, _octaves, _lucanarity, _persistance);
+            }
 
-        //Parallel.ForEach<Color>(noise.GetPixels, )
-        return noise;
+        return noisemap;
     }
 
     public Texture2D WorldTexture(float[,] noiseMap, World.DisplayMode displayMode)
@@ -72,19 +83,20 @@ public class HeightMapGenerator : MonoBehaviour
 
     private float HeightAt(float x, float y)
     {
+        return HeightAt(x, y, octaves, lucanarity, persistance);
+    }
+    private float HeightAt(float x, float y, int _octaves, float _lucanarity, float _persistance)
+    {
         float perlin = 0;
-        for (int i = 0; i < octaves; i++)
+        for (int i = 0; i < _octaves; i++)
         {
-            float u = x * Mathf.Pow(lucanarity, i) + perlinOffset.x;
-            float v = y * Mathf.Pow(lucanarity, i) + perlinOffset.y;
+            float u = x * Mathf.Pow(_lucanarity, i) + perlinOffset.x;
+            float v = y * Mathf.Pow(_lucanarity, i) + perlinOffset.y;
 
             float noise = Mathf.PerlinNoise(u, v) * 2 - 1;
-            perlin += noise * Mathf.Pow(persistance, i);
-            //Debug.Log(u + " " + v + ": " + perlin);
+            perlin += noise * Mathf.Pow(_persistance, i);
         }
-
-        //perlin = Mathf.Clamp01(perlin);
-
+        
         if (perlin > 1 || perlin < -1)
             Debug.Log(x + " " + y + ": " + perlin);
 
@@ -102,11 +114,13 @@ public class HeightMapGenerator : MonoBehaviour
 
         float[,] map = noise;
         float[,] deriv2 = Derivative2();
+        float[,] derivWeights = GenerateNoiseMap(mapWidth, mapHeight, new Vector2(1.5f, 2.25f), 1, 1, 1);
 
         for (int i = 0; i < mapWidth; i++)
             for (int j = 0; j < mapHeight; j++)
             {
-                map[i, j] -= deriv2[i, j] * cliffIntensity;
+                float cliffWeight = Mathf.Clamp01(cliffIntensity * (derivWeights[i, j] / 2 + 0.5f));
+                map[i, j] -= deriv2[i, j] * cliffWeight;
             }
 
         return map;

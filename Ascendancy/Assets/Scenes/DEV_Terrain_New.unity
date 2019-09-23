@@ -957,7 +957,7 @@ MonoBehaviour:
   persistance: 0.5
   mapWidth: 64
   mapHeight: 64
-  cliffIntensity: 0.215
+  cliffIntensity: 1
   terrainHeightGradient:
     serializedVersion: 2
     key0: {r: 0.04045032, g: 0.054314055, b: 0.9528302, a: 1}

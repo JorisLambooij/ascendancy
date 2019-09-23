@@ -55,7 +55,7 @@ public class World : MonoBehaviour_Singleton
     public void CreateWorld()
     {
         HeightMapGenerator heightMapGenerator = GetComponent<HeightMapGenerator>();
-        heightMapGenerator.GenerateHeightMap(worldSize, worldSize);
+        heightMapGenerator.GenerateHeightMap(worldSize, worldSize, new Vector2(1, 0));
         heightmap = heightMapGenerator.AmplifyCliffs();
 
         //initiate things
