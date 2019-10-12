@@ -21,21 +21,22 @@ public class MessageWindow : MonoBehaviour
         gluedToBottom = true;
         currentMessageTimestamp = new SubscribableProperty<int>(0);
 
-        ReceiveMessage("SYSTEM", "Lobby created");
+        ReceiveMessage("SYSTEM", Color.gray, "Lobby created");
 
         for (int i = 0; i < 25; i++)
-            ReceiveMessage("TEST", i.ToString());
+            ReceiveMessage("TEST", Color.gray ,i.ToString());
     }
 
-    public void ReceiveMessage(string sender, string message)
+    public void ReceiveMessage(string sender, Color color, string message)
     {
         currentMessageTimestamp.Value++;
 
-        message = sender + " [" + System.DateTime.Now.Hour.ToString("00") + ":" + System.DateTime.Now.Minute.ToString("00") + "]: " + message;
+        message = "<color=#" + ColorUtility.ToHtmlStringRGBA(color) + ">" + sender + "</color>" + " [" + System.DateTime.Now.Hour.ToString("00") + ":" + System.DateTime.Now.Minute.ToString("00") + "]: " + message;
+        Debug.Log(message);
         ChatMessage chatMessage = Instantiate(messagePrefab, chatWindow).GetComponent<ChatMessage>();
         chatMessage.textContent.text = message;
-        chatMessage.index = currentMessageTimestamp.Value + maximumNumberOfMessages;
-        chatMessage.messageWindow = this;
+        chatMessage.Index = currentMessageTimestamp.Value + maximumNumberOfMessages;
+        chatMessage.MessageWindow = this;
         currentMessageTimestamp.Subscribe(chatMessage);
         
         gluedToBottom = scrollRect.verticalNormalizedPosition < epsilon;

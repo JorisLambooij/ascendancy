@@ -7,8 +7,8 @@ public class ChatMessage : MonoBehaviour, PropertySubscriber<int>
 {
     public Text textContent;
 
-    public int index { get; set; }
-    public MessageWindow messageWindow { get; set; }
+    public int Index { get; set; }
+    public MessageWindow MessageWindow { get; set; }
     
     // Start is called before the first frame update
     void Start()
@@ -18,7 +18,7 @@ public class ChatMessage : MonoBehaviour, PropertySubscriber<int>
 
     public void Callback(int value)
     {
-        if (value > index)
+        if (value > Index)
         {
             StartCoroutine(DestroyThis());
         }
@@ -27,8 +27,8 @@ public class ChatMessage : MonoBehaviour, PropertySubscriber<int>
     IEnumerator DestroyThis()
     {
         yield return new WaitForEndOfFrame();
-        messageWindow.currentMessageTimestamp.Unsubscribe(this);
+        MessageWindow.currentMessageTimestamp.Unsubscribe(this);
         Destroy(this.gameObject);
-        messageWindow.ScrollToBottom();
+        MessageWindow.ScrollToBottom();
     }
 }

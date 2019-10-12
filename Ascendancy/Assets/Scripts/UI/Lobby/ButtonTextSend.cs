@@ -12,7 +12,7 @@ public class ButtonTextSend : MonoBehaviour
     {
         if (inputBox.text != "")
         {
-            msgWindow.ReceiveMessage("PLAYERNAME", inputBox.text);
+            msgWindow.ReceiveMessage("PLAYERNAME", Color.yellow, inputBox.text);
             inputBox.text = "";
         }
     }
