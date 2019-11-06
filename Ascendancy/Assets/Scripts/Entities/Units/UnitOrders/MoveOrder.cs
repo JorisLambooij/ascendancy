@@ -8,10 +8,16 @@ public class MoveOrder : UnitOrder
     /// The destination the unit should go to.
     /// </summary>
     private Vector3 destination;
+
+    /// <summary>
+    /// The EntityFeature that allows thisEntity to move.
+    /// </summary>
+    private MovementFeature movementFeature;
     
-    public MoveOrder(Unit unit, Vector3 destination) : base(unit)
+    public MoveOrder(Entity entity, Vector3 destination) : base(entity)
     {
         this.destination = destination;
+
     }
 
     public override Vector3 CurrentDestination
@@ -26,13 +32,14 @@ public class MoveOrder : UnitOrder
     
     public override void Execute()
     {
-        unit.Controller.NavAgent.SetDestination(CurrentDestination);
-        unit.Controller.NavAgent.isStopped = false;
+        movementFeature.unitController.NavAgent.SetDestination(CurrentDestination);
+        movementFeature.unitController.NavAgent.isStopped = false;
     }
 
     public override bool Fulfilled
     {
-        get { return unit.Controller.NavAgent.remainingDistance == 0; }
+        get { return movementFeature.unitController.NavAgent.remainingDistance == 0; }
     }
+
 }
 

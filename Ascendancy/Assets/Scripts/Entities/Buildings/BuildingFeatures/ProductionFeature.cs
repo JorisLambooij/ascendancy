@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewProductionFeature", menuName = "Building Features/Resource Production Feature")]
-public class ProductionFeature : BuildingFeature
+[System.Serializable]
+[CreateAssetMenu(fileName = "NewProductionFeature", menuName = "Entity Features/Resource Production Feature")]
+public class ProductionFeature : EntityFeature
 {
     public Resource producedResource;
     public float producedAmount;
@@ -13,18 +14,13 @@ public class ProductionFeature : BuildingFeature
 
     private float countdown;
     private const float PROD_TIME = 3;
-
-    public override void Initialize(Building building)
-    {
-        
-    }
-
-    public override void UpdateOverride(Building building)
+    
+    public override void UpdateOverride(Entity entity)
     {
         if (countdown < 0)
         {
             countdown = PROD_TIME;
-            Produce(building.Owner);
+            Produce(entity.Owner);
         }
         countdown -= Time.deltaTime;
     }
@@ -53,7 +49,6 @@ public class ProductionFeature : BuildingFeature
                 // not enough of the needed Resource, so don't produce anything
                 return false;
         }
-        
         
         float producedInStorage = owner.economy.resourceStorage.GetValue(producedResource);
         owner.economy.resourceStorage.SetValue(producedResource, producedInStorage + producedAmount);

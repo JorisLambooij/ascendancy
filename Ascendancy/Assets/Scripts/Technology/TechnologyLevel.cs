@@ -7,7 +7,7 @@ public class TechnologyLevel : MonoBehaviour
     public TechnologyTree techTree { get; private set; }
     public int currentFocus;
 
-    private HashSet<UnitInfo> unitsUnlocked;
+    private HashSet<EntityInfo> unitsUnlocked;
     private HashSet<BuildingInfo> buildingsUnlocked;
     private HashSet<Resource> resourcesUnlocked;
 
@@ -16,7 +16,7 @@ public class TechnologyLevel : MonoBehaviour
     {
         techTree = TechTreeReader.LoadTechTree();
 
-        unitsUnlocked     = new HashSet<UnitInfo>();
+        unitsUnlocked     = new HashSet<EntityInfo>();
         buildingsUnlocked = new HashSet<BuildingInfo>();
         resourcesUnlocked = new HashSet<Resource>();
 
@@ -49,7 +49,7 @@ public class TechnologyLevel : MonoBehaviour
         Technology tech = techTree.techDictionary[techID];
 
         if (tech.unitsUnlocked != null)
-            foreach (UnitInfo unitInfo in tech.unitsUnlocked)
+            foreach (EntityInfo unitInfo in tech.unitsUnlocked)
                 unitsUnlocked.Add(unitInfo);
 
         if (tech.buildingsUnlocked != null)
@@ -65,7 +65,7 @@ public class TechnologyLevel : MonoBehaviour
 
     }
 
-    public bool IsUnitUnlocked(UnitInfo unitInfo)
+    public bool IsUnitUnlocked(EntityInfo unitInfo)
     {
         return unitsUnlocked.Contains(unitInfo);
     }

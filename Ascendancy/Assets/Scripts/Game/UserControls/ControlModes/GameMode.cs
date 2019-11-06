@@ -347,13 +347,13 @@ public class GameMode : ControlMode
                     }
                     else if (e.GetComponentInParent<Entity>().GetType() == typeof(Unit))
                     {
-                        UnitInfo uInfo = e.GetComponentInParent<Unit>().unitInfo;
-                        thismanybuttons = uInfo.contextMenuOptions;
+                        EntityInfo uInfo = e.GetComponentInParent<Unit>().entityInfo;
+                        thismanybuttons = uInfo.ContextMenuOptions;
                     }
                     else if (e.GetComponentInParent<Entity>().GetType() == typeof(Building))
                     {
                         BuildingInfo bInfo = e.GetComponentInParent<Building>().buildingInfo;
-                        thismanybuttons = bInfo.contextMenuOptions;
+                        thismanybuttons = bInfo.ContextMenuOptions;
                     }
 
                     if (thismanybuttons > 0 && thismanybuttons < 9)

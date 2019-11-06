@@ -16,26 +16,20 @@ public class Building : Entity
     {
         base.Start();
 
-        currentHealth = buildingInfo.maxHealth;
+        currentHealth = buildingInfo.MaxHealth;
 
-        foreach (EntityFeature feature in buildingInfo.entity_features)
+        foreach (EntityFeature feature in buildingInfo.EntityFeatures)
         {
             Debug.Log("feature: " + feature);
             feature.Initialize(this);
         }
-
-        foreach (BuildingFeature feature in buildingInfo.building_features)
-            feature.Initialize(this);
     }
 
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
-        foreach (EntityFeature feature in buildingInfo.entity_features)
-            feature.UpdateOverride(this);
-
-        foreach (BuildingFeature feature in buildingInfo.building_features)
+        foreach (EntityFeature feature in buildingInfo.EntityFeatures)
             feature.UpdateOverride(this);
     }
 }

@@ -55,7 +55,7 @@ public class UnitController : MonoBehaviour
         get { return navMeshAgent; }
     }
 
-    public void EnterMelee(Unit enemy)
+    public void EnterMelee(Entity enemy)
     {
         if (currentOrder == null)
         {

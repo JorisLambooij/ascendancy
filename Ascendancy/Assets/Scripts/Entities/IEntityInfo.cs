@@ -2,59 +2,75 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IEntityInfo
+[CreateAssetMenu(fileName = "NewEntityInfo", menuName = "Entity")]
+public class EntityInfo : ScriptableObject
 {
+    [Header("Core Info")]
     /// <summary>
     /// The name of this entity type.
     /// </summary>
-    string Name { get; }
+    new public string name;
 
     /// <summary>
     /// Short description.
     /// </summary>
-    string Description { get; }
+    public string Description;
 
     /// <summary>
     /// Maximum Health of this entity.
     /// </summary>
-    int MaxHealth { get; }
+    public int MaxHealth;
 
+    /// <summary>
+    /// Armor will reduce incoming damage.
+    /// </summary>
+    public int Armor;
+
+    [Header("Visual Data")]
     /// <summary>
     /// The Prefab used to instantiate this entity.
     /// </summary>
-    GameObject Prefab { get; }
+    public GameObject Prefab;
 
     /// <summary>
     /// entity Thumbnail.
     /// </summary>
-    Sprite Thumbnail { get; }
-
-    /// <summary>
-    /// How many options the context menu has for this entity.
-    /// </summary>
-    int ContextMenuOptions { get; }
+    public Sprite Thumbnail;
 
     /// <summary>
     /// The Sprite used for the minimap.
     /// NULL means default marker.
     /// </summary>
-    Sprite MinimapMarker { get; }
+    public Sprite MinimapMarker;
+
+    [Header("Technical")]
+    /// <summary>
+    /// entity view distance in tiles.
+    /// </summary>
+    public float ViewDistance;
 
     /// <summary>
-    /// entity view distance in half tiles.
+    /// How many options the context menu has for this entity.
     /// </summary>
-    int ViewDistance { get; }
+    public int ContextMenuOptions;
+
+    /// <summary>
+    /// Only entities of the highes selectionPriority will be selected when dragging the mouse.
+    /// </summary>
+    public int selectionPriority;
 
     /// <summary>
     /// Base cost of the entity.
     /// </summary>
-    List<Resource_Amount> Resource_amount { get; }
+    public List<Resource_Amount> ResourceAmount;
 
     /// <summary>
     /// Time needed to build the entity in seconds.
     /// </summary>
-    float Build_time { get; }
+    public float BuildTime;
 
-    List<EntityFeature> EntityFeatures { get; }
-
+    /// <summary>
+    /// List of all EntityFeatures.
+    /// </summary>
+    public List<EntityFeature> EntityFeatures;
 }

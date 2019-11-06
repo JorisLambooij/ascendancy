@@ -5,10 +5,10 @@ using UnityEngine;
 public abstract class Entity : MonoBehaviour
 {
     /// <summary>
-    /// The current health status of this Entity.
+    /// Holds all the stats for this Entity.
     /// </summary>
-    protected int currentHealth;
-
+    public EntityInfo entityInfo;
+    
     /// <summary>
     /// The player who owns this Entity.
     /// </summary>
@@ -29,6 +29,11 @@ public abstract class Entity : MonoBehaviour
     /// Receive an order
     /// </summary>
     public abstract void ClickOrder(RaycastHit hit, bool enqueue);
+
+    /// <summary>
+    /// The current health status of this Entity.
+    /// </summary>
+    protected int currentHealth;
 
     /// <summary>
     /// Deal damage to this Entity.
@@ -60,5 +65,15 @@ public abstract class Entity : MonoBehaviour
     protected virtual void Die()
     {
         Destroy(this.gameObject);
+    }
+
+    public T FindFeature<T>() where T : EntityFeature
+    {
+        foreach(EntityFeature feature in entityInfo.EntityFeatures)
+        {
+            if (feature.GetType() == typeof(T))
+                return feature as T;
+        }
+        return default(T);
     }
 }

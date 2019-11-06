@@ -8,9 +8,9 @@ using UnityEngine;
 public abstract class UnitOrder
 {
     /// <summary>
-    /// The Unit this Order is associated with.
+    /// The Entity this Order is associated with.
     /// </summary>
-    protected Unit unit;
+    protected Entity entity;
 
     /// <summary>
     /// Some Orders should be repeated in certain periods. This is the timer variable that enables that.
@@ -20,10 +20,10 @@ public abstract class UnitOrder
     /// <summary>
     /// Constructor.
     /// </summary>
-    /// <param name="unit">The Unit this Order is issued to.</param>
-    public UnitOrder(Unit unit)
+    /// <param name="entity">The Unit this Order is issued to.</param>
+    public UnitOrder(Entity entity)
     {
-        this.unit = unit;
+        this.entity = entity;
     }
 
     /// <summary>

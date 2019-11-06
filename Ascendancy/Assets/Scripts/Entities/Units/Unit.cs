@@ -7,10 +7,6 @@ using UnityEngine;
 /// </summary>
 public class Unit : Entity
 {
-    /// <summary>
-    /// Holds all the stats for this Unit.
-    /// </summary>
-    public UnitInfo unitInfo;
     private UnitController controller;
 
     private Sprite minimapMarker;
@@ -20,9 +16,9 @@ public class Unit : Entity
     {
         base.Start();
 
-        currentHealth = unitInfo.maxHealth;
+        currentHealth = entityInfo.MaxHealth;
         controller = GetComponent<UnitController>();
-        minimapMarker = unitInfo.minimapMarker;
+        minimapMarker = entityInfo.MinimapMarker;
 
         GameObject markerObject = Resources.Load("Prefabs/UI/MinimapMarker") as GameObject;
 
@@ -30,12 +26,12 @@ public class Unit : Entity
         if (minimapMarker != null)
         {
             markerObject.GetComponent<SpriteRenderer>().sprite = minimapMarker;
-            Debug.Log(markerObject.GetComponent <SpriteRenderer > ().sprite.name);
+            Debug.Log(markerObject.GetComponent<SpriteRenderer>().sprite.name);
         }
 
         Instantiate(markerObject, this.transform);
 
-        foreach (EntityFeature feature in unitInfo.entity_features)
+        foreach (EntityFeature feature in entityInfo.EntityFeatures)
             feature.Initialize(this);
 
         //unit_features?
@@ -44,7 +40,7 @@ public class Unit : Entity
     // Update is called once per frame
     protected override void Update()
     {
-        foreach (EntityFeature feature in unitInfo.entity_features)
+        foreach (EntityFeature feature in entityInfo.EntityFeatures)
             feature.UpdateOverride(this);
     }
 

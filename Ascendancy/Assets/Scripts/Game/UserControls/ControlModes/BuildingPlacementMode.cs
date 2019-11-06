@@ -42,8 +42,8 @@ public class BuildingPlacementMode : ControlMode
                 if (validLocation)
                 {
                     // valid spot, place building
-                    Debug.Log("Placing a " + building.buildingName + " at: " + preview.transform.position);
-                    GameObject newBuildingGO = GameObject.Instantiate(building.prefab, gameManager.playerScript.buildingsGO.transform);
+                    Debug.Log("Placing a " + building.name + " at: " + preview.transform.position);
+                    GameObject newBuildingGO = GameObject.Instantiate(building.Prefab, gameManager.playerScript.buildingsGO.transform);
                     newBuildingGO.transform.position = preview.transform.position;
 
                 }

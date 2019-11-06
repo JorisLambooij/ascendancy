@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewRecruitmentFeature", menuName = "Entity Features/Recruitment Feature", order = 3)]
+[CreateAssetMenu(fileName = "NewRecruitmentFeature", menuName = "Entity Features/Recruitment Feature")]
 public class RecruitmentFeature : EntityFeature
 {
-    public List<UnitInfo> recruitableUnits;
-    private List<QueueObject> queue = new List<QueueObject>();
+    public List<EntityInfo> recruitableUnits;
 
+    private List<QueueObject> queue = new List<QueueObject>();
     private float timer = 0f;
     private readonly int maxQueueSize = 10;
-
-
+    
     public override void Initialize(Entity entity)
     {
 
@@ -20,9 +19,7 @@ public class RecruitmentFeature : EntityFeature
     public override void UpdateOverride(Entity entity)
     {
         if (Input.GetKeyDown(KeyCode.T))
-        {
-            AddToQueue(recruitableUnits[0].prefab.GetComponent<Unit>(), entity);
-        }
+            AddToQueue(recruitableUnits[0].Prefab.GetComponent<Unit>(), entity);
 
         if (queue.Count > 0)
             if (timer <= 0f)
@@ -31,21 +28,15 @@ public class RecruitmentFeature : EntityFeature
                 queue.RemoveAt(0);
 
                 if (queue.Count > 0)
-                {
-                    timer = queue[0].BaseUnit.unitInfo.build_time;
-                }
+                    timer = queue[0].BaseUnit.entityInfo.BuildTime;
                 else
-                {
                     timer = 0f;
-                }
             }
             else
             {
                 timer -= Time.deltaTime;
-                Debug.Log("TIMER: " + timer + "s / QUEUE: " + queue.Count + " $" + queue[0].BaseUnit.unitInfo.unitName);
+                Debug.Log("TIMER: " + timer + "s / QUEUE: " + queue.Count + " $" + queue[0].BaseUnit.entityInfo.name);
             }
-
-
     }
 
     /// <summary>
@@ -55,9 +46,9 @@ public class RecruitmentFeature : EntityFeature
     /// <returns>True on a success, false otherwise.</returns>
     public bool AddToQueue(Unit unit, Entity entity)
     {
-        Debug.Log("Add to queue: " + unit.unitInfo.unitName);
+        Debug.Log("Add to queue: " + unit.entityInfo.name);
         // if unit is not allowed, abort
-        if (!recruitableUnits.Contains(unit.unitInfo))
+        if (!recruitableUnits.Contains(unit.entityInfo))
             return false;
 
         Debug.Log("Recruitable: YES");
@@ -69,33 +60,33 @@ public class RecruitmentFeature : EntityFeature
         }
 
         //check resource amount
-        List<Resource_Amount> unit_cost = unit.unitInfo.resource_amount;
+        List<Resource_Amount> unitRecruitmentCosts = unit.entityInfo.ResourceAmount;
 
         bool enough = true;
-        foreach (Resource_Amount amount in unit_cost)
+        foreach (Resource_Amount amount in unitRecruitmentCosts)
             if (entity.Owner.economy.resourceStorage.GetValue(amount.resource) < amount.amount)
                 enough = false;
 
         if (enough == true)
         {
-            foreach (Resource_Amount amount in unit_cost)
+            foreach (Resource_Amount amount in unitRecruitmentCosts)
             {
                 float newAmount = entity.Owner.economy.resourceStorage.GetValue(amount.resource) - amount.amount; ;
                 entity.Owner.economy.resourceStorage.SetValue(amount.resource, newAmount);
             }
 
             if (queue.Count == 0)
-                timer = unit.unitInfo.build_time;
+                timer = unit.entityInfo.BuildTime;
 
-            queue.Add(new QueueObject(unit, unit.unitInfo.resource_amount));
+            queue.Add(new QueueObject(unit, unit.entityInfo.ResourceAmount));
 
-            Debug.Log("Successfully added " + unit.unitInfo.unitName + " to the queue!");
+            Debug.Log("Successfully added " + unit.entityInfo.name + " to the queue!");
 
             return true;
         }
         else
         {
-            Debug.Log("Not enough resources for " + unit.unitInfo.unitName + "!");
+            Debug.Log("Not enough resources for " + unit.entityInfo.name + "!");
             //alert the player
             //TODO
 
@@ -106,9 +97,10 @@ public class RecruitmentFeature : EntityFeature
     private void Recruit(Unit unit, Entity entity)
     {
         Transform parent = entity.Owner.unitsGO.transform;
-        Unit newUnit = Instantiate(unit.unitInfo.prefab, parent).GetComponent<Unit>();
+        Unit newUnit = Instantiate(unit.entityInfo.Prefab, parent).GetComponent<Unit>();
         newUnit.transform.position = entity.transform.position;
 
         Debug.Log("Recruitment Success");
     }
+    
 }

@@ -13,17 +13,17 @@ public class RotateOrder : UnitOrder
 
     public override Vector3 CurrentDestination
     {
-        get { return unit.transform.position; }
+        get { return entity.transform.position; }
     }
 
     public override bool Fulfilled
     {
-        get { return Vector3.Angle(unit.transform.forward, orientation) < 6; }
+        get { return Vector3.Angle(entity.transform.forward, orientation) < 6; }
     }
     
     public override void Update()
     {
-        unit.transform.GetComponent<UnitRotator>().RotateTowards(orientation);
+        entity.transform.GetComponent<UnitRotator>().RotateTowards(orientation);
     }
 
     public Vector3 TargetOrientation

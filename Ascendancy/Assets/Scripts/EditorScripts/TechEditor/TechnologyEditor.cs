@@ -14,7 +14,7 @@ public class TechnologyEditor : EditorWindow, PropertySubscriber<Node>
 
     private TechTreeEditor techTreeEditor;
 
-    private GUIExpandableList<UnitInfo> unitList;
+    private GUIExpandableList<EntityInfo> unitList;
     private GUIExpandableList<BuildingInfo> buildingList;
     private GUIExpandableList<Resource> resourceList;
 
@@ -71,7 +71,7 @@ public class TechnologyEditor : EditorWindow, PropertySubscriber<Node>
                     tech.iconPath = relativePath;
                 }
                 
-                unitList.elements     = ConvertFromStringArray<UnitInfo>(tech.unitsUnlocked);
+                unitList.elements     = ConvertFromStringArray<EntityInfo>(tech.unitsUnlocked);
                 buildingList.elements = ConvertFromStringArray<BuildingInfo>(tech.buildingsUnlocked);
                 resourceList.elements = ConvertFromStringArray<Resource>(tech.resourcesUnlocked);
 
@@ -135,7 +135,7 @@ public class TechnologyEditor : EditorWindow, PropertySubscriber<Node>
 
         if (techTreeEditor != null)
             techTreeEditor.selectedNode.Subscribe(this);
-        unitList = new GUIExpandableList<UnitInfo>("Units Unlocked", true, 0);
+        unitList = new GUIExpandableList<EntityInfo>("Units Unlocked", true, 0);
         buildingList = new GUIExpandableList<BuildingInfo>("Buildings Unlocked", true, 0);
         resourceList = new GUIExpandableList<Resource>("Resources Unlocked", true, 0);
     }

@@ -2,21 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewPortalFeature", menuName = "Building Features/Portal Feature", order = 4)]
-public class PortalFeature : BuildingFeature
+[CreateAssetMenu(fileName = "NewPortalFeature", menuName = "Entity Features/Special/Portal Feature", order = 0)]
+public class PortalFeature : EntityFeature
 {
     public Vector3 portalOffset;
     public Building partnerPortal;
 
-    public override void Initialize(Building building)
-    {
-        
-    }
-
-    public override void UpdateOverride(Building building)
-    {
-        
-    }
 
     public void TeleportUnit(Unit u)
     {
