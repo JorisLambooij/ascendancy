@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3f0cdcb4f1a84242ab6395c4fb7c456, type: 3}
-  m_Name: Gold Mine
+  m_Name: Gold ProductionFeature
   m_EditorClassIdentifier: 
   producedResource: {fileID: 11400000, guid: 73d299aab683abc428b8e867394aa0ce, type: 2}
   producedAmount: 25

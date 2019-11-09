@@ -9,10 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3f0cdcb4f1a84242ab6395c4fb7c456, type: 3}
-  m_Name: Iron Mine
+  m_Script: {fileID: 11500000, guid: e9c113e413379bc4ea39aa80d44387df, type: 3}
+  m_Name: TankMovementFeature
   m_EditorClassIdentifier: 
-  producedResource: {fileID: 11400000, guid: a01bdeeab68f31f488705611ebf4a82b, type: 2}
-  producedAmount: 25
-  consumedResource: {fileID: 0}
-  consumedAmount: 0
+  speed: 10
+  turnSpeed: 10

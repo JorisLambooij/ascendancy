@@ -8,13 +8,31 @@ using UnityEditor;
 [System.Serializable]
 public abstract class EntityFeature : ScriptableObject
 {
+    /// <summary>
+    /// The order in which the features are ranked when a click is registered. Higher values go first.
+    /// </summary>
+    public int clickPriority;
+
     public virtual void Initialize(Entity entity)
     {
 
     }
+
     public virtual void UpdateOverride(Entity entity)
     {
 
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <param name="hit"></param>
+    /// <param name="enqueue"></param>
+    /// <returns>True if order was successfull, false otherwise.</returns>
+    public virtual bool ClickOrder(Entity entity, RaycastHit hit, bool enqueue = false)
+    {
+        return true;
     }
 
     #if UNITY_EDITOR

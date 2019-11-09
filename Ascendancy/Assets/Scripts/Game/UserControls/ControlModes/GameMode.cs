@@ -237,6 +237,9 @@ public class GameMode : ControlMode
                     {
                         Unit u = es.ParentEntity as Unit;
 
+                        if (u == null)
+                            continue;
+
                         // Project the Unit's position onto the drag line
                         Vector3 startToUnitPos = u.transform.position - dragStartPosM2;
                         Vector3 projectedVector = Vector3.Project(startToUnitPos, dragLineDirection);

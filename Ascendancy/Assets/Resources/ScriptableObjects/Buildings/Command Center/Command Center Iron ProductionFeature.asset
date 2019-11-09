@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3f0cdcb4f1a84242ab6395c4fb7c456, type: 3}
-  m_Name: Tool Factory
+  m_Name: Command Center Iron ProductionFeature
   m_EditorClassIdentifier: 
-  producedResource: {fileID: 11400000, guid: af0ccdf2421900e4b8d65ddb37b02480, type: 2}
-  producedAmount: 5
-  consumedResource: {fileID: 11400000, guid: a01bdeeab68f31f488705611ebf4a82b, type: 2}
-  consumedAmount: 10
+  clickPriority: 0
+  producedResource: {fileID: 11400000, guid: a01bdeeab68f31f488705611ebf4a82b, type: 2}
+  producedAmount: 10
+  consumedResource: {fileID: 0}
+  consumedAmount: 0

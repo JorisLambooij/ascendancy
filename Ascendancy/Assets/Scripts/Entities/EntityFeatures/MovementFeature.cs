@@ -19,5 +19,33 @@ public class MovementFeature : EntityFeature
     {
         base.UpdateOverride(entity);
     }
-    
+
+    public override bool ClickOrder(Entity entity, RaycastHit hit, bool enqueue = false)
+    {
+        if (hit.collider == null)
+        {
+            Debug.LogError("No hit.collider!");
+            return false;
+        }
+
+        MoveOrder moveOrder;
+        switch (hit.collider.tag)
+        {
+            case ("Unit"):
+            case ("Building"):
+                moveOrder = new MoveOrder(entity, hit.collider.transform.position);
+                entity.IssueOrder(moveOrder, enqueue);
+                return true;
+            case ("Ground"):
+                moveOrder = new MoveOrder(entity, hit.point);
+                entity.IssueOrder(moveOrder, enqueue);
+                return true;
+
+            default:
+                //Unknown tag
+                Debug.Log("Unknown tag hit with ray cast: tag '" + entity.tag + "' in " + hit.collider.ToString());
+                entity.Controller.orders.Clear();
+                return false;
+        }
+    }
 }

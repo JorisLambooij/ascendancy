@@ -19,15 +19,3 @@ public class EntityInfoEditor : Editor
         }
     }
 }
-
-[CustomEditor(typeof(MovementFeature))]
-public class MovementFeatureEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        MovementFeature entityInfo = (MovementFeature)target;
-
-        EditorGUILayout.LabelField("Movement");
-        DrawDefaultInspector();
-    }
-}

@@ -10,12 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53812a508e45da8409e1937447f40206, type: 3}
-  m_Name: BlackSmith
+  m_Name: Gold Mine
   m_EditorClassIdentifier: 
-  buildingName: Blacksmith
-  goldCost: 500
-  maxHealth: 200
-  features:
-  - {fileID: 11400000, guid: 91c63376520d4da429887e103bb9271d, type: 2}
-  contextMenuOptions: 0
-  prefab: {fileID: 6786867742982607769, guid: 1ea388ef2c3ef924ba52a1cd7f8b80f5, type: 3}
+  name: 
+  Description: 
+  MaxHealth: 0
+  Armor: 0
+  Prefab: {fileID: 0}
+  Thumbnail: {fileID: 0}
+  MinimapMarker: {fileID: 0}
+  ViewDistance: 0
+  ContextMenuOptions: 0
+  selectionPriority: 0
+  ResourceAmount: []
+  BuildTime: 0
+  EntityFeatures: []

@@ -34,5 +34,33 @@ public class MeleeFeature : EntityFeature
     /// List of special abilities.
     /// </summary>
     //public List<>
-    
+
+    public override bool ClickOrder(Entity entity, RaycastHit hit, bool enqueue = false)
+    {
+        if (hit.collider == null)
+        {
+            Debug.LogError("No hit.collider!");
+            return false;
+        }
+
+        switch (hit.collider.tag)
+        {
+            case ("Unit"):
+                Unit targetU = hit.collider.GetComponentInParent<Unit>();
+                MeleeAttackOrder attackOrderU = new MeleeAttackOrder(entity, targetU);
+                entity.IssueOrder(attackOrderU, enqueue);
+                return true;
+            case ("Building"):
+                Building targetB = hit.collider.GetComponentInParent<Building>();
+                MeleeAttackOrder attackOrderB = new MeleeAttackOrder(entity, targetB);
+                entity.IssueOrder(attackOrderB, enqueue);
+                return true;
+
+            default:
+                //Unknown tag
+                Debug.Log("Unknown tag hit with ray cast: tag '" + entity.tag + "' in " + hit.collider.ToString());
+                entity.Controller.orders.Clear();
+                return false;
+        }
+    }
 }

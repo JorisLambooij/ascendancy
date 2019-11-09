@@ -9,21 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95c7e25b3849595428ebaf54e2d439fd, type: 3}
-  m_Name: Dummy Tank
+  m_Script: {fileID: 11500000, guid: 53812a508e45da8409e1937447f40206, type: 3}
+  m_Name: Iron Mine
   m_EditorClassIdentifier: 
-  name: Dummy Tank
+  name: 
   Description: 
-  MaxHealth: 100
-  Armor: 10
-  Prefab: {fileID: 7551204154752481065, guid: 204dd92974604ec4bb53de31b1bfaa9b, type: 3}
+  MaxHealth: 0
+  Armor: 0
+  Prefab: {fileID: 0}
   Thumbnail: {fileID: 0}
   MinimapMarker: {fileID: 0}
-  ViewDistance: 10
+  ViewDistance: 0
   ContextMenuOptions: 0
   selectionPriority: 0
   ResourceAmount: []
-  BuildTime: 2
-  EntityFeatures:
-  - {fileID: 11400000, guid: e386352aebb02e445958baa451193ebb, type: 2}
-  - {fileID: 11400000, guid: bc1a033dab5d3bb41bef84a6e1288422, type: 2}
+  BuildTime: 0
+  EntityFeatures: []

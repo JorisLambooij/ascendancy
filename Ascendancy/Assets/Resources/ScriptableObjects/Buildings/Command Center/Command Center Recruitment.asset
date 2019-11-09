@@ -9,12 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 273c1be3b5edf3b4bb931c6ab0bbed60, type: 3}
-  m_Name: TankMeleeFeature
+  m_Script: {fileID: 11500000, guid: 3f550d7aa0b9ce148b3fbacf929024c3, type: 3}
+  m_Name: Command Center Recruitment
   m_EditorClassIdentifier: 
-  test: 
-  meleeAttack: 0
-  meleeDefense: 0
-  meleeStrength: 0
-  meleeRange: 0
-  attackSpeed: 0
+  recruitableUnits:
+  - {fileID: 11400000, guid: 0e0055ee303abc449b2adcdb18c4482a, type: 2}
