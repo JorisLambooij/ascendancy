@@ -21,7 +21,7 @@ MonoBehaviour:
   MinimapMarker: {fileID: 0}
   ViewDistance: 50
   ContextMenuOptions: 0
-  selectionPriority: 0
+  selectionPriority: 1
   ResourceAmount:
   - resource: {fileID: 11400000, guid: 73d299aab683abc428b8e867394aa0ce, type: 2}
     amount: 1000

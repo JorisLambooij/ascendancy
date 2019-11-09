@@ -13658,7 +13658,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1609131022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15084,6 +15084,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8358357043820073909, guid: 408072e69fc331e498cb2b7117bf2044,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6118261737210275373, guid: 408072e69fc331e498cb2b7117bf2044,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -15163,11 +15168,6 @@ PrefabInstance:
         type: 3}
       propertyPath: playerNo
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8358357043820073909, guid: 408072e69fc331e498cb2b7117bf2044,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 408072e69fc331e498cb2b7117bf2044, type: 3}

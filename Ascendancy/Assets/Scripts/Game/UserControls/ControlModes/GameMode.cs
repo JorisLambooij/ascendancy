@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -136,29 +137,22 @@ public class GameMode : ControlMode
 
                 DeselectAll();
 
-                bool unitsInSelection = false;
+                int highestPriority = -1;
                 foreach (EntitySelector e in player.GetComponentsInChildren<EntitySelector>())
                     if (PositionInSelection(e.transform.position))
                     {
                         selectedUnits.Add(e);
-                        e.Selected = true;
-                        if (e.ParentEntity is Unit)
-                            unitsInSelection = true;
+
+                        Entity entity = e.GetComponentInParent<Entity>();
+
+                        if (entity.entityInfo.selectionPriority > highestPriority)
+                            highestPriority = entity.entityInfo.selectionPriority;
                     }
 
-                // if there is at least one unit in the selection, do not select buildings
-                List<EntitySelector> toRemove = new List<EntitySelector>();
-                if (unitsInSelection)
-                {
-                    foreach (EntitySelector e in selectedUnits)
-                        if (e.ParentEntity is Building)
-                            toRemove.Add(e);
-                    foreach (EntitySelector e in toRemove)
-                    {
-                        selectedUnits.Remove(e);
-                        e.Selected = false;
-                    }
-                }
+                // Keep only those Entities with the highest Priority
+                selectedUnits = selectedUnits.Where(e => e.GetComponentInParent<Entity>().entityInfo.selectionPriority == highestPriority).ToList();
+                foreach(EntitySelector e in selectedUnits)
+                    e.Selected = true;
 
             }
             else if (!EventSystem.current.IsPointerOverGameObject())
@@ -293,17 +287,6 @@ public class GameMode : ControlMode
 
                             bool enqueue = Input.GetKey(KeyCode.LeftShift);
                             u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
-
-
-                            //if (u.GetComponentInParent<Entity>().GetType() == typeof(Unit))
-                            //{
-                            //    bool enqueue = Input.GetKey(KeyCode.LeftShift);
-                            //    u.GetComponentInParent<Unit>().ClickOrder(hit, enqueue);
-                            //}
-                            //else
-                            //{
-                            //    Debug.Log("Building " + u.GetComponentInParent<Entity>().name + " could not receive order!");
-                            //}
                         }
                     }
                     else

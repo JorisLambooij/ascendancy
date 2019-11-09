@@ -55,7 +55,7 @@ public class EntityInfo : ScriptableObject
     public int ContextMenuOptions;
 
     /// <summary>
-    /// Only entities of the highes selectionPriority will be selected when dragging the mouse.
+    /// Only entities of the highest selectionPriority will be selected when dragging the mouse.
     /// </summary>
     public int selectionPriority;
 
