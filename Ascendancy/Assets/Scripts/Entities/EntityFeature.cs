@@ -13,12 +13,14 @@ public abstract class EntityFeature : ScriptableObject
     /// </summary>
     public int clickPriority;
 
+    public Entity entity { get; private set; }
+
     public virtual void Initialize(Entity entity)
     {
-
+        this.entity = entity;
     }
 
-    public virtual void UpdateOverride(Entity entity)
+    public virtual void UpdateOverride()
     {
 
     }
@@ -30,7 +32,7 @@ public abstract class EntityFeature : ScriptableObject
     /// <param name="hit"></param>
     /// <param name="enqueue"></param>
     /// <returns>True if order was successfull, false otherwise.</returns>
-    public virtual bool ClickOrder(Entity entity, RaycastHit hit, bool enqueue = false)
+    public virtual bool ClickOrder(RaycastHit hit, bool enqueue = false)
     {
         return true;
     }

@@ -30,6 +30,6 @@ public class Building : Entity
     {
         base.Update();
         foreach (EntityFeature feature in buildingInfo.EntityFeatures)
-            feature.UpdateOverride(this);
+            feature.UpdateOverride();
     }
 }

@@ -12,7 +12,7 @@ public class MoveOrder : UnitOrder
     /// <summary>
     /// The EntityFeature that allows thisEntity to move.
     /// </summary>
-    private MovementFeature movementFeature;
+    //private MovementFeature movementFeature;
     
     public MoveOrder(Entity entity, Vector3 destination) : base(entity)
     {
@@ -32,13 +32,13 @@ public class MoveOrder : UnitOrder
     
     public override void Execute()
     {
-        movementFeature.unitController.NavAgent.SetDestination(CurrentDestination);
-        movementFeature.unitController.NavAgent.isStopped = false;
+        entity.Controller.NavAgent.SetDestination(CurrentDestination);
+        entity.Controller.NavAgent.isStopped = false;
     }
 
     public override bool Fulfilled
     {
-        get { return movementFeature.unitController.NavAgent.remainingDistance == 0; }
+        get { return entity.Controller.NavAgent.remainingDistance == 0; }
     }
 
 }

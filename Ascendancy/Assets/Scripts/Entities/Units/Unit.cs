@@ -7,9 +7,9 @@ using UnityEngine;
 /// </summary>
 public class Unit : Entity
 {
-    private UnitController controller;
+    //private UnitController controller;
 
-    private Sprite minimapMarker;
+    //private Sprite minimapMarker;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -41,7 +41,7 @@ public class Unit : Entity
     protected override void Update()
     {
         foreach (EntityFeature feature in entityInfo.EntityFeatures)
-            feature.UpdateOverride(this);
+            feature.UpdateOverride();
     }
 
     /// <summary>

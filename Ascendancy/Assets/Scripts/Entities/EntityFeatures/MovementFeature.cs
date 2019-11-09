@@ -12,15 +12,13 @@ public class MovementFeature : EntityFeature
     public float speed;
 
     public float turnSpeed;
-
-    public UnitController unitController { get; set; }
-
-    public override void UpdateOverride(Entity entity)
+    
+    public override void UpdateOverride()
     {
-        base.UpdateOverride(entity);
+        base.UpdateOverride();
     }
 
-    public override bool ClickOrder(Entity entity, RaycastHit hit, bool enqueue = false)
+    public override bool ClickOrder(RaycastHit hit, bool enqueue = false)
     {
         if (hit.collider == null)
         {

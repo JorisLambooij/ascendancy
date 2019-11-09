@@ -53,7 +53,7 @@ public class MeleeAttackOrder : UnitOrder
         if (IsInRange)
         {
             if (moveFeature != null)
-                moveFeature.unitController.NavAgent.isStopped = true;
+                moveFeature.entity.Controller.NavAgent.isStopped = true;
 
             if (cooldown <= 0)
             {
@@ -63,8 +63,8 @@ public class MeleeAttackOrder : UnitOrder
         }
         else if (!guardMode && moveFeature != null)
         {
-            moveFeature.unitController.NavAgent.SetDestination(targetPos);
-            moveFeature.unitController.NavAgent.isStopped = false;
+            moveFeature.entity.Controller.NavAgent.SetDestination(targetPos);
+            moveFeature.entity.Controller.NavAgent.isStopped = false;
         }
     }
 

@@ -22,11 +22,7 @@ MonoBehaviour:
   ViewDistance: 10
   ContextMenuOptions: 0
   selectionPriority: 0
-  ResourceAmount:
-  - resource: {fileID: 11400000, guid: 73d299aab683abc428b8e867394aa0ce, type: 2}
-    amount: 100
-  - resource: {fileID: 11400000, guid: a01bdeeab68f31f488705611ebf4a82b, type: 2}
-    amount: 20
+  ResourceAmount: []
   BuildTime: 0
   EntityFeatures:
   - {fileID: 11400000, guid: e386352aebb02e445958baa451193ebb, type: 2}

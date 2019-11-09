@@ -7,24 +7,25 @@ public class RecruitmentFeature : EntityFeature
 {
     public List<EntityInfo> recruitableUnits;
 
-    private List<QueueObject> queue = new List<QueueObject>();
+    private List<QueueObject> queue;
     private float timer = 0f;
     private readonly int maxQueueSize = 10;
-    
+
     public override void Initialize(Entity entity)
     {
-
+        base.Initialize(entity);
+        queue = new List<QueueObject>();
     }
 
-    public override void UpdateOverride(Entity entity)
+    public override void UpdateOverride()
     {
         if (Input.GetKeyDown(KeyCode.T))
-            AddToQueue(recruitableUnits[0].Prefab.GetComponent<Unit>(), entity);
-
+            AddToQueue(recruitableUnits[0].Prefab.GetComponent<Unit>());
+        
         if (queue.Count > 0)
             if (timer <= 0f)
             {
-                Recruit(queue[0].BaseUnit, entity);
+                Recruit(queue[0].BaseUnit);
                 queue.RemoveAt(0);
 
                 if (queue.Count > 0)
@@ -44,7 +45,7 @@ public class RecruitmentFeature : EntityFeature
     /// </summary>
     /// <param name="unitInfo">The Unit we wish to spawn.</param>
     /// <returns>True on a success, false otherwise.</returns>
-    public bool AddToQueue(Unit unit, Entity entity)
+    public bool AddToQueue(Unit unit)
     {
         Debug.Log("Add to queue: " + unit.entityInfo.name);
         // if unit is not allowed, abort
@@ -94,7 +95,7 @@ public class RecruitmentFeature : EntityFeature
         }
     }
 
-    private void Recruit(Unit unit, Entity entity)
+    private void Recruit(Unit unit)
     {
         Transform parent = entity.Owner.unitsGO.transform;
         Unit newUnit = Instantiate(unit.entityInfo.Prefab, parent).GetComponent<Unit>();

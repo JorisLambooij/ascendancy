@@ -15,7 +15,7 @@ public class ProductionFeature : EntityFeature
     private float countdown;
     private const float PROD_TIME = 3;
     
-    public override void UpdateOverride(Entity entity)
+    public override void UpdateOverride()
     {
         if (countdown < 0)
         {

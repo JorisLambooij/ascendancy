@@ -10,11 +10,11 @@ public class Entity : MonoBehaviour
     /// </summary>
     public EntityInfo entityInfo;
 
-    private List<EntityFeature> features;
+    protected List<EntityFeature> features;
 
-    private UnitController controller;
+    protected UnitController controller;
 
-    private Sprite minimapMarker;
+    protected Sprite minimapMarker;
 
     /// <summary>
     /// The player who owns this Entity.
@@ -40,7 +40,7 @@ public class Entity : MonoBehaviour
         bool success = false;
         int i = 0;
         while (!success && i < features.Count)
-            success = features[i++].ClickOrder(this, hit, enqueue);
+            success = features[i++].ClickOrder(hit, enqueue);
         
     }
 
@@ -82,7 +82,7 @@ public class Entity : MonoBehaviour
     protected virtual void Update()
     {
         foreach (EntityFeature feature in features)
-            feature.UpdateOverride(this);
+            feature.UpdateOverride();
     }
 
     /// <summary>
