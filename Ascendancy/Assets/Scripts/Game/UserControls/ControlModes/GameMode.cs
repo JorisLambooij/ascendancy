@@ -176,11 +176,9 @@ public class GameMode : ControlMode
                         es.Selected = true;
                         selectedUnits.Add(es);
                     }
-                        
                 }
             }
         }
-        
     }
 
     /// <summary>
@@ -281,27 +279,19 @@ public class GameMode : ControlMode
                     {
                         foreach (EntitySelector u in selectedUnits)
                         {
-                            //some errors here, I think we should split building and unit selection:
-                            //1+ unit among entities: only units selected
-                            //TODO seperate selections
-
                             bool enqueue = Input.GetKey(KeyCode.LeftShift);
                             u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
                         }
                     }
                     else
-                    {
                         Debug.LogError("Raycast missed hit.collider");
-                    }
                 }
             }
         }
         else //if context menu is open
         {
             if (Input.GetMouseButtonUp(1))
-            {
                 conMenuHandler.Hide();
-            }
         }
     }
 
@@ -345,10 +335,8 @@ public class GameMode : ControlMode
                     if (thismanybuttons > 0 && thismanybuttons < 9)
                         //open menu only if options are available  
                         if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
-                        {
                             //here we open the context menu    
                             conMenuHandler.Show(thismanybuttons);
-                        }
                 }
             }
         }

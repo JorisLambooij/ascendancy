@@ -50,12 +50,12 @@ public class TechnologyLevel : MonoBehaviour
 
         if (tech.unitsUnlocked != null)
             foreach (EntityInfo unitInfo in tech.unitsUnlocked)
-                unitsUnlocked.Add(unitInfo);
-
+                UnlockEntity(unitInfo);
+        /*
         if (tech.buildingsUnlocked != null)
             foreach (BuildingInfo buildingInfo in tech.buildingsUnlocked)
-                buildingsUnlocked.Add(buildingInfo);
-
+                UnlockEntity(buildingInfo);
+        */
         if (tech.resourcesUnlocked != null)
             foreach (Resource resource in tech.resourcesUnlocked)
             {
@@ -63,6 +63,12 @@ public class TechnologyLevel : MonoBehaviour
                 GetComponent<Economy>().NewAvailableResource(resource);
             }
 
+    }
+
+    private void UnlockEntity(EntityInfo info)
+    {
+        if (!unitsUnlocked.Contains(info))
+            unitsUnlocked.Add(info);
     }
 
     public bool IsUnitUnlocked(EntityInfo unitInfo)
