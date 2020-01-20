@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Damage_Material
-  m_Shader: {fileID: -6465566751694194690, guid: 161fb38d5b41fd944b0d4c0853eb3385,
+  m_Shader: {fileID: -6465566751694194690, guid: ccf1b4fd1f6ae9749bc114625eefc950,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -38,9 +38,17 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_57F1CA54: 10
+    - Vector1_78E86888: 0.1
     - Vector1_81684C3A: 0.6
     - Vector1_8607DEAF: 0.181
+    - Vector1_EC14311D: 3
+    - Vector1_EFAF5D75: 0.1
     - Vector1_F6C6D22A: 0
+    - _Highlighted: 0
+    - _Selected: 0
     m_Colors:
     - Color_4E1FA88C: {r: 2.5148268, g: 1.780042, b: 0.32082152, a: 0}
     - Color_F3AA4EDA: {r: 0.98491555, g: 0.37658536, b: 0.09656035, a: 0}
+    - _Color_Hightlight: {r: 0, g: 0.3058824, b: 1.945098, a: 0}
+    - _Color_Select: {r: 0, g: 1.066667, b: 0.02352941, a: 1}
+    - _Color_Standard: {r: 0.16642925, g: 0.36977306, b: 0.6415094, a: 0}

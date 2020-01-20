@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class MoveOrder : UnitOrder
 {
+    protected const float MAX_REMAINING_DISTANCE = 0.2f;
+
     /// <summary>
     /// The destination the unit should go to.
     /// </summary>
-    private Vector3 destination;
+    protected Vector3 destination;
 
     /// <summary>
     /// The EntityFeature that allows thisEntity to move.
@@ -17,7 +19,6 @@ public class MoveOrder : UnitOrder
     public MoveOrder(Entity entity, Vector3 destination) : base(entity)
     {
         this.destination = destination;
-
     }
 
     public override Vector3 CurrentDestination
@@ -38,7 +39,7 @@ public class MoveOrder : UnitOrder
 
     public override bool Fulfilled
     {
-        get { return entity.Controller.NavAgent.remainingDistance == 0; }
+        get { return entity.Controller.NavAgent.remainingDistance <= MAX_REMAINING_DISTANCE; }
     }
 
 }

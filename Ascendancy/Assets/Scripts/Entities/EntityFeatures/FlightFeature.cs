@@ -1,22 +1,14 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 [System.Serializable]
-[CreateAssetMenu(fileName = "NewMovementFeature", menuName = "Entity Features/Movement Feature", order = 0)]
-public class MovementFeature : EntityFeature
+[CreateAssetMenu(fileName = "NewFlightFeature", menuName = "Entity Features/Flight Feature", order = 0)]
+public class FlightFeature : EntityFeature
 {
-    public float speed;
+    public float flyingSpeed;
 
-    public float turnSpeed;
-
-    public override void Initialize(Entity entity)
-    {
-        base.Initialize(entity);
-    }
+    public float angularFlyingSpeed;
 
     public override void UpdateOverride()
     {
