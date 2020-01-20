@@ -125,9 +125,9 @@ public class TechField : MonoBehaviour
         playerTechScreen.Focus(Tech.id);
     }
 
-    public void OnProgressUpdate(int newProgress)
+    public void OnProgressUpdate(float newProgress)
     {
-        progressBar.value = Mathf.Clamp01((float)newProgress / Tech.cost);
+        progressBar.value = Mathf.Clamp01(newProgress / Tech.cost);
 
         if (playerTechScreen.TechTree.TechResearchability(Tech.id) == Researchability.Researched)
             SetResearched();

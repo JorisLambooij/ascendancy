@@ -30,10 +30,15 @@ public class TechnologyLevel : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            techTree.AddProgress(currentFocus, 1000);
-            if (techTree.TechResearchability(currentFocus) == Researchability.Researched)
-                UnlockThingsFromTech(currentFocus);
+            AddResearchPoints(500);
         }
+    }
+
+    public void AddResearchPoints(float amount)
+    {
+        techTree.AddProgress(currentFocus, amount);
+        if (techTree.TechResearchability(currentFocus) == Researchability.Researched)
+            UnlockThingsFromTech(currentFocus);
     }
 
     public void ResearchFocus(int techID)

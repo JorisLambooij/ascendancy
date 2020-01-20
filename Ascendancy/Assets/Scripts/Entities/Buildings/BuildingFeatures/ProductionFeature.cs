@@ -11,18 +11,10 @@ public class ProductionFeature : EntityFeature
 
     public Resource consumedResource;
     public float consumedAmount;
-
-    private float countdown;
-    private const float PROD_TIME = 3;
     
-    public override void UpdateOverride()
+    public override void Update10Override()
     {
-        if (countdown < 0)
-        {
-            countdown = PROD_TIME;
-            Produce(entity.Owner);
-        }
-        countdown -= Time.deltaTime;
+        Produce(entity.Owner);
     }
 
     private bool Produce(Player owner)
@@ -54,17 +46,5 @@ public class ProductionFeature : EntityFeature
         owner.economy.resourceStorage.SetValue(producedResource, producedInStorage + producedAmount);
         return true;
     }
-
-    private IEnumerator Countdown(Building building)
-    {
-        float duration = 1f;
-        float normalizedTime = 0;
-        while (normalizedTime <= 1f)
-        {
-            normalizedTime += Time.deltaTime / duration;
-            yield return null;
-        }
-        Produce(building.Owner);
-        Countdown(building);
-    }
+    
 }

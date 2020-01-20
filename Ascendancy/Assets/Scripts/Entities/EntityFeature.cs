@@ -25,6 +25,11 @@ public abstract class EntityFeature : ScriptableObject
 
     }
 
+    public virtual void Update10Override()
+    {
+
+    }
+
     /// <summary>
     /// 
     /// </summary>

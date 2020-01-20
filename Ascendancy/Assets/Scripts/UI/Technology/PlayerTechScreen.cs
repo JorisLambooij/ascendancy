@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 
-public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, int>
+public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
 {
     public int scale = TechTreeEditor.GRID_SNAP;
     public GameObject techFieldPrefab;
@@ -91,7 +91,7 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, int>
         }
     }
 
-    public void Callback(int key, int newValue)
+    public void Callback(int key, float newValue)
     {
         techFieldsDict[key].OnProgressUpdate(newValue);
 

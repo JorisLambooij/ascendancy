@@ -77,12 +77,30 @@ public class Entity : MonoBehaviour
 
         foreach (EntityFeature feature in features)
             feature.Initialize(this);
+
+        StartCoroutine(Update10Coroutine());
     }
 
     protected virtual void Update()
     {
         foreach (EntityFeature feature in features)
             feature.UpdateOverride();
+    }
+
+    protected virtual void Update10()
+    {
+        foreach (EntityFeature feature in features)
+            feature.Update10Override();
+    }
+
+    protected IEnumerator Update10Coroutine()
+    {
+        while (true)
+        {
+            Update10();
+            yield return new WaitForSeconds(10);
+        }
+
     }
 
     /// <summary>

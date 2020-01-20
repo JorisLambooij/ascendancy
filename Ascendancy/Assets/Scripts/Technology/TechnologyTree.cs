@@ -10,14 +10,14 @@ public struct TechnologyTree
     public List<Technology> technologies { get; private set; }
     public Dictionary<int, Technology> techDictionary { get; private set; }
 
-    public SubscribableDictionary<int, int> techProgress { get; private set; }
+    public SubscribableDictionary<int, float> techProgress { get; private set; }
     public Dictionary<int, Vector2> techPosition { get; private set; }
     
     public TechnologyTree(int techCount)
     {
         technologies = new List<Technology>(techCount);
         techDictionary = new Dictionary<int, Technology>(techCount);
-        techProgress = new SubscribableDictionary<int, int>(techCount);
+        techProgress = new SubscribableDictionary<int, float>(techCount);
         techPosition = new Dictionary<int, Vector2>(techCount);
     }
 
@@ -28,11 +28,11 @@ public struct TechnologyTree
         techProgress.Add(t.id, 0);
     }
 
-    public void AddProgress(int techID, int progress)
+    public void AddProgress(int techID, float progress)
     {
         if (progress < 0)
             return;
-        int newProgress = techProgress.GetValue(techID) + progress;
+        float newProgress = techProgress.GetValue(techID) + progress;
         newProgress = Mathf.Min(newProgress, techDictionary[techID].cost);
         techProgress.SetValue(techID, newProgress);
     }
@@ -71,8 +71,8 @@ public struct TechnologyTree
     private bool IsTechResearched(int techID)
     {
         int cost = techDictionary[techID].cost;
-        int progress = techProgress.GetValue(techID);
-        return cost == progress;
+        float progress = techProgress.GetValue(techID);
+        return cost <= progress;
     }
 
     /// <summary>
