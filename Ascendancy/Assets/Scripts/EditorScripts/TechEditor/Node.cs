@@ -3,6 +3,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
+#if (UNITY_EDITOR) 
 public class Node
 {
     public Rect rect;
@@ -248,3 +249,4 @@ public class Node
         
     }
 }
+#endif

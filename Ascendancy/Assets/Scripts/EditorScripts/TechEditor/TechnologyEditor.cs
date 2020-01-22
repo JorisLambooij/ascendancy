@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+#if (UNITY_EDITOR) 
 public class TechnologyEditor : EditorWindow, PropertySubscriber<Node>
 {
     public string techSpriteFolder = "Assets/Resources/Sprites/Technologies/";
@@ -140,3 +141,4 @@ public class TechnologyEditor : EditorWindow, PropertySubscriber<Node>
         resourceList = new GUIExpandableList<Resource>("Resources Unlocked", true, 0);
     }
 }
+#endif

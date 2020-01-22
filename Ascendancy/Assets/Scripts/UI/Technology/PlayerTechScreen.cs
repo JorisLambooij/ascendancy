@@ -6,7 +6,9 @@ using UnityEngine.UI.Extensions;
 
 public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
 {
-    public int scale = TechTreeEditor.GRID_SNAP;
+    // Should be the same as TechTreeEditor.GRID_SNAP
+    public int scale = 100; 
+
     public GameObject techFieldPrefab;
     public GameObject linePrefab;
     public Transform techFieldsParent;

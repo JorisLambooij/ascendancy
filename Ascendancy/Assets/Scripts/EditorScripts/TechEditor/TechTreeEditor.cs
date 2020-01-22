@@ -3,6 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.IO;
 
+#if (UNITY_EDITOR) 
 public class TechTreeEditor : EditorWindow
 {
     public const int GRID_SNAP = 100;
@@ -552,3 +553,5 @@ public class TechTreeEditor : EditorWindow
 
     #endregion
 }
+
+#endif

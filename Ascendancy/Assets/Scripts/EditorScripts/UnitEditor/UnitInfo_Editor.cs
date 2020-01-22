@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+#if (UNITY_EDITOR) 
 public class EntityInfoEditor : EditorWindow
 {
     EntityInfo entityInfo;
@@ -87,3 +88,4 @@ public class EntityInfoEditor : EditorWindow
         //Selection.activeObject = asset;
     }
 }
+#endif

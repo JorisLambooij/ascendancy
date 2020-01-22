@@ -26,8 +26,7 @@ public class GameMode : ControlMode
     private Camera cam;
     //private Canvas contextMenuCanvas;
     private ContextMenuHandler conMenuHandler;
-
-
+    
     //private Vector3[] conMenuButtonPos;
 
     public GameMode() : base()
@@ -50,9 +49,7 @@ public class GameMode : ControlMode
         else
             formationLine.enabled = false;
         if (conMenuHandler == null)
-        {
             Debug.LogError("ConMenuHandler not found");
-        }
         else
         {
             //conMenuHandler.Hide();
@@ -86,8 +83,7 @@ public class GameMode : ControlMode
         // context menu out or pointer over UI element;
         if (conMenuHandler.IsVisible())
             return;
-
-
+        
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             dragStartPosM1 = Input.mousePosition;
@@ -186,6 +182,9 @@ public class GameMode : ControlMode
     /// </summary>
     private void Mouse2()
     {
+        foreach (EntitySelector es in selectedUnits)
+            Debug.Log("Selection: " + es.ParentEntity.name);
+
         if (!conMenuHandler.IsVisible())
         {
             if (Input.GetMouseButtonDown(1))

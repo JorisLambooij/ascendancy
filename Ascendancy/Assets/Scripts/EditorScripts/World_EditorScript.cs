@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+#if (UNITY_EDITOR) 
 [CustomEditor (typeof (HeightMapGenerator))]
 public class World_EditorScript : Editor
 {
@@ -13,3 +14,4 @@ public class World_EditorScript : Editor
         DrawDefaultInspector();
     }
 }
+#endif
