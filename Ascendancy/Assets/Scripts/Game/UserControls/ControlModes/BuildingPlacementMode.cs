@@ -5,12 +5,15 @@ using UnityEngine.EventSystems;
 
 public class BuildingPlacementMode : ControlMode
 {
-    public BuildingInfo building;
+    public EntityInfo building;
     public GameObject preview;
     
     public BuildingPlacementMode()
     {
-        preview = GameObject.Find("Building Preview");
+        preview = GameObject.Find("BuildingPreview");
+        if (preview == null)
+            Debug.Log("BuildingPreview not found!");
+        preview.SetActive(false);
     }
 
     public override void HandleInput()
@@ -43,8 +46,8 @@ public class BuildingPlacementMode : ControlMode
                 {
                     // valid spot, place building
                     Debug.Log("Placing a " + building.name + " at: " + preview.transform.position);
-                    GameObject newBuildingGO = GameObject.Instantiate(building.Prefab, gameManager.playerScript.buildingsGO.transform);
-                    newBuildingGO.transform.position = preview.transform.position;
+                    GameObject newBuildingGO = building.CreateInstance(gameManager.GetPlayer, preview.transform.position);
+                    //newBuildingGO.transform.position = preview.transform.position;
 
                 }
                 else
@@ -54,5 +57,13 @@ public class BuildingPlacementMode : ControlMode
                 }
         }
         
+    }
+    public override void Start()
+    {
+        preview.SetActive(true);
+    }
+    public override void Stop()
+    {
+        preview.SetActive(false);
     }
 }

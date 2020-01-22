@@ -1,15 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BuidingMenuCategory : MonoBehaviour
 {
-    private bool expanded;
-    public GameObject options;
+    protected bool expanded;
+    protected GameObject optionsGO;
 
     // Start is called before the first frame update
     void Start()
     {
+        optionsGO = GetComponentInChildren<VerticalLayoutGroup>().gameObject;
         Expanded = false;
     }
 
@@ -24,7 +26,7 @@ public class BuidingMenuCategory : MonoBehaviour
         set
         {
             expanded = value;
-            options.SetActive(value);
+            optionsGO.SetActive(value);
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BuildMenuOption : MonoBehaviour
 {
-    public BuildingInfo building;
+    public EntityInfo building;
 
     private GameManager gameManager;
 
@@ -12,6 +13,8 @@ public class BuildMenuOption : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+
+        GetComponentInChildren<Image>().sprite = building.Thumbnail;
     }
 
     public void SelectBuilding()

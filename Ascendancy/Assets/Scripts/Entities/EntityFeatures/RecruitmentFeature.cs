@@ -20,7 +20,7 @@ public class RecruitmentFeature : EntityFeature
     public override void UpdateOverride()
     {
         if (Input.GetKeyDown(KeyCode.T))
-            AddToQueue(recruitableUnits[0].Prefab.GetComponent<Unit>());
+            AddToQueue(recruitableUnits[0]);
         
         if (queue.Count > 0)
             if (timer <= 0f)
@@ -29,14 +29,14 @@ public class RecruitmentFeature : EntityFeature
                 queue.RemoveAt(0);
 
                 if (queue.Count > 0)
-                    timer = queue[0].BaseUnit.entityInfo.BuildTime;
+                    timer = queue[0].BaseUnit.BuildTime;
                 else
                     timer = 0f;
             }
             else
             {
                 timer -= Time.deltaTime;
-                Debug.Log("TIMER: " + timer + "s / QUEUE: " + queue.Count + " $" + queue[0].BaseUnit.entityInfo.name);
+                Debug.Log("TIMER: " + timer + "s / QUEUE: " + queue.Count + " $" + queue[0].BaseUnit.name);
             }
     }
 
@@ -45,11 +45,11 @@ public class RecruitmentFeature : EntityFeature
     /// </summary>
     /// <param name="unitInfo">The Unit we wish to spawn.</param>
     /// <returns>True on a success, false otherwise.</returns>
-    public bool AddToQueue(Unit unit)
+    public bool AddToQueue(EntityInfo unit)
     {
-        Debug.Log("Add to queue: " + unit.entityInfo.name);
+        Debug.Log("Add to queue: " + unit.name);
         // if unit is not allowed, abort
-        if (!recruitableUnits.Contains(unit.entityInfo))
+        if (!recruitableUnits.Contains(unit))
             return false;
 
         Debug.Log("Recruitable: YES");
@@ -61,7 +61,7 @@ public class RecruitmentFeature : EntityFeature
         }
 
         //check resource amount
-        List<Resource_Amount> unitRecruitmentCosts = unit.entityInfo.ResourceAmount;
+        List<Resource_Amount> unitRecruitmentCosts = unit.ResourceAmount;
 
         bool enough = true;
         foreach (Resource_Amount amount in unitRecruitmentCosts)
@@ -77,17 +77,17 @@ public class RecruitmentFeature : EntityFeature
             }
 
             if (queue.Count == 0)
-                timer = unit.entityInfo.BuildTime;
+                timer = unit.BuildTime;
 
-            queue.Add(new QueueObject(unit, unit.entityInfo.ResourceAmount));
+            queue.Add(new QueueObject(unit, unit.ResourceAmount));
 
-            Debug.Log("Successfully added " + unit.entityInfo.name + " to the queue!");
+            Debug.Log("Successfully added " + unit.name + " to the queue!");
 
             return true;
         }
         else
         {
-            Debug.Log("Not enough resources for " + unit.entityInfo.name + "!");
+            Debug.Log("Not enough resources for " + unit.name + "!");
             //alert the player
             //TODO
 
@@ -95,11 +95,10 @@ public class RecruitmentFeature : EntityFeature
         }
     }
 
-    private void Recruit(Unit unit)
+    private void Recruit(EntityInfo unit)
     {
         Transform parent = entity.Owner.unitsGO.transform;
-        Unit newUnit = Instantiate(unit.entityInfo.Prefab, parent).GetComponent<Unit>();
-        newUnit.transform.position = entity.transform.position;
+        GameObject newUnit = unit.CreateInstance(entity.Owner, entity.transform.position);
 
         Debug.Log("Recruitment Success");
     }

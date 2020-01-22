@@ -10,20 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a9cf974669d2fc41897d68bad847a3a, type: 3}
-  m_Name: Lab
+  m_Name: Lumberyard
   m_EditorClassIdentifier: 
-  name: Research Lab
-  Description: A place for all your big brain people.
-  MaxHealth: 100
+  name: Lumberyard
+  Description: A yard that lumbers.
+  MaxHealth: 50
   Armor: 0
   Mesh: {fileID: -2432090755550338912, guid: 878114cddeffa41478b1aea55dddc1c6, type: 3}
-  Thumbnail: {fileID: 21300000, guid: e8700ef684d825442b85087ad6636bf9, type: 3}
+  Thumbnail: {fileID: 21300000, guid: e0eac6b76fdd842e88a7f8c75ecffaf4, type: 3}
   MinimapMarker: {fileID: 0}
   ViewDistance: 0
   ContextMenuOptions: 0
-  EntityType: 1
+  EntityType: 0
   selectionPriority: 0
   BuildTime: 0
-  ResourceAmount: []
+  ResourceAmount:
+  - resource: {fileID: 11400000, guid: 73d299aab683abc428b8e867394aa0ce, type: 2}
+    amount: 100
   EntityFeatures:
-  - {fileID: 11400000, guid: 1567fcc3fd0c89948a0ca71c1b9a81dc, type: 2}
+  - {fileID: 11400000, guid: cd96553d1dde8ed4199b83ce70baf4b7, type: 2}

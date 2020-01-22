@@ -85,10 +85,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7551204154752481067}
   - component: {fileID: 7551204154752481064}
-  - component: {fileID: 7551204154752481069}
-  - component: {fileID: 7551204154752481066}
-  - component: {fileID: -7862923471056111313}
   - component: {fileID: 515888744}
+  - component: {fileID: 7450172127873904964}
   m_Layer: 12
   m_Name: Dummy Tank
   m_TagString: Unit
@@ -134,45 +132,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &7551204154752481069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7551204154752481065}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0086f85ebb48cf4d8f3466f77a11275, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entityInfo: {fileID: 11400000, guid: 0e0055ee303abc449b2adcdb18c4482a, type: 2}
---- !u!114 &7551204154752481066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7551204154752481065}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ebb20bbc2d7f5747a3e686647b7b9b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &-7862923471056111313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7551204154752481065}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06c723ecd5c35a4409fb8f0828ce6f2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  allowedAngleForMovement: 40
-  maxAngularSpeed: 2
 --- !u!54 &515888744
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -189,6 +148,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7450172127873904964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7551204154752481065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6485168cc732b0409a012a610f896cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityInfo: {fileID: 11400000, guid: 0e0055ee303abc449b2adcdb18c4482a, type: 2}
 --- !u!1001 &2947112944609445433
 PrefabInstance:
   m_ObjectHideFlags: 0

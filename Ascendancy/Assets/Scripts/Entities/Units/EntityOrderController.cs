@@ -6,7 +6,7 @@ using UnityEngine.AI;
 /// <summary>
 /// Unit AI
 /// </summary>
-public class UnitController : MonoBehaviour
+public class EntityOrderController : MonoBehaviour
 {
     private NavMeshAgent navMeshAgent;
 

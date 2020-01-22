@@ -222,18 +222,18 @@ public class GameMode : ControlMode
                     Vector3 dragLineDirection = (dragStopPosM2 - dragStartPosM2);
                     Vector3 orientation = Vector3.Cross(dragLineDirection, Vector3.up).normalized;
 
-                    SortedDictionary<float, Unit> unitsSorted = new SortedDictionary<float, Unit>();
+                    SortedDictionary<float, Entity> unitsSorted = new SortedDictionary<float, Entity>();
 
                     // sort units, then issue commands according to units' relative position towards the goal line
                     foreach (EntitySelector es in selectedUnits)
                     {
-                        Unit u = es.ParentEntity as Unit;
+                        Entity e = es.ParentEntity as Entity;
 
-                        if (u == null)
+                        if (e == null)
                             continue;
 
                         // Project the Unit's position onto the drag line
-                        Vector3 startToUnitPos = u.transform.position - dragStartPosM2;
+                        Vector3 startToUnitPos = e.transform.position - dragStartPosM2;
                         Vector3 projectedVector = Vector3.Project(startToUnitPos, dragLineDirection);
                         float projectedDistance = projectedVector.magnitude;
 
@@ -243,16 +243,18 @@ public class GameMode : ControlMode
 
                         // if, by some chance, two units happen to have the same projected dictance, just move the second one slightly further down.
                         while (unitsSorted.ContainsKey(projectedDistance))
-                            projectedDistance += 0.0001f;
+                            projectedDistance += 0.001f;
                         // sort by length of the projected vector
-                        unitsSorted.Add(projectedDistance, u);
+                        unitsSorted.Add(projectedDistance, e);
                     }
 
-                    // Make sure nothing has gone horribly wrong
+                    // Make sure nothing has gone horribly wrong (no units missing or counted twice)
                     Debug.Assert(unitsSorted.Count == count);
+                    if (unitsSorted.Count != count)
+                        Debug.Log("UnitsSorted.Count: " + unitsSorted.Count + "; SelectedUnits.Count: " + count);
 
                     int i = 0;
-                    foreach (KeyValuePair<float, Unit> kvp in unitsSorted)
+                    foreach (KeyValuePair<float, Entity> kvp in unitsSorted)
                     {
                         // Determine the lerped position on the drag line
                         float lerpFactor;
@@ -262,9 +264,9 @@ public class GameMode : ControlMode
                             lerpFactor = 0.5f;
                         i++;
                         Vector3 lerpedPos = Vector3.Lerp(dragStartPosM2, dragStopPosM2, lerpFactor);
-                        
+
                         // Issue an order to the nearest unit to move there
-                        Unit nearestUnit = kvp.Value;
+                        Entity nearestUnit = kvp.Value;
                         bool enqueue = Input.GetKey(KeyCode.LeftShift);
                         nearestUnit.IssueOrder(new MoveOrder(nearestUnit, lerpedPos), false);
                         nearestUnit.IssueOrder(new RotateOrder(nearestUnit, orientation), true);

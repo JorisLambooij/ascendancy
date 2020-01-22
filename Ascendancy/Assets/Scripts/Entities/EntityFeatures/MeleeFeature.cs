@@ -59,6 +59,8 @@ public class MeleeFeature : EntityFeature
             default:
                 //Unknown tag
                 Debug.Log("Unknown tag hit with ray cast: tag '" + entity.tag + "' in " + hit.collider.ToString());
+
+                Debug.Log(entity.Controller);
                 entity.Controller.orders.Clear();
                 return false;
         }

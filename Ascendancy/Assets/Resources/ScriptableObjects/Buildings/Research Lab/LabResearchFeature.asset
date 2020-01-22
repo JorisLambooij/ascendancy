@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: LabResearchFeature
   m_EditorClassIdentifier: 
   clickPriority: 0
-  researchProduced: 0
+  researchProduced: 50

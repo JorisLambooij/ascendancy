@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53812a508e45da8409e1937447f40206, type: 3}
-  m_Name: Iron Mine
+  m_Name: Blacksmith
   m_EditorClassIdentifier: 
   name: 
   Description: 
   MaxHealth: 0
   Armor: 0
-  Prefab: {fileID: 0}
+  Mesh: {fileID: 0}
   Thumbnail: {fileID: 0}
   MinimapMarker: {fileID: 0}
   ViewDistance: 0
   ContextMenuOptions: 0
+  EntityType: 0
   selectionPriority: 0
-  ResourceAmount: []
   BuildTime: 0
+  ResourceAmount: []
   EntityFeatures: []

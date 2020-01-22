@@ -16,7 +16,6 @@ public class ModelMaterialHandler : MonoBehaviour
             e = transform.parent.GetComponentInParent<Entity>();
 
         Color c = e.Owner.playerColor;
-        Debug.Log(c);
 
         Material mat = GetComponent<MeshRenderer>().material;
 

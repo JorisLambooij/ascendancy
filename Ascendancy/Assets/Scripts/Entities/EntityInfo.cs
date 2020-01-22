@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum EntityType { Unit, Building };
 [CreateAssetMenu(fileName = "NewEntityInfo", menuName = "Entity")]
 public class EntityInfo : ScriptableObject
 {
@@ -30,7 +31,7 @@ public class EntityInfo : ScriptableObject
     /// <summary>
     /// The Prefab used to instantiate this entity.
     /// </summary>
-    public GameObject Prefab;
+    public Mesh Mesh;
 
     /// <summary>
     /// entity Thumbnail.
@@ -55,22 +56,43 @@ public class EntityInfo : ScriptableObject
     public int ContextMenuOptions;
 
     /// <summary>
+    /// What type of Entity if this?
+    /// </summary>
+    public EntityType EntityType;
+
+    /// <summary>
     /// Only entities of the highest selectionPriority will be selected when dragging the mouse.
     /// </summary>
     public int selectionPriority;
 
-    /// <summary>
-    /// Base cost of the entity.
-    /// </summary>
-    public List<Resource_Amount> ResourceAmount;
-
+    [Header("Building Cost")]
     /// <summary>
     /// Time needed to build the entity in seconds.
     /// </summary>
     public float BuildTime;
 
     /// <summary>
+    /// Base cost of the entity.
+    /// </summary>
+    public List<Resource_Amount> ResourceAmount;
+
+    [Header("Features")]
+    /// <summary>
     /// List of all EntityFeatures.
     /// </summary>
     public List<EntityFeature> EntityFeatures;
+
+    public virtual GameObject CreateInstance(Player owner, Vector3 position)
+    {
+        GameObject prefab = Resources.Load("Prefabs/Entities/Entity Prefab") as GameObject;
+        GameObject go = Instantiate(prefab, owner.transform);
+        go.transform.position = position;
+
+        go.GetComponentInChildren<MeshFilter>().mesh = Mesh;
+        go.GetComponent<Entity>().entityInfo = this;
+
+        go.name = name;
+
+        return go;
+    }
 }

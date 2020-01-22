@@ -44,5 +44,10 @@ public class GameManager : MonoBehaviour
         controlMode = controlModeDict[mode];
         controlMode.Start();
     }
+
+    public Player GetPlayer
+    {
+        get { return GameObject.Find("Player " + playerNo).GetComponent<Player>(); }
+    }
     
 }

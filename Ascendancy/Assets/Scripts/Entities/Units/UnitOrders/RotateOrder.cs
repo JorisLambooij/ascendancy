@@ -6,7 +6,7 @@ public class RotateOrder : UnitOrder
 {
     private Vector3 orientation;
 
-    public RotateOrder(Unit unit, Vector3 orientation) : base(unit)
+    public RotateOrder(Entity entity, Vector3 orientation) : base(entity)
     {
         this.orientation = orientation;
     }
@@ -23,7 +23,7 @@ public class RotateOrder : UnitOrder
     
     public override void Update()
     {
-        entity.transform.GetComponent<UnitRotator>().RotateTowards(orientation);
+        //entity.transform.GetComponent<UnitRotator>().RotateTowards(orientation);
     }
 
     public Vector3 TargetOrientation

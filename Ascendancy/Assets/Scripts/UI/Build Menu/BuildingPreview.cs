@@ -14,7 +14,7 @@ public class BuildingPreview : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        renderer = GetComponent<Renderer>();
+        renderer = GetComponentInChildren<Renderer>();
         renderer.material.SetColor("_BaseColor", invalidColor);
     }
 

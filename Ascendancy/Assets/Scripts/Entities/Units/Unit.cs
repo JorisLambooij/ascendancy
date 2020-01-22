@@ -17,19 +17,6 @@ public class Unit : Entity
         base.Start();
 
         currentHealth = entityInfo.MaxHealth;
-        controller = GetComponent<UnitController>();
-        minimapMarker = entityInfo.MinimapMarker;
-
-        GameObject markerObject = Resources.Load("Prefabs/UI/MinimapMarker") as GameObject;
-
-        //if a sprite was provided, we use it while keeping the position and settings
-        if (minimapMarker != null)
-        {
-            markerObject.GetComponent<SpriteRenderer>().sprite = minimapMarker;
-            Debug.Log(markerObject.GetComponent<SpriteRenderer>().sprite.name);
-        }
-
-        Instantiate(markerObject, this.transform);
 
         foreach (EntityFeature feature in entityInfo.EntityFeatures)
             feature.Initialize(this);
@@ -98,7 +85,7 @@ public class Unit : Entity
         }
     }
 
-    public UnitController Controller
+    public EntityOrderController Controller
     {
         get { return controller; }
     }

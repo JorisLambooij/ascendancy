@@ -12,7 +12,7 @@ public class Entity : MonoBehaviour
 
     protected List<EntityFeature> features;
 
-    protected UnitController controller;
+    protected EntityOrderController controller;
 
     protected Sprite minimapMarker;
 
@@ -64,9 +64,26 @@ public class Entity : MonoBehaviour
 
     protected virtual void Start()
     {
+        // Create the Selection Marker
         GameObject selectionMarkerPrefab = Resources.Load("Prefabs/SelectionMarker") as GameObject;
         Instantiate(selectionMarkerPrefab, this.transform);
 
+        controller = transform.GetComponent<EntityOrderController>();
+        Debug.Assert(controller != null, "EntityController not found on " + transform.name);
+
+        // Create a map marker for this Entity
+        minimapMarker = entityInfo.MinimapMarker;
+        GameObject markerObject = Resources.Load("Prefabs/UI/MinimapMarker") as GameObject;
+
+        // If a sprite was provided, we use it while keeping the position and settings
+        if (minimapMarker != null)
+        {
+            markerObject.GetComponent<SpriteRenderer>().sprite = minimapMarker;
+            Debug.Log(markerObject.GetComponent<SpriteRenderer>().sprite.name);
+        }
+        Instantiate(markerObject, this.transform);
+
+        // Start with max Health
         this.currentHealth = entityInfo.MaxHealth;
 
         // Copy all features as new objects, and immediately sort them by priority.
@@ -75,9 +92,11 @@ public class Entity : MonoBehaviour
         
         features = featuresCopy.OrderBy(f => -f.clickPriority).ToList();
 
+        // Initialize all Features
         foreach (EntityFeature feature in features)
             feature.Initialize(this);
 
+        // Start the 10-second Update Routine
         StartCoroutine(Update10Coroutine());
     }
 
@@ -97,8 +116,8 @@ public class Entity : MonoBehaviour
     {
         while (true)
         {
-            Update10();
             yield return new WaitForSeconds(10);
+            Update10();
         }
 
     }
@@ -138,7 +157,7 @@ public class Entity : MonoBehaviour
         }
     }
 
-    public UnitController Controller
+    public EntityOrderController Controller
     {
         get { return controller; }
     }
