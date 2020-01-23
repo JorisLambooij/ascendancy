@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
+    public const float UPDATE_FREQ = 3; 
+
     /// <summary>
     /// Holds all the stats for this Entity.
     /// </summary>
@@ -116,7 +118,7 @@ public class Entity : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(10);
+            yield return new WaitForSeconds(UPDATE_FREQ);
             Update10();
         }
 

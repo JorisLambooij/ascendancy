@@ -22,6 +22,8 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
     public Color colorIfResearching;
     public Color colorIfResearched;
 
+    public Text pointsUI;
+
     private Dictionary<int, TechField> techFieldsDict;
 
     void Start()
@@ -34,6 +36,8 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
 
     void Update()
     {
+        pointsUI.text = playerTechLevel.storedResearch.ToString();
+
         if (Input.GetKeyUp(KeyCode.Escape))
             gameObject.SetActive(false);
     }

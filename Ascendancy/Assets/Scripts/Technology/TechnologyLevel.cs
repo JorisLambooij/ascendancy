@@ -7,6 +7,8 @@ public class TechnologyLevel : MonoBehaviour
     public TechnologyTree techTree { get; private set; }
     public int currentFocus;
 
+    public float storedResearch;
+
     private HashSet<EntityInfo> unitsUnlocked;
     private HashSet<BuildingInfo> buildingsUnlocked;
     private HashSet<Resource> resourcesUnlocked;
@@ -15,6 +17,9 @@ public class TechnologyLevel : MonoBehaviour
     public void Initialize()
     {
         techTree = TechTreeReader.LoadTechTree();
+
+        currentFocus = -1;
+        storedResearch = 0;
 
         unitsUnlocked     = new HashSet<EntityInfo>();
         buildingsUnlocked = new HashSet<BuildingInfo>();
@@ -36,9 +41,29 @@ public class TechnologyLevel : MonoBehaviour
 
     public void AddResearchPoints(float amount)
     {
-        techTree.AddProgress(currentFocus, amount);
+        // No current Research, so keep the points until a Focus is set.
+        if (currentFocus == -1)
+        {
+            storedResearch += amount;
+            return;
+        }
+
+        // If there are stored points, add those to the progress as well,
+        // but only as many as the specified amount already being added.
+        // (So if there are 200 points stored, but only 50 are being added by another source, then only 50 additional points will be added from the 200 stored)
+        if (storedResearch > 0)
+        {
+            float additionalAmount = Mathf.Clamp(storedResearch, 0, amount);
+            amount += additionalAmount;
+            storedResearch -= additionalAmount;
+        }
+
+        float overflow = techTree.AddProgress(currentFocus, amount);
         if (techTree.TechResearchability(currentFocus) == Researchability.Researched)
+        {
             UnlockThingsFromTech(currentFocus);
+            currentFocus = -1;
+        }
     }
 
     public void ResearchFocus(int techID)

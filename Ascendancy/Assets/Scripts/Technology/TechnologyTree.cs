@@ -28,13 +28,26 @@ public struct TechnologyTree
         techProgress.Add(t.id, 0);
     }
 
-    public void AddProgress(int techID, float progress)
+    /// <summary>
+    /// Adds the specified amount of Research Points to the given Tech. Excess points will be returned.
+    /// </summary>
+    /// <param name="techID">Which Tech to add the points to.</param>
+    /// <param name="progress">How many points should be added.</param>
+    /// <returns>The excess points.</returns>
+    public float AddProgress(int techID, float progress)
     {
         if (progress < 0)
-            return;
+            return 0;
+
+        // if more points are added than necessary, keep the additional points.
         float newProgress = techProgress.GetValue(techID) + progress;
+        float overflow = 0;
+        if (newProgress > techDictionary[techID].cost)
+            overflow = newProgress - techDictionary[techID].cost;
+
         newProgress = Mathf.Min(newProgress, techDictionary[techID].cost);
         techProgress.SetValue(techID, newProgress);
+        return overflow;
     }
 
     public List<Technology> UnlockedTechs()
