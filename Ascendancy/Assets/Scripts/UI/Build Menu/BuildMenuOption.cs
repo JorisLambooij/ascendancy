@@ -21,6 +21,6 @@ public class BuildMenuOption : MonoBehaviour
     {
         gameManager.SwitchToMode(ControlModeEnum.buildingMode);
         BuildingPlacementMode buildingMode = gameManager.controlMode as BuildingPlacementMode;
-        buildingMode.building = building;
+        buildingMode.Building = building;
     }
 }

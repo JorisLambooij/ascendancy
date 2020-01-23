@@ -1210,6 +1210,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3cabfc560acc5c4d92043b841ca0fd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &220739975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220739973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d76cf8cb9b78c749b31dbc4a6e0596b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &220739976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3576,6 +3588,7 @@ MonoBehaviour:
   playerScript: {fileID: 349416432}
   camScript: {fileID: 2102454448}
   world: {fileID: 220739974}
+  occupationMap: {fileID: 220739975}
 --- !u!4 &757122381
 Transform:
   m_ObjectHideFlags: 0
@@ -17210,6 +17223,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3139358577754058279, guid: 22c1b03f31ce659429d7a44aaad9ee42,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3139358577754058279, guid: 22c1b03f31ce659429d7a44aaad9ee42,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22c1b03f31ce659429d7a44aaad9ee42, type: 3}

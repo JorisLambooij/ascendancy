@@ -5,9 +5,19 @@ using UnityEngine.EventSystems;
 
 public class BuildingPlacementMode : ControlMode
 {
-    public EntityInfo building;
+    private EntityInfo building;
     public GameObject preview;
-    
+
+    public EntityInfo Building
+    {
+        get => building;
+        set
+        {
+            building = value;
+            preview.GetComponentInChildren<MeshFilter>().mesh = building.Mesh;
+        }
+    }
+
     public BuildingPlacementMode()
     {
         preview = GameObject.Find("BuildingPreview");
@@ -38,8 +48,8 @@ public class BuildingPlacementMode : ControlMode
             preview.transform.position = new Vector3(x, tile.height, y);
 
             // Location is valid if tile is both flatland and empty of other Entities of the same BuildingLayer.
-            bool flatArea = gameManager.world.IsAreaFlat(preview.transform.position, building.dimensions);
-            bool freeSpace = gameManager.occupationMap.AreTilesFree(preview.transform.position, building.dimensions);
+            bool flatArea = gameManager.world.IsAreaFlat(preview.transform.position, Building.dimensions);
+            bool freeSpace = gameManager.occupationMap.AreTilesFree(preview.transform.position, Building.dimensions);
             bool validLocation = flatArea && freeSpace;
 
             preview.GetComponent<BuildingPreview>().valid = validLocation;
@@ -48,8 +58,8 @@ public class BuildingPlacementMode : ControlMode
                 if (validLocation)
                 {
                     // valid spot, place building
-                    Debug.Log("Placing a " + building.name + " at: " + preview.transform.position);
-                    GameObject newBuildingGO = building.CreateInstance(gameManager.GetPlayer, preview.transform.position);
+                    Debug.Log("Placing a " + Building.name + " at: " + preview.transform.position);
+                    GameObject newBuildingGO = Building.CreateInstance(gameManager.GetPlayer, preview.transform.position);
                     Entity b = newBuildingGO.GetComponent<Entity>();
                     
                     // Mark all the spots that this building occupies as occupied in the world map.
