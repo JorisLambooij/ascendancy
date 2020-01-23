@@ -105,7 +105,7 @@ Material:
     - _ZWrite: 1
     - _boolTextured: 0
     - _grid: 0
-    - _gridStrength: 0.673
+    - _gridStrength: 0.875
     m_Colors:
     - Color_283B0952: {r: 0.12156863, g: 0.6313726, b: 0.14117648, a: 0}
     - _BaseColor: {r: 0, g: 0, b: 0, a: 1}

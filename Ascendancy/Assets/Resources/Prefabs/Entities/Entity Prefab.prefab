@@ -28,8 +28,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2021816001869258103}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.25, z: 0}
-  m_LocalScale: {x: 2, y: 0.5, z: 2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2021816003209581206}
   m_RootOrder: 0
@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 2021816003209581206}
   - component: {fileID: -8187520399354841546}
   m_Layer: 12
-  m_Name: Building Prefab
+  m_Name: Entity Prefab
   m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

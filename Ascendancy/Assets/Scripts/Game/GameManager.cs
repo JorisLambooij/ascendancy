@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 
     public ControlMode controlMode;
     public World world;
+    public TileOccupationMap occupationMap;
 
     // Might need refactoring
     private Dictionary<ControlModeEnum, ControlMode> controlModeDict;

@@ -12,28 +12,52 @@ public class World : MonoBehaviour_Singleton
     public enum DisplayMode { Height, Color };
     public DisplayMode displayMode = DisplayMode.Color;
 
-    public GameObject chunkPrefab;
-    public LocalNavMeshBuilder navMeshBuilder;
+    #region Tweakables
+    [Header("Tweakables")]
+    /// <summary>
+    /// Tiles per side of the world.
+    /// </summary>
+    public int worldSize = 64;
 
-    //tweakables
-    public int worldSize = 64;  //tiles per side of the world
-    public int numberOfChunks = 2; // number of chunk per side of the world
+    public float EffectiveWorldSize
+    {
+        get { return worldSize * tileSize; }
+    }
+
+    /// <summary>
+    /// Number of chunk per side of the world.
+    /// </summary>
+    public int numberOfChunks = 2;
 
     public float tileSize = 5f; //meters per side of each tiles
     public float heightScale = 1f;   //meters of elevation each new level gives us
     public float heightResolution = 1f; // amount of different levels of elevation
+    #endregion
+
+    public GameObject chunkPrefab;
+    public LocalNavMeshBuilder navMeshBuilder;
 
     //public float seaLevel = 0;
 
+    [Header("Misc References")]
     public Transform ChunkCollector;
-
     public GameObject fow_plane;
     public Texture2D tex;
 
+    /// <summary>
+    /// Contains the information about the height of the tiles.
+    /// </summary>
     private float[,] heightmap;
-    private Tile[,] map;    //set of all the tiles that make up the world
-    private Chunk[,] chunks; //set of all the chunks we're going to use to draw the world
-                             //private GameObject chunkGO; //the instantiated Chunk
+
+    /// <summary>
+    /// Set of all the tiles that make up the world
+    /// </summary>
+    private Tile[,] map;
+
+    /// <summary>
+    /// Set of all the chunks used to draw the world.
+    /// </summary>
+    private Chunk[,] chunks;
 
     protected void Awake()
     {
@@ -169,13 +193,32 @@ public class World : MonoBehaviour_Singleton
         return map[v.x, v.y].flatLand;
     }
 
+    public bool IsAreaFlat(Vector3 pos, Vector2Int dimensions)
+    {
+        Vector2Int v = IntVector(pos);
+
+        int halfX = dimensions.x / 2;
+        int halfY = dimensions.y / 2;
+
+        // If a single tile is not flat, return false.
+        for (int x = 0; x < dimensions.x; x++)
+            for (int y = 0; y < dimensions.y; y++)
+            {
+                int finalX = v.x + x - halfX, finalY = v.y + y - halfY;
+
+                if (!map[finalX, finalY].flatLand)
+                    return false;
+            }
+        return true;
+    }
+    
     public Tile GetTile(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);
         return map[v.x, v.y];
     }
 
-    private Vector2Int IntVector(Vector3 v)
+    public Vector2Int IntVector(Vector3 v)
     {
         float x = v.x / tileSize;
         float y = v.z / tileSize;

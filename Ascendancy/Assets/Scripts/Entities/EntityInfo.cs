@@ -27,6 +27,11 @@ public class EntityInfo : ScriptableObject
     /// </summary>
     public int Armor;
 
+    /// <summary>
+    /// The size (measured in Tiles) of this Entity.
+    /// </summary>
+    public Vector2Int dimensions;
+
     [Header("Visual Data")]
     /// <summary>
     /// The Prefab used to instantiate this entity.

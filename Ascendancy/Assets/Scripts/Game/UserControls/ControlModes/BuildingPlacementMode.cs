@@ -34,10 +34,13 @@ public class BuildingPlacementMode : ControlMode
         {
             Tile tile = gameManager.world.GetTile(hit.point);
 
-            preview.transform.position = new Vector3(tile.worldX, tile.height + 1, tile.worldZ);
+            int x = (int)tile.worldX, y = (int)tile.worldZ;
+            preview.transform.position = new Vector3(x, tile.height, y);
 
-            // TODO: also check for other buildings in this spot
-            bool validLocation = tile.flatLand;
+            // Location is valid if tile is both flatland and empty of other Entities of the same BuildingLayer.
+            bool flatArea = gameManager.world.IsAreaFlat(preview.transform.position, building.dimensions);
+            bool freeSpace = gameManager.occupationMap.AreTilesFree(preview.transform.position, building.dimensions);
+            bool validLocation = flatArea && freeSpace;
 
             preview.GetComponent<BuildingPreview>().valid = validLocation;
             
@@ -47,13 +50,18 @@ public class BuildingPlacementMode : ControlMode
                     // valid spot, place building
                     Debug.Log("Placing a " + building.name + " at: " + preview.transform.position);
                     GameObject newBuildingGO = building.CreateInstance(gameManager.GetPlayer, preview.transform.position);
-                    //newBuildingGO.transform.position = preview.transform.position;
-
+                    Entity b = newBuildingGO.GetComponent<Entity>();
+                    
+                    // Mark all the spots that this building occupies as occupied in the world map.
+                    gameManager.occupationMap.NewOccupation(preview.transform.position, b, TileOccupation.OccupationLayer.Building);
                 }
                 else
                 {
                     // invalid spot, do NOT place building
-                    Debug.Log("Not here, buckaroo");
+                    if (!flatArea)
+                        Debug.Log("Area not flat");
+                    if (!freeSpace)
+                        Debug.Log("Other building here");
                 }
         }
         
