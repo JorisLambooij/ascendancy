@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class GameMode : ControlMode
 {
-    private List<EntitySelector> selectedUnits;
+    public SubscribableList<EntitySelector> selectedUnits { get; protected set; }
 
     private Vector3 dragStartPosM1, dragStopPosM1;
     private bool startDragM1, draggingM1;
@@ -31,7 +31,7 @@ public class GameMode : ControlMode
 
     public GameMode() : base()
     {
-        selectedUnits = new List<EntitySelector>(8);
+        selectedUnits = new SubscribableList<EntitySelector>();
         cam = gameManager.camScript.transform.GetComponent<Camera>();
         selectionBox = GameObject.Find("SelectionRect").GetComponent<Image>();
         selectionBox.enabled = false;
@@ -61,6 +61,8 @@ public class GameMode : ControlMode
         Mouse1();
         Mouse2();
         Mouse3();
+
+
     }
 
     public override void Start()
@@ -146,10 +148,10 @@ public class GameMode : ControlMode
                     }
 
                 // Keep only those Entities with the highest Priority
-                selectedUnits = selectedUnits.Where(e => e.GetComponentInParent<Entity>().entityInfo.selectionPriority == highestPriority).ToList();
-                foreach(EntitySelector e in selectedUnits)
+                List<EntitySelector> filteredList = selectedUnits.AsList.Where(e => e.GetComponentInParent<Entity>().entityInfo.selectionPriority == highestPriority).ToList();
+                foreach(EntitySelector e in filteredList)
                     e.Selected = true;
-
+                selectedUnits.FromList(filteredList);
             }
             else if (!EventSystem.current.IsPointerOverGameObject())
             {
@@ -182,9 +184,6 @@ public class GameMode : ControlMode
     /// </summary>
     private void Mouse2()
     {
-        foreach (EntitySelector es in selectedUnits)
-            Debug.Log("Selection: " + es.ParentEntity.name);
-
         if (!conMenuHandler.IsVisible())
         {
             if (Input.GetMouseButtonDown(1))
@@ -224,7 +223,7 @@ public class GameMode : ControlMode
                     SortedDictionary<float, Entity> unitsSorted = new SortedDictionary<float, Entity>();
 
                     // sort units, then issue commands according to units' relative position towards the goal line
-                    foreach (EntitySelector es in selectedUnits)
+                    foreach (EntitySelector es in selectedUnits.AsList)
                     {
                         Entity e = es.ParentEntity as Entity;
 
@@ -278,7 +277,7 @@ public class GameMode : ControlMode
 
                     if (hit.collider != null)
                     {
-                        foreach (EntitySelector u in selectedUnits)
+                        foreach (EntitySelector u in selectedUnits.AsList)
                         {
                             bool enqueue = Input.GetKey(KeyCode.LeftShift);
                             u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
@@ -359,7 +358,7 @@ public class GameMode : ControlMode
 
     private void DeselectAll()
     {
-        foreach (EntitySelector unitSelector in selectedUnits)
+        foreach (EntitySelector unitSelector in selectedUnits.AsList)
             unitSelector.Selected = false;
 
         selectedUnits.Clear();

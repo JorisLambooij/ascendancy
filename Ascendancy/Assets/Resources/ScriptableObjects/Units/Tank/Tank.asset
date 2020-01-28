@@ -16,14 +16,16 @@ MonoBehaviour:
   Description: A simple tank.
   MaxHealth: 100
   Armor: 10
-  Prefab: {fileID: 7551204154752481065, guid: 204dd92974604ec4bb53de31b1bfaa9b, type: 3}
-  Thumbnail: {fileID: 0}
+  dimensions: {x: 0, y: 0}
+  Mesh: {fileID: -2432090755550338912, guid: e9b9a323884f49b4a98797454d72e14a, type: 3}
+  Thumbnail: {fileID: 21300000, guid: ee68f3592be87f944baf9081ab72913e, type: 3}
   MinimapMarker: {fileID: 0}
   ViewDistance: 10
   ContextMenuOptions: 0
+  EntityType: 0
   selectionPriority: 2
-  ResourceAmount: []
   BuildTime: 0
+  ResourceAmount: []
   EntityFeatures:
   - {fileID: 11400000, guid: e386352aebb02e445958baa451193ebb, type: 2}
   - {fileID: 11400000, guid: bc1a033dab5d3bb41bef84a6e1288422, type: 2}

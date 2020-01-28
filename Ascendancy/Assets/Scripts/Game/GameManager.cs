@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public TileOccupationMap occupationMap;
 
     // Might need refactoring
-    private Dictionary<ControlModeEnum, ControlMode> controlModeDict;
+    public Dictionary<ControlModeEnum, ControlMode> controlModeDict { get; protected set; }
     
     // Start is called before the first frame update
     void Awake()

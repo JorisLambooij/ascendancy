@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 7551204154752481064}
   - component: {fileID: 515888744}
   - component: {fileID: 7450172127873904964}
+  - component: {fileID: 1282564119}
   m_Layer: 12
   m_Name: Dummy Tank
   m_TagString: Unit
@@ -161,6 +162,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityInfo: {fileID: 11400000, guid: 0e0055ee303abc449b2adcdb18c4482a, type: 2}
+--- !u!114 &1282564119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7551204154752481065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd01b7e6b7014d742836575fa594bb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2947112944609445433
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -175,8 +188,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: e9b9a323884f49b4a98797454d72e14a,
         type: 3}
-      propertyPath: m_IsActive
-      value: 1
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: e9b9a323884f49b4a98797454d72e14a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Unit
+      objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: e9b9a323884f49b4a98797454d72e14a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: e9b9a323884f49b4a98797454d72e14a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Unit
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e9b9a323884f49b4a98797454d72e14a,
         type: 3}
@@ -233,11 +261,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: e9b9a323884f49b4a98797454d72e14a,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: -2416733968201007103, guid: e9b9a323884f49b4a98797454d72e14a,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -274,6 +297,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HealthBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 1643377803510651347, guid: b301285cc05e8e44589b3daad62ac3da,
+        type: 3}
+      propertyPath: m_TagString
+      value: Unit
       objectReference: {fileID: 0}
     - target: {fileID: 4819689974344152042, guid: b301285cc05e8e44589b3daad62ac3da,
         type: 3}

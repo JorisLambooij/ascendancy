@@ -14,5 +14,15 @@ public interface DictionarySubscriber<T, U>
 
 public interface ListSubscriber<T>
 {
-    void Callback(T updatedValue);
+    /// <summary>
+    /// Called when one new element is added.
+    /// </summary>
+    /// <param name="updatedValue"></param>
+    void NewElementCallback(T updatedValue);
+
+    /// <summary>
+    /// Called when the entire list is reordered, deleted or otherwise changed.
+    /// </summary>
+    /// <param name="newList"></param>
+    void NewListCallback(List<T> newList);
 }

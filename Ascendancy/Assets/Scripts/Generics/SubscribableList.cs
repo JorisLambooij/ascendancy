@@ -44,7 +44,23 @@ public class SubscribableList<T>
         list.Add(value);
 
         foreach (ListSubscriber<T> subscriber in subscribers)
-            subscriber.Callback(value);
+            subscriber.NewElementCallback(value);
+    }
+
+    public void Remove(T value)
+    {
+        list.Remove(value);
+        
+        foreach (ListSubscriber<T> subscriber in subscribers)
+            subscriber.NewListCallback(this.AsList);
+    }
+
+    public void Clear()
+    {
+        list.Clear();
+        
+        foreach (ListSubscriber<T> subscriber in subscribers)
+            subscriber.NewListCallback(this.AsList);
     }
 
     /// <summary>
@@ -63,6 +79,22 @@ public class SubscribableList<T>
     public List<T> AsList
     {
         get => list;
+    }
+
+    public int Count
+    {
+        get => list.Count;
+    }
+
+    public void FromList(List<T> list)
+    {
+        this.list.Clear();
+
+        foreach (T obj in list)
+            this.list.Add(obj);
+        
+        foreach (ListSubscriber<T> subscriber in subscribers)
+            subscriber.NewListCallback(this.AsList);
     }
 }
 

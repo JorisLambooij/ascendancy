@@ -89,8 +89,20 @@ public class EntityInfo : ScriptableObject
 
     public virtual GameObject CreateInstance(Player owner, Vector3 position)
     {
-        GameObject prefab = Resources.Load("Prefabs/Entities/Entity Prefab") as GameObject;
-        GameObject go = Instantiate(prefab, owner.transform);
+        GameObject prefab;
+        Transform targetParent;
+        if (EntityType == EntityType.Building)
+        {
+            targetParent = owner.buildingsGO.transform;
+            prefab = Resources.Load("Prefabs/Entities/Building Prefab") as GameObject;
+        }
+        else
+        {
+            targetParent = owner.unitsGO.transform;
+            prefab = Resources.Load("Prefabs/Entities/Unit Prefab") as GameObject;
+        }
+
+        GameObject go = Instantiate(prefab, targetParent);
         go.transform.position = position;
 
         go.GetComponentInChildren<MeshFilter>().mesh = Mesh;

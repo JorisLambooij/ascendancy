@@ -16,13 +16,15 @@ MonoBehaviour:
   Description: This be dragons
   MaxHealth: 1000
   Armor: 50
-  Prefab: {fileID: 0}
-  Thumbnail: {fileID: 0}
+  dimensions: {x: 0, y: 0}
+  Mesh: {fileID: 0}
+  Thumbnail: {fileID: 21300000, guid: c4f68eb4431d7ba40aa6d2031524819e, type: 3}
   MinimapMarker: {fileID: 0}
   ViewDistance: 0
   ContextMenuOptions: 0
+  EntityType: 0
   selectionPriority: 0
-  ResourceAmount: []
   BuildTime: 0
+  ResourceAmount: []
   EntityFeatures:
   - {fileID: 11400000, guid: 99ee879b1a8ec394c981a73d46a64dad, type: 2}

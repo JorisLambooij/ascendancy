@@ -28,7 +28,7 @@ public class ProductionFeature : EntityFeature
         if (producedResource != null && !owner.economy.availableResources.Contains(producedResource))
         // Produced Resource has not been unlocked yet
         {
-            Debug.Log("Resource " + producedResource.resourceName + " not unlocked.");
+            // Debug.Log("Resource " + producedResource.resourceName + " not unlocked.");
             return false;
         }
 
