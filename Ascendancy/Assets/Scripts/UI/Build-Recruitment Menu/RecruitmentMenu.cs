@@ -35,16 +35,14 @@ public class RecruitmentMenu : MonoBehaviour, ListSubscriber<EntitySelector>
 
     public void NewListCallback(List<EntitySelector> newList)
     {
-        Debug.Log("New List: " + newList.Count);
         List<EntitySelector> recrList = newList.Where(e => e.ParentEntity.FindFeature<RecruitmentFeature>() != null).ToList();
-        Debug.Log("Recruitments: " + recrList.Count);
 
         foreach (RecruitmentMenuCategory cat in categories)
             cat.Expanded = false;
 
         pool.Generate(recrList.Count);
         int i = 0;
-        foreach(EntitySelector es in newList)
+        foreach(EntitySelector es in recrList)
         {
             RecruitmentMenuCategory cat = pool.pool[i].GetComponent<RecruitmentMenuCategory>();
             cat.Expanded = true;

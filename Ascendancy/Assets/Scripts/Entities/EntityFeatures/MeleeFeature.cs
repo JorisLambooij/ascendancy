@@ -46,16 +46,11 @@ public class MeleeFeature : EntityFeature
         switch (hit.collider.tag)
         {
             case ("Unit"):
-                Unit targetU = hit.collider.GetComponentInParent<Unit>();
-                MeleeAttackOrder attackOrderU = new MeleeAttackOrder(entity, targetU);
-                entity.IssueOrder(attackOrderU, enqueue);
-                return true;
             case ("Building"):
-                Building targetB = hit.collider.GetComponentInParent<Building>();
-                MeleeAttackOrder attackOrderB = new MeleeAttackOrder(entity, targetB);
-                entity.IssueOrder(attackOrderB, enqueue);
+                Entity target = hit.collider.GetComponentInParent<Entity>();
+                MeleeAttackOrder attackOrder = new MeleeAttackOrder(entity, target);
+                entity.IssueOrder(attackOrder, enqueue);
                 return true;
-
             default:
                 //Unknown tag
                 Debug.Log("Unknown tag hit with ray cast: tag '" + entity.tag + "' in " + hit.collider.ToString());

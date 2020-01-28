@@ -47,18 +47,14 @@ public class Unit : Entity
         switch (hit.collider.tag)
         {
             case ("Unit"):
-                Unit targetU = hit.collider.GetComponentInParent<Unit>();
-                MeleeAttackOrder attackOrderU = new MeleeAttackOrder(this, targetU);
-                IssueOrder(attackOrderU, enqueue);
+            case ("Building"):
+                Entity target = hit.collider.GetComponentInParent<Entity>();
+                MeleeAttackOrder attackOrder = new MeleeAttackOrder(this, target);
+                IssueOrder(attackOrder, enqueue);
                 break;
             case ("Ground"):
                 MoveOrder moveOrder = new MoveOrder(this, hit.point);
                 IssueOrder(moveOrder, enqueue);
-                break;
-            case ("Building"):
-                Building targetB = hit.collider.GetComponentInParent<Building>();
-                MeleeAttackOrder attackOrderB = new MeleeAttackOrder(this, targetB);
-                IssueOrder(attackOrderB, enqueue);
                 break;
 
             default:

@@ -26,6 +26,7 @@ public class MeleeAttackOrder : UnitOrder
 
     public MeleeAttackOrder(Entity entity, Entity target, bool guardMode = false) : base(entity)
     {
+        Debug.Log("Order: " + target);
         this.target = target;
         this.guardMode = guardMode;
         this.combatFeature = entity.FindFeature<MeleeFeature>();
@@ -85,7 +86,7 @@ public class MeleeAttackOrder : UnitOrder
         if (targetCombatFeature != null)
         {
             // Target has combat capabilities, so enter a melee duel
-            (target as Unit).Controller.EnterMelee(entity);
+            (target as Entity).Controller.EnterMelee(entity);
 
             int unitAttack = combatFeature.meleeAttack;
             int targetDefense = targetCombatFeature.meleeDefense;

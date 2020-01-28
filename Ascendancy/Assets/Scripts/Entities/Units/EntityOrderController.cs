@@ -59,7 +59,7 @@ public class EntityOrderController : MonoBehaviour
     {
         if (currentOrder == null)
         {
-            Unit thisUnit = GetComponent<Unit>();
+            Entity thisUnit = GetComponent<Entity>();
             MeleeAttackOrder defendOrder = new MeleeAttackOrder(thisUnit, enemy, true);
 
             NewOrder(defendOrder);
