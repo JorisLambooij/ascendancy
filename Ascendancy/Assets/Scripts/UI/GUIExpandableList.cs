@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+#if (UNITY_EDITOR) 
 public class GUIExpandableList<T> : GUIContent where T : ScriptableObject
 {
     private bool expanded;
@@ -80,3 +81,5 @@ public class GUIExpandableList<T> : GUIContent where T : ScriptableObject
         }
     }
 }
+#endif
+

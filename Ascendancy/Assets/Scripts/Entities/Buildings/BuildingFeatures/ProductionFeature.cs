@@ -2,31 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewProductionFeature", menuName = "Building Features/Resource Production Feature")]
-public class ProductionFeature : BuildingFeature
+[System.Serializable]
+[CreateAssetMenu(fileName = "NewProductionFeature", menuName = "Entity Features/Resource Production Feature")]
+public class ProductionFeature : EntityFeature
 {
     public Resource producedResource;
     public float producedAmount;
 
     public Resource consumedResource;
     public float consumedAmount;
-
-    private float countdown;
-    private const float PROD_TIME = 3;
-
-    public override void Initialize(Building building)
+    
+    public override void Update10Override()
     {
-        
-    }
-
-    public override void UpdateOverride(Building building)
-    {
-        if (countdown < 0)
-        {
-            countdown = PROD_TIME;
-            Produce(building.Owner);
-        }
-        countdown -= Time.deltaTime;
+        Produce(entity.Owner);
     }
 
     private bool Produce(Player owner)
@@ -40,7 +28,7 @@ public class ProductionFeature : BuildingFeature
         if (producedResource != null && !owner.economy.availableResources.Contains(producedResource))
         // Produced Resource has not been unlocked yet
         {
-            Debug.Log("Resource " + producedResource.resourceName + " not unlocked.");
+            // Debug.Log("Resource " + producedResource.resourceName + " not unlocked.");
             return false;
         }
 
@@ -54,22 +42,9 @@ public class ProductionFeature : BuildingFeature
                 return false;
         }
         
-        
         float producedInStorage = owner.economy.resourceStorage.GetValue(producedResource);
         owner.economy.resourceStorage.SetValue(producedResource, producedInStorage + producedAmount);
         return true;
     }
-
-    private IEnumerator Countdown(Building building)
-    {
-        float duration = 1f;
-        float normalizedTime = 0;
-        while (normalizedTime <= 1f)
-        {
-            normalizedTime += Time.deltaTime / duration;
-            yield return null;
-        }
-        Produce(building.Owner);
-        Countdown(building);
-    }
+    
 }

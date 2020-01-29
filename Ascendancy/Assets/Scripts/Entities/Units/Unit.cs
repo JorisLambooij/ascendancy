@@ -7,35 +7,18 @@ using UnityEngine;
 /// </summary>
 public class Unit : Entity
 {
-    /// <summary>
-    /// Holds all the stats for this Unit.
-    /// </summary>
-    public UnitInfo unitInfo;
-    private UnitController controller;
+    //private UnitController controller;
 
-    private Sprite minimapMarker;
+    //private Sprite minimapMarker;
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
 
-        currentHealth = unitInfo.maxHealth;
-        controller = GetComponent<UnitController>();
-        minimapMarker = unitInfo.minimapMarker;
+        currentHealth = entityInfo.MaxHealth;
 
-        GameObject markerObject = Resources.Load("Prefabs/UI/MinimapMarker") as GameObject;
-
-        //if a sprite was provided, we use it while keeping the position and settings
-        if (minimapMarker != null)
-        {
-            markerObject.GetComponent<SpriteRenderer>().sprite = minimapMarker;
-            Debug.Log(markerObject.GetComponent <SpriteRenderer > ().sprite.name);
-        }
-
-        Instantiate(markerObject, this.transform);
-
-        foreach (EntityFeature feature in unitInfo.entity_features)
+        foreach (EntityFeature feature in entityInfo.EntityFeatures)
             feature.Initialize(this);
 
         //unit_features?
@@ -44,8 +27,8 @@ public class Unit : Entity
     // Update is called once per frame
     protected override void Update()
     {
-        foreach (EntityFeature feature in unitInfo.entity_features)
-            feature.UpdateOverride(this);
+        foreach (EntityFeature feature in entityInfo.EntityFeatures)
+            feature.UpdateOverride();
     }
 
     /// <summary>
@@ -64,18 +47,14 @@ public class Unit : Entity
         switch (hit.collider.tag)
         {
             case ("Unit"):
-                Unit targetU = hit.collider.GetComponentInParent<Unit>();
-                MeleeAttackOrder attackOrderU = new MeleeAttackOrder(this, targetU);
-                IssueOrder(attackOrderU, enqueue);
+            case ("Building"):
+                Entity target = hit.collider.GetComponentInParent<Entity>();
+                MeleeAttackOrder attackOrder = new MeleeAttackOrder(this, target);
+                IssueOrder(attackOrder, enqueue);
                 break;
             case ("Ground"):
                 MoveOrder moveOrder = new MoveOrder(this, hit.point);
                 IssueOrder(moveOrder, enqueue);
-                break;
-            case ("Building"):
-                Building targetB = hit.collider.GetComponentInParent<Building>();
-                MeleeAttackOrder attackOrderB = new MeleeAttackOrder(this, targetB);
-                IssueOrder(attackOrderB, enqueue);
                 break;
 
             default:
@@ -102,7 +81,7 @@ public class Unit : Entity
         }
     }
 
-    public UnitController Controller
+    public EntityOrderController Controller
     {
         get { return controller; }
     }

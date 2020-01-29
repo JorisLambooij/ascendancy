@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-
-
 public class Chunk : MonoBehaviour
 {
     #region mesh creation variables
@@ -16,18 +14,14 @@ public class Chunk : MonoBehaviour
     private Mesh mesh;
     private MeshCollider col;
     #endregion
-    #region textures
-    private float tunit = .25f;
-    private Vector2 tGrass = new Vector2(0, 3);
-    private Vector2 tSand = new Vector2(3, 2);
-    private Vector2 tWildCard = new Vector2(3, 0);
-    #endregion
 
     //tweakables
     public int chunkSize = 64;  //max tiles per side this chunk can handle
     public float tileSize = 1.5f;
+    public Vector2Int chunkIndex;
+
     // Use this for initialization
-    void Awake()
+    public void Initialize()
     {
         //fetch objects
         //TODO: fix this for instantiation
@@ -54,21 +48,32 @@ public class Chunk : MonoBehaviour
         tris.Add(vertCount + 3);    //4
 
         //TODO: tweak this
-        uvs.Add(new Vector2(0, 1));
-        uvs.Add(new Vector2(1, 1));
-        uvs.Add(new Vector2(1, 0));
-        uvs.Add(new Vector2(0, 0));
+        uvs.Add(UVProjection(UpperLeft));
+        uvs.Add(UVProjection(UpperRight));
+        uvs.Add(UVProjection(LowerRight));
+        uvs.Add(UVProjection(LowerLeft));
 
         vertCount += 4;
     }
-    void DrawTile(Tile t, Vector2 texture)
+    Vector2 UVProjection(Vector3 point)
+    {
+        int numberOfChunks = ((World)World.Instance).numberOfChunks;
+        Vector3 UV_projectionInChunk = Vector3.ProjectOnPlane(point, Vector3.up) / chunkSize / tileSize / numberOfChunks;
+
+        float x = UV_projectionInChunk.x + chunkIndex.x * (1f / numberOfChunks);
+        float y = UV_projectionInChunk.z + chunkIndex.y * (1f / numberOfChunks);
+
+        return new Vector2(x, y);
+    }
+
+    void DrawTile(Tile t)
     {
 
         //fetch the corner points, transforming them to world-space in the process
-        Vector3 p1 = transform.InverseTransformPoint(t.upperLeft);
-        Vector3 p2 = transform.InverseTransformPoint(t.upperRight);
-        Vector3 p3 = transform.InverseTransformPoint(t.lowerRight);
-        Vector3 p4 = transform.InverseTransformPoint(t.lowerLeft);
+        Vector3 p1 = transform.InverseTransformPoint(t.upperLeft);  // p1 -> 0, 0
+        Vector3 p2 = transform.InverseTransformPoint(t.upperRight); // p2 -> 1, 0
+        Vector3 p3 = transform.InverseTransformPoint(t.lowerRight); // p3 -> 1, 1
+        Vector3 p4 = transform.InverseTransformPoint(t.lowerLeft);  // p4 -> 0, 1
         //if we're just drawing on the flat
         if (!t.isSlope)
         {
@@ -89,10 +94,10 @@ public class Chunk : MonoBehaviour
             vertCount += 4;
 
             //TODO: tweak this
-            uvs.Add(new Vector2(0, 1));
-            uvs.Add(new Vector2(1, 1));
-            uvs.Add(new Vector2(1, 0));
-            uvs.Add(new Vector2(0, 0));
+            uvs.Add(UVProjection(p1));
+            uvs.Add(UVProjection(p2));
+            uvs.Add(UVProjection(p3));
+            uvs.Add(UVProjection(p4));
 
             return;
         }
@@ -119,9 +124,10 @@ public class Chunk : MonoBehaviour
                 tris.Add(vertCount + 1);
                 tris.Add(vertCount + 2);
 
-                uvs.Add(new Vector2(0, 1));
-                uvs.Add(new Vector2(1, 1));
-                uvs.Add(new Vector2(0, 0));
+                //431
+                uvs.Add(UVProjection(p1));
+                uvs.Add(UVProjection(p2));
+                uvs.Add(UVProjection(p4));
 
                 vertCount += 3;
 
@@ -134,9 +140,10 @@ public class Chunk : MonoBehaviour
                 tris.Add(vertCount + 1);
                 tris.Add(vertCount + 2);
 
-                uvs.Add(new Vector2(1, 1));
-                uvs.Add(new Vector2(1, 0));
-                uvs.Add(new Vector2(0, 0));
+                //421
+                uvs.Add(UVProjection(p2));
+                uvs.Add(UVProjection(p3));
+                uvs.Add(UVProjection(p4));
 
                 vertCount += 3;
 
@@ -154,9 +161,10 @@ public class Chunk : MonoBehaviour
                 tris.Add(vertCount + 1);
                 tris.Add(vertCount + 2);
 
-                uvs.Add(new Vector2(0, 1));
-                uvs.Add(new Vector2(1, 1));
-                uvs.Add(new Vector2(1, 0));
+                //432
+                uvs.Add(UVProjection(p1));
+                uvs.Add(UVProjection(p2));
+                uvs.Add(UVProjection(p3));
 
                 vertCount += 3;
 
@@ -169,9 +177,10 @@ public class Chunk : MonoBehaviour
                 tris.Add(vertCount + 1);
                 tris.Add(vertCount + 2);
 
-                uvs.Add(new Vector2(0, 1));
-                uvs.Add(new Vector2(1, 0));
-                uvs.Add(new Vector2(0, 0));
+                //421
+                uvs.Add(UVProjection(p1));
+                uvs.Add(UVProjection(p3));
+                uvs.Add(UVProjection(p4));
 
                 vertCount += 3;
 
@@ -200,10 +209,10 @@ public class Chunk : MonoBehaviour
             vertCount += 4;
 
             //TODO: tweak this
-            uvs.Add(new Vector2(0, 1));
-            uvs.Add(new Vector2(1, 1));
-            uvs.Add(new Vector2(1, 0));
-            uvs.Add(new Vector2(0, 0));
+            uvs.Add(UVProjection(p1));
+            uvs.Add(UVProjection(p2));
+            uvs.Add(UVProjection(p3));
+            uvs.Add(UVProjection(p4));
 
             return;
             #endregion
@@ -224,9 +233,10 @@ public class Chunk : MonoBehaviour
                 tris.Add(vertCount + 1);
                 tris.Add(vertCount + 2);
 
-                uvs.Add(new Vector2(0, 1));
-                uvs.Add(new Vector2(1, 1));
-                uvs.Add(new Vector2(0, 0));
+                // 431
+                uvs.Add(UVProjection(p1));
+                uvs.Add(UVProjection(p2));
+                uvs.Add(UVProjection(p4));
 
                 vertCount += 3;
 
@@ -239,9 +249,10 @@ public class Chunk : MonoBehaviour
                 tris.Add(vertCount + 1);
                 tris.Add(vertCount + 2);
 
-                uvs.Add(new Vector2(1, 1));
-                uvs.Add(new Vector2(1, 0));
-                uvs.Add(new Vector2(0, 0));
+                //321
+                uvs.Add(UVProjection(p2));
+                uvs.Add(UVProjection(p3));
+                uvs.Add(UVProjection(p4));
 
                 vertCount += 3;
 
@@ -259,9 +270,10 @@ public class Chunk : MonoBehaviour
                 tris.Add(vertCount + 1);
                 tris.Add(vertCount + 2);
 
-                uvs.Add(new Vector2(0, 1));
-                uvs.Add(new Vector2(1, 1));
-                uvs.Add(new Vector2(1, 0));
+                //432
+                uvs.Add(UVProjection(p1));
+                uvs.Add(UVProjection(p2));
+                uvs.Add(UVProjection(p3));
 
                 vertCount += 3;
 
@@ -274,9 +286,10 @@ public class Chunk : MonoBehaviour
                 tris.Add(vertCount + 1);
                 tris.Add(vertCount + 2);
 
-                uvs.Add(new Vector2(0, 1));
-                uvs.Add(new Vector2(1, 0));
-                uvs.Add(new Vector2(0, 0));
+                //421
+                uvs.Add(UVProjection(p1));
+                uvs.Add(UVProjection(p3));
+                uvs.Add(UVProjection(p4));
 
                 vertCount += 3;
 
@@ -301,7 +314,7 @@ public class Chunk : MonoBehaviour
             for (int z = startZ; z < endZ; z++)
             {
                 Tile t = map[x, z];
-                DrawTile(t, tGrass);
+                DrawTile(t);
             }
         }
 
@@ -310,14 +323,7 @@ public class Chunk : MonoBehaviour
 
     }
     #endregion
-
-    //calculate the textures properlly
-    Vector2 getUVCoordinates(Vector2 input, Vector2 texture)
-    {
-        Vector2 returnVect = new Vector2((input.x * tunit) + (texture.x * tunit), (input.y * tunit) + (texture.y * tunit));
-        return returnVect;
-    }
-
+    
     //method that comits all our changes to the mesh proper
     void ComitMeshChanges()
     {

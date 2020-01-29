@@ -3,13 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Resource_Amount : System.Object
+public struct Resource_Amount
 {
     public Resource resource;
     public float amount;
-
-    void Start()
-    {
-        
-    }
 }

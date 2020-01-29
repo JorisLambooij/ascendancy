@@ -10,7 +10,7 @@ public class JSON_To_Tech_Converter
         Sprite icon = Resources.Load<Sprite>(iconPath);
         Technology tech = new Technology(jsonTech, icon);
 
-        tech.unitsUnlocked = ConvertList<UnitInfo>(jsonTech.unitsUnlocked);
+        tech.unitsUnlocked = ConvertList<EntityInfo>(jsonTech.unitsUnlocked);
         tech.buildingsUnlocked = ConvertList<BuildingInfo>(jsonTech.buildingsUnlocked);
         tech.resourcesUnlocked = ConvertList<Resource>(jsonTech.resourcesUnlocked);
 

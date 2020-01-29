@@ -11,14 +11,14 @@ public class Healthbar : MonoBehaviour
     public float margin = 0.05f;
 
     private Camera cam;
-    private Unit unit;
+    private Entity entity;
 
     private SpriteRenderer barBack, barFront;
 
     // Start is called before the first frame update
     void Start()
     {
-        unit = transform.GetComponentInParent<Unit>();
+        entity = transform.GetComponentInParent<Entity>();
         cam = Camera.main;
 
         barBack = GetComponent<SpriteRenderer>();
@@ -31,8 +31,8 @@ public class Healthbar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int maxHealth = unit.unitInfo.maxHealth;
-        int currentHealth = unit.Health;
+        int maxHealth = entity.entityInfo.MaxHealth;
+        int currentHealth = entity.Health;
         bool visible = maxHealth > currentHealth || activeOverride;
 
         if (visible)

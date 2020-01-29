@@ -10,14 +10,28 @@ public class MeleeAttackOrder : UnitOrder
     private Entity target;
 
     /// <summary>
+    /// The Combat-EntityFeature that enables this Entity to fight.
+    /// </summary>
+    private MeleeFeature combatFeature;
+
+    /// <summary>
+    /// The Movement-EntityFeature that enables this Entity to move. If not found, Entity still will be able to defend its melee range.
+    /// </summary>
+    private MovementFeature moveFeature;
+
+    /// <summary>
     /// Guard Mode means the unit will not follow the target when it gets out range.
     /// </summary>
     private bool guardMode;
 
-    public MeleeAttackOrder(Unit unit, Entity target, bool guardMode = false) : base(unit)
+    public MeleeAttackOrder(Entity entity, Entity target, bool guardMode = false) : base(entity)
     {
+        Debug.Log("Order: " + target);
         this.target = target;
         this.guardMode = guardMode;
+        this.combatFeature = entity.FindFeature<MeleeFeature>();
+        moveFeature = entity.FindFeature<MovementFeature>();
+
     }
 
     public override Vector3 CurrentDestination
@@ -39,18 +53,19 @@ public class MeleeAttackOrder : UnitOrder
 
         if (IsInRange)
         {
-            unit.Controller.NavAgent.isStopped = true;
+            if (moveFeature != null)
+                moveFeature.entity.Controller.NavAgent.isStopped = true;
 
             if (cooldown <= 0)
             {
                 Attack();
-                cooldown = unit.unitInfo.attackSpeed;
+                cooldown = combatFeature.attackSpeed;
             }
         }
-        else if (!guardMode)
+        else if (!guardMode && moveFeature != null)
         {
-            unit.Controller.NavAgent.SetDestination(targetPos);
-            unit.Controller.NavAgent.isStopped = false;
+            moveFeature.entity.Controller.NavAgent.SetDestination(targetPos);
+            moveFeature.entity.Controller.NavAgent.isStopped = false;
         }
     }
 
@@ -59,7 +74,7 @@ public class MeleeAttackOrder : UnitOrder
     /// </summary>
     private bool IsInRange
     {
-        get { return Vector3.Distance(unit.transform.position, target.transform.position) < unit.unitInfo.meleeRange; }
+        get { return Vector3.Distance(entity.transform.position, target.transform.position) < combatFeature.meleeRange; }
     }
 
     /// <summary>
@@ -67,27 +82,28 @@ public class MeleeAttackOrder : UnitOrder
     /// </summary>
     private void Attack()
     {
-        if (target is Unit)
+        MeleeFeature targetCombatFeature = target.FindFeature<MeleeFeature>();
+        if (targetCombatFeature != null)
         {
-            // melee duel
-            (target as Unit).Controller.EnterMelee(unit);
+            // Target has combat capabilities, so enter a melee duel
+            (target as Entity).Controller.EnterMelee(entity);
 
-            int unitAttack = unit.unitInfo.meleeAttack;
-            int targetDefense = (target as Unit).unitInfo.meleeDefense;
+            int unitAttack = combatFeature.meleeAttack;
+            int targetDefense = targetCombatFeature.meleeDefense;
 
             int chanceToHit = Mathf.Clamp(50 + unitAttack - targetDefense, 10, 90);
             
             if (Random.Range(0, 100) < chanceToHit)
             {
-                // successful attack
-                target.TakeDamage(unit.unitInfo.meleeStrength);
+                // Successful attack
+                target.TakeDamage(combatFeature.meleeStrength);
             }
         }
-        else if (target is Building)
+        else
         {
-            // buildings cant defend themselves, so auto-hit
-            target.TakeDamage(unit.unitInfo.meleeStrength);
-            cooldown = unit.unitInfo.attackSpeed;
+            // Target entitiy can't defend itself, so auto-hit.
+            target.TakeDamage(combatFeature.meleeStrength);
+            cooldown = combatFeature.attackSpeed;
         }
 
     }

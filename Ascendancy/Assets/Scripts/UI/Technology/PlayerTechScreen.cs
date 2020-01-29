@@ -4,9 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 
-public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, int>
+public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
 {
-    public int scale = TechTreeEditor.GRID_SNAP;
+    // Should be the same as TechTreeEditor.GRID_SNAP
+    public int scale = 100; 
+
     public GameObject techFieldPrefab;
     public GameObject linePrefab;
     public Transform techFieldsParent;
@@ -20,6 +22,8 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, int>
     public Color colorIfResearching;
     public Color colorIfResearched;
 
+    public Text pointsUI;
+
     private Dictionary<int, TechField> techFieldsDict;
 
     void Start()
@@ -28,6 +32,14 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, int>
         playerTechLevel = playerScript.transform.GetComponent<TechnologyLevel>();
 
         SetUpTechScreen();
+    }
+
+    void Update()
+    {
+        pointsUI.text = playerTechLevel.storedResearch.ToString();
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+            gameObject.SetActive(false);
     }
 
     private void SetUpTechScreen()
@@ -91,7 +103,7 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, int>
         }
     }
 
-    public void Callback(int key, int newValue)
+    public void Callback(int key, float newValue)
     {
         techFieldsDict[key].OnProgressUpdate(newValue);
 

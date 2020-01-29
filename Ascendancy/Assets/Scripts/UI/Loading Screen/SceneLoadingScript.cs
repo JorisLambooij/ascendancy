@@ -17,7 +17,8 @@ public class SceneLoadingScript : MonoBehaviour
     {
         //collecting scene names
         sceneNames = new List<string>();
-
+        
+        #if (UNITY_EDITOR)
         foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes)
         {
             if (scene.enabled)
@@ -38,8 +39,8 @@ public class SceneLoadingScript : MonoBehaviour
             foreach(string sceneName in sceneNames)
                 Debug.Log("'"+sceneName+"'");
         }
+        #endif
 
-        
     }
 
     IEnumerator LoadAsyncOperation()

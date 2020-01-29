@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Tile
 {
-
     public Vector3 upperLeft;
     public Vector3 upperRight;
     public Vector3 lowerRight;

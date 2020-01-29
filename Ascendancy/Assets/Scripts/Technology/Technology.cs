@@ -39,7 +39,7 @@ public class Technology
     /// </summary>
     public List<int> leadsToTechs;
 
-    public Technology(string name, int id, Sprite icon, int cost, bool startTech, int[] dependencies, UnitInfo[] unitsUnlocked, BuildingInfo[] buildingsUnlocked, Resource[] resourcesUnlocked)
+    public Technology(string name, int id, Sprite icon, int cost, bool startTech, int[] dependencies, EntityInfo[] unitsUnlocked, BuildingInfo[] buildingsUnlocked, Resource[] resourcesUnlocked)
     {
         this.name = name;
         this.id = id;
@@ -65,7 +65,7 @@ public class Technology
     }
 
     // Effects
-    public UnitInfo[] unitsUnlocked;
+    public EntityInfo[] unitsUnlocked;
     public BuildingInfo[] buildingsUnlocked;
     public Resource[] resourcesUnlocked;
 

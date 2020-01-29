@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -9,7 +10,7 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class GameMode : ControlMode
 {
-    private List<EntitySelector> selectedUnits;
+    public SubscribableList<EntitySelector> selectedUnits { get; protected set; }
 
     private Vector3 dragStartPosM1, dragStopPosM1;
     private bool startDragM1, draggingM1;
@@ -25,13 +26,12 @@ public class GameMode : ControlMode
     private Camera cam;
     //private Canvas contextMenuCanvas;
     private ContextMenuHandler conMenuHandler;
-
-
+    
     //private Vector3[] conMenuButtonPos;
 
     public GameMode() : base()
     {
-        selectedUnits = new List<EntitySelector>(8);
+        selectedUnits = new SubscribableList<EntitySelector>();
         cam = gameManager.camScript.transform.GetComponent<Camera>();
         selectionBox = GameObject.Find("SelectionRect").GetComponent<Image>();
         selectionBox.enabled = false;
@@ -49,9 +49,7 @@ public class GameMode : ControlMode
         else
             formationLine.enabled = false;
         if (conMenuHandler == null)
-        {
             Debug.LogError("ConMenuHandler not found");
-        }
         else
         {
             //conMenuHandler.Hide();
@@ -63,6 +61,8 @@ public class GameMode : ControlMode
         Mouse1();
         Mouse2();
         Mouse3();
+
+
     }
 
     public override void Start()
@@ -85,8 +85,7 @@ public class GameMode : ControlMode
         // context menu out or pointer over UI element;
         if (conMenuHandler.IsVisible())
             return;
-
-
+        
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             dragStartPosM1 = Input.mousePosition;
@@ -136,30 +135,23 @@ public class GameMode : ControlMode
 
                 DeselectAll();
 
-                bool unitsInSelection = false;
+                int highestPriority = -1;
                 foreach (EntitySelector e in player.GetComponentsInChildren<EntitySelector>())
                     if (PositionInSelection(e.transform.position))
                     {
                         selectedUnits.Add(e);
-                        e.Selected = true;
-                        if (e.ParentEntity is Unit)
-                            unitsInSelection = true;
+
+                        Entity entity = e.GetComponentInParent<Entity>();
+
+                        if (entity.entityInfo.selectionPriority > highestPriority)
+                            highestPriority = entity.entityInfo.selectionPriority;
                     }
 
-                // if there is at least one unit in the selection, do not select buildings
-                List<EntitySelector> toRemove = new List<EntitySelector>();
-                if (unitsInSelection)
-                {
-                    foreach (EntitySelector e in selectedUnits)
-                        if (e.ParentEntity is Building)
-                            toRemove.Add(e);
-                    foreach (EntitySelector e in toRemove)
-                    {
-                        selectedUnits.Remove(e);
-                        e.Selected = false;
-                    }
-                }
-
+                // Keep only those Entities with the highest Priority
+                List<EntitySelector> filteredList = selectedUnits.AsList.Where(e => e.GetComponentInParent<Entity>().entityInfo.selectionPriority == highestPriority).ToList();
+                foreach(EntitySelector e in filteredList)
+                    e.Selected = true;
+                selectedUnits.FromList(filteredList);
             }
             else if (!EventSystem.current.IsPointerOverGameObject())
             {
@@ -182,11 +174,9 @@ public class GameMode : ControlMode
                         es.Selected = true;
                         selectedUnits.Add(es);
                     }
-                        
                 }
             }
         }
-        
     }
 
     /// <summary>
@@ -230,15 +220,18 @@ public class GameMode : ControlMode
                     Vector3 dragLineDirection = (dragStopPosM2 - dragStartPosM2);
                     Vector3 orientation = Vector3.Cross(dragLineDirection, Vector3.up).normalized;
 
-                    SortedDictionary<float, Unit> unitsSorted = new SortedDictionary<float, Unit>();
+                    SortedDictionary<float, Entity> unitsSorted = new SortedDictionary<float, Entity>();
 
                     // sort units, then issue commands according to units' relative position towards the goal line
-                    foreach (EntitySelector es in selectedUnits)
+                    foreach (EntitySelector es in selectedUnits.AsList)
                     {
-                        Unit u = es.ParentEntity as Unit;
+                        Entity e = es.ParentEntity as Entity;
+
+                        if (e == null)
+                            continue;
 
                         // Project the Unit's position onto the drag line
-                        Vector3 startToUnitPos = u.transform.position - dragStartPosM2;
+                        Vector3 startToUnitPos = e.transform.position - dragStartPosM2;
                         Vector3 projectedVector = Vector3.Project(startToUnitPos, dragLineDirection);
                         float projectedDistance = projectedVector.magnitude;
 
@@ -248,16 +241,18 @@ public class GameMode : ControlMode
 
                         // if, by some chance, two units happen to have the same projected dictance, just move the second one slightly further down.
                         while (unitsSorted.ContainsKey(projectedDistance))
-                            projectedDistance += 0.0001f;
+                            projectedDistance += 0.001f;
                         // sort by length of the projected vector
-                        unitsSorted.Add(projectedDistance, u);
+                        unitsSorted.Add(projectedDistance, e);
                     }
 
-                    // Make sure nothing has gone horribly wrong
+                    // Make sure nothing has gone horribly wrong (no units missing or counted twice)
                     Debug.Assert(unitsSorted.Count == count);
+                    if (unitsSorted.Count != count)
+                        Debug.Log("UnitsSorted.Count: " + unitsSorted.Count + "; SelectedUnits.Count: " + count);
 
                     int i = 0;
-                    foreach (KeyValuePair<float, Unit> kvp in unitsSorted)
+                    foreach (KeyValuePair<float, Entity> kvp in unitsSorted)
                     {
                         // Determine the lerped position on the drag line
                         float lerpFactor;
@@ -267,9 +262,9 @@ public class GameMode : ControlMode
                             lerpFactor = 0.5f;
                         i++;
                         Vector3 lerpedPos = Vector3.Lerp(dragStartPosM2, dragStopPosM2, lerpFactor);
-                        
+
                         // Issue an order to the nearest unit to move there
-                        Unit nearestUnit = kvp.Value;
+                        Entity nearestUnit = kvp.Value;
                         bool enqueue = Input.GetKey(KeyCode.LeftShift);
                         nearestUnit.IssueOrder(new MoveOrder(nearestUnit, lerpedPos), false);
                         nearestUnit.IssueOrder(new RotateOrder(nearestUnit, orientation), true);
@@ -282,40 +277,21 @@ public class GameMode : ControlMode
 
                     if (hit.collider != null)
                     {
-                        foreach (EntitySelector u in selectedUnits)
+                        foreach (EntitySelector u in selectedUnits.AsList)
                         {
-                            //some errors here, I think we should split building and unit selection:
-                            //1+ unit among entities: only units selected
-                            //TODO seperate selections
-
                             bool enqueue = Input.GetKey(KeyCode.LeftShift);
                             u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
-
-
-                            //if (u.GetComponentInParent<Entity>().GetType() == typeof(Unit))
-                            //{
-                            //    bool enqueue = Input.GetKey(KeyCode.LeftShift);
-                            //    u.GetComponentInParent<Unit>().ClickOrder(hit, enqueue);
-                            //}
-                            //else
-                            //{
-                            //    Debug.Log("Building " + u.GetComponentInParent<Entity>().name + " could not receive order!");
-                            //}
                         }
                     }
                     else
-                    {
                         Debug.LogError("Raycast missed hit.collider");
-                    }
                 }
             }
         }
         else //if context menu is open
         {
             if (Input.GetMouseButtonUp(1))
-            {
                 conMenuHandler.Hide();
-            }
         }
     }
 
@@ -347,22 +323,20 @@ public class GameMode : ControlMode
                     }
                     else if (e.GetComponentInParent<Entity>().GetType() == typeof(Unit))
                     {
-                        UnitInfo uInfo = e.GetComponentInParent<Unit>().unitInfo;
-                        thismanybuttons = uInfo.contextMenuOptions;
+                        EntityInfo uInfo = e.GetComponentInParent<Unit>().entityInfo;
+                        thismanybuttons = uInfo.ContextMenuOptions;
                     }
                     else if (e.GetComponentInParent<Entity>().GetType() == typeof(Building))
                     {
                         BuildingInfo bInfo = e.GetComponentInParent<Building>().buildingInfo;
-                        thismanybuttons = bInfo.contextMenuOptions;
+                        thismanybuttons = bInfo.ContextMenuOptions;
                     }
 
                     if (thismanybuttons > 0 && thismanybuttons < 9)
                         //open menu only if options are available  
                         if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
-                        {
                             //here we open the context menu    
                             conMenuHandler.Show(thismanybuttons);
-                        }
                 }
             }
         }
@@ -384,7 +358,7 @@ public class GameMode : ControlMode
 
     private void DeselectAll()
     {
-        foreach (EntitySelector unitSelector in selectedUnits)
+        foreach (EntitySelector unitSelector in selectedUnits.AsList)
             unitSelector.Selected = false;
 
         selectedUnits.Clear();

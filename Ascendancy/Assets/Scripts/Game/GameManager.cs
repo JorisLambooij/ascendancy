@@ -13,9 +13,10 @@ public class GameManager : MonoBehaviour
 
     public ControlMode controlMode;
     public World world;
+    public TileOccupationMap occupationMap;
 
     // Might need refactoring
-    private Dictionary<ControlModeEnum, ControlMode> controlModeDict;
+    public Dictionary<ControlModeEnum, ControlMode> controlModeDict { get; protected set; }
     
     // Start is called before the first frame update
     void Awake()
@@ -43,6 +44,11 @@ public class GameManager : MonoBehaviour
 
         controlMode = controlModeDict[mode];
         controlMode.Start();
+    }
+
+    public Player GetPlayer
+    {
+        get { return GameObject.Find("Player " + playerNo).GetComponent<Player>(); }
     }
     
 }

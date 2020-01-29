@@ -12,19 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95c7e25b3849595428ebaf54e2d439fd, type: 3}
   m_Name: Dummy Tank
   m_EditorClassIdentifier: 
-  unitName: Dummy Tank
-  description: Super duper debug tank
-  maxHealth: 100
-  armor: 10
-  meleeAttack: 40
-  meleeDefense: 50
-  meleeStrength: 10
-  meleeRange: 2
-  attackSpeed: 1
-  speed: 4
-  acceleration: 4
-  prefab: {fileID: 7551204154752481065, guid: 204dd92974604ec4bb53de31b1bfaa9b, type: 3}
-  thumbnail: {fileID: 0}
-  contextMenuOptions: 6
-  minimapMarker: {fileID: 0}
-  viewDistance: 10
+  name: Dummy Tank
+  Description: 
+  MaxHealth: 100
+  Armor: 10
+  Prefab: {fileID: 7551204154752481065, guid: 204dd92974604ec4bb53de31b1bfaa9b, type: 3}
+  Thumbnail: {fileID: 0}
+  MinimapMarker: {fileID: 0}
+  ViewDistance: 10
+  ContextMenuOptions: 0
+  selectionPriority: 0
+  ResourceAmount: []
+  BuildTime: 2
+  EntityFeatures:
+  - {fileID: 11400000, guid: e386352aebb02e445958baa451193ebb, type: 2}
+  - {fileID: 11400000, guid: bc1a033dab5d3bb41bef84a6e1288422, type: 2}

@@ -7,34 +7,85 @@ using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
 
-public class World : MonoBehaviour
+public class World : MonoBehaviour_Singleton
 {
-    public Texture2D heightmap;
+    public enum DisplayMode { Height, Color };
+    public DisplayMode displayMode = DisplayMode.Color;
+
+    #region Tweakables
+    [Header("Tweakables")]
+    /// <summary>
+    /// Tiles per side of the world.
+    /// </summary>
+    public int worldSize = 64;
+
+    public float EffectiveWorldSize
+    {
+        get { return worldSize * tileSize; }
+    }
+
+    /// <summary>
+    /// Number of chunk per side of the world.
+    /// </summary>
+    public int numberOfChunks = 2;
+
+    public float tileSize = 5f; //meters per side of each tiles
+    public float heightScale = 1f;   //meters of elevation each new level gives us
+    public float heightResolution = 1f; // amount of different levels of elevation
+    #endregion
+
     public GameObject chunkPrefab;
     public LocalNavMeshBuilder navMeshBuilder;
 
-    //tweakables
-    public int worldSize = 64;  //tiles per side of the world
-    public int chunkSize = 64;
-    public float tileSize = 5f; //meters per side of each tiles
-    public float noiseScale = .125f;
-    public float heightScale = 1f;   //meters of elevation each new level gives us
-    public float heightResolution = 1f;
+    //public float seaLevel = 0;
 
+    [Header("Misc References")]
     public Transform ChunkCollector;
-
     public GameObject fow_plane;
+    public Texture2D tex;
 
-    private Tile[,] map;    //set of all the tiles that make up the world
-    private Chunk[,] chunks; //set of all the chunks we're going to use to draw the world
-                             //private GameObject chunkGO; //the instantiated Chunk
+    /// <summary>
+    /// Contains the information about the height of the tiles.
+    /// </summary>
+    private float[,] heightmap;
 
-    void Start()
+    /// <summary>
+    /// Set of all the tiles that make up the world
+    /// </summary>
+    private Tile[,] map;
+
+    /// <summary>
+    /// Set of all the chunks used to draw the world.
+    /// </summary>
+    private Chunk[,] chunks;
+
+    protected void Awake()
     {
+        base.Start();
+
+        CreateWorld();
+
+        //resize fow_plane
+        if (fow_plane == null)
+            Debug.LogError("FoW_Plane not found, no fog for you! Go fog yourself!");
+        else
+        {
+            //TODO Calculate stuff instead of estimating '25.5'
+            fow_plane.transform.localScale = new Vector3(25.5f, 1, 25.5f);
+            fow_plane.transform.position = new Vector3(worldSize, fow_plane.transform.position.y, worldSize);
+        }
+    }
+
+    public void CreateWorld()
+    {
+        HeightMapGenerator heightMapGenerator = GetComponent<HeightMapGenerator>();
+        heightMapGenerator.GenerateHeightMap(worldSize, worldSize, new Vector2(1, 0));
+        heightmap = heightMapGenerator.AmplifyCliffs();
+
         //initiate things
         map = new Tile[worldSize, worldSize];
-        int chunkAmount = Mathf.CeilToInt(worldSize / chunkSize);
-        chunks = new Chunk[chunkAmount, chunkAmount];
+
+        chunks = new Chunk[numberOfChunks, numberOfChunks];
         for (int x = 0; x < worldSize; x++)
             for (int z = 0; z < worldSize; z++)
                 map[x, z] = new Tile(x, z, 0f, tileSize);
@@ -49,29 +100,36 @@ public class World : MonoBehaviour
             {
                 chunks[i, j] = GenerateChunk(i, j);
                 chunks[i, j].DrawTiles(map);
+
+                //chunks[i, j].GetComponent<MeshRenderer>().material.SetTexture("_TerrainTexture", heightMapGenerator.HeightTexture(i, j, worldSize / numberOfChunks, displayMode));
             }
+
+
+        chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TerrainTexture", heightMapGenerator.WorldTexture(heightMapGenerator.noise, displayMode));
 
         navMeshBuilder.UpdateNavMesh(false);
 
-        //resize fow_plane
-        if (fow_plane == null)
-            Debug.LogError("FoW_Plane not found, no fog for you! Go fog yourself!");
-        else
-        {
-            //TODO Calculate stuff instead of estimating '25.5'
-            fow_plane.transform.localScale = new Vector3(25.5f, 1, 25.5f);
-            fow_plane.transform.position = new Vector3(worldSize, fow_plane.transform.position.y, worldSize);
-        }
+    }
+
+    public void DestroyWorld()
+    {
+        if (chunks != null)
+            for (int i = 0; i < chunks.GetLength(0); i++)
+                for (int j = 0; j < chunks.GetLength(1); j++)
+                    if (chunks[i, j] != null)
+                    DestroyImmediate(chunks[i, j].gameObject);
     }
 
     // Generate a chunk, fill it with necessary data and return the Chunk object
     Chunk GenerateChunk(int x, int z)
     {
         GameObject chunkGO = Instantiate(chunkPrefab, ChunkCollector);
-        chunkGO.transform.position = new Vector3(x, 0, z) * chunkSize * tileSize;
+        chunkGO.transform.position = new Vector3(x, 0, z) * (worldSize / numberOfChunks) * tileSize;
         Chunk chunk = chunkGO.GetComponent<Chunk>();
+        chunk.Initialize();
         chunk.tileSize = tileSize;
-        chunk.chunkSize = chunkSize;
+        chunk.chunkSize = worldSize / numberOfChunks;
+        chunk.chunkIndex = new Vector2Int(x, z);
         return chunk;
     }
 
@@ -106,21 +164,18 @@ public class World : MonoBehaviour
 
     float Height(float x, float z)
     {
-        int texX = (int)(x / worldSize * heightmap.width);
-        int texY = (int)(z / worldSize * heightmap.height);
+        int texX = (int)(x / worldSize * heightmap.GetLength(0));
+        int texY = (int)(z / worldSize * heightmap.GetLength(1));
 
-        return heightmap.GetPixel(texX, texY).grayscale * heightResolution;
+        texX = Mathf.RoundToInt(texX / tileSize);
+        texY = Mathf.RoundToInt(texY / tileSize);
+
+        texX = Mathf.Clamp(texX, 0, heightmap.GetLength(0) - 1);
+        texY = Mathf.Clamp(texY, 0, heightmap.GetLength(1) - 1);
+
+        return heightmap[texX, texY] * heightResolution;
     }
-
-    float Perlin(float x, float z)
-    {
-        float perlinX = x * noiseScale;
-        float perlinZ = z * noiseScale;
-
-        Debug.Log("Perlin " + x + "," + z + " " + (Mathf.PerlinNoise(perlinX, perlinZ) * heightScale));
-        return (Mathf.PerlinNoise(perlinX, perlinZ)) * heightScale;
-    }
-
+    
     public Collider GetCollider()
     {
         return chunks[0, 0].GetComponent<MeshCollider>();
@@ -138,13 +193,32 @@ public class World : MonoBehaviour
         return map[v.x, v.y].flatLand;
     }
 
+    public bool IsAreaFlat(Vector3 pos, Vector2Int dimensions)
+    {
+        Vector2Int v = IntVector(pos);
+
+        int halfX = dimensions.x / 2;
+        int halfY = dimensions.y / 2;
+
+        // If a single tile is not flat, return false.
+        for (int x = 0; x < dimensions.x; x++)
+            for (int y = 0; y < dimensions.y; y++)
+            {
+                int finalX = v.x + x - halfX, finalY = v.y + y - halfY;
+
+                if (!map[finalX, finalY].flatLand)
+                    return false;
+            }
+        return true;
+    }
+    
     public Tile GetTile(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);
         return map[v.x, v.y];
     }
 
-    private Vector2Int IntVector(Vector3 v)
+    public Vector2Int IntVector(Vector3 v)
     {
         float x = v.x / tileSize;
         float y = v.z / tileSize;

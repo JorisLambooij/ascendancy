@@ -7,7 +7,9 @@ public class TechnologyLevel : MonoBehaviour
     public TechnologyTree techTree { get; private set; }
     public int currentFocus;
 
-    private HashSet<UnitInfo> unitsUnlocked;
+    public float storedResearch;
+
+    private HashSet<EntityInfo> unitsUnlocked;
     private HashSet<BuildingInfo> buildingsUnlocked;
     private HashSet<Resource> resourcesUnlocked;
 
@@ -16,7 +18,10 @@ public class TechnologyLevel : MonoBehaviour
     {
         techTree = TechTreeReader.LoadTechTree();
 
-        unitsUnlocked     = new HashSet<UnitInfo>();
+        currentFocus = -1;
+        storedResearch = 0;
+
+        unitsUnlocked     = new HashSet<EntityInfo>();
         buildingsUnlocked = new HashSet<BuildingInfo>();
         resourcesUnlocked = new HashSet<Resource>();
 
@@ -30,9 +35,34 @@ public class TechnologyLevel : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            techTree.AddProgress(currentFocus, 1000);
-            if (techTree.TechResearchability(currentFocus) == Researchability.Researched)
-                UnlockThingsFromTech(currentFocus);
+            AddResearchPoints(500);
+        }
+    }
+
+    public void AddResearchPoints(float amount)
+    {
+        // No current Research, so keep the points until a Focus is set.
+        if (currentFocus == -1)
+        {
+            storedResearch += amount;
+            return;
+        }
+
+        // If there are stored points, add those to the progress as well,
+        // but only as many as the specified amount already being added.
+        // (So if there are 200 points stored, but only 50 are being added by another source, then only 50 additional points will be added from the 200 stored)
+        if (storedResearch > 0)
+        {
+            float additionalAmount = Mathf.Clamp(storedResearch, 0, amount);
+            amount += additionalAmount;
+            storedResearch -= additionalAmount;
+        }
+
+        float overflow = techTree.AddProgress(currentFocus, amount);
+        if (techTree.TechResearchability(currentFocus) == Researchability.Researched)
+        {
+            UnlockThingsFromTech(currentFocus);
+            currentFocus = -1;
         }
     }
 
@@ -49,13 +79,13 @@ public class TechnologyLevel : MonoBehaviour
         Technology tech = techTree.techDictionary[techID];
 
         if (tech.unitsUnlocked != null)
-            foreach (UnitInfo unitInfo in tech.unitsUnlocked)
-                unitsUnlocked.Add(unitInfo);
-
+            foreach (EntityInfo unitInfo in tech.unitsUnlocked)
+                UnlockEntity(unitInfo);
+        /*
         if (tech.buildingsUnlocked != null)
             foreach (BuildingInfo buildingInfo in tech.buildingsUnlocked)
-                buildingsUnlocked.Add(buildingInfo);
-
+                UnlockEntity(buildingInfo);
+        */
         if (tech.resourcesUnlocked != null)
             foreach (Resource resource in tech.resourcesUnlocked)
             {
@@ -65,7 +95,13 @@ public class TechnologyLevel : MonoBehaviour
 
     }
 
-    public bool IsUnitUnlocked(UnitInfo unitInfo)
+    private void UnlockEntity(EntityInfo info)
+    {
+        if (!unitsUnlocked.Contains(info))
+            unitsUnlocked.Add(info);
+    }
+
+    public bool IsUnitUnlocked(EntityInfo unitInfo)
     {
         return unitsUnlocked.Contains(unitInfo);
     }

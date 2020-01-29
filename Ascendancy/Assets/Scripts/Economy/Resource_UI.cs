@@ -27,10 +27,15 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
     /// Callback for when a new Resource has become available.
     /// </summary>
     /// <param name="updatedValue"></param>
-    public void Callback(Resource updatedValue)
+    public void NewElementCallback(Resource updatedValue)
     {
         if (!resourceEntries.ContainsKey(updatedValue))
             InstantiateNewField(updatedValue);
+    }
+
+    public void NewListCallback(List<Resource> newList)
+    {
+        // TODO: Reset the UI to match the new Resources.
     }
 
     // Start is called before the first frame update

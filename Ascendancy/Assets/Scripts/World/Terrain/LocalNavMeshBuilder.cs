@@ -41,7 +41,7 @@ public class LocalNavMeshBuilder : MonoBehaviour
         m_Instance = NavMesh.AddNavMeshData(m_NavMesh);
         if (m_Tracked == null)
             m_Tracked = transform;
-        UpdateNavMesh(false);
+        //UpdateNavMesh(false);
     }
     
     void OnDisable()
