@@ -66,8 +66,8 @@ public class World : MonoBehaviour_Singleton
         CreateWorld();
 
         //resize fow_plane
-        if (fow_plane == null)
-            Debug.LogError("FoW_Plane not found, no fog for you! Go fog yourself!");
+        if (fow_plane == null) { }
+            //Debug.LogError("FoW_Plane not found, no fog for you! Go fog yourself!");
         else
         {
             //TODO Calculate stuff instead of estimating '25.5'

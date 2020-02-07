@@ -20,7 +20,7 @@ public class BuildingPlacementMode : ControlMode
 
     public BuildingPlacementMode()
     {
-        preview = GameObject.Find("BuildingPreview");
+        preview = GameObject.Find("Building Preview");
         if (preview == null)
             Debug.Log("BuildingPreview not found!");
         preview.SetActive(false);

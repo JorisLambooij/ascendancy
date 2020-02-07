@@ -8,7 +8,7 @@ public class BuildMenu : MonoBehaviour
     {
         MenuCategory[] menuCategories = transform.GetComponentsInChildren<MenuCategory>();
 
-        Debug.Log(transform.parent.name + " " + menuCategories.Length);
+        //Debug.Log(transform.parent.name + " " + menuCategories.Length);
         foreach (MenuCategory category in menuCategories)
             category.Expanded = false;
 

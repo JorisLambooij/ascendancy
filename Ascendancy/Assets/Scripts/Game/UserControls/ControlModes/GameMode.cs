@@ -195,7 +195,7 @@ public class GameMode : ControlMode
             if (startDragM2)
             {
                 dragStopPosM2 = MouseRaycast().point;
-                if (!draggingM2 && Vector3.Distance(dragStartPosM2, dragStopPosM2) > 0.01f)
+                if (!draggingM2 && Vector3.Distance(dragStartPosM2, dragStopPosM2) > 0.1f)
                 {
                     draggingM2 = true;
                     formationLine.enabled = true;
@@ -280,7 +280,9 @@ public class GameMode : ControlMode
                         foreach (EntitySelector u in selectedUnits.AsList)
                         {
                             bool enqueue = Input.GetKey(KeyCode.LeftShift);
-                            u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
+                            u.ParentEntity.ClickOrder(hit, enqueue);
+                            Debug.Log("click " + u.ParentEntity.gameObject.name);
+                            //u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
                         }
                     }
                     else
