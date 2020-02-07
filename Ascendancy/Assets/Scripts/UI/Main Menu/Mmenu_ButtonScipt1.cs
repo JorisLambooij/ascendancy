@@ -29,7 +29,8 @@ public class Mmenu_ButtonScipt1 : MonoBehaviour
 
     public void BT3_click()
     {
-
+        NextSceneStatic.sceneName = "MPMenu";
+        SceneManager.LoadScene("LoadScreen");
     }
 
     public void BT4_click()

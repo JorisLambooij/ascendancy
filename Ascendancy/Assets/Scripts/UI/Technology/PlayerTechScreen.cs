@@ -36,12 +36,12 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
 
     void Update()
     {
-        pointsUI.text = playerTechLevel.storedResearch.ToString();
-
         if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            GetComponentInParent<UI_Canvas>().CloseAllScreens();
             gameObject.SetActive(false);
     }
-
+    }
     private void SetUpTechScreen()
     {
         techFieldsDict = new Dictionary<int, TechField>();

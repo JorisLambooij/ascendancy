@@ -129,7 +129,7 @@ public class GameMode : ControlMode
                 draggingM1 = false;
 
                 Matrix4x4 selectionMatrix = selectionBox.rectTransform.worldToLocalMatrix;
-                GameObject player = GameObject.Find("Player " + gameManager.playerNo);
+                Player player = gameManager.playerScript;
                 if (player == null)
                     throw new System.Exception("Invalid Player Number (" + gameManager.playerNo + ")");
 
@@ -186,39 +186,58 @@ public class GameMode : ControlMode
     {
         if (!conMenuHandler.IsVisible())
         {
-            if (Input.GetMouseButtonDown(1))
+            if (selectedUnits.Count > 0)
+                Mouse2_UnitOrder();
+            else
+                Mouse2_NoUnitsSelected();
+            
+        }
+        else //if context menu is open
+        {
+            if (Input.GetMouseButtonUp(1))
             {
-                dragStartPosM2 = MouseRaycast().point;
-                formationLine.SetPosition(0, dragStartPosM2 + lineOffset);
-                startDragM2 = true;
+                conMenuHandler.Hide();
             }
-            if (startDragM2)
+        }
+    }
+
+    private void Mouse2_UnitOrder()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            dragStartPosM2 = MouseRaycast().point;
+            formationLine.SetPosition(0, dragStartPosM2 + lineOffset);
+            startDragM2 = true;
+        }
+        if (startDragM2)
+        {
+            dragStopPosM2 = MouseRaycast().point;
+            if (!draggingM2 && Vector3.Distance(dragStartPosM2, dragStopPosM2) > 0.01f)
             {
-                dragStopPosM2 = MouseRaycast().point;
-                if (!draggingM2 && Vector3.Distance(dragStartPosM2, dragStopPosM2) > 0.1f)
-                {
                     draggingM2 = true;
                     formationLine.enabled = true;
                 }
 
-                if (draggingM2)
-                {
-                    formationLine.SetPosition(1, dragStopPosM2 + lineOffset);
-                    Debug.DrawLine(dragStartPosM2, dragStopPosM2);
-                }
-            }
-            if (Input.GetMouseButtonUp(1))
+            if (draggingM2)
             {
-                startDragM2 = false;
-                formationLine.enabled = false;
+                formationLine.SetPosition(1, dragStopPosM2 + lineOffset);
+                Debug.DrawLine(dragStartPosM2, dragStopPosM2);
+            }
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            startDragM2 = false;
+            formationLine.enabled = false;
 
-                if (draggingM2)
-                {
-                    draggingM2 = false;
+            if (draggingM2)
+            {
+                draggingM2 = false;
 
-                    int count = selectedUnits.Count;
-                    Vector3 dragLineDirection = (dragStopPosM2 - dragStartPosM2);
-                    Vector3 orientation = Vector3.Cross(dragLineDirection, Vector3.up).normalized;
+                int count = selectedUnits.Count;
+                Vector3 dragLineDirection = (dragStopPosM2 - dragStartPosM2);
+                Vector3 orientation = Vector3.Cross(dragLineDirection, Vector3.up).normalized;
+
+                SortedDictionary<float, Unit> unitsSorted = new SortedDictionary<float, Unit>();
 
                     SortedDictionary<float, Entity> unitsSorted = new SortedDictionary<float, Entity>();
 
@@ -235,9 +254,12 @@ public class GameMode : ControlMode
                         Vector3 projectedVector = Vector3.Project(startToUnitPos, dragLineDirection);
                         float projectedDistance = projectedVector.magnitude;
 
-                        // if the units projected position is in the "before" the drag line starting pos, correct the projected distance
-                        if (Vector3.Angle(projectedVector, dragLineDirection) > 90)
-                            projectedDistance *= -1;
+                    // if, by some chance, two units happen to have the same projected dictance, just move the second one slightly further down.
+                    while (unitsSorted.ContainsKey(projectedDistance))
+                        projectedDistance += 0.0001f;
+                    // sort by length of the projected vector
+                    unitsSorted.Add(projectedDistance, u);
+                }
 
                         // if, by some chance, two units happen to have the same projected dictance, just move the second one slightly further down.
                         while (unitsSorted.ContainsKey(projectedDistance))
@@ -270,12 +292,15 @@ public class GameMode : ControlMode
                         nearestUnit.IssueOrder(new RotateOrder(nearestUnit, orientation), true);
                     }
                 }
-                else
-                {
-                    // probably a redundant raycast, can be optimized
-                    RaycastHit hit = MouseRaycast();
+            }
+            else
+            {
+                // probably a redundant raycast, can be optimized
+                RaycastHit hit = MouseRaycast();
 
-                    if (hit.collider != null)
+                if (hit.collider != null)
+                {
+                    foreach (EntitySelector u in selectedUnits)
                     {
                         foreach (EntitySelector u in selectedUnits.AsList)
                         {
@@ -288,6 +313,10 @@ public class GameMode : ControlMode
                     else
                         Debug.LogError("Raycast missed hit.collider");
                 }
+                else
+                {
+                    Debug.LogError("Raycast missed hit.collider");
+                }
             }
         }
         else //if context menu is open
@@ -297,6 +326,12 @@ public class GameMode : ControlMode
         }
     }
 
+    private void Mouse2_NoUnitsSelected()
+    {
+        // toggle build menu
+        if (Input.GetMouseButtonUp(1))
+            gameManager.UICanvas.ToggleBuildMenu();
+    }
 
     /// <summary>
     /// Bring up ContextMenu

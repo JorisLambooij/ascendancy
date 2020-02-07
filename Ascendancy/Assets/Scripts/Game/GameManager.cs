@@ -6,14 +6,17 @@ public enum ControlModeEnum { gameMode, menuMode, buildingMode };
 
 public class GameManager : MonoBehaviour
 {
+    private static GameManager instance;
+    public static GameManager Instance { get => instance; }
+
     public int playerNo;
     public Player playerScript;
 
     public CameraScript camScript;
-
     public ControlMode controlMode;
     public World world;
     public TileOccupationMap occupationMap;
+    public UI_Canvas UICanvas;
 
     // Might need refactoring
     public Dictionary<ControlModeEnum, ControlMode> controlModeDict { get; protected set; }
@@ -21,6 +24,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        instance = this;
+        playerScript = GameObject.Find("PlayerManager").GetComponent<PlayerLoader>().LoadPlayersIntoScene(playerNo);
+        
         ControlMode.gameManager = this;
         controlModeDict = new Dictionary<ControlModeEnum, ControlMode>
         {
