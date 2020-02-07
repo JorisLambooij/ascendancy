@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+        
         playerScript = GameObject.Find("PlayerManager").GetComponent<PlayerLoader>().LoadPlayersIntoScene(playerNo);
         
         ControlMode.gameManager = this;

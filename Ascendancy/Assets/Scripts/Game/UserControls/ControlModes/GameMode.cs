@@ -26,7 +26,7 @@ public class GameMode : ControlMode
     private Camera cam;
     //private Canvas contextMenuCanvas;
     private ContextMenuHandler conMenuHandler;
-    
+
     //private Vector3[] conMenuButtonPos;
 
     public GameMode() : base()
@@ -61,8 +61,6 @@ public class GameMode : ControlMode
         Mouse1();
         Mouse2();
         Mouse3();
-
-
     }
 
     public override void Start()
@@ -85,7 +83,7 @@ public class GameMode : ControlMode
         // context menu out or pointer over UI element;
         if (conMenuHandler.IsVisible())
             return;
-        
+
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             dragStartPosM1 = Input.mousePosition;
@@ -149,7 +147,7 @@ public class GameMode : ControlMode
 
                 // Keep only those Entities with the highest Priority
                 List<EntitySelector> filteredList = selectedUnits.AsList.Where(e => e.GetComponentInParent<Entity>().entityInfo.selectionPriority == highestPriority).ToList();
-                foreach(EntitySelector e in filteredList)
+                foreach (EntitySelector e in filteredList)
                     e.Selected = true;
                 selectedUnits.FromList(filteredList);
             }
@@ -190,7 +188,7 @@ public class GameMode : ControlMode
                 Mouse2_UnitOrder();
             else
                 Mouse2_NoUnitsSelected();
-            
+
         }
         else //if context menu is open
         {
@@ -203,6 +201,13 @@ public class GameMode : ControlMode
 
     private void Mouse2_UnitOrder()
     {
+        if (conMenuHandler.IsVisible())
+        {
+            //if context menu is open
+            if (Input.GetMouseButtonUp(1))
+                conMenuHandler.Hide();
+            return;
+        }
         if (Input.GetMouseButtonDown(1))
         {
             dragStartPosM2 = MouseRaycast().point;
@@ -214,9 +219,9 @@ public class GameMode : ControlMode
             dragStopPosM2 = MouseRaycast().point;
             if (!draggingM2 && Vector3.Distance(dragStartPosM2, dragStopPosM2) > 0.01f)
             {
-                    draggingM2 = true;
-                    formationLine.enabled = true;
-                }
+                draggingM2 = true;
+                formationLine.enabled = true;
+            }
 
             if (draggingM2)
             {
@@ -237,92 +242,71 @@ public class GameMode : ControlMode
                 Vector3 dragLineDirection = (dragStopPosM2 - dragStartPosM2);
                 Vector3 orientation = Vector3.Cross(dragLineDirection, Vector3.up).normalized;
 
-                SortedDictionary<float, Unit> unitsSorted = new SortedDictionary<float, Unit>();
+                SortedDictionary<float, Entity> unitsSorted = new SortedDictionary<float, Entity>();
 
-                    SortedDictionary<float, Entity> unitsSorted = new SortedDictionary<float, Entity>();
+                // sort units, then issue commands according to units' relative position towards the goal line
+                foreach (EntitySelector es in selectedUnits.AsList)
+                {
+                    Entity e = es.ParentEntity as Entity;
 
-                    // sort units, then issue commands according to units' relative position towards the goal line
-                    foreach (EntitySelector es in selectedUnits.AsList)
-                    {
-                        Entity e = es.ParentEntity as Entity;
+                    if (e == null)
+                        continue;
 
-                        if (e == null)
-                            continue;
-
-                        // Project the Unit's position onto the drag line
-                        Vector3 startToUnitPos = e.transform.position - dragStartPosM2;
-                        Vector3 projectedVector = Vector3.Project(startToUnitPos, dragLineDirection);
-                        float projectedDistance = projectedVector.magnitude;
+                    // Project the Unit's position onto the drag line
+                    Vector3 startToUnitPos = e.transform.position - dragStartPosM2;
+                    Vector3 projectedVector = Vector3.Project(startToUnitPos, dragLineDirection);
+                    float projectedDistance = projectedVector.magnitude;
 
                     // if, by some chance, two units happen to have the same projected dictance, just move the second one slightly further down.
                     while (unitsSorted.ContainsKey(projectedDistance))
                         projectedDistance += 0.0001f;
                     // sort by length of the projected vector
-                    unitsSorted.Add(projectedDistance, u);
+                    unitsSorted.Add(projectedDistance, e);
                 }
 
-                        // if, by some chance, two units happen to have the same projected dictance, just move the second one slightly further down.
-                        while (unitsSorted.ContainsKey(projectedDistance))
-                            projectedDistance += 0.001f;
-                        // sort by length of the projected vector
-                        unitsSorted.Add(projectedDistance, e);
-                    }
 
-                    // Make sure nothing has gone horribly wrong (no units missing or counted twice)
-                    Debug.Assert(unitsSorted.Count == count);
-                    if (unitsSorted.Count != count)
-                        Debug.Log("UnitsSorted.Count: " + unitsSorted.Count + "; SelectedUnits.Count: " + count);
 
-                    int i = 0;
-                    foreach (KeyValuePair<float, Entity> kvp in unitsSorted)
-                    {
-                        // Determine the lerped position on the drag line
-                        float lerpFactor;
-                        if (count > 1)
-                            lerpFactor = (float)i / (count - 1);
-                        else
-                            lerpFactor = 0.5f;
-                        i++;
-                        Vector3 lerpedPos = Vector3.Lerp(dragStartPosM2, dragStopPosM2, lerpFactor);
+                // Make sure nothing has gone horribly wrong (no units missing or counted twice)
+                Debug.Assert(unitsSorted.Count == count);
+                if (unitsSorted.Count != count)
+                    Debug.Log("UnitsSorted.Count: " + unitsSorted.Count + "; SelectedUnits.Count: " + count);
 
-                        // Issue an order to the nearest unit to move there
-                        Entity nearestUnit = kvp.Value;
-                        bool enqueue = Input.GetKey(KeyCode.LeftShift);
-                        nearestUnit.IssueOrder(new MoveOrder(nearestUnit, lerpedPos), false);
-                        nearestUnit.IssueOrder(new RotateOrder(nearestUnit, orientation), true);
-                    }
+                int i = 0;
+                foreach (KeyValuePair<float, Entity> kvp in unitsSorted)
+                {
+                    // Determine the lerped position on the drag line
+                    float lerpFactor;
+                    if (count > 1)
+                        lerpFactor = (float)i / (count - 1);
+                    else
+                        lerpFactor = 0.5f;
+                    i++;
+                    Vector3 lerpedPos = Vector3.Lerp(dragStartPosM2, dragStopPosM2, lerpFactor);
+
+                    // Issue an order to the nearest unit to move there
+                    Entity nearestUnit = kvp.Value;
+                    bool enqueue = Input.GetKey(KeyCode.LeftShift);
+                    nearestUnit.IssueOrder(new MoveOrder(nearestUnit, lerpedPos), false);
+                    nearestUnit.IssueOrder(new RotateOrder(nearestUnit, orientation), true);
                 }
             }
+
             else
             {
                 // probably a redundant raycast, can be optimized
                 RaycastHit hit = MouseRaycast();
 
                 if (hit.collider != null)
-                {
-                    foreach (EntitySelector u in selectedUnits)
+                    foreach (EntitySelector es in selectedUnits.AsList)
                     {
-                        foreach (EntitySelector u in selectedUnits.AsList)
-                        {
-                            bool enqueue = Input.GetKey(KeyCode.LeftShift);
-                            u.ParentEntity.ClickOrder(hit, enqueue);
-                            Debug.Log("click " + u.ParentEntity.gameObject.name);
-                            //u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
-                        }
+                        bool enqueue = Input.GetKey(KeyCode.LeftShift);
+                        es.ParentEntity.ClickOrder(hit, enqueue);
+                        Debug.Log("click " + es.ParentEntity.gameObject.name);
+                        //u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
                     }
-                    else
-                        Debug.LogError("Raycast missed hit.collider");
-                }
                 else
-                {
                     Debug.LogError("Raycast missed hit.collider");
-                }
             }
-        }
-        else //if context menu is open
-        {
-            if (Input.GetMouseButtonUp(1))
-                conMenuHandler.Hide();
         }
     }
 
