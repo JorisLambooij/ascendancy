@@ -18,7 +18,8 @@ public class EntityManagerScript2 : MonoBehaviour
             typeof(COM_Level),
             typeof(Translation),
             typeof(RenderMesh),
-            typeof(LocalToWorld)
+            typeof(LocalToWorld),
+            typeof(RenderBounds)
             );
 
         NativeArray < Entity > entityArray = new NativeArray<Entity>(1, Allocator.Temp);
