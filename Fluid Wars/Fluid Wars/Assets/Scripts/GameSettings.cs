@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Entities;
 
-public struct Sphere : IComponentData
+public class GameSettings : MonoBehaviour
 {
-    public Color color;
+    public float movementSpeed = 0.5f;
 }

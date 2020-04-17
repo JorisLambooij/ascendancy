@@ -14,6 +14,8 @@ public class GameSceneEntityManager : MonoBehaviour
     public Material material;
     public int arenaRange;
 
+    public List<Color> playerColors;
+
     void Start()
     {
         EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;

@@ -8,12 +8,11 @@ public class SYS_ColorChanger : ComponentSystem
 {
     protected override void OnUpdate()
     {
-        
-        Entities.ForEach((RenderMesh renderM) => 
+        Entities.WithAll<RenderMesh, COM_PlayerInfo>().ForEach((Entity e, ref COM_PlayerInfo info) =>
         {
-            renderM.material.SetColor("_Color", Color.white);
-            //RenderMesh renderMesh;
-            //renderMesh.material.color = playerComponent.playerColor;
+            info.playerColor = Color.cyan;
+            //rm.material.SetColor("_Color", Color.white);
         });
+        
     }
 }
