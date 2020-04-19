@@ -1968,10 +1968,13 @@ MonoBehaviour:
   playerEntryPrefab: {fileID: 7794026143633133344, guid: 8d6527d46a80b5c4f92bde663d87d85c,
     type: 3}
   playerColors:
-  - {r: 0.08235294, g: 0.83137256, b: 0.105882354, a: 1}
-  - {r: 0.92156863, g: 0.13333334, b: 0.11372549, a: 1}
-  - {r: 0.14117648, g: 0.105882354, b: 0.89411765, a: 1}
-  - {r: 0.9433962, g: 0.9392003, b: 0.10234961, a: 1}
+  - {r: 0, g: 0, b: 0.754717, a: 1}
+  - {r: 0.0029369951, g: 0.6226415, b: 0.0029369951, a: 1}
+  - {r: 0.9433962, g: 0.9433962, b: 0.031149892, a: 1}
+  - {r: 0.94509804, g: 0.6117647, b: 0, a: 1}
+  - {r: 0.8679245, g: 0, b: 0, a: 1}
+  - {r: 0.6392157, g: 0, b: 0.7924528, a: 1}
+  - {r: 0, g: 0.8679245, b: 0.8679245, a: 1}
 --- !u!114 &2112733832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1984,8 +1987,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90f1561509aee794ca7ff6754f811e49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 6118261737210275372, guid: 408072e69fc331e498cb2b7117bf2044,
-    type: 3}
+  playerPrefab: {fileID: 0}
 --- !u!1001 &6548278713323183770
 PrefabInstance:
   m_ObjectHideFlags: 0

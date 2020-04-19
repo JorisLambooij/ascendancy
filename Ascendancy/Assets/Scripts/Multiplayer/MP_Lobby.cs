@@ -26,8 +26,8 @@ public class MP_Lobby : MonoBehaviour
         playerCount = 0;
         Debug.Assert(playerColors.Count >= maxPlayers, "Not enough Player Colors!");
 
-        AddPlayer();
-
+        //AddPlayer(this);
+        
         DontDestroyOnLoad(this);
     }
 
@@ -37,7 +37,7 @@ public class MP_Lobby : MonoBehaviour
         
     }
     
-    public void AddPlayer()
+    public void AddPlayer(Player player)
     {
         if (playerCount >= maxPlayers)
             return;
@@ -45,8 +45,13 @@ public class MP_Lobby : MonoBehaviour
         Transform playerEntry = Instantiate(playerEntryPrefab, playerList).transform;
         PlayerEntryUI entryUI = playerEntry.GetComponent<PlayerEntryUI>();
 
-        //entryUI.PlayerColor = playerColors[playerCount];
+        entryUI.PlayerColorIndex = playerCount;
         entryUI.PlayerNo = (++playerCount);
+        entryUI.playerNameText.text = player.playerName;
+        entryUI.player = player;
+        entryUI.UpdateColor();
+
+        player.playerNo = entryUI.PlayerNo;
     }
 
     public void StartGame()

@@ -5,17 +5,24 @@ using UnityEngine.UI;
 
 public class PlayerEntryUI : MonoBehaviour
 {
-    //public Image background;
     public Text playerNameText;
+    public Player player;
 
     private int playerNo;
+    private Dropdown colorDropdown;
+    private MP_Lobby lobby;
 
-    private Color playerColor;
+    void Awake()
+    {
+        colorDropdown = GetComponentInChildren<Dropdown>();
+        lobby = GameObject.Find("PlayerManager").GetComponent<MP_Lobby>();
+    }
 
     public PlayerInfo InfoFromEntry
     {
         get
         {
+            Color playerColor = lobby.playerColors[PlayerColorIndex];
             PlayerInfo info = new PlayerInfo(playerNameText.text, PlayerNo, playerColor);
             return info;
         }
@@ -26,16 +33,18 @@ public class PlayerEntryUI : MonoBehaviour
         set
         {
             playerNo = value;
-            playerNameText.text = "Player " + playerNo;
+            //playerNameText.text = "Player " + playerNo;
         }
     }
 
-    //public Color PlayerColor {
-    //    get => playerColor;
-    //    set
-    //    {
-    //        playerColor = value;
-    //        background.color = playerColor;
-    //    }
-    //}
+    public int PlayerColorIndex
+    {
+        get => colorDropdown.value;
+        set => colorDropdown.value = value;
+        
+    }
+    public void UpdateColor()
+    {
+        player.playerColor = lobby.playerColors[PlayerColorIndex];
+    }
 }

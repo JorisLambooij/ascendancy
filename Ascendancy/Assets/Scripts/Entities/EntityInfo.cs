@@ -93,12 +93,12 @@ public class EntityInfo : ScriptableObject
         Transform targetParent;
         if (EntityType == EntityType.Building)
         {
-            targetParent = owner.buildingsGO.transform;
+            targetParent = owner.BuildingsGO.transform;
             prefab = Resources.Load("Prefabs/Entities/Building Prefab") as GameObject;
         }
         else
         {
-            targetParent = owner.unitsGO.transform;
+            targetParent = owner.UnitsGO.transform;
             prefab = Resources.Load("Prefabs/Entities/Unit Prefab") as GameObject;
         }
 

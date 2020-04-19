@@ -8,7 +8,6 @@ public class PlayerInfo
 
     private int playerNo;
     public int PlayerNo { get => playerNo; private set => playerNo = value; }
-
     public Color playerColor;
 
     public PlayerInfo(string name, int playerNo, Color playerColor)

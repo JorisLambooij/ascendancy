@@ -5,6 +5,12 @@ using UnityEngine;
 public class PlayerLoader : MonoBehaviour
 {
     public GameObject playerPrefab;
+    private Transform playerManager;
+
+    void Start()
+    {
+        playerManager = GameObject.Find("PlayerManager").transform;
+    }
 
     /// <summary>
     /// Loads instances for all players into the scene.

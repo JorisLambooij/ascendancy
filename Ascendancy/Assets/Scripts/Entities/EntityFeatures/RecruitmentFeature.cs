@@ -65,15 +65,15 @@ public class RecruitmentFeature : EntityFeature
 
         bool enough = true;
         foreach (Resource_Amount amount in unitRecruitmentCosts)
-            if (entity.Owner.economy.resourceStorage.GetValue(amount.resource) < amount.amount)
+            if (entity.Owner.PlayerEconomy.resourceStorage.GetValue(amount.resource) < amount.amount)
                 enough = false;
 
         if (enough == true)
         {
             foreach (Resource_Amount amount in unitRecruitmentCosts)
             {
-                float newAmount = entity.Owner.economy.resourceStorage.GetValue(amount.resource) - amount.amount; ;
-                entity.Owner.economy.resourceStorage.SetValue(amount.resource, newAmount);
+                float newAmount = entity.Owner.PlayerEconomy.resourceStorage.GetValue(amount.resource) - amount.amount; ;
+                entity.Owner.PlayerEconomy.resourceStorage.SetValue(amount.resource, newAmount);
             }
 
             if (queue.Count == 0)
@@ -97,7 +97,7 @@ public class RecruitmentFeature : EntityFeature
 
     private void Recruit(EntityInfo unit)
     {
-        Transform parent = entity.Owner.unitsGO.transform;
+        Transform parent = entity.Owner.UnitsGO.transform;
         GameObject newUnit = unit.CreateInstance(entity.Owner, entity.transform.position);
 
         Entity newEntity = newUnit.GetComponent<Entity>();
