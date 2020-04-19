@@ -26,6 +26,8 @@ public class Player : MonoBehaviour
 
         UnitsGO = transform.Find("Units");
         BuildingsGO = transform.Find("Buildings");
+        PlayerEconomy = GetComponent<Economy>();
+        TechLevel = GetComponent<TechnologyLevel>();
 
         Transform playerManager = GameObject.Find("PlayerManager").transform;
         transform.SetParent(playerManager);
@@ -36,10 +38,7 @@ public class Player : MonoBehaviour
     {
         Debug.Log("Init player " + playerNo);
 
-        PlayerEconomy = GetComponent<Economy>();
         PlayerEconomy.Initialize();
-
-        TechLevel = GetComponent<TechnologyLevel>();
         TechLevel.Initialize();
     }
 }

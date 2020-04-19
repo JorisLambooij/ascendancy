@@ -6,27 +6,24 @@ using UnityEngine.SceneManagement;
 public class MP_Lobby : MonoBehaviour
 {
     public int maxPlayers;
-
+    public List<Color> playerColors;
     public GameObject playerEntryPrefab;
+
+    public List<PlayerInfo> PlayersInLobby { get => playersInLobby; }
 
     private Transform playerList;
     private List<PlayerInfo> playersInLobby;
-
     private int playerCount;
-
-    public List<Color> playerColors;
-
-    public List<PlayerInfo> PlayersInLobby { get => playersInLobby; }
+    private Dictionary<int, Player> playerDict;
 
     // Start is called before the first frame update
     void Start()
     {
+        playerDict = new Dictionary<int, Player>();
         playerList = GameObject.Find("Player List").transform;
         playersInLobby = new List<PlayerInfo>();
         playerCount = 0;
         Debug.Assert(playerColors.Count >= maxPlayers, "Not enough Player Colors!");
-
-        //AddPlayer(this);
         
         DontDestroyOnLoad(this);
     }
@@ -52,16 +49,25 @@ public class MP_Lobby : MonoBehaviour
         entryUI.UpdateColor();
 
         player.playerNo = entryUI.PlayerNo;
+
+        playerDict.Add(player.playerNo, player);
     }
 
-    public void StartGame()
+    public void LoadGame()
     {
         PlayerEntryUI[] entries = playerList.GetComponentsInChildren<PlayerEntryUI>();
         foreach (PlayerEntryUI entry in entries)
             playersInLobby.Add(entry.InfoFromEntry);
 
-        NextSceneStatic.sceneName = "DEV_Units";
+        NextSceneStatic.sceneName = "DEV_Terrain_New";
         SceneManager.LoadScene("LoadScreen");
+        InitializePlayers();
+    }
+
+    public void InitializePlayers()
+    {
+        foreach (KeyValuePair<int, Player> kvp in playerDict)
+            kvp.Value.Initialize();
     }
 
     public void ConstructPlayerData()

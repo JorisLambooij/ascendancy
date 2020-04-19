@@ -25,9 +25,14 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        
-        playerScript = GameObject.Find("PlayerManager").GetComponent<PlayerLoader>().LoadPlayersIntoScene(playerNo);
-        
+
+        Player[] allPlayers = GameObject.Find("PlayerManager").GetComponentsInChildren<Player>();
+        foreach(Player player in allPlayers)
+            if (player.playerNo == playerNo)
+                playerScript = player;   //.GetComponent<PlayerLoader>().LoadPlayersIntoScene(playerNo);
+
+        Debug.Log("Found Player: " + playerScript);
+
         ControlMode.gameManager = this;
         controlModeDict = new Dictionary<ControlModeEnum, ControlMode>
         {
@@ -37,7 +42,7 @@ public class GameManager : MonoBehaviour
         };
         SwitchToMode(ControlModeEnum.gameMode);
     }
-
+    
     // Update is called once per frame
     void Update()
     {

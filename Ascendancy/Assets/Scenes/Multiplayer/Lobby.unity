@@ -1245,7 +1245,7 @@ PrefabInstance:
     - target: {fileID: 3481091255367386929, guid: 88ea19a191795394d8ba6dd862b5f7ca,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StartGame
+      value: LoadGame
       objectReference: {fileID: 0}
     - target: {fileID: 3481091255367386929, guid: 88ea19a191795394d8ba6dd862b5f7ca,
         type: 3}
@@ -1755,7 +1755,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1752309663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1930,7 +1930,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2112733830}
   - component: {fileID: 2112733831}
-  - component: {fileID: 2112733832}
   m_Layer: 0
   m_Name: PlayerManager
   m_TagString: Untagged
@@ -1965,8 +1964,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxPlayers: 4
-  playerEntryPrefab: {fileID: 7794026143633133344, guid: 8d6527d46a80b5c4f92bde663d87d85c,
-    type: 3}
   playerColors:
   - {r: 0, g: 0, b: 0.754717, a: 1}
   - {r: 0.0029369951, g: 0.6226415, b: 0.0029369951, a: 1}
@@ -1975,19 +1972,8 @@ MonoBehaviour:
   - {r: 0.8679245, g: 0, b: 0, a: 1}
   - {r: 0.6392157, g: 0, b: 0.7924528, a: 1}
   - {r: 0, g: 0.8679245, b: 0.8679245, a: 1}
---- !u!114 &2112733832
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2112733829}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90f1561509aee794ca7ff6754f811e49, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 0}
+  playerEntryPrefab: {fileID: 7794026143633133344, guid: 8d6527d46a80b5c4f92bde663d87d85c,
+    type: 3}
 --- !u!1001 &6548278713323183770
 PrefabInstance:
   m_ObjectHideFlags: 0
