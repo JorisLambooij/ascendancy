@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class MessageWindow : MonoBehaviour
 {
+    public bool displayTestMessages;
     public int maximumNumberOfMessages;
     public Text messageWindowText;
     public Transform chatWindow;
@@ -23,8 +24,9 @@ public class MessageWindow : MonoBehaviour
 
         ReceiveMessage("SYSTEM", Color.gray, "Lobby created");
 
-        for (int i = 0; i < 25; i++)
-            ReceiveMessage("TEST", Color.gray ,i.ToString());
+        if (displayTestMessages)
+            for (int i = 0; i < 25; i++)
+                ReceiveMessage("TEST", Color.gray ,i.ToString());
     }
 
     public void ReceiveMessage(string sender, Color color, string message)
