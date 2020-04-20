@@ -20,18 +20,23 @@ public class GameManager : MonoBehaviour
 
     // Might need refactoring
     public Dictionary<ControlModeEnum, ControlMode> controlModeDict { get; protected set; }
-    
+
+    private MP_Lobby playerManager;
+
     // Start is called before the first frame update
     void Awake()
     {
         instance = this;
 
-        Player[] allPlayers = GameObject.Find("PlayerManager").GetComponentsInChildren<Player>();
+        playerManager = GameObject.Find("PlayerManager").GetComponent<MP_Lobby>();
+
+        Player[] allPlayers = playerManager.GetComponentsInChildren<Player>();
         foreach(Player player in allPlayers)
             if (player.playerNo == playerNo)
                 playerScript = player;   //.GetComponent<PlayerLoader>().LoadPlayersIntoScene(playerNo);
 
         Debug.Log("Found Player: " + playerScript);
+        
 
         ControlMode.gameManager = this;
         controlModeDict = new Dictionary<ControlModeEnum, ControlMode>
@@ -60,7 +65,7 @@ public class GameManager : MonoBehaviour
 
     public Player GetPlayer
     {
-        get { return GameObject.Find("Player " + playerNo).GetComponent<Player>(); }
+        get { return playerManager.GetPlayer(playerNo); }
     }
     
 }

@@ -71,7 +71,9 @@ public class Entity : MonoBehaviour
         Instantiate(selectionMarkerPrefab, this.transform);
 
         controller = transform.GetComponent<EntityOrderController>();
-        Debug.Assert(controller != null, "EntityController not found on " + transform.name);
+
+        if (controller == null)
+            Debug.LogError("EntityController not found on " + transform.name);
 
         // Create a map marker for this Entity
         minimapMarker = entityInfo.MinimapMarker;

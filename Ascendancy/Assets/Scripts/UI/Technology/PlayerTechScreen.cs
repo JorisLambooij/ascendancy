@@ -22,11 +22,9 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
     public Color colorIfResearching;
     public Color colorIfResearched;
 
-    public Text pointsUI;
-
     private Dictionary<int, TechField> techFieldsDict;
 
-    void Start()
+    void Awake()
     {
         Player playerScript = GameObject.Find("Game Manager").GetComponent<GameManager>().playerScript;
         playerTechLevel = playerScript.transform.GetComponent<TechnologyLevel>();
@@ -38,14 +36,14 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
     {
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            GetComponentInParent<UI_Canvas>().CloseAllScreens();
+            //GetComponentInParent<UI_Canvas>().CloseAllScreens();
             gameObject.SetActive(false);
+        }
     }
-    }
+
     private void SetUpTechScreen()
     {
         techFieldsDict = new Dictionary<int, TechField>();
-        TechnologyTree techTree = playerTechLevel.techTree;
         TechTree.techProgress.Subscribe(this);
         
         // Make a TechField for each Technology

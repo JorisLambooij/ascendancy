@@ -17,7 +17,7 @@ public class MP_Lobby : MonoBehaviour
     private Dictionary<int, Player> playerDict;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         playerDict = new Dictionary<int, Player>();
         playerList = GameObject.Find("Player List").transform;
@@ -66,8 +66,13 @@ public class MP_Lobby : MonoBehaviour
 
     public void InitializePlayers()
     {
-        foreach (KeyValuePair<int, Player> kvp in playerDict)
-            kvp.Value.Initialize();
+        foreach (Player player in playerDict.Values)
+            player.Initialize();
+    }
+
+    public Player GetPlayer(int id)
+    {
+        return playerDict[id];
     }
 
     public void ConstructPlayerData()

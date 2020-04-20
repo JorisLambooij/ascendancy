@@ -119,5 +119,11 @@ namespace Mirror.Discovery
         }
 
         #endregion
+
+        public void ServerFound()
+        {
+            Debug.Log("Server Found!");
+        }
     }
+
 }
