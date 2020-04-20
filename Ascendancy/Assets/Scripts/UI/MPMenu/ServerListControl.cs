@@ -1,23 +1,29 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ServerListControl : MonoBehaviour
 {
     [SerializeField]
     private GameObject buttonTemplate;
     [SerializeField]
-    private bool generateDummyEntries; 
+    private bool generateDummyEntries;
+    [SerializeField]
+    private NetworkManager networkManager;
 
     List<GameObject> items;
-    List<MPMenu_ServerResponse> serverList;
+    Dictionary<long, MPMenu_ServerResponse> serverList;
+
+    private long selectedServerId;
 
     private int maxServerNameLength = 20;
 
     void Start()
     {
         items = new List<GameObject>();
-        serverList = new List<MPMenu_ServerResponse>();
+        serverList = new Dictionary<long, MPMenu_ServerResponse>();
 
         if (generateDummyEntries)
             GenerateDummyEntries();
@@ -28,7 +34,6 @@ public class ServerListControl : MonoBehaviour
 
     public void Update()
     {
-        //TODO Refresh Items every X seconds (10? 20?)
     }
 
     public static long RandomLong()
@@ -53,24 +58,36 @@ public class ServerListControl : MonoBehaviour
                 uri = new System.Uri("http://www.test.com/"),
                 serverId = RandomLong()
         };
-            serverList.Add(servInf);
+            serverList.Add(servInf.serverId, servInf);
         }
     }
 
     public void AddEntry(MPMenu_ServerResponse responseData)
     {
-        serverList.Add(responseData);
+        if (!serverList.ContainsKey(responseData.serverId))
+            serverList.Add(responseData.serverId, responseData);
+
+        RefreshItems();
+    }
+
+    public void ClearList()
+    {
+        serverList.Clear();
     }
 
     public void RefreshItems()
     {
+        // do not refresh if we are already in the next scene
+        if (NetworkServer.active || NetworkClient.active)
+            return;
+
         foreach (GameObject b in items)
         {
             Destroy(b);
         }
 
         string itemText = "";
-        foreach (MPMenu_ServerResponse serverData in serverList)
+        foreach (MPMenu_ServerResponse serverData in serverList.Values)
         {
             GameObject button = Instantiate(buttonTemplate) as GameObject;
             button.SetActive(true);
@@ -93,13 +110,28 @@ public class ServerListControl : MonoBehaviour
 
             itemText += "Players: " + serverData.playerCount + "/" + serverData.playerMax;
 
-
+            button.GetComponent<ServerListItem>().serverListControl = this;
             button.GetComponent<ServerListItem>().SetText(itemText);
+            button.GetComponent<ServerListItem>().serverId = serverData.serverId;
+
+            //(re)select button if it has the selectedServer ID
+            if (serverData.serverId == selectedServerId)
+                button.GetComponent<Button>().Select();
 
             button.transform.SetParent(buttonTemplate.transform.parent, false);
 
             items.Add(button);
             itemText = "";
         }
+    }
+
+    public void SetSelectedServer(long servId)
+    {
+        selectedServerId = servId;
+    }
+
+        public void StartSelectedServer()
+    {
+        NetworkManager.singleton.StartClient(serverList[selectedServerId].uri);
     }
 }

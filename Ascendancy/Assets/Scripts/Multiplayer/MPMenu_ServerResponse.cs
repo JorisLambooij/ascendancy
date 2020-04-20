@@ -1,6 +1,7 @@
 ﻿using Mirror;
 using System;
 using System.Net;
+using UnityEngine;
 
 public class MPMenu_ServerResponse : MessageBase
 {
@@ -31,4 +32,9 @@ public class MPMenu_ServerResponse : MessageBase
 
     // Current ping
     public int ping;
+
+    void Start()
+    {
+        Debug.Log("ServerResponse created");
+    }
 }
