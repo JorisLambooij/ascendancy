@@ -8,6 +8,10 @@ public class ServerListItem : MonoBehaviour
     [SerializeField]
     private Text myText;
 
+    public ServerListControl serverListControl;
+
+    public long serverId;
+
     public void SetText(string itemText)
     {
         myText.text = itemText;
@@ -16,10 +20,10 @@ public class ServerListItem : MonoBehaviour
     public void OnClick()
     {
         Debug.Log("Selected \"" + myText.text.Substring(0, 20).Trim() + "\"");
-    }
 
-    void Start()
-    {
-        
+        if (serverId != 0)
+            serverListControl.SetSelectedServer(serverId);
+        else
+            Debug.LogError("Selected Server is missing an ID!");
     }
 }

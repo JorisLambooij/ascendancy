@@ -22,6 +22,8 @@ namespace Mirror.Discovery
         [Tooltip("Transport to be advertised during discovery")]
         public Transport transport;
 
+        public ServerListControl control;
+
         [Tooltip("Invoked when a server is found")]
         public ServerFoundUnityEvent OnServerFound;
 
@@ -36,6 +38,8 @@ namespace Mirror.Discovery
                 transport = Transport.activeTransport;
 
             base.Start();
+
+            Debug.Log("Started server discovery");
         }
 
         /// <summary>
@@ -54,6 +58,8 @@ namespace Mirror.Discovery
             // but other discovery implementations might want to use the data
             // in there,  This way the client can ask for
             // specific game mode or something
+
+            Debug.Log("Server request from " + endpoint.Address.ToString());
 
             try
             {
@@ -115,6 +121,8 @@ namespace Mirror.Discovery
             };
             response.uri = realUri.Uri;
 
+            Debug.Log("Server found on " + response.EndPoint.Address.ToString());
+            control.AddEntry(response);
             OnServerFound.Invoke(response);
         }
 
