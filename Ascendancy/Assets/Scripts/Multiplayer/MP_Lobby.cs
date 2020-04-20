@@ -42,11 +42,10 @@ public class MP_Lobby : MonoBehaviour
         Transform playerEntry = Instantiate(playerEntryPrefab, playerList).transform;
         PlayerEntryUI entryUI = playerEntry.GetComponent<PlayerEntryUI>();
 
+        entryUI.player = player;
         entryUI.PlayerColorIndex = playerCount;
         entryUI.PlayerNo = (++playerCount);
         entryUI.playerNameText.text = player.playerName;
-        entryUI.player = player;
-        entryUI.UpdateColor();
 
         player.playerNo = entryUI.PlayerNo;
 

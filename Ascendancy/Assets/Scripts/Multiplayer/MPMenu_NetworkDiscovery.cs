@@ -9,10 +9,10 @@ using UnityEngine.Events;
 namespace Mirror.Discovery
 {
     [Serializable]
-    public class ServerFoundUnityEvent : UnityEvent<MPMenu_ServerResponse> { };
+    public class MPMenu_ServerFoundUnityEvent : UnityEvent<MPMenu_ServerResponse> { };
 
     [DisallowMultipleComponent]
-    [AddComponentMenu("Network/NetworkDiscovery")]
+    [AddComponentMenu("Network/CustomNetworkDiscovery")]
     public class MPMenu_NetworkDiscovery : NetworkDiscoveryBase<ServerRequest, MPMenu_ServerResponse>
     {
         #region Server
@@ -23,7 +23,7 @@ namespace Mirror.Discovery
         public Transport transport;
 
         [Tooltip("Invoked when a server is found")]
-        public ServerFoundUnityEvent OnServerFound;
+        public MPMenu_ServerFoundUnityEvent OnServerFound;
 
         public override void Start()
         {
@@ -50,6 +50,7 @@ namespace Mirror.Discovery
         /// <returns>The message to be sent back to the client or null</returns>
         protected override MPMenu_ServerResponse ProcessRequest(ServerRequest request, IPEndPoint endpoint)
         {
+            Debug.Log("Got a request, creating response");
             // In this case we don't do anything with the request
             // but other discovery implementations might want to use the data
             // in there,  This way the client can ask for
@@ -89,7 +90,11 @@ namespace Mirror.Discovery
         /// Override if you wish to include additional data in the discovery message
         /// such as desired game mode, language, difficulty, etc... </remarks>
         /// <returns>An instance of ServerRequest with data to be broadcasted</returns>
-        protected override ServerRequest GetRequest() => new ServerRequest();
+        protected override ServerRequest GetRequest()
+        {
+            Debug.Log("Sending new Request out");
+            return new ServerRequest();
+        }
 
         /// <summary>
         /// Process the answer from a server
@@ -104,7 +109,8 @@ namespace Mirror.Discovery
         {
             // we received a message from the remote endpoint
             response.EndPoint = endpoint;
-
+            
+            Debug.Log("Sending new Request out");
             // although we got a supposedly valid url, we may not be able to resolve
             // the provided host
             // However we know the real ip address of the server because we just

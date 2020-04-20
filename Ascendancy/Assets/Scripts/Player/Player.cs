@@ -1,13 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Mirror;
 
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
+    [SyncVar]
     public int playerNo;
+    [SyncVar(hook =nameof(OnNameChange))]
     public string playerName;
+    [SyncVar(hook=nameof(OnColorChange))]
     public Color playerColor;
-
+    
     private Economy economy;
     private TechnologyLevel techLevel;
     private Transform buildingsGO;
@@ -32,6 +37,9 @@ public class Player : MonoBehaviour
         Transform playerManager = GameObject.Find("PlayerManager").transform;
         transform.SetParent(playerManager);
         playerManager.GetComponent<MP_Lobby>().AddPlayer(this);
+
+
+        GameObject.Find("AddPlayer Button").GetComponent<Button>().onClick.AddListener(InvokeCmdNameChange);
     }
 
     public void Initialize()
@@ -40,5 +48,28 @@ public class Player : MonoBehaviour
 
         PlayerEconomy.Initialize();
         TechLevel.Initialize();
+    }
+
+    private void OnColorChange(Color oldColor, Color newColor)
+    {
+        Debug.Log("Color Change: " + newColor);
+        //this.playerColor = newColor;
+    }
+
+    private void OnNameChange(string oldName, string newName)
+    {
+        Debug.Log("Name Changed by Server: " + newName);
+    }
+    
+    public void InvokeCmdNameChange()
+    {
+        CmdNameChange(playerName);
+    }
+
+    [Command]
+    public void CmdNameChange(string newName)
+    {
+        Debug.Log("Client changes name to " + newName);
+        playerName = newName;
     }
 }

@@ -80,7 +80,11 @@ namespace Mirror.Discovery
         /// Override if you wish to include additional data in the discovery message
         /// such as desired game mode, language, difficulty, etc... </remarks>
         /// <returns>An instance of ServerRequest with data to be broadcasted</returns>
-        protected override ServerRequest GetRequest() => new ServerRequest();
+        protected override ServerRequest GetRequest()
+        {
+            Debug.Log("Get Request");
+            return new ServerRequest();
+        }
 
         /// <summary>
         /// Process the answer from a server
