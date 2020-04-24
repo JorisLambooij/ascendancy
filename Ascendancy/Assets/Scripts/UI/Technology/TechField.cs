@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 
 public class TechField : MonoBehaviour
 {
     public PlayerTechScreen playerTechScreen;
     public Transform inPoint;
     public Transform outPoint;
+    public List<UILineRenderer> outgoingLines;
     public bool isCurrentFocus = false;
 
     private Text labelName;
@@ -41,7 +43,8 @@ public class TechField : MonoBehaviour
 
         icon.sprite = tech.icon;
         
-        SetRightColor();
+        // not necessary since the updating of the lines does this as well
+        //SetRightColor();
     }
 
     #region Color Management
@@ -71,7 +74,8 @@ public class TechField : MonoBehaviour
         ColorBlock colors = button.colors;
         colors.disabledColor = playerTechScreen.colorIfNotResearchable;
         button.colors = colors;
-        
+
+        ColorLines(playerTechScreen.colorIfNotResearchable);
         //icon.color = playerTechScreen.colorIfNotResearchable;
     }
     private void SetResearchable()
@@ -85,6 +89,7 @@ public class TechField : MonoBehaviour
             colors.normalColor = playerTechScreen.colorIfResearching;
             button.colors = colors;
 
+            ColorLines(playerTechScreen.colorIfResearching);
             //icon.color = playerTechScreen.colorIfResearching;
         }
         else
@@ -93,8 +98,10 @@ public class TechField : MonoBehaviour
             colors.normalColor = playerTechScreen.colorIfResearchable;
             button.colors = colors;
 
+            ColorLines(playerTechScreen.colorIfResearchable);
             //icon.color = playerTechScreen.colorIfResearchable;
         }
+        
     }
     private void SetResearched()
     {
@@ -104,14 +111,21 @@ public class TechField : MonoBehaviour
         colors.disabledColor = playerTechScreen.colorIfResearched;
         button.colors = colors;
 
+        ColorLines(playerTechScreen.colorIfResearched);
         //icon.color = playerTechScreen.colorIfResearched;
+    }
+
+    private void ColorLines(Color c)
+    {
+        foreach (UILineRenderer line in outgoingLines)
+            line.color = c;
     }
     #endregion
 
     /// <summary>
     /// When a dependency of this Technology is updated, check whether this Technology has become researchable as a result.
     /// </summary>
-    /// <param name="newProgress">New Progress of the dependency. Not relevant in this function.</param>
+    /// <param name="newProgress">Progress of the dependency. Not relevant in this function.</param>
     public void OnDependencyProgressUpdate()
     {
         if (playerTechScreen.TechTree.TechResearchability(Tech.id) == Researchability.Researchable)

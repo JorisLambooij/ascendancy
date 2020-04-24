@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class MP_Lobby : MonoBehaviour
 {
     public int maxPlayers;
@@ -24,16 +25,16 @@ public class MP_Lobby : MonoBehaviour
         playersInLobby = new List<PlayerInfo>();
         playerCount = 0;
         Debug.Assert(playerColors.Count >= maxPlayers, "Not enough Player Colors!");
-        
+
         DontDestroyOnLoad(this);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
-    
+
     public void AddPlayer(Player player)
     {
         if (playerCount >= maxPlayers)

@@ -16546,6 +16546,21 @@ PrefabInstance:
       propertyPath: pointsUI
       value: 
       objectReference: {fileID: 137328600}
+    - target: {fileID: 3655036190986204600, guid: 622b3ce687146d945ab1537398255da8,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3655036190986204600, guid: 622b3ce687146d945ab1537398255da8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3655036190986204600, guid: 622b3ce687146d945ab1537398255da8,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -300
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 622b3ce687146d945ab1537398255da8, type: 3}
 --- !u!1 &3674110868888835990 stripped

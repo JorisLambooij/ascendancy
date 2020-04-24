@@ -57,17 +57,25 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
 
         // Connect the fields to show dependencies
         foreach (KeyValuePair<int, Technology> kvp in TechTree.techDictionary)
-            foreach (int dependendy in kvp.Value.dependencies)
+            foreach (int dependency in kvp.Value.dependencies)
             {
                 UILineRenderer line = Instantiate(linePrefab, linesParent).GetComponent<UILineRenderer>();
 
-                Vector2 outPoint = techFieldsDict[dependendy].outPoint.position;
+                Vector2 outPoint = techFieldsDict[dependency].outPoint.position;
                 Vector2 inPoint = techFieldsDict[kvp.Value.id].inPoint.position;
                 
                 line.Points = new Vector2[] { outPoint, inPoint };
+
+                techFieldsDict[dependency].outgoingLines.Add(line);
+                techFieldsDict[dependency].SetRightColor();
             }
     }
 
+    /// <summary>
+    /// Create the UI Element for one Technology
+    /// </summary>
+    /// <param name="tech">The Technology in question.s</param>
+    /// <param name="screenPosition">Where on the screen this field is located.</param>
     private void InstantiateTechField(Technology tech, Vector2 screenPosition)
     {
         TechField techField = Instantiate(techFieldPrefab, techFieldsParent).GetComponent<TechField>();
@@ -76,12 +84,18 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
         techFieldsDict.Add(tech.id, techField);
     }
 
-
+    /// <summary>
+    /// Returns the TechnologyTree that this Screen is bound to.
+    /// </summary>
     public TechnologyTree TechTree
     {
         get { return playerTechLevel.techTree; }
     }
     
+    /// <summary>
+    /// Set the currect Research Focus to the selected Technology.
+    /// </summary>
+    /// <param name="techID">The ID of the Technology to research now.</param>
     public void Focus(int techID)
     {
         TechField[] techFields = GetComponentsInChildren<TechField>();
@@ -101,14 +115,16 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
         }
     }
 
+    /// <summary>
+    /// When a Technology's progress is upated, this function is called.
+    /// </summary>
+    /// <param name="key">The ID of the updated Tech.</param>
+    /// <param name="newValue">The new progress of the updated Tech.</param>
     public void Callback(int key, float newValue)
     {
         techFieldsDict[key].OnProgressUpdate(newValue);
 
         foreach (int techID in TechTree.techDictionary[key].leadsToTechs)
-        { 
-            //Debug.Log("Checking " + TechTree.techDictionary)
             techFieldsDict[techID].OnDependencyProgressUpdate();
-        }
     }
 }

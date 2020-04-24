@@ -25,7 +25,7 @@ namespace Mirror
             public NetworkConnection conn;
             public GameObject roomPlayer;
         }
-
+        
         [Header("Room Settings")]
 
         [FormerlySerializedAs("m_ShowRoomGUI")]
