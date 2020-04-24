@@ -7,9 +7,7 @@
             "dependencies": [],
             "cost": 0,
             "startTech": true,
-            "unitsUnlocked": [
-                "ScriptableObjects/Units/Dummy Tank.asset"
-            ],
+            "unitsUnlocked": [],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
         },
@@ -35,7 +33,10 @@
             ],
             "cost": 1000,
             "startTech": false,
-            "unitsUnlocked": [],
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Production Buildings/Iron Mine/Iron Mine.asset",
+                "ScriptableObjects/Buildings/Production Buildings/Blacksmith/Blacksmith.asset"
+            ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": [
                 "ScriptableObjects/Resource/Iron.asset",
@@ -50,7 +51,9 @@
             "dependencies": [],
             "cost": 2000,
             "startTech": false,
-            "unitsUnlocked": [],
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Research Lab/Lab.asset"
+            ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
         },
@@ -166,7 +169,9 @@
             "dependencies": [],
             "cost": 0,
             "startTech": true,
-            "unitsUnlocked": [],
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Production Buildings/Lumberyard/Lumberyard.asset"
+            ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": [
                 "ScriptableObjects/Resource/Wood.asset"

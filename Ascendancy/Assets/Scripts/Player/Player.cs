@@ -39,7 +39,7 @@ public class Player : NetworkBehaviour
         playerManager.GetComponent<MP_Lobby>().AddPlayer(this);
 
 
-        GameObject.Find("AddPlayer Button").GetComponent<Button>().onClick.AddListener(InvokeCmdNameChange);
+        //GameObject.Find("AddPlayer Button").GetComponent<Button>().onClick.AddListener(InvokeCmdNameChange);
     }
 
     public void Initialize()

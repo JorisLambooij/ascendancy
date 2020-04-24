@@ -14,8 +14,6 @@ public class Economy : MonoBehaviour
 
         foreach (Resource resource in availableResources.AsList)
             resourceStorage.Add(resource, 0);
-
-        Debug.Log("init economy " + (resourceStorage == null));
     }
 
     public void NewAvailableResource(Resource r)

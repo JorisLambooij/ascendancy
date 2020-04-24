@@ -59,7 +59,6 @@ public class BuildingPlacementMode : ControlMode
                 if (validLocation)
                 {
                     // valid spot, place building
-                    Debug.Log("Placing a " + Building.name + " at: " + preview.transform.position);
                     GameObject newBuildingGO = Building.CreateInstance(gameManager.GetPlayer, preview.transform.position);
                     Entity b = newBuildingGO.GetComponent<Entity>();
                     

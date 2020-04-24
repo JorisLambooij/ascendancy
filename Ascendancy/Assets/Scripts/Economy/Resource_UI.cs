@@ -44,7 +44,7 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
         player = GameManager.Instance.playerScript;
 
         resourceEntries = new Dictionary<Resource, Resource_UI_Entry>();
-        
+
         player.PlayerEconomy.resourceStorage.Subscribe(this);
         player.PlayerEconomy.availableResources.Subscribe(this);
         
