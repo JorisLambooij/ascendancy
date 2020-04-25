@@ -12,6 +12,7 @@ public class MP_Lobby : MonoBehaviour
     public GameObject playerEntryPrefab;
 
     public List<PlayerInfo> PlayersInLobby { get => playersInLobby; }
+    public bool isServer = false;
 
 
     private Transform playerList;
@@ -27,6 +28,12 @@ public class MP_Lobby : MonoBehaviour
         playersInLobby = new List<PlayerInfo>();
         playerCount = 0;
         Debug.Assert(playerColors.Count >= maxPlayers, "Not enough Player Colors!");
+
+        MPMenu_NetworkRoomManager roomMngr = GameObject.Find("NetworkManager").GetComponent<MPMenu_NetworkRoomManager>();
+        if (roomMngr.mode == NetworkManagerMode.Host)
+            isServer = true;
+
+        Debug.Log("I am " + roomMngr.mode.ToString());
 
         DontDestroyOnLoad(this);
     }
@@ -51,7 +58,15 @@ public class MP_Lobby : MonoBehaviour
         entryUI.playerNameText.text = player.playerName;
 
         Button kickPlayerButton = playerEntry.GetComponentInChildren<Button>();
-        kickPlayerButton.onClick.AddListener(() => kickPlayerButtonListener(player));
+        if (isServer) //player.isClient is always true somehow
+        {
+            kickPlayerButton.onClick.AddListener(() => kickPlayerButtonListener(player));
+        }
+        else
+        {
+            Destroy(kickPlayerButton.gameObject);
+            Debug.Log("Destroy kick button, because isServer is " + isServer + " and  playernumber is " + player.playerNo);
+        }
 
         player.playerNo = entryUI.PlayerNo;
 
