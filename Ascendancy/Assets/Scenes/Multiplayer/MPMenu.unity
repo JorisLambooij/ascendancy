@@ -317,7 +317,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 470103138}
   m_HandleRect: {fileID: 470103137}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 1
   m_OnValueChanged:
@@ -1586,7 +1586,7 @@ MonoBehaviour:
   spawnPrefabs: []
   showRoomGUI: 1
   minPlayers: 1
-  roomPlayerPrefab: {fileID: 7098639013782683504, guid: 67d492a2b070a364882b91c37c6b29b4,
+  roomPlayerPrefab: {fileID: 5409059187741451284, guid: 408072e69fc331e498cb2b7117bf2044,
     type: 3}
   RoomScene: Assets/Scenes/Multiplayer/Lobby.unity
   GameplayScene: Assets/Scenes/DEV_Terrain_New.unity

@@ -73,6 +73,7 @@ GameObject:
   - component: {fileID: 6118261737210275379}
   - component: {fileID: 6118261737210275376}
   - component: {fileID: 8642055844873635346}
+  - component: {fileID: 5409059187741451284}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -108,6 +109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdface0f48c757a4292b473232ae77f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   playerNo: 1
   playerName: Alice
   playerColor: {r: 0, g: 0.754717, b: 0.030186852, a: 1}
@@ -136,7 +139,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentFocus: 1
-  storedResearch: 0
 --- !u!114 &8642055844873635346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,3 +154,20 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   m_AssetId: 
+--- !u!114 &5409059187741451284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6118261737210275372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79874ac94d5b1314788ecf0e86bd23fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  showRoomGUI: 1
+  readyToBegin: 0
+  index: 0

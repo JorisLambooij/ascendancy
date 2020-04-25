@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
 
 public class MP_Lobby : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class MP_Lobby : MonoBehaviour
     public GameObject playerEntryPrefab;
 
     public List<PlayerInfo> PlayersInLobby { get => playersInLobby; }
+
 
     private Transform playerList;
     private List<PlayerInfo> playersInLobby;
@@ -48,9 +50,57 @@ public class MP_Lobby : MonoBehaviour
         entryUI.PlayerNo = (++playerCount);
         entryUI.playerNameText.text = player.playerName;
 
+        Button kickPlayerButton = playerEntry.GetComponentInChildren<Button>();
+        kickPlayerButton.onClick.AddListener(() => kickPlayerButtonListener(player));
+
         player.playerNo = entryUI.PlayerNo;
 
         playerDict.Add(player.playerNo, player);
+    }
+    
+    public void RemovePlayer(Player player)
+    {
+        playerDict.Remove(player.playerNo);
+
+        PlayerEntryUI[] entries = playerList.GetComponentsInChildren<PlayerEntryUI>();
+        PlayerEntryUI deletemeUI = null;
+        foreach (PlayerEntryUI entry in entries)
+        {
+            if(entry.player.Equals(player))
+            {
+                deletemeUI = entry;
+            }
+        }
+
+        if (deletemeUI == null)
+            Debug.LogError("Unable to remove player " + player.playerName);
+        else
+        {
+            deletemeUI.playerNameText.text = "DELETED";
+            Destroy(deletemeUI.gameObject);
+        }
+    }
+
+    public void PlayerDisconnected(NetworkIdentity identity)
+    {
+        Player dictPlayer = null;
+
+        foreach (Player player in playerDict.Values)
+        {
+            if (player.netIdentity.Equals(identity))
+            {
+                Debug.Log("Removing entry for player" + player.playerName);
+                dictPlayer = player;
+            }
+        }
+
+        if (dictPlayer != null)
+            RemovePlayer(dictPlayer);
+    }
+
+    public void UpdatePlayerNumbers()
+    {
+        Debug.Log("Updating player numbers");
     }
 
     public void LoadGame()
@@ -78,5 +128,15 @@ public class MP_Lobby : MonoBehaviour
     public void ConstructPlayerData()
     {
 
+    }
+    
+    private void kickPlayerButtonListener(Player player)
+    {
+        Debug.Log("Trying to kick " + player.playerName);
+
+        player.GetComponent<NetworkRoomPlayer>().connectionToClient.Disconnect();
+
+        //MPMenu_NetworkRoomManager roomMngr = GameObject.Find("NetworkManager").GetComponent<MPMenu_NetworkRoomManager>();
+        //roomMngr.
     }
 }
