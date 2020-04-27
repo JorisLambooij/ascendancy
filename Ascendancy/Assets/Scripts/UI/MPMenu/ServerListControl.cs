@@ -132,6 +132,13 @@ public class ServerListControl : MonoBehaviour
 
         public void StartSelectedServer()
     {
-        NetworkManager.singleton.StartClient(serverList[selectedServerId].uri);
+        try
+        {
+            NetworkManager.singleton.StartClient(serverList[selectedServerId].uri);
+        }
+        catch (KeyNotFoundException e)
+        {
+            Debug.LogError("No Server was selected!");
+        }
     }
 }
