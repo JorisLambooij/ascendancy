@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EntityType { Unit, Building };
+/// <summary>
+/// Is this a unit that needs to be recruited, or a building that can be built directly?
+/// </summary>
+public enum ConstructionMethod { Unit, Building };
+
 [CreateAssetMenu(fileName = "NewEntityInfo", menuName = "Entity")]
 public class EntityInfo : ScriptableObject
 {
@@ -63,7 +67,12 @@ public class EntityInfo : ScriptableObject
     /// <summary>
     /// What type of Entity if this?
     /// </summary>
-    public EntityType EntityType;
+    public ConstructionMethod Construction_Method;
+
+    /// <summary>
+    /// What category of Entity is this? (E.g. production, military, cavalry etc.)
+    /// </summary>
+    public string Category;
 
     /// <summary>
     /// Only entities of the highest selectionPriority will be selected when dragging the mouse.
@@ -91,7 +100,7 @@ public class EntityInfo : ScriptableObject
     {
         GameObject prefab;
         Transform targetParent;
-        if (EntityType == EntityType.Building)
+        if (Construction_Method == ConstructionMethod.Building)
         {
             targetParent = owner.BuildingsGO.transform;
             prefab = Resources.Load("Prefabs/Entities/Building Prefab") as GameObject;

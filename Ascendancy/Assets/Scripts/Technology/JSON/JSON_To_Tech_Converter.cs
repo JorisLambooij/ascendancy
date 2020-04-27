@@ -22,6 +22,11 @@ public class JSON_To_Tech_Converter
         T[] infos = new T[strings.Length];
         for (int i = 0; i < strings.Length; i++)
         {
+            if (strings[i].Length == 0)
+            {
+                Debug.LogError("Something wrong with Tech " + i);
+                continue;
+            }
             string path = System.IO.Path.ChangeExtension(strings[i], "").Remove(strings[i].IndexOf('.'));
             T info = Resources.Load<T>(path);
             infos[i] = info;

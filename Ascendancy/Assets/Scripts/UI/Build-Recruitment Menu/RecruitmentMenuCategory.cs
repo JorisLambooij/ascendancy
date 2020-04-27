@@ -13,13 +13,13 @@ public class RecruitmentMenuCategory : MenuCategory
     {
         base.Start();
 
+        optionsGO = this.gameObject;
         pool = GetComponent<GOPool>();
 
         // Assign this as reference to all the options in this category
         RecruitmentOption[] recruitmentOptions = transform.GetComponentsInChildren<RecruitmentOption>();
         foreach (RecruitmentOption option in recruitmentOptions)
             option.Category = this;
-        
     }
 
     public void SelectRecruiter(Entity recruiter)

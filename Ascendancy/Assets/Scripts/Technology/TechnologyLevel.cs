@@ -9,9 +9,9 @@ public class TechnologyLevel : MonoBehaviour
 
     public SubscribableProperty<float> storedResearch;
 
-    private HashSet<EntityInfo> unitsUnlocked;
-    private HashSet<BuildingInfo> buildingsUnlocked;
-    private HashSet<Resource> resourcesUnlocked;
+    public SubscribableList<EntityInfo> entitiesUnlocked { get; private set; }
+    public SubscribableList<BuildingInfo> buildingsUnlocked { get; private set; }
+    public SubscribableList<Resource> resourcesUnlocked { get; private set; }
 
     // Start is called before the first frame update
     public void Initialize()
@@ -21,9 +21,9 @@ public class TechnologyLevel : MonoBehaviour
         currentFocus = -1;
         storedResearch = new SubscribableProperty<float>(0);
 
-        unitsUnlocked     = new HashSet<EntityInfo>();
-        buildingsUnlocked = new HashSet<BuildingInfo>();
-        resourcesUnlocked = new HashSet<Resource>();
+        entitiesUnlocked  = new SubscribableList<EntityInfo>();
+        buildingsUnlocked = new SubscribableList<BuildingInfo>();
+        resourcesUnlocked = new SubscribableList<Resource>();
 
         List<Technology> unlockedTechs = techTree.UnlockedTechs();
         foreach (Technology tech in unlockedTechs)
@@ -97,13 +97,13 @@ public class TechnologyLevel : MonoBehaviour
 
     private void UnlockEntity(EntityInfo info)
     {
-        if (!unitsUnlocked.Contains(info))
-            unitsUnlocked.Add(info);
+        if (!entitiesUnlocked.Contains(info))
+            entitiesUnlocked.Add(info);
     }
 
     public bool IsUnitUnlocked(EntityInfo unitInfo)
     {
-        return unitsUnlocked.Contains(unitInfo);
+        return entitiesUnlocked.Contains(unitInfo);
     }
 
     public bool IsBuildingUnlocked(BuildingInfo buildingInfo)

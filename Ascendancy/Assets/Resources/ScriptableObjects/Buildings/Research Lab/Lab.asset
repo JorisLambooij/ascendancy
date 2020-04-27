@@ -22,7 +22,8 @@ MonoBehaviour:
   MinimapMarker: {fileID: 0}
   ViewDistance: 0
   ContextMenuOptions: 0
-  EntityType: 1
+  Construction_Method: 1
+  Category: Research
   selectionPriority: 0
   BuildTime: 0
   ResourceAmount: []

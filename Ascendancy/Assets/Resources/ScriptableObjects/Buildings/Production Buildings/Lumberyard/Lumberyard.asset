@@ -16,12 +16,14 @@ MonoBehaviour:
   Description: A yard that lumbers.
   MaxHealth: 50
   Armor: 0
+  dimensions: {x: 0, y: 0}
   Mesh: {fileID: -2432090755550338912, guid: 878114cddeffa41478b1aea55dddc1c6, type: 3}
   Thumbnail: {fileID: 21300000, guid: e0eac6b76fdd842e88a7f8c75ecffaf4, type: 3}
   MinimapMarker: {fileID: 0}
   ViewDistance: 0
   ContextMenuOptions: 0
-  EntityType: 0
+  Construction_Method: 1
+  Category: Production
   selectionPriority: 0
   BuildTime: 0
   ResourceAmount:

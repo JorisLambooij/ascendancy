@@ -7,7 +7,9 @@
             "dependencies": [],
             "cost": 0,
             "startTech": true,
-            "unitsUnlocked": [],
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Command Center/Command Center.asset"
+            ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
         },
@@ -67,7 +69,7 @@
             "cost": 500,
             "startTech": false,
             "unitsUnlocked": [
-                "ScriptableObjects/Units/Dummy Tank.asset"
+                "ScriptableObjects/Buildings/Production Buildings/Blacksmith/Blacksmith.asset"
             ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []

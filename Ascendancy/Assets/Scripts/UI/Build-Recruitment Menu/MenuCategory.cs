@@ -5,21 +5,35 @@ using UnityEngine.UI;
 
 public class MenuCategory : MonoBehaviour
 {
+    /// <summary>
+    /// Name of this Category
+    /// </summary>
+    public string category;
+
+    /// <summary>
+    /// If this Category is expanded or not.
+    /// </summary>
     protected bool expanded;
+
+    /// <summary>
+    /// The parent GO of the Options
+    /// </summary>
+    [SerializeField]
     protected GameObject optionsGO;
 
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        optionsGO = transform.GetComponentInChildren<VerticalLayoutGroup>().gameObject;
-        Expanded = false;
+        Expanded = true;
     }
-
-    public void Expand()
+    
+    // Toggle Expansion status.
+    public void ToggleExpand()
     {
         Expanded = !expanded;
     }
 
+    // To directly set expanded or collapsed.
     public bool Expanded
     {
         get { return expanded; }

@@ -15,6 +15,11 @@ public class GOPool : MonoBehaviour
             targetParent = this.transform;
     }
 
+    /// <summary>
+    /// Returns a list with the specified amount of GameObjects.
+    /// </summary>
+    /// <param name="amount">How many GOs?</param>
+    /// <returns>List of length 'amount'</returns>
     public List<GameObject> Generate(int amount)
     {
         List<GameObject> returnList = new List<GameObject>(amount);

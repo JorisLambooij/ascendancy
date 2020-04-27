@@ -22,7 +22,8 @@ MonoBehaviour:
   MinimapMarker: {fileID: 0}
   ViewDistance: 10
   ContextMenuOptions: 0
-  EntityType: 0
+  Construction_Method: 0
+  Category: Cavalry
   selectionPriority: 2
   BuildTime: 0
   ResourceAmount: []
