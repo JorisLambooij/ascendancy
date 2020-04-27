@@ -18,7 +18,7 @@ public class Economy : MonoBehaviour
 
     public void NewAvailableResource(Resource r)
     {
-        Debug.Log("New Resource: " + r.resourceName);
+        //Debug.Log("New Resource: " + r.resourceName);
         availableResources.Add(r);
         resourceStorage.Add(r, 0);
     }

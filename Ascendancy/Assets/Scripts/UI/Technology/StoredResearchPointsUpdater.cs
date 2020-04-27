@@ -12,8 +12,6 @@ public class StoredResearchPointsUpdater : MonoBehaviour, PropertySubscriber<flo
     void Start()
     {
         textField = GetComponent<Text>();
-
-        Debug.Log(GetComponentInParent<PlayerTechScreen>().playerTechLevel);
         GetComponentInParent<PlayerTechScreen>().playerTechLevel.storedResearch.Subscribe(this);
     }
     

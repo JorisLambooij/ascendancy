@@ -26,7 +26,7 @@ public class BuildMenuCategory : MenuCategory
 
     public void AddBuildOption(EntityInfo entity)
     {
-        Debug.Log("New Option: " + entity.name);
+        //Debug.Log("New Option: " + entity.name);
         GameObject newOptionGO = Instantiate(optionPrefab, optionsGO.transform);
         newOptionGO.name = entity.name;
 
