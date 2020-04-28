@@ -344,8 +344,7 @@ public class GameMode : ControlMode
                     //zero button as default                                     
                     if (e == null)
                     {
-                        Debug.LogError("Entity Selector is NULL!");
-                        Debug.LogError("(FAIL)Name is " + hit.transform.name);
+                        Debug.LogError("Entity Selector is NULL! (FAIL)Name is " + hit.transform.name);
                     }
                     else if (e.GetComponentInParent<Entity>().GetType() == typeof(Unit))
                     {
