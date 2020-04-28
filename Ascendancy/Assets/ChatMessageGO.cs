@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ChatMessage : MonoBehaviour, PropertySubscriber<int>
+public class ChatMessageGO : MonoBehaviour, PropertySubscriber<int>
 {
     public Text textContent;
 

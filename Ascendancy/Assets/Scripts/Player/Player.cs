@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
+using System;
 
 public class Player : NetworkBehaviour
 {
@@ -22,6 +23,8 @@ public class Player : NetworkBehaviour
     public TechnologyLevel TechLevel { get => techLevel; set => techLevel = value; }
     public Transform BuildingsGO { get => buildingsGO; set => buildingsGO = value; }
     public Transform UnitsGO { get => unitsGO; set => unitsGO = value; }
+
+    public static event Action<Player, ChatMessage> OnMessage;
 
     // When the NetworkManager creates this Player, do this
     private void Awake()
@@ -72,4 +75,26 @@ public class Player : NetworkBehaviour
         Debug.Log("Client changes name to " + newName);
         playerName = newName;
     }
+
+    #region Chat
+
+    [Command]
+    public void CmdSend(ChatMessage message)
+    {
+        if (message.message.Trim() != "")
+            RpcReceive(message);
+    }
+
+    [ClientRpc]
+    public void RpcReceive(ChatMessage message)
+    {
+        OnMessage?.Invoke(this, message);
+    }
+
+    override public void OnStartLocalPlayer()
+    {
+        GetComponentInParent<MP_Lobby>().LocalPlayerInitialization(this);
+    }
+
+    #endregion
 }

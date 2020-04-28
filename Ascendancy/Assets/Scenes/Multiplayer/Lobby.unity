@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6abfb1fc28fa98344b5353816e1f0953, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textContent: {fileID: 48103076}
+  textContent: {fileID: 0}
 --- !u!224 &49735908 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3481091255367386934, guid: 88ea19a191795394d8ba6dd862b5f7ca,
@@ -1093,7 +1093,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputBox: {fileID: 8285211}
-  msgWindow: {fileID: 2055743977}
+  lobby: {fileID: 2112733831}
 --- !u!224 &1252164234 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3481091255367386934, guid: 88ea19a191795394d8ba6dd862b5f7ca,
@@ -1908,10 +1908,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayTestMessages: 0
   maximumNumberOfMessages: 25
-  messageWindowText: {fileID: 48103076}
-  chatWindow: {fileID: 1338922153}
   messagePrefab: {fileID: 48103074}
   scrollRect: {fileID: 1004362325}
+  chatWindow: {fileID: 1338922153}
 --- !u!222 &2055743980
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1974,6 +1973,8 @@ MonoBehaviour:
   - {r: 0, g: 0.8679245, b: 0.8679245, a: 1}
   playerEntryPrefab: {fileID: 7794026143633133344, guid: 8d6527d46a80b5c4f92bde663d87d85c,
     type: 3}
+  isServer: 0
+  messageWindow: {fileID: 2055743977}
 --- !u!1001 &6548278713323183770
 PrefabInstance:
   m_ObjectHideFlags: 0

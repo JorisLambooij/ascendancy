@@ -14,10 +14,17 @@ public class MP_Lobby : MonoBehaviour
     public List<PlayerInfo> PlayersInLobby { get => playersInLobby; }
     public bool isServer = false;
     
+    public MessageWindow messageWindow;
+
     private Transform playerList;
     private List<PlayerInfo> playersInLobby;
     private int playerCount;
     private Dictionary<int, Player> playerDict;
+
+
+    private MPMenu_NetworkRoomManager roomMngr;
+
+    private Player localPlayer = null;
 
     // Start is called before the first frame update
     void Awake()
@@ -35,6 +42,9 @@ public class MP_Lobby : MonoBehaviour
         Debug.Log("I am " + roomMngr.mode.ToString());
 
         DontDestroyOnLoad(this);
+
+        Player.OnMessage += OnPlayerMessage;
+
     }
 
     // Update is called once per frame
@@ -56,22 +66,26 @@ public class MP_Lobby : MonoBehaviour
         entryUI.PlayerNo = (++playerCount);
         entryUI.playerNameText.text = player.playerName;
 
-        Button kickPlayerButton = playerEntry.GetComponentInChildren<Button>();
-        if (isServer) //player.isClient is always true somehow
-        {
-            kickPlayerButton.onClick.AddListener(() => kickPlayerButtonListener(player));
-        }
-        else
-        {
-            Destroy(kickPlayerButton.gameObject);
-            Debug.Log("Destroy kick button, because isServer is " + isServer + " and  playernumber is " + player.playerNo);
-        }
-
         player.playerNo = entryUI.PlayerNo;
 
         playerDict.Add(player.playerNo, player);
+
+        if (localPlayer != null)
+            PrintChatMessage(new ChatMessage("SYSTEM", player.playerName + " connected",Color.gray));
+
+        Button kickPlayerButton = playerEntry.GetComponentInChildren<Button>();
+        if (isServer)
+            kickPlayerButton.onClick.AddListener(() => kickPlayerButtonListener(player));
+        else
+            Destroy(kickPlayerButton.gameObject);
     }
-    
+
+    public void LocalPlayerInitialization(Player player)
+    {
+        localPlayer = player;
+        Debug.Log(player.playerName + " connected as a local player");
+    }
+
     public void RemovePlayer(Player player)
     {
         playerDict.Remove(player.playerNo);
@@ -80,7 +94,7 @@ public class MP_Lobby : MonoBehaviour
         PlayerEntryUI deletemeUI = null;
         foreach (PlayerEntryUI entry in entries)
         {
-            if(entry.player.Equals(player))
+            if (entry.player.Equals(player))
             {
                 deletemeUI = entry;
             }
@@ -92,7 +106,10 @@ public class MP_Lobby : MonoBehaviour
         {
             deletemeUI.playerNameText.text = "DELETED";
             Destroy(deletemeUI.gameObject);
+            PrintChatMessage(new ChatMessage("SYSTEM", player.playerName + " disconnected", Color.gray));
         }
+
+
     }
 
     public void PlayerDisconnected(NetworkIdentity identity)
@@ -128,6 +145,36 @@ public class MP_Lobby : MonoBehaviour
         InitializePlayers();
     }
 
+
+    #region chat
+    public void SendChatMessage(ChatMessage message)
+    {
+        Player player = NetworkClient.connection.identity.GetComponent<Player>();
+
+        // send a message
+        player.CmdSend(message);
+    }
+
+    public void SendChatMessage(string text)
+    {
+        Player player = NetworkClient.connection.identity.GetComponent<Player>();
+
+        // send a message
+        player.CmdSend(new ChatMessage(player.playerName, text, player.playerColor));
+    }
+
+    public void PrintChatMessage(ChatMessage message)
+    {
+        messageWindow.PrintMessage(message);
+    }
+
+    public void OnPlayerMessage(Player player, ChatMessage message)
+    {
+        PrintChatMessage(message);
+    }
+
+    #endregion
+
     public void InitializePlayers()
     {
         foreach (Player player in playerDict.Values)
@@ -142,8 +189,8 @@ public class MP_Lobby : MonoBehaviour
     public void ConstructPlayerData()
     {
 
-    }
-    
+    }    
+
     private void kickPlayerButtonListener(Player player)
     {
         Debug.Log("Trying to kick " + player.playerName);
