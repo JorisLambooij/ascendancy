@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f550d7aa0b9ce148b3fbacf929024c3, type: 3}
   m_Name: Command Center Recruitment
   m_EditorClassIdentifier: 
+  clickPriority: 0
   recruitableUnits:
   - {fileID: 11400000, guid: 0e0055ee303abc449b2adcdb18c4482a, type: 2}
+  - {fileID: 11400000, guid: 39bbb6d7bf6e084479023a9e58e7fcdf, type: 2}

@@ -37,7 +37,7 @@ public class GameMode : ControlMode
         selectionBox.enabled = false;
 
         //contextMenuCanvas = GameObject.Find("Canvas_ConMenu").GetComponent<Canvas>();
-        conMenuHandler = GameObject.Find("Canvas_ConMenu").GetComponent<ContextMenuHandler>();
+        conMenuHandler = GameObject.Find("Context Menu").GetComponent<ContextMenuHandler>();
 
         formationLine = GameObject.Find("FormationLine").GetComponent<LineRenderer>();
 
@@ -313,7 +313,7 @@ public class GameMode : ControlMode
     {
         // toggle build menu
         if (Input.GetMouseButtonUp(1))
-            gameManager.UICanvas.ToggleBuildMenu();
+            gameManager.ui_Manager.OpenScreen("Build Menu");
     }
 
     /// <summary>

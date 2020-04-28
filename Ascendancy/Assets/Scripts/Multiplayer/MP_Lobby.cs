@@ -13,8 +13,7 @@ public class MP_Lobby : MonoBehaviour
 
     public List<PlayerInfo> PlayersInLobby { get => playersInLobby; }
     public bool isServer = false;
-
-
+    
     private Transform playerList;
     private List<PlayerInfo> playersInLobby;
     private int playerCount;

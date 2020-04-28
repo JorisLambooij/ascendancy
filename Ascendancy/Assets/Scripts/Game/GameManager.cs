@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public ControlMode controlMode;
     public World world;
     public TileOccupationMap occupationMap;
-    public UI_Canvas UICanvas;
+    public UI_Manager ui_Manager;
 
     // Might need refactoring
     public Dictionary<ControlModeEnum, ControlMode> controlModeDict { get; protected set; }

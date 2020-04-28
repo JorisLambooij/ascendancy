@@ -68,7 +68,7 @@ public class Entity : MonoBehaviour
     protected virtual void Start()
     {
         // Create the Selection Marker
-        GameObject selectionMarkerPrefab = Resources.Load("Prefabs/SelectionMarker") as GameObject;
+        GameObject selectionMarkerPrefab = Resources.Load("Prefabs/UI/SelectionMarker") as GameObject;
         Instantiate(selectionMarkerPrefab, this.transform);
 
         controller = transform.GetComponent<EntityOrderController>();
@@ -84,7 +84,7 @@ public class Entity : MonoBehaviour
         if (minimapMarker != null)
         {
             markerObject.GetComponent<SpriteRenderer>().sprite = minimapMarker;
-            Debug.Log(markerObject.GetComponent<SpriteRenderer>().sprite.name);
+            //Debug.Log(markerObject.GetComponent<SpriteRenderer>().sprite.name);
         }
         Instantiate(markerObject, this.transform);
 
