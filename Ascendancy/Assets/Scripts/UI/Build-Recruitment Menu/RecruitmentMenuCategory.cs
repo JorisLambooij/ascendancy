@@ -8,7 +8,12 @@ public class RecruitmentMenuCategory : MenuCategory
     protected GOPool pool;
 
     public Entity SelectedRecruiter;
-    
+
+    void Awake()
+    {
+        pool = GetComponent<GOPool>();
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -33,6 +38,7 @@ public class RecruitmentMenuCategory : MenuCategory
 
     public void SetOptions(RecruitmentFeature recruitmentFeature)
     {
+        Debug.Log("pool " + pool);
         pool.Generate(recruitmentFeature.recruitableUnits.Count);
 
         int i = 0;

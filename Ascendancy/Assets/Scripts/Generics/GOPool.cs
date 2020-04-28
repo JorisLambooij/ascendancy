@@ -8,7 +8,7 @@ public class GOPool : MonoBehaviour
     public GameObject prefab;
     public List<GameObject> pool { get; protected set; }
 
-    void Start()
+    void Awake()
     {
         pool = new List<GameObject>();
         if (targetParent == null)

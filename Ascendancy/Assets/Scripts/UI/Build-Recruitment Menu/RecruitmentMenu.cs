@@ -10,11 +10,14 @@ public class RecruitmentMenu : MonoBehaviour, ListSubscriber<EntitySelector>
 
     List<RecruitmentMenuCategory> categories;
 
+    void Awake()
+    {
+        pool = GetComponent<GOPool>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        pool = GetComponent<GOPool>();
-
         GameManager gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         (gameManager.controlModeDict[ControlModeEnum.gameMode] as GameMode).selectedUnits.Subscribe(this);
         categories = new List<RecruitmentMenuCategory>();

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
@@ -91,8 +92,15 @@ public class Entity : MonoBehaviour
         this.currentHealth = entityInfo.MaxHealth;
 
         // Copy all features as new objects, and immediately sort them by priority.
-        EntityFeature[] featuresCopy = new EntityFeature[entityInfo.EntityFeatures.Count];
-        entityInfo.EntityFeatures.CopyTo(featuresCopy);
+        int count = entityInfo.EntityFeatures.Count;
+        EntityFeature[] featuresCopy = new EntityFeature[count];
+
+        for (int i = 0; i < count; i++)
+        {
+            EntityFeature f = Instantiate(entityInfo.EntityFeatures[i]);
+            featuresCopy[i] = f;
+        }
+        //entityInfo.EntityFeatures.CopyTo(featuresCopy);
         
         features = featuresCopy.OrderBy(f => -f.clickPriority).ToList();
 

@@ -64,9 +64,18 @@ public class RecruitmentFeature : EntityFeature
         List<Resource_Amount> unitRecruitmentCosts = unit.ResourceAmount;
 
         bool enough = true;
+        List<Resource_Amount> missingResources = new List<Resource_Amount>();
+
         foreach (Resource_Amount amount in unitRecruitmentCosts)
-            if (entity.Owner.PlayerEconomy.resourceStorage.GetValue(amount.resource) < amount.amount)
+        {
+            float availableResource = entity.Owner.PlayerEconomy.resourceStorage.GetValue(amount.resource);
+            
+            if (availableResource < amount.amount)
+            {
+                missingResources.Add(new Resource_Amount(amount.resource, amount.amount - availableResource));
                 enough = false;
+            }
+        }
 
         if (enough == true)
         {
@@ -87,9 +96,14 @@ public class RecruitmentFeature : EntityFeature
         }
         else
         {
-            Debug.Log("Not enough resources for " + unit.name + "!");
-            //alert the player
-            //TODO
+            // alert the player
+            string message = "Not enough resources for " + unit.name + "!";
+            foreach (Resource_Amount amount in missingResources)
+                message += "\n" + amount.amount + " " + amount.resource;
+            Debug.Log(message);
+
+
+            // TODO: Make an ingame error message
 
             return false;
         }

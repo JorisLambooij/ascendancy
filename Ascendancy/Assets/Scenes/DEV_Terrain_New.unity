@@ -16612,6 +16612,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3909428005258487694, guid: 6380a8eabf577034288fa841ec2dcc29,
         type: 3}
+    - target: {fileID: 884868946663026569, guid: 5beb6969568aedc4a8e5c57010321ba3,
+        type: 3}
+      propertyPath: pool
+      value: 
+      objectReference: {fileID: 3674110868888835993}
     - target: {fileID: 2365623495133468844, guid: 5beb6969568aedc4a8e5c57010321ba3,
         type: 3}
       propertyPath: m_AnchorMin.y
