@@ -1113,6 +1113,7 @@ GameObject:
   - component: {fileID: 1338922158}
   - component: {fileID: 1338922154}
   - component: {fileID: 1338922157}
+  - component: {fileID: 1338922155}
   m_Layer: 5
   m_Name: Image_listViewport
   m_TagString: Untagged
@@ -1168,6 +1169,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1338922155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338922152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 2690392445
+  serverOnly: 0
+  m_AssetId: 
 --- !u!222 &1338922156
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1864,6 +1880,7 @@ GameObject:
   - component: {fileID: 2055743976}
   - component: {fileID: 2055743980}
   - component: {fileID: 2055743977}
+  - component: {fileID: 2055743978}
   m_Layer: 5
   m_Name: Image_MessageWindowBG
   m_TagString: Untagged
@@ -1906,12 +1923,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7df7c59fcf66e724698c79702de2abd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   displayTestMessages: 0
   maximumNumberOfMessages: 25
-  messageWindowText: {fileID: 48103076}
-  chatWindow: {fileID: 1338922153}
   messagePrefab: {fileID: 48103074}
   scrollRect: {fileID: 1004362325}
+  chatWindow: {fileID: 1338922153}
+--- !u!114 &2055743978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055743975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 2308056361
+  serverOnly: 0
+  m_AssetId: 
 --- !u!222 &2055743980
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1974,6 +2007,8 @@ MonoBehaviour:
   - {r: 0, g: 0.8679245, b: 0.8679245, a: 1}
   playerEntryPrefab: {fileID: 7794026143633133344, guid: 8d6527d46a80b5c4f92bde663d87d85c,
     type: 3}
+  isServer: 0
+  messageWindow: {fileID: 2055743977}
 --- !u!1001 &6548278713323183770
 PrefabInstance:
   m_ObjectHideFlags: 0

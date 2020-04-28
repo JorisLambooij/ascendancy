@@ -14,11 +14,14 @@ public class MP_Lobby : MonoBehaviour
     public List<PlayerInfo> PlayersInLobby { get => playersInLobby; }
     public bool isServer = false;
 
+    public MessageWindow messageWindow;
 
     private Transform playerList;
     private List<PlayerInfo> playersInLobby;
     private int playerCount;
     private Dictionary<int, Player> playerDict;
+
+    private MPMenu_NetworkRoomManager roomMngr;
 
     // Start is called before the first frame update
     void Awake()
@@ -29,7 +32,7 @@ public class MP_Lobby : MonoBehaviour
         playerCount = 0;
         Debug.Assert(playerColors.Count >= maxPlayers, "Not enough Player Colors!");
 
-        MPMenu_NetworkRoomManager roomMngr = GameObject.Find("NetworkManager").GetComponent<MPMenu_NetworkRoomManager>();
+        roomMngr = GameObject.Find("NetworkManager").GetComponent<MPMenu_NetworkRoomManager>();
         if (roomMngr.mode == NetworkManagerMode.Host)
             isServer = true;
 
@@ -46,6 +49,9 @@ public class MP_Lobby : MonoBehaviour
 
     public void AddPlayer(Player player)
     {
+        if (player == null)
+            Debug.LogError("Cannot add empty player to Lobby!");
+
         if (playerCount >= maxPlayers)
             return;
 
@@ -71,6 +77,8 @@ public class MP_Lobby : MonoBehaviour
         player.playerNo = entryUI.PlayerNo;
 
         playerDict.Add(player.playerNo, player);
+
+        messageWindow.ReceiveMessage("SYSTEM", Color.gray, player.playerName + " connected");
     }
     
     public void RemovePlayer(Player player)
@@ -93,7 +101,10 @@ public class MP_Lobby : MonoBehaviour
         {
             deletemeUI.playerNameText.text = "DELETED";
             Destroy(deletemeUI.gameObject);
+            messageWindow.ReceiveMessage("SYSTEM", Color.gray, player.playerName + " disconnected");
         }
+
+        
     }
 
     public void PlayerDisconnected(NetworkIdentity identity)
