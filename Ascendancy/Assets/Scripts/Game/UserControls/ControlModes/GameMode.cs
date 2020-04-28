@@ -301,7 +301,6 @@ public class GameMode : ControlMode
                     {
                         bool enqueue = Input.GetKey(KeyCode.LeftShift);
                         es.ParentEntity.ClickOrder(hit, enqueue);
-                        Debug.Log("click " + es.ParentEntity.gameObject.name);
                         //u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
                     }
                 else

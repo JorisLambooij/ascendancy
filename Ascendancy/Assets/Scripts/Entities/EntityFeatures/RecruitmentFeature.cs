@@ -47,16 +47,16 @@ public class RecruitmentFeature : EntityFeature
     /// <returns>True on a success, false otherwise.</returns>
     public bool AddToQueue(EntityInfo unit)
     {
-        Debug.Log("Add to queue: " + unit.name);
+        //Debug.Log("Add to queue: " + unit.name);
         // if unit is not allowed, abort
         if (!recruitableUnits.Contains(unit))
             return false;
 
-        Debug.Log("Recruitable: YES");
+        //Debug.Log("Recruitable: YES");
 
         if (queue.Count >= maxQueueSize)
         {
-            Debug.Log("Queue is already full!");
+            //Debug.Log("Queue is already full!");
             return false;
         }
 
@@ -90,7 +90,7 @@ public class RecruitmentFeature : EntityFeature
 
             queue.Add(new QueueObject(unit, unit.ResourceAmount));
 
-            Debug.Log("Successfully added " + unit.name + " to the queue!");
+            //Debug.Log("Successfully added " + unit.name + " to the queue!");
 
             return true;
         }
