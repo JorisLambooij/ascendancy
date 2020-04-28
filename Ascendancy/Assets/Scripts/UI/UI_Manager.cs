@@ -14,7 +14,8 @@ public class UI_Manager : MonoBehaviour
     {
         uiList = new List<UI_Screen>(GetComponentsInChildren<UI_Screen>());
         uiList.Remove(gameScreen);
-        //CloseAllScreens();
+
+        CloseAllScreens();
     }
 
     /// <summary>
@@ -43,6 +44,15 @@ public class UI_Manager : MonoBehaviour
             ui.SetStatus(status);
     }
     
+    public bool GetScreenStatus(string uiName)
+    {
+        UI_Screen ui = uiList.Find(s => s.name.ToLower() == uiName.ToLower());
+
+        if (ui != null)
+            return ui.GetStatus;
+        return false;
+    }
+
     /// <summary>
     /// Close all screens and return to game UI.
     /// </summary>

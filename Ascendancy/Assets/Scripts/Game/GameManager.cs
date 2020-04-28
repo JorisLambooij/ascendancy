@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public ControlMode controlMode;
     public World world;
     public TileOccupationMap occupationMap;
-    public UI_Manager ui_Manager;
+    private UI_Manager ui_Manager;
 
     // Might need refactoring
     public Dictionary<ControlModeEnum, ControlMode> controlModeDict { get; protected set; }
@@ -36,7 +36,9 @@ public class GameManager : MonoBehaviour
                 playerScript = player;   //.GetComponent<PlayerLoader>().LoadPlayersIntoScene(playerNo);
 
         Debug.Log("Found Player: " + playerScript);
-        
+
+        // Create a new UI Manager
+        ui_Manager = Instantiate(Resources.Load<GameObject>("Prefabs/UI/UI Manager")).GetComponent<UI_Manager>();
 
         ControlMode.gameManager = this;
         controlModeDict = new Dictionary<ControlModeEnum, ControlMode>
@@ -67,5 +69,6 @@ public class GameManager : MonoBehaviour
     {
         get { return playerManager.GetPlayer(playerNo); }
     }
-    
+
+    public UI_Manager Ui_Manager { get => ui_Manager; }
 }

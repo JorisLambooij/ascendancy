@@ -37,7 +37,8 @@
             "startTech": false,
             "unitsUnlocked": [
                 "ScriptableObjects/Buildings/Production Buildings/Iron Mine/Iron Mine.asset",
-                "ScriptableObjects/Buildings/Production Buildings/Blacksmith/Blacksmith.asset"
+                "ScriptableObjects/Buildings/Production Buildings/Blacksmith/Blacksmith.asset",
+                "ScriptableObjects/Buildings/Production Buildings/Gold Mine/Gold Mine.asset"
             ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": [

@@ -37,7 +37,7 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
         // Close the Tech Screen.
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            GameManager.Instance.ui_Manager.SetScreen("Tech Screen", false);
+            GameManager.Instance.Ui_Manager.SetScreen("Tech Screen", false);
             //GetComponentInParent<UI_Canvas>().CloseAllScreens();
             //gameObject.SetActive(false);
         }

@@ -73,8 +73,8 @@ public class Entity : MonoBehaviour
 
         controller = transform.GetComponent<EntityOrderController>();
 
-        if (controller == null)
-            Debug.LogError("EntityController not found on " + transform.name);
+        //if (controller == null)
+        //    Debug.LogWarning("EntityController not found on " + transform.name);
 
         // Create a map marker for this Entity
         minimapMarker = entityInfo.MinimapMarker;
