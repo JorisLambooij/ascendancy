@@ -17,4 +17,9 @@ public class UI_Screen : MonoBehaviour
     {
         gameObject.SetActive(on);
     }
+
+    public bool GetStatus
+    {
+        get => gameObject.activeSelf;
+    }
 }

@@ -313,7 +313,13 @@ public class GameMode : ControlMode
     {
         // toggle build menu
         if (Input.GetMouseButtonUp(1))
-            gameManager.ui_Manager.OpenScreen("Build Menu");
+        {
+            string buildMenuName = "Build Menu";
+            if (!gameManager.Ui_Manager.GetScreenStatus(buildMenuName))
+                gameManager.Ui_Manager.OpenScreen(buildMenuName);
+            else
+                gameManager.Ui_Manager.SetScreen(buildMenuName, false);
+        }
     }
 
     /// <summary>

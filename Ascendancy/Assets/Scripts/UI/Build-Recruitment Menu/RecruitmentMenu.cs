@@ -46,10 +46,10 @@ public class RecruitmentMenu : MonoBehaviour, ListSubscriber<EntitySelector>
 
         // Open the Recruitment Menu when there are recruitments available
         if (recrList.Count > 0)
-            GameManager.Instance.ui_Manager.OpenScreen("Recruitment Menu", false);
+            GameManager.Instance.Ui_Manager.OpenScreen("Recruitment Menu", false);
         // Close it otherwise
         else
-            GameManager.Instance.ui_Manager.SetScreen("Recruitment Menu", false);
+            GameManager.Instance.Ui_Manager.SetScreen("Recruitment Menu", false);
 
         // Fill each Category with the Recruitment Options of the recruiting Entity.
         pool.Generate(recrList.Count);
