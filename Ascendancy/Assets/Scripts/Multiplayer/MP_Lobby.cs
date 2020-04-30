@@ -29,19 +29,29 @@ public class MP_Lobby : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        DontDestroyOnLoad(this);
         playerDict = new Dictionary<int, Player>();
         playerList = GameObject.Find("Player List").transform;
         playersInLobby = new List<PlayerInfo>();
         playerCount = 0;
         Debug.Assert(playerColors.Count >= maxPlayers, "Not enough Player Colors!");
 
+        Button buttonReadyStart = GameObject.Find("StartGameButton").GetComponent<Button>();
+
         MPMenu_NetworkRoomManager roomMngr = GameObject.Find("NetworkManager").GetComponent<MPMenu_NetworkRoomManager>();
         if (roomMngr.mode == NetworkManagerMode.Host)
+        {
             isServer = true;
+            buttonReadyStart.GetComponentInChildren<Text>().text = "Start Game";
+        }
+        else
+        {
+            buttonReadyStart.GetComponentInChildren<Text>().text = "Ready";
+        }
 
         Debug.Log("I am " + roomMngr.mode.ToString());
 
-        DontDestroyOnLoad(this);
+        
 
         Player.OnMessage += OnPlayerMessage;
 
@@ -134,6 +144,45 @@ public class MP_Lobby : MonoBehaviour
         Debug.Log("Updating player numbers");
     }
 
+    public void ButtonReadyStartCLick()
+    {
+        if (isServer)
+        {
+            //Button Start
+            LoadGame();
+        }
+        else
+        {
+            Button buttonReadyStart = GameObject.Find("StartGameButton").GetComponent<Button>();
+
+            //Button Ready
+            NetworkRoomPlayer nwrPlayer = localPlayer.GetComponent<NetworkRoomPlayer>();
+            if (nwrPlayer.readyToBegin)
+            {
+                nwrPlayer.readyToBegin = false;
+
+                //change color of button to red
+                ColorBlock cb = new ColorBlock
+                {
+                    normalColor = Color.red
+                };
+                buttonReadyStart.colors = cb;
+            }
+            else
+            {
+                nwrPlayer.readyToBegin = true;
+
+                //change color of button to green
+                ColorBlock cb = new ColorBlock
+                {
+                    normalColor = Color.red
+                };
+                buttonReadyStart.colors = cb;
+            }
+
+        }
+    }
+
     public void LoadGame()
     {
         PlayerEntryUI[] entries = playerList.GetComponentsInChildren<PlayerEntryUI>();
@@ -197,7 +246,5 @@ public class MP_Lobby : MonoBehaviour
 
         player.GetComponent<NetworkRoomPlayer>().connectionToClient.Disconnect();
 
-        //MPMenu_NetworkRoomManager roomMngr = GameObject.Find("NetworkManager").GetComponent<MPMenu_NetworkRoomManager>();
-        //roomMngr.
     }
 }

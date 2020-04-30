@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
 using System;
+using UnityEngine.Events;
 
 public class Player : NetworkBehaviour
 {
@@ -26,9 +27,17 @@ public class Player : NetworkBehaviour
 
     public static event Action<Player, ChatMessage> OnMessage;
 
+    //Events
+    public UnityEvent nameChangeEvent;
+
+
     // When the NetworkManager creates this Player, do this
     private void Awake()
     {
+        PrefManager prefManager = GameObject.Find("PlayerPrefManager").GetComponent<PrefManager>();
+        prefManager.RegisterPlayer(this);
+        playerName = prefManager.GetPlayerName();
+
         PlayerEconomy = GetComponent<Economy>();
         TechLevel = GetComponent<TechnologyLevel>();
 
@@ -40,6 +49,7 @@ public class Player : NetworkBehaviour
         Transform playerManager = GameObject.Find("PlayerManager").transform;
         transform.SetParent(playerManager);
         playerManager.GetComponent<MP_Lobby>().AddPlayer(this);
+
 
 
         //GameObject.Find("AddPlayer Button").GetComponent<Button>().onClick.AddListener(InvokeCmdNameChange);
@@ -59,9 +69,12 @@ public class Player : NetworkBehaviour
         //this.playerColor = newColor;
     }
 
+    #region playerName
+
     private void OnNameChange(string oldName, string newName)
     {
         Debug.Log("Name Changed by Server: " + newName);
+        nameChangeEvent.Invoke();
     }
     
     public void InvokeCmdNameChange()
@@ -75,6 +88,8 @@ public class Player : NetworkBehaviour
         Debug.Log("Client changes name to " + newName);
         playerName = newName;
     }
+
+    #endregion
 
     #region Chat
 
