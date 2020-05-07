@@ -5,10 +5,9 @@ using System.Net;
 using UnityEngine;
 using Mirror.Discovery;
 using UnityEngine.Events;
+using Mirror;
 
-namespace Mirror.Discovery
-{
-    [Serializable]
+[Serializable]
     public class MPMenu_ServerFoundUnityEvent : UnityEvent<MPMenu_ServerResponse> { };
 
     [DisallowMultipleComponent]
@@ -139,5 +138,3 @@ namespace Mirror.Discovery
             Debug.Log("Server Found!");
         }
     }
-
-}

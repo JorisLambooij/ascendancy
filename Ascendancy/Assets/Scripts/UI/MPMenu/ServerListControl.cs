@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using Mirror.Discovery;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -135,6 +136,7 @@ public class ServerListControl : MonoBehaviour
         try
         {
             NetworkManager.singleton.StartClient(serverList[selectedServerId].uri);
+            GameObject.Find("NetworkManager").GetComponent<MPMenu_NetworkDiscovery>().StopDiscovery();
         }
         catch (KeyNotFoundException e)
         {

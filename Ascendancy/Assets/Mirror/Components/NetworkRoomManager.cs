@@ -290,6 +290,11 @@ namespace Mirror
                     newRoomGameObject = Instantiate(roomPlayerPrefab.gameObject, Vector3.zero, Quaternion.identity);
 
                 NetworkServer.AddPlayerForConnection(conn, newRoomGameObject);
+
+                if (conn.identity.isClient)
+                {
+
+                }
             }
             else
                 OnRoomServerAddPlayer(conn);

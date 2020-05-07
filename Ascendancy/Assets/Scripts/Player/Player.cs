@@ -34,10 +34,6 @@ public class Player : NetworkBehaviour
     // When the NetworkManager creates this Player, do this
     private void Awake()
     {
-        PrefManager prefManager = GameObject.Find("PlayerPrefManager").GetComponent<PrefManager>();
-        prefManager.RegisterPlayer(this);
-        playerName = prefManager.GetPlayerName();
-
         PlayerEconomy = GetComponent<Economy>();
         TechLevel = GetComponent<TechnologyLevel>();
 
@@ -49,8 +45,6 @@ public class Player : NetworkBehaviour
         Transform playerManager = GameObject.Find("PlayerManager").transform;
         transform.SetParent(playerManager);
         playerManager.GetComponent<MP_Lobby>().AddPlayer(this);
-
-
 
         //GameObject.Find("AddPlayer Button").GetComponent<Button>().onClick.AddListener(InvokeCmdNameChange);
     }
@@ -87,6 +81,17 @@ public class Player : NetworkBehaviour
     {
         Debug.Log("Client changes name to " + newName);
         playerName = newName;
+        CmdNameChange(newName);
+    }
+
+    [ClientRpc]
+    public void RpcLookupName()
+    {
+        PrefManager prefManager = GameObject.Find("PlayerPrefManager").GetComponent<PrefManager>();
+        name = prefManager.GetPlayerName();
+        Debug.Log("playername is now " + name);
+        if (hasAuthority)
+            CmdNameChange(name);
     }
 
     #endregion
@@ -106,9 +111,10 @@ public class Player : NetworkBehaviour
         OnMessage?.Invoke(this, message);
     }
 
-    override public void OnStartLocalPlayer()
+    public override void OnStartClient()
     {
-        GetComponentInParent<MP_Lobby>().LocalPlayerInitialization(this);
+        GetComponentInParent<MP_Lobby>().NetworkPlayerInitialization(this);
+        base.OnStartClient();
     }
 
     #endregion

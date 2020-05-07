@@ -13,7 +13,7 @@ public class MP_Lobby : MonoBehaviour
 
     public List<PlayerInfo> PlayersInLobby { get => playersInLobby; }
     public bool isServer = false;
-    
+
     public MessageWindow messageWindow;
 
     private Transform playerList;
@@ -21,6 +21,7 @@ public class MP_Lobby : MonoBehaviour
     private int playerCount;
     private Dictionary<int, Player> playerDict;
 
+    public static MP_Lobby singleton { get; private set; }
 
     private MPMenu_NetworkRoomManager roomMngr;
 
@@ -28,6 +29,23 @@ public class MP_Lobby : MonoBehaviour
 
     // Start is called before the first frame update
     void Awake()
+    {
+        if (singleton != null)
+        {
+            Debug.Log("Destroying second MP_Lobby");
+            singleton.messageWindow = messageWindow;
+            //singleton.Awake(); this line will just crash unity editor as whole (I am kind of proud tho)
+            singleton.Initialize();
+            Destroy(gameObject);
+        }
+        else
+        {
+            singleton = this;
+            Initialize();
+        }
+    }
+
+    public void Initialize()
     {
         DontDestroyOnLoad(this);
         playerDict = new Dictionary<int, Player>();
@@ -51,10 +69,9 @@ public class MP_Lobby : MonoBehaviour
 
         Debug.Log("I am " + roomMngr.mode.ToString());
 
-        
+
 
         Player.OnMessage += OnPlayerMessage;
-
     }
 
     // Update is called once per frame
@@ -67,9 +84,43 @@ public class MP_Lobby : MonoBehaviour
     {
         if (playerCount >= maxPlayers)
             return;
+    }
 
+
+    public void NetworkPlayerInitialization(Player player)
+    {
         Transform playerEntry = Instantiate(playerEntryPrefab, playerList).transform;
         PlayerEntryUI entryUI = playerEntry.GetComponent<PlayerEntryUI>();
+
+        Button kickPlayerButton = playerEntry.GetComponentInChildren<Button>();
+
+        if (player.hasAuthority) //if true, this is the local player
+        {
+            localPlayer = player;
+
+            PrefManager prefManager = GameObject.Find("PlayerPrefManager").GetComponent<PrefManager>();
+            prefManager.RegisterPlayer(player);
+
+            Destroy(kickPlayerButton.gameObject);
+
+            player.playerName = prefManager.GetPlayerName();
+
+            Debug.Log(player.playerName + " connected");
+        }
+        else // if false, this is a client player
+        {
+            if (isServer)
+                kickPlayerButton.onClick.AddListener(() => kickPlayerButtonListener(player));
+            else
+                Destroy(kickPlayerButton.gameObject);
+
+
+
+            if (isServer)
+                player.RpcLookupName();
+
+            Debug.Log("Remote player connected"); //we do not have the correct playername at this time
+        }
 
         entryUI.player = player;
         entryUI.PlayerColorIndex = playerCount;
@@ -79,21 +130,6 @@ public class MP_Lobby : MonoBehaviour
         player.playerNo = entryUI.PlayerNo;
 
         playerDict.Add(player.playerNo, player);
-
-        if (localPlayer != null)
-            PrintChatMessage(new ChatMessage("SYSTEM", player.playerName + " connected",Color.gray));
-
-        Button kickPlayerButton = playerEntry.GetComponentInChildren<Button>();
-        if (isServer)
-            kickPlayerButton.onClick.AddListener(() => kickPlayerButtonListener(player));
-        else
-            Destroy(kickPlayerButton.gameObject);
-    }
-
-    public void LocalPlayerInitialization(Player player)
-    {
-        localPlayer = player;
-        Debug.Log(player.playerName + " connected as a local player");
     }
 
     public void RemovePlayer(Player player)
@@ -238,13 +274,11 @@ public class MP_Lobby : MonoBehaviour
     public void ConstructPlayerData()
     {
 
-    }    
+    }
 
     private void kickPlayerButtonListener(Player player)
     {
         Debug.Log("Trying to kick " + player.playerName);
-
         player.GetComponent<NetworkRoomPlayer>().connectionToClient.Disconnect();
-
     }
 }
