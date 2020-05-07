@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class TopRowButtonBinder : MonoBehaviour
 {
+    public ServerListControl controlList;
+
     MPMenu_NetworkRoomManager netMngr;
     MPMenu_NetworkDiscovery netDisc;
 
@@ -15,6 +17,7 @@ public class TopRowButtonBinder : MonoBehaviour
             GameObject go = GameObject.Find("NetworkManager");
             netMngr = go.GetComponent<MPMenu_NetworkRoomManager>();
             netDisc = go.GetComponent<MPMenu_NetworkDiscovery>();
+            netDisc.control = controlList;
         }
     }
 
