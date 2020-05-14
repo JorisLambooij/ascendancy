@@ -10,11 +10,11 @@ public class Player : NetworkBehaviour
 {
     [SyncVar]
     public int playerNo;
-    [SyncVar(hook =nameof(OnNameChange))]
+    [SyncVar(hook = nameof(OnNameChange))]
     public string playerName;
-    [SyncVar(hook=nameof(OnColorChange))]
+    [SyncVar(hook = nameof(OnColorChange))]
     public Color playerColor;
-    
+
     private Economy economy;
     private TechnologyLevel techLevel;
     private Transform buildingsGO;
@@ -46,7 +46,6 @@ public class Player : NetworkBehaviour
         transform.SetParent(playerManager);
         playerManager.GetComponent<MP_Lobby>().AddPlayer(this);
 
-        //GameObject.Find("AddPlayer Button").GetComponent<Button>().onClick.AddListener(InvokeCmdNameChange);
     }
 
     public void Initialize()
@@ -57,11 +56,15 @@ public class Player : NetworkBehaviour
         TechLevel.Initialize();
     }
 
+    #region playerColor
+
     private void OnColorChange(Color oldColor, Color newColor)
     {
         Debug.Log("Color Change: " + newColor);
-        //this.playerColor = newColor;
+        this.playerColor = newColor;
     }
+
+    #endregion
 
     #region playerName
 
@@ -70,10 +73,12 @@ public class Player : NetworkBehaviour
         Debug.Log("Name Changed by Server: " + newName);
         nameChangeEvent.Invoke();
     }
-    
+
     public void InvokeCmdNameChange()
     {
-        CmdNameChange(playerName);
+        Debug.Log("InvokeCmdNameChange");
+        if (hasAuthority)
+            CmdNameChange(playerName);
     }
 
     [Command]
@@ -81,17 +86,18 @@ public class Player : NetworkBehaviour
     {
         Debug.Log("Client changes name to " + newName);
         playerName = newName;
-        CmdNameChange(newName);
+        if (hasAuthority)
+            CmdNameChange(newName);
     }
 
     [ClientRpc]
     public void RpcLookupName()
     {
         PrefManager prefManager = GameObject.Find("PlayerPrefManager").GetComponent<PrefManager>();
-        name = prefManager.GetPlayerName();
-        Debug.Log("playername is now " + name);
+        playerName = prefManager.GetPlayerName();
+        Debug.Log("playername is now " + playerName);
         if (hasAuthority)
-            CmdNameChange(name);
+            CmdNameChange(playerName);
     }
 
     #endregion

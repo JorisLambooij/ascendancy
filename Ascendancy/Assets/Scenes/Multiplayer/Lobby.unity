@@ -1986,6 +1986,7 @@ MonoBehaviour:
   - {r: 0.8679245, g: 0, b: 0, a: 1}
   - {r: 0.6392157, g: 0, b: 0.7924528, a: 1}
   - {r: 0, g: 0.8679245, b: 0.8679245, a: 1}
+  - {r: 0.627451, g: 0.3529412, b: 0, a: 1}
   playerEntryPrefab: {fileID: 7794026143633133344, guid: 8d6527d46a80b5c4f92bde663d87d85c,
     type: 3}
   isServer: 0

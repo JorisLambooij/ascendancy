@@ -34,7 +34,6 @@ public class MP_Lobby : MonoBehaviour
         {
             Debug.Log("Destroying second MP_Lobby");
             singleton.messageWindow = messageWindow;
-            //singleton.Awake(); this line will just crash unity editor as whole (I am kind of proud tho)
             singleton.Initialize();
             Destroy(gameObject);
         }
@@ -101,7 +100,13 @@ public class MP_Lobby : MonoBehaviour
             PrefManager prefManager = GameObject.Find("PlayerPrefManager").GetComponent<PrefManager>();
             prefManager.RegisterPlayer(player);
 
+            #region UI
+
             Destroy(kickPlayerButton.gameObject);
+
+            entryUI.GetComponentInChildren<Dropdown>().interactable = true; //should be already, but better to be sure
+
+            #endregion
 
             player.playerName = prefManager.GetPlayerName();
 
@@ -109,12 +114,17 @@ public class MP_Lobby : MonoBehaviour
         }
         else // if false, this is a client player
         {
+
+            #region UI
             if (isServer)
                 kickPlayerButton.onClick.AddListener(() => kickPlayerButtonListener(player));
             else
                 Destroy(kickPlayerButton.gameObject);
 
+            //you should only be able to change your own color
+            entryUI.GetComponentInChildren<Dropdown>().interactable = false;
 
+            #endregion
 
             if (isServer)
                 player.RpcLookupName();

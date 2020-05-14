@@ -413,6 +413,8 @@ MonoBehaviour:
       m_Image: {fileID: 21300000, guid: c1a10c8e0344d51448793aa7198b312c, type: 3}
     - m_Text: 7
       m_Image: {fileID: 21300000, guid: 1cc45679fcda1f0419629fbe010df0f7, type: 3}
+    - m_Text: 8
+      m_Image: {fileID: 21300000, guid: 1594b6370a7681f4b8e1688c7bc47b89, type: 3}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -1120,7 +1122,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 2}
-  m_SizeDelta: {x: 0, y: 150}
+  m_SizeDelta: {x: 0, y: 200}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1827925136665034295
 CanvasRenderer:
