@@ -12,8 +12,10 @@ public class Player : NetworkBehaviour
     public int playerNo;
     [SyncVar(hook = nameof(OnNameChange))]
     public string playerName;
-    [SyncVar(hook = nameof(OnColorChange))]
+    [SyncVar]
     public Color playerColor;
+    [SyncVar]
+    public int playerColorIndex;
 
     private Economy economy;
     private TechnologyLevel techLevel;
@@ -28,7 +30,8 @@ public class Player : NetworkBehaviour
     public static event Action<Player, ChatMessage> OnMessage;
 
     //Events
-    public UnityEvent nameChangeEvent;
+    public UnityEvent nameChangeEvent = new UnityEvent();
+    public UnityEvent colorChangeEvent = new UnityEvent();
 
 
     // When the NetworkManager creates this Player, do this
@@ -58,10 +61,13 @@ public class Player : NetworkBehaviour
 
     #region playerColor
 
-    private void OnColorChange(Color oldColor, Color newColor)
+    [Command]
+    public void CmdColorChange(Color newColor, int index)
     {
-        Debug.Log("Color Change: " + newColor);
         this.playerColor = newColor;
+        this.playerColorIndex = index;
+        colorChangeEvent.Invoke();
+        Debug.Log("Player " + playerName +" changes color to " + newColor);
     }
 
     #endregion

@@ -13,7 +13,7 @@ public class PlayerEntryUI : NetworkBehaviour
     private int playerNo;
     private Dropdown colorDropdown;
     [SyncVar]
-    private int colorIndexSync;
+    public int colorIndexSync; //remember to make private again
     private MP_Lobby lobby;
 
     void Awake()
@@ -25,6 +25,7 @@ public class PlayerEntryUI : NetworkBehaviour
     {
         playerNameText.text = player.playerName;
         playerNameText.color = player.playerColor;
+        this.PlayerColorIndex = player.playerColorIndex;
     }
 
     public PlayerInfo InfoFromEntry
@@ -37,7 +38,8 @@ public class PlayerEntryUI : NetworkBehaviour
         }
     }
 
-    public int PlayerNo {
+    public int PlayerNo
+    {
         get => playerNo;
         set
         {
@@ -46,37 +48,20 @@ public class PlayerEntryUI : NetworkBehaviour
         }
     }
 
-
     public int PlayerColorIndex
     {
         get => colorDropdown.value;
         set => colorDropdown.value = value;
     }
 
-    
     public void UpdateColor()
     {
         Debug.Log("I wanna change color!");
-        
-        //player.playerName = "Player " + PlayerColorIndex;
-        player.playerColor = lobby.playerColors[PlayerColorIndex];
 
-        colorIndexSync = PlayerColorIndex;
-        //CmdUpdateColor(PlayerColorIndex);
-    }
-
-    [Command]
-    private void CmdUpdateColor(int colorIndex)
-    {
-        Debug.Log("Client requesting Color change: " + colorIndex);
-
-    }
-
-    [ClientRpc]
-    private void RpcUpdateColor(int colorIndex)
-    {
-        Debug.Log("Color change by server: " + colorIndex);
-        PlayerColorIndex = colorIndex;
-        UpdateColor();
+        if (player.hasAuthority)
+        {
+            player.CmdColorChange(lobby.playerColors[PlayerColorIndex], PlayerColorIndex);
+            Debug.Log("Color changed");
+        }
     }
 }

@@ -117,7 +117,7 @@ public class MP_Lobby : MonoBehaviour
 
             #region UI
             if (isServer)
-                kickPlayerButton.onClick.AddListener(() => kickPlayerButtonListener(player));
+                kickPlayerButton.onClick.AddListener(() => KickPlayerButtonListener(player));
             else
                 Destroy(kickPlayerButton.gameObject);
 
@@ -286,7 +286,7 @@ public class MP_Lobby : MonoBehaviour
 
     }
 
-    private void kickPlayerButtonListener(Player player)
+    private void KickPlayerButtonListener(Player player)
     {
         Debug.Log("Trying to kick " + player.playerName);
         player.GetComponent<NetworkRoomPlayer>().connectionToClient.Disconnect();
