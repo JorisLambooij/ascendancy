@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
@@ -67,11 +68,13 @@ public class Entity : MonoBehaviour
     protected virtual void Start()
     {
         // Create the Selection Marker
-        GameObject selectionMarkerPrefab = Resources.Load("Prefabs/SelectionMarker") as GameObject;
+        GameObject selectionMarkerPrefab = Resources.Load("Prefabs/UI/SelectionMarker") as GameObject;
         Instantiate(selectionMarkerPrefab, this.transform);
 
         controller = transform.GetComponent<EntityOrderController>();
-        Debug.Assert(controller != null, "EntityController not found on " + transform.name);
+
+        //if (controller == null)
+        //    Debug.LogWarning("EntityController not found on " + transform.name);
 
         // Create a map marker for this Entity
         minimapMarker = entityInfo.MinimapMarker;
@@ -81,7 +84,7 @@ public class Entity : MonoBehaviour
         if (minimapMarker != null)
         {
             markerObject.GetComponent<SpriteRenderer>().sprite = minimapMarker;
-            Debug.Log(markerObject.GetComponent<SpriteRenderer>().sprite.name);
+            //Debug.Log(markerObject.GetComponent<SpriteRenderer>().sprite.name);
         }
         Instantiate(markerObject, this.transform);
 
@@ -89,8 +92,15 @@ public class Entity : MonoBehaviour
         this.currentHealth = entityInfo.MaxHealth;
 
         // Copy all features as new objects, and immediately sort them by priority.
-        EntityFeature[] featuresCopy = new EntityFeature[entityInfo.EntityFeatures.Count];
-        entityInfo.EntityFeatures.CopyTo(featuresCopy);
+        int count = entityInfo.EntityFeatures.Count;
+        EntityFeature[] featuresCopy = new EntityFeature[count];
+
+        for (int i = 0; i < count; i++)
+        {
+            EntityFeature f = Instantiate(entityInfo.EntityFeatures[i]);
+            featuresCopy[i] = f;
+        }
+        //entityInfo.EntityFeatures.CopyTo(featuresCopy);
         
         features = featuresCopy.OrderBy(f => -f.clickPriority).ToList();
 

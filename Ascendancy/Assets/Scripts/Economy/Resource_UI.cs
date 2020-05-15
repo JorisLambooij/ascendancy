@@ -44,11 +44,11 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
         player = GameManager.Instance.playerScript;
 
         resourceEntries = new Dictionary<Resource, Resource_UI_Entry>();
+
+        player.PlayerEconomy.resourceStorage.Subscribe(this);
+        player.PlayerEconomy.availableResources.Subscribe(this);
         
-        player.economy.resourceStorage.Subscribe(this);
-        player.economy.availableResources.Subscribe(this);
-        
-        foreach (KeyValuePair<Resource, float> kvp in player.economy.resourceStorage.AsDictionary)
+        foreach (KeyValuePair<Resource, float> kvp in player.PlayerEconomy.resourceStorage.AsDictionary)
             InstantiateNewField(kvp.Key, kvp.Value);
     }
 
@@ -64,7 +64,7 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
     // Update is called once per frame
     void Update()
     {
-        foreach (KeyValuePair<Resource, float> kvp in player.economy.resourceStorage.AsDictionary)
+        foreach (KeyValuePair<Resource, float> kvp in player.PlayerEconomy.resourceStorage.AsDictionary)
         {
             // Update the count of each resource
             if (!resourceEntries.ContainsKey(kvp.Key))

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ContextMenuHandler : MonoBehaviour
+public class ContextMenuHandler : UI_Screen
 {
-
     private Vector3[] conMenuButtonPos;
     Image centerImage;
     Button[] buttons;

@@ -37,7 +37,7 @@ public class GameMode : ControlMode
         selectionBox.enabled = false;
 
         //contextMenuCanvas = GameObject.Find("Canvas_ConMenu").GetComponent<Canvas>();
-        conMenuHandler = GameObject.Find("Canvas_ConMenu").GetComponent<ContextMenuHandler>();
+        conMenuHandler = GameObject.Find("Context Menu").GetComponent<ContextMenuHandler>();
 
         formationLine = GameObject.Find("FormationLine").GetComponent<LineRenderer>();
 
@@ -301,7 +301,6 @@ public class GameMode : ControlMode
                     {
                         bool enqueue = Input.GetKey(KeyCode.LeftShift);
                         es.ParentEntity.ClickOrder(hit, enqueue);
-                        Debug.Log("click " + es.ParentEntity.gameObject.name);
                         //u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
                     }
                 else
@@ -314,7 +313,13 @@ public class GameMode : ControlMode
     {
         // toggle build menu
         if (Input.GetMouseButtonUp(1))
-            gameManager.UICanvas.ToggleBuildMenu();
+        {
+            string buildMenuName = "Build Menu";
+            if (!gameManager.Ui_Manager.GetScreenStatus(buildMenuName))
+                gameManager.Ui_Manager.OpenScreen(buildMenuName);
+            else
+                gameManager.Ui_Manager.SetScreen(buildMenuName, false);
+        }
     }
 
     /// <summary>
@@ -339,8 +344,7 @@ public class GameMode : ControlMode
                     //zero button as default                                     
                     if (e == null)
                     {
-                        Debug.LogError("Entity Selector is NULL!");
-                        Debug.LogError("(FAIL)Name is " + hit.transform.name);
+                        Debug.LogError("Entity Selector is NULL! (FAIL)Name is " + hit.transform.name);
                     }
                     else if (e.GetComponentInParent<Entity>().GetType() == typeof(Unit))
                     {

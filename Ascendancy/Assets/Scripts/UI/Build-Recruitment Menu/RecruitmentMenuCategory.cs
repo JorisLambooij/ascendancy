@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(GOPool))]
 public class RecruitmentMenuCategory : MenuCategory
 {
+    [SerializeField]
     protected GOPool pool;
 
     public Entity SelectedRecruiter;
@@ -13,13 +14,12 @@ public class RecruitmentMenuCategory : MenuCategory
     {
         base.Start();
 
-        pool = GetComponent<GOPool>();
+        optionsGO = this.gameObject;
 
         // Assign this as reference to all the options in this category
         RecruitmentOption[] recruitmentOptions = transform.GetComponentsInChildren<RecruitmentOption>();
         foreach (RecruitmentOption option in recruitmentOptions)
             option.Category = this;
-        
     }
 
     public void SelectRecruiter(Entity recruiter)
@@ -40,9 +40,7 @@ public class RecruitmentMenuCategory : MenuCategory
         {
             RecruitmentOption option = optionGO.GetComponent<RecruitmentOption>();
             option.Unit = recruitmentFeature.recruitableUnits[i];
-            Debug.Log("Set Category");
             option.Category = this;
-
             i++;
         }
     }

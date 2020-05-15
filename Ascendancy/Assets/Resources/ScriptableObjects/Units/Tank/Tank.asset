@@ -22,10 +22,13 @@ MonoBehaviour:
   MinimapMarker: {fileID: 0}
   ViewDistance: 10
   ContextMenuOptions: 0
-  EntityType: 0
+  Construction_Method: 0
+  Category: Cavalry
   selectionPriority: 2
   BuildTime: 0
-  ResourceAmount: []
+  ResourceAmount:
+  - resource: {fileID: 11400000, guid: a01bdeeab68f31f488705611ebf4a82b, type: 2}
+    amount: 100
   EntityFeatures:
   - {fileID: 11400000, guid: e386352aebb02e445958baa451193ebb, type: 2}
   - {fileID: 11400000, guid: bc1a033dab5d3bb41bef84a6e1288422, type: 2}

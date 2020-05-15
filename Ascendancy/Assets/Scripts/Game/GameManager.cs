@@ -16,18 +16,30 @@ public class GameManager : MonoBehaviour
     public ControlMode controlMode;
     public World world;
     public TileOccupationMap occupationMap;
-    public UI_Canvas UICanvas;
+    private UI_Manager ui_Manager;
 
     // Might need refactoring
     public Dictionary<ControlModeEnum, ControlMode> controlModeDict { get; protected set; }
-    
+
+    private MP_Lobby playerManager;
+
     // Start is called before the first frame update
     void Awake()
     {
         instance = this;
-        
-        playerScript = GameObject.Find("PlayerManager").GetComponent<PlayerLoader>().LoadPlayersIntoScene(playerNo);
-        
+
+        playerManager = GameObject.Find("PlayerManager").GetComponent<MP_Lobby>();
+
+        Player[] allPlayers = playerManager.GetComponentsInChildren<Player>();
+        foreach(Player player in allPlayers)
+            if (player.playerNo == playerNo)
+                playerScript = player;   //.GetComponent<PlayerLoader>().LoadPlayersIntoScene(playerNo);
+
+        Debug.Log("Found Player: " + playerScript);
+
+        // Create a new UI Manager
+        ui_Manager = Instantiate(Resources.Load<GameObject>("Prefabs/UI/UI Manager")).GetComponent<UI_Manager>();
+
         ControlMode.gameManager = this;
         controlModeDict = new Dictionary<ControlModeEnum, ControlMode>
         {
@@ -37,7 +49,7 @@ public class GameManager : MonoBehaviour
         };
         SwitchToMode(ControlModeEnum.gameMode);
     }
-
+    
     // Update is called once per frame
     void Update()
     {
@@ -55,7 +67,8 @@ public class GameManager : MonoBehaviour
 
     public Player GetPlayer
     {
-        get { return GameObject.Find("Player " + playerNo).GetComponent<Player>(); }
+        get { return playerManager.GetPlayer(playerNo); }
     }
-    
+
+    public UI_Manager Ui_Manager { get => ui_Manager; }
 }

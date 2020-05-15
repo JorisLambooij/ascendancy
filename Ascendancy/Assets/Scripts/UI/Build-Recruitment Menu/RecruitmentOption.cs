@@ -36,7 +36,7 @@ public class RecruitmentOption : MonoBehaviour
         
         RecruitmentFeature recruitmentF = Category.SelectedRecruiter.FindFeature<RecruitmentFeature>();
         Debug.Assert(recruitmentF != null, "Selected Entity cannot recruit!");
-
+        Debug.Log("Recruiting from " + recruitmentF.entity.name);
         recruitmentF.AddToQueue(Unit);
     }
 

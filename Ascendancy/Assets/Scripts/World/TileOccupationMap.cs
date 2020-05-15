@@ -21,8 +21,8 @@ public class TileOccupationMap : MonoBehaviour
 
     public bool IsTileFree(int tileX, int tileY, TileOccupation.OccupationLayer layer = TileOccupation.OccupationLayer.Building)
     {
-        Debug.Assert(tileX > 0 && tileX < occupationMap.GetLength(0), "Something wrong in TileOccupationMap. X: " + tileX);
-        Debug.Assert(tileY > 0 && tileY < occupationMap.GetLength(1), "Something wrong in TileOccupationMap. Y: " + tileY);
+        Debug.Assert(tileX >= 0 && tileX < occupationMap.GetLength(0), "Out of bounds of TileOccupationMap. X: " + tileX);
+        Debug.Assert(tileY >= 0 && tileY < occupationMap.GetLength(1), "Out of bounds of TileOccupationMap. Y: " + tileY);
         return occupationMap[tileX, tileY].occupation[layer] == null;
     }
     

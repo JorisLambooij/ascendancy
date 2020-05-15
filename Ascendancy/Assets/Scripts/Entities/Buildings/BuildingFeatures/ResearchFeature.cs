@@ -9,6 +9,7 @@ public class ResearchFeature : EntityFeature
 
     public override void Update10Override()
     {
-        entity.Owner.techLevel.AddResearchPoints(researchProduced);
+        //Debug.Log("Researching " + entity.Owner.gameObject.name + " " + researchProduced);
+        entity.Owner.TechLevel.AddResearchPoints(researchProduced);
     }
 }

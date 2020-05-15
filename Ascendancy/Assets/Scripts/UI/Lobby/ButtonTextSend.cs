@@ -6,13 +6,13 @@ using UnityEngine.UI;
 public class ButtonTextSend : MonoBehaviour
 {
     public InputField inputBox;
-    public MessageWindow msgWindow;
+    public MP_Lobby lobby;
 
     public void OnClick()
     {
         if (inputBox.text != "")
         {
-            msgWindow.ReceiveMessage("PLAYERNAME", Color.yellow, inputBox.text);
+            lobby.SendChatMessage(inputBox.text);
             inputBox.text = "";
         }
     }

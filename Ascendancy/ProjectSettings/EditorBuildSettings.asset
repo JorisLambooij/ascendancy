@@ -5,21 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 0
-    path: Assets/Scenes/MainMenu.unity
-    guid: a7aacdad524fbe649812e531ac61edce
-  - enabled: 0
-    path: Assets/Scenes/DEV_Units.unity
-    guid: 30f6af72fb30bf0469860a7b8e9a6cc2
-  - enabled: 0
+  - enabled: 1
+    path: Assets/Scenes/Multiplayer/MPMenu.unity
+    guid: 46015ae4469a2744c90d05ff578307e2
+  - enabled: 1
+    path: Assets/Scenes/Multiplayer/Lobby.unity
+    guid: 4c364493e7ba43c4691f86f28c6fa151
+  - enabled: 1
     path: Assets/Scenes/LoadScreen.unity
     guid: 8d0a2e4e8344592479264c8c08d7fc91
-  - enabled: 0
-    path: Assets/Scenes/MapEditor.unity
-    guid: e034c2534bbce514bab632fa22a22efd
   - enabled: 1
     path: Assets/Scenes/DEV_Terrain_New.unity
     guid: ad1e6dbf2fb4e2448b9cd36bc2e2b3fb

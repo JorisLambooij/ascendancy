@@ -23,7 +23,8 @@ public class BuildingPlacementMode : ControlMode
         preview = GameObject.Find("Building Preview");
         if (preview == null)
             Debug.Log("BuildingPreview not found!");
-        preview.SetActive(false);
+        else
+            preview.SetActive(false);
     }
 
     public override void HandleInput()
@@ -58,7 +59,6 @@ public class BuildingPlacementMode : ControlMode
                 if (validLocation)
                 {
                     // valid spot, place building
-                    Debug.Log("Placing a " + Building.name + " at: " + preview.transform.position);
                     GameObject newBuildingGO = Building.CreateInstance(gameManager.GetPlayer, preview.transform.position);
                     Entity b = newBuildingGO.GetComponent<Entity>();
                     

@@ -14,13 +14,11 @@ public class Economy : MonoBehaviour
 
         foreach (Resource resource in availableResources.AsList)
             resourceStorage.Add(resource, 0);
-
-        Debug.Log("init economy " + (resourceStorage == null));
     }
 
     public void NewAvailableResource(Resource r)
     {
-        Debug.Log("New Resource: " + r.resourceName);
+        //Debug.Log("New Resource: " + r.resourceName);
         availableResources.Add(r);
         resourceStorage.Add(r, 0);
     }

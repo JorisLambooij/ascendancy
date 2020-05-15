@@ -8,7 +8,7 @@
             "cost": 0,
             "startTech": true,
             "unitsUnlocked": [
-                "ScriptableObjects/Units/Dummy Tank.asset"
+                "ScriptableObjects/Buildings/Command Center/Command Center.asset"
             ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
@@ -35,7 +35,11 @@
             ],
             "cost": 1000,
             "startTech": false,
-            "unitsUnlocked": [],
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Production Buildings/Iron Mine/Iron Mine.asset",
+                "ScriptableObjects/Buildings/Production Buildings/Blacksmith/Blacksmith.asset",
+                "ScriptableObjects/Buildings/Production Buildings/Gold Mine/Gold Mine.asset"
+            ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": [
                 "ScriptableObjects/Resource/Iron.asset",
@@ -50,7 +54,9 @@
             "dependencies": [],
             "cost": 2000,
             "startTech": false,
-            "unitsUnlocked": [],
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Research Lab/Lab.asset"
+            ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
         },
@@ -64,7 +70,7 @@
             "cost": 500,
             "startTech": false,
             "unitsUnlocked": [
-                "ScriptableObjects/Units/Dummy Tank.asset"
+                "ScriptableObjects/Buildings/Production Buildings/Blacksmith/Blacksmith.asset"
             ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
@@ -166,7 +172,9 @@
             "dependencies": [],
             "cost": 0,
             "startTech": true,
-            "unitsUnlocked": [],
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Production Buildings/Lumberyard/Lumberyard.asset"
+            ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": [
                 "ScriptableObjects/Resource/Wood.asset"
