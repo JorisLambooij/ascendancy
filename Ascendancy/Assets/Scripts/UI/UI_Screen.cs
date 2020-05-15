@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class UI_Screen : MonoBehaviour
 {
+    public UnityEvent Initialize;
+
     /// <summary>
     /// Toggle the state of this ui element.
     /// </summary>

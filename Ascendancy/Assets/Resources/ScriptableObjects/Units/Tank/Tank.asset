@@ -27,7 +27,7 @@ MonoBehaviour:
   selectionPriority: 2
   BuildTime: 0
   ResourceAmount:
-  - resource: {fileID: 11400000, guid: a01bdeeab68f31f488705611ebf4a82b, type: 2}
+  - resource: {fileID: 11400000, guid: 12d5eb5b328016a40993a98535cbbd84, type: 2}
     amount: 100
   EntityFeatures:
   - {fileID: 11400000, guid: e386352aebb02e445958baa451193ebb, type: 2}

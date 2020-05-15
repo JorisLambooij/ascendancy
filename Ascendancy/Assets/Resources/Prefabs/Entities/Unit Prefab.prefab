@@ -39,6 +39,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -89,7 +90,7 @@ GameObject:
   - component: {fileID: 7450172127873904964}
   - component: {fileID: 1282564119}
   m_Layer: 12
-  m_Name: Dummy Tank
+  m_Name: Unit Prefab
   m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -181,35 +182,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7551204154752481067}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: e9b9a323884f49b4a98797454d72e14a,
-        type: 3}
-      propertyPath: m_Name
-      value: Model
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: e9b9a323884f49b4a98797454d72e14a,
-        type: 3}
-      propertyPath: m_Layer
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: e9b9a323884f49b4a98797454d72e14a,
-        type: 3}
-      propertyPath: m_TagString
-      value: Unit
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: e9b9a323884f49b4a98797454d72e14a,
-        type: 3}
-      propertyPath: m_Layer
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534866581884222612, guid: e9b9a323884f49b4a98797454d72e14a,
-        type: 3}
-      propertyPath: m_TagString
-      value: Unit
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e9b9a323884f49b4a98797454d72e14a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: e9b9a323884f49b4a98797454d72e14a,
         type: 3}
@@ -266,6 +242,31 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 71c13c9357c9f0d4480e7befe17cb10a, type: 2}
+    - target: {fileID: -927199367670048503, guid: e9b9a323884f49b4a98797454d72e14a,
+        type: 3}
+      propertyPath: m_Name
+      value: Model
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: e9b9a323884f49b4a98797454d72e14a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: e9b9a323884f49b4a98797454d72e14a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Unit
+      objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: e9b9a323884f49b4a98797454d72e14a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: e9b9a323884f49b4a98797454d72e14a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Unit
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e9b9a323884f49b4a98797454d72e14a, type: 3}
 --- !u!1 &6613486084043677488 stripped
