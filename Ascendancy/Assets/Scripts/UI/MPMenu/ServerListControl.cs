@@ -52,11 +52,11 @@ public class ServerListControl : MonoBehaviour
             {
                 nameServer = "SERVER " + i,
                 nameHost = "HOSTNAME",
-                ping = i*5,
+                ping = i*5,                                     //TODO: get real ping
                 passwordProtection = false,
                 playerCount = i,
                 playerMax = 20,
-                uri = new System.Uri("http://www.test.com/"),
+                uri = new System.Uri("http://www.test.com/"),   //TODO: get real Uri
                 serverId = RandomLong()
         };
             serverList.Add(servInf.serverId, servInf);
