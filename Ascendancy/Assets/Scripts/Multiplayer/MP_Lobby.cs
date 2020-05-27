@@ -60,6 +60,7 @@ public class MP_Lobby : MonoBehaviour
         {
             isServer = true;
             buttonReadyStart.GetComponentInChildren<Text>().text = "Start Game";
+            buttonReadyStart.interactable = false;
         }
         else
         {
@@ -111,6 +112,7 @@ public class MP_Lobby : MonoBehaviour
             player.playerName = prefManager.GetPlayerName();
 
             Debug.Log(player.playerName + " connected");
+
         }
         else // if false, this is a client player
         {
@@ -140,32 +142,39 @@ public class MP_Lobby : MonoBehaviour
         player.playerNo = entryUI.PlayerNo;
 
         playerDict.Add(player.playerNo, player);
+
+        if (isServer && playerDict.Count > 1)
+        {
+            //Host player is ready if enough players are currently connected
+
+            NetworkRoomPlayer nwrPlayer = localPlayer.GetComponent<NetworkRoomPlayer>();
+            RawImage riReadyState = FindPlayerEntry(localPlayer).GetComponentInChildren<RawImage>();
+
+            nwrPlayer.readyToBegin = true;
+            riReadyState.color = Color.green;
+
+        }
     }
 
     public void RemovePlayer(Player player)
     {
         playerDict.Remove(player.playerNo);
+        PlayerEntryUI deletemeUI = FindPlayerEntry(player);
+        deletemeUI.playerNameText.text = "DELETED";
+        Destroy(deletemeUI.gameObject);
+        PrintChatMessage(new ChatMessage("SYSTEM", player.playerName + " disconnected", Color.gray));
 
-        PlayerEntryUI[] entries = playerList.GetComponentsInChildren<PlayerEntryUI>();
-        PlayerEntryUI deletemeUI = null;
-        foreach (PlayerEntryUI entry in entries)
+        if (isServer && playerDict.Count == 1)
         {
-            if (entry.player.Equals(player))
-            {
-                deletemeUI = entry;
-            }
+            //Host player is not ready if not enough players are currently connected
+
+            NetworkRoomPlayer nwrPlayer = localPlayer.GetComponent<NetworkRoomPlayer>();
+            RawImage riReadyState = FindPlayerEntry(localPlayer).GetComponentInChildren<RawImage>();
+
+            nwrPlayer.readyToBegin = false;
+            riReadyState.color = Color.red;
+
         }
-
-        if (deletemeUI == null)
-            Debug.LogError("Unable to remove player " + player.playerName);
-        else
-        {
-            deletemeUI.playerNameText.text = "DELETED";
-            Destroy(deletemeUI.gameObject);
-            PrintChatMessage(new ChatMessage("SYSTEM", player.playerName + " disconnected", Color.gray));
-        }
-
-
     }
 
     public void PlayerDisconnected(NetworkIdentity identity)
@@ -200,6 +209,10 @@ public class MP_Lobby : MonoBehaviour
         else
         {
             Button buttonReadyStart = GameObject.Find("StartGameButton").GetComponent<Button>();
+            RawImage riReadyState = FindPlayerEntry(localPlayer).GetComponentInChildren<RawImage>();                  //GameObject.Find("RawImageReadyState").GetComponent<RawImage>();
+
+
+            ColorBlock cbButton = buttonReadyStart.colors;
 
             //Button Ready
             NetworkRoomPlayer nwrPlayer = localPlayer.GetComponent<NetworkRoomPlayer>();
@@ -207,26 +220,27 @@ public class MP_Lobby : MonoBehaviour
             {
                 nwrPlayer.readyToBegin = false;
 
-                //change color of button to red
-                ColorBlock cb = new ColorBlock
-                {
-                    normalColor = Color.red
-                };
-                buttonReadyStart.colors = cb;
+                //change color of button and indicator to red
+                cbButton.normalColor = Color.red;
+                riReadyState.color = Color.red;
             }
             else
             {
                 nwrPlayer.readyToBegin = true;
 
-                //change color of button to green
-                ColorBlock cb = new ColorBlock
-                {
-                    normalColor = Color.red
-                };
-                buttonReadyStart.colors = cb;
+                //change color of button and indicator to green
+                cbButton.normalColor = Color.green;
+                riReadyState.color = Color.green;
             }
 
+            buttonReadyStart.colors = cbButton;
         }
+    }
+
+    public void ToggleStartButton(bool on)
+    {
+        Button buttonReadyStart = GameObject.Find("StartGameButton").GetComponent<Button>();
+        buttonReadyStart.interactable = on;
     }
 
     public void LoadGame()
@@ -284,6 +298,29 @@ public class MP_Lobby : MonoBehaviour
     public void ConstructPlayerData()
     {
 
+    }
+
+    private PlayerEntryUI FindPlayerEntry(Player player)
+    {
+        PlayerEntryUI[] entries = playerList.GetComponentsInChildren<PlayerEntryUI>();
+        PlayerEntryUI correctEntry = null;
+        foreach (PlayerEntryUI entry in entries)
+        {
+            if (entry.player.Equals(player))
+            {
+                correctEntry = entry;
+            }
+        }
+
+        if (correctEntry == null)
+        {
+            Debug.LogError("Unable to find playerEntry for player " + player.playerName);
+            return null;
+        }
+        else
+        {
+            return correctEntry;
+        }
     }
 
     private void KickPlayerButtonListener(Player player)
