@@ -143,16 +143,25 @@ public class MP_Lobby : MonoBehaviour
 
         playerDict.Add(player.playerNo, player);
 
+        player.setReadyEvent.AddListener(() => SetReadyEventListener(player));
+
+
         if (isServer && playerDict.Count > 1)
         {
             //Host player is ready if enough players are currently connected
 
-            NetworkRoomPlayer nwrPlayer = localPlayer.GetComponent<NetworkRoomPlayer>();
-            RawImage riReadyState = FindPlayerEntry(localPlayer).GetComponentInChildren<RawImage>();
+            //NetworkRoomPlayer nwrPlayer = localPlayer.GetComponent<NetworkRoomPlayer>();
+            //RawImage riReadyState = FindPlayerEntry(localPlayer).GetComponentInChildren<RawImage>();
 
-            nwrPlayer.readyToBegin = true;
-            riReadyState.color = Color.green;
+            //nwrPlayer.readyToBegin = true;
+            //riReadyState.color = Color.green;
 
+            localPlayer.SetReady(true);
+        }
+        else if (playerDict.Count > 1)
+        {
+            //host should be ready, so lets manually switch host indicator to ready
+            SetReady(playerDict[1], true);
         }
     }
 
@@ -168,12 +177,13 @@ public class MP_Lobby : MonoBehaviour
         {
             //Host player is not ready if not enough players are currently connected
 
-            NetworkRoomPlayer nwrPlayer = localPlayer.GetComponent<NetworkRoomPlayer>();
-            RawImage riReadyState = FindPlayerEntry(localPlayer).GetComponentInChildren<RawImage>();
+            //NetworkRoomPlayer nwrPlayer = localPlayer.GetComponent<NetworkRoomPlayer>();
+            //RawImage riReadyState = FindPlayerEntry(localPlayer).GetComponentInChildren<RawImage>();
 
-            nwrPlayer.readyToBegin = false;
-            riReadyState.color = Color.red;
+            //nwrPlayer.readyToBegin = false;
+            //riReadyState.color = Color.red;
 
+            localPlayer.SetReady(false);
         }
     }
 
@@ -208,32 +218,18 @@ public class MP_Lobby : MonoBehaviour
         }
         else
         {
-            Button buttonReadyStart = GameObject.Find("StartGameButton").GetComponent<Button>();
-            RawImage riReadyState = FindPlayerEntry(localPlayer).GetComponentInChildren<RawImage>();                  //GameObject.Find("RawImageReadyState").GetComponent<RawImage>();
-
-
-            ColorBlock cbButton = buttonReadyStart.colors;
-
             //Button Ready
-            NetworkRoomPlayer nwrPlayer = localPlayer.GetComponent<NetworkRoomPlayer>();
-            if (nwrPlayer.readyToBegin)
+            //NetworkRoomPlayer nwrPlayer = localPlayer.GetComponent<NetworkRoomPlayer>();
+            if (localPlayer.isReady())
             {
-                nwrPlayer.readyToBegin = false;
-
-                //change color of button and indicator to red
-                cbButton.normalColor = Color.red;
-                riReadyState.color = Color.red;
+                //SetReady(localPlayer, false);
+                localPlayer.SetReady(false);
             }
             else
             {
-                nwrPlayer.readyToBegin = true;
-
-                //change color of button and indicator to green
-                cbButton.normalColor = Color.green;
-                riReadyState.color = Color.green;
-            }
-
-            buttonReadyStart.colors = cbButton;
+                //SetReady(localPlayer, true);
+                localPlayer.SetReady(true);
+            }            
         }
     }
 
@@ -323,7 +319,54 @@ public class MP_Lobby : MonoBehaviour
         }
     }
 
-    private void KickPlayerButtonListener(Player player)
+    public void SetReady(Player player, bool ready)
+    {
+        Button buttonReadyStart = GameObject.Find("StartGameButton").GetComponent<Button>();
+        RawImage riReadyState = FindPlayerEntry(player).GetComponentInChildren<RawImage>();
+        ColorBlock cbButton = buttonReadyStart.colors;
+
+        if (ready)
+        {
+            //change color of button and indicator to green
+            cbButton.normalColor = Color.green;
+            riReadyState.color = Color.green;
+        }
+        else
+        {
+            //change color of button and indicator to red
+            cbButton.normalColor = Color.red;
+            riReadyState.color = Color.red;
+        }
+
+        if (!isServer) //only clients need to change color of button
+            buttonReadyStart.colors = cbButton;
+        else // let us check if all players are ready
+        {
+            bool allReady = true;
+
+            foreach(Player p in playerDict.Values)
+            {
+                if (p.isReady() == false)
+                    allReady = false;
+            }
+
+            if (allReady == true)
+            {
+                buttonReadyStart.interactable = true;
+            }
+            else
+            {
+                buttonReadyStart.interactable = false;
+            }
+        }
+    }
+
+    private void SetReadyEventListener(Player player)
+    {
+        SetReady(player, player.isReady());
+    }
+
+        private void KickPlayerButtonListener(Player player)
     {
         Debug.Log("Trying to kick " + player.playerName);
         player.GetComponent<NetworkRoomPlayer>().connectionToClient.Disconnect();

@@ -32,6 +32,7 @@ public class Player : NetworkBehaviour
     //Events
     public UnityEvent nameChangeEvent = new UnityEvent();
     public UnityEvent colorChangeEvent = new UnityEvent();
+    public UnityEvent setReadyEvent = new UnityEvent();
 
 
     // When the NetworkManager creates this Player, do this
@@ -129,5 +130,32 @@ public class Player : NetworkBehaviour
         base.OnStartClient();
     }
 
+    #endregion
+
+    #region Lobby
+
+    public void SetReady(bool ready)
+    {
+        NetworkRoomPlayer nwrPlayer = GetComponent<NetworkRoomPlayer>();
+        nwrPlayer.readyToBegin = ready;
+        setReadyEvent.Invoke();
+        CmdSetReady(ready);
+    }
+
+    [Command]
+    private void CmdSetReady(bool ready)
+    {
+        NetworkRoomPlayer nwrPlayer = GetComponent<NetworkRoomPlayer>();
+        nwrPlayer.readyToBegin = ready;
+
+        setReadyEvent.Invoke();
+        Debug.Log("Player " + playerName + " is ready? " + ready);
+    }
+
+
+    public bool isReady()
+    {
+        return GetComponent<NetworkRoomPlayer>().readyToBegin;
+    }
     #endregion
 }
