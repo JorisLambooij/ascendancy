@@ -10,9 +10,8 @@ public struct DamageAmount
 {
     public DamageType type;
 
-    public float amount;
-
-    public bool armorPiercing;
+    public float APAmount;
+    public float nonAPAmount;
 }
 
 [System.Serializable]

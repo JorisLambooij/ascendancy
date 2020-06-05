@@ -61,7 +61,8 @@ public class Entity : MonoBehaviour
         float totalDamage = 0;
         foreach(DamageAmount dmgAmount in attackStrength.damageComposition)
         {
-            float modifiedDamage = dmgAmount.amount;
+            float modifiedDamage = dmgAmount.APAmount;
+            modifiedDamage += Mathf.Max(dmgAmount.nonAPAmount - entityInfo.Armor, 1);
             totalDamage += modifiedDamage;
         }
 

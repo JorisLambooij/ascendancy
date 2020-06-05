@@ -51,6 +51,11 @@ public abstract class UnitOrder
             cooldown -= Time.deltaTime;
     }
 
+    public virtual void Cancel()
+    {
+
+    }
+
     /// <summary>
     /// Whether or not the Order has been fulfilled.
     /// </summary>

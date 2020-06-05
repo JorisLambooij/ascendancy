@@ -5,18 +5,25 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewRangedFeature", menuName = "Entity Features/Ranged Attack Feature")]
 public class RangedAttackFeature : EntityFeature
 {
+    [Tooltip("Minimum distance between this Entity and its target"), Min(0)]
     public int minRange;
-
+   
+    [Tooltip("Maximum distance between this Entity and its target")]
     public int maxRange;
     
-    public AttackStrength rangedStrength;
+    [Tooltip("Time inbetween attacks")]
+    public float rangedAttackCooldown;
 
-    public float rangedAttackSpeed;
-
+    [Tooltip("Amount of burst shots per volley"), Min(1)]
     public int volley;
 
-    public float accuracy;
+    [Tooltip("Time in takes the Entity to shoot one volley"), Min(0)]
+    public float volleyDuration;
 
+    [Tooltip("Inaccuracy of the ranged attack.")]
+    public float inaccuracy;
+
+    [Tooltip("Properties of the projectiles")]
     public ProjectileInfo projectileInfo;
     
 
