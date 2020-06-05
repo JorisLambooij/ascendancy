@@ -29,8 +29,14 @@ public class RecruitmentMenu : MonoBehaviour, ListSubscriber<EntitySelector>
     public void NewElementCallback(EntitySelector updatedValue)
     {
         //throw new System.NotImplementedException("Subscriber Method for when new Entities are selected not yet implemented");
-        if (updatedValue.ParentEntity.FindFeature<RecruitmentFeature>() != null)
-            Debug.LogError("New Recruiter Selected, implement this method pls.");
+        if (updatedValue.ParentEntity.FindFeature<RecruitmentFeature>() == null)
+            return;
+
+        GameManager.Instance.Ui_Manager.OpenScreen("Recruitment Menu", false);
+
+        RecruitmentMenuCategory newCat = pool.Add().GetComponent<RecruitmentMenuCategory>();
+        newCat.Expanded = true;
+        newCat.SelectRecruiter(updatedValue.ParentEntity);
     }
 
     /// <summary>
@@ -39,7 +45,6 @@ public class RecruitmentMenu : MonoBehaviour, ListSubscriber<EntitySelector>
     /// <param name="newList"></param>
     public void NewListCallback(List<EntitySelector> newList)
     {
-        Debug.Log("New List Callback for Recruitment Menu");
         // Filter for Entities that can recruit.
         List<EntitySelector> recrList = newList.Where(e => e.ParentEntity.FindFeature<RecruitmentFeature>() != null).ToList();
 

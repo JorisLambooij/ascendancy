@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Runtime;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Entity : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class Entity : MonoBehaviour
     protected EntityOrderController controller;
 
     protected Sprite minimapMarker;
+
+    public UnityEvent OnDestroyCallbacks;
 
     /// <summary>
     /// The player who owns this Entity.
@@ -62,7 +65,7 @@ public class Entity : MonoBehaviour
         foreach(DamageAmount dmgAmount in attackStrength.damageComposition)
         {
             float modifiedDamage = dmgAmount.APAmount;
-            modifiedDamage += Mathf.Max(dmgAmount.nonAPAmount - entityInfo.Armor, 1);
+            modifiedDamage += Mathf.Max(dmgAmount.nonAPAmount - entityInfo.Armor, Mathf.Min(dmgAmount.nonAPAmount, 1 ));
             totalDamage += modifiedDamage;
         }
 
@@ -148,6 +151,7 @@ public class Entity : MonoBehaviour
     /// </summary>
     protected virtual void Die()
     {
+        OnDestroyCallbacks.Invoke();
         Destroy(this.gameObject);
     }
 

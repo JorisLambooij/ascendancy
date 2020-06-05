@@ -56,7 +56,12 @@ public class EntityInfo : ScriptableObject
 
     [Header("Technical")]
     /// <summary>
-    /// entity view distance in tiles.
+    /// How good this entity is at stopping other Entities.
+    /// </summary>
+    public float mass;
+
+    /// <summary>
+    /// Entity view distance in tiles.
     /// </summary>
     public float ViewDistance;
 

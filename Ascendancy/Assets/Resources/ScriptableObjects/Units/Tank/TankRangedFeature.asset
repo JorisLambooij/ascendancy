@@ -13,22 +13,21 @@ MonoBehaviour:
   m_Name: TankRangedFeature
   m_EditorClassIdentifier: 
   clickPriority: 0
-  minRange: 0
-  maxRange: 100
-  rangedStrength:
-    damageComposition:
-    - type: 0
-      amount: 100
-      armorPiercing: 1
-  rangedAttackSpeed: 1
-  volley: 1
-  accuracy: 1
+  minRange: 5
+  maxRange: 40
+  rangedAttackCooldown: 1
+  volley: 2
+  volleyDuration: 0.2
+  inaccuracy: 5
   projectileInfo:
     launchVelocity: 5
-    targetSeekingCoefficient: 0.2
+    targetSeekingCoefficient: 0.1
     lifeTime: 4
     attackStrength:
       damageComposition:
       - type: 0
-        amount: 10
-        armorPiercing: 0
+        APAmount: 10
+        nonAPAmount: 0
+    interceptable: 0
+    piercingPower: 1
+    explosive: 0

@@ -84,6 +84,9 @@ public class GameMode : ControlMode
         if (conMenuHandler.IsVisible())
             return;
 
+        bool append = Input.GetKey(KeyCode.LeftControl);
+            
+
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             dragStartPosM1 = Input.mousePosition;
@@ -131,7 +134,8 @@ public class GameMode : ControlMode
                 if (player == null)
                     throw new System.Exception("Invalid Player Number (" + gameManager.playerNo + ")");
 
-                DeselectAll();
+                if (!append)
+                    DeselectAll();
 
                 int highestPriority = -1;
                 foreach (EntitySelector e in player.GetComponentsInChildren<EntitySelector>())
@@ -159,7 +163,8 @@ public class GameMode : ControlMode
                 Ray ray = gameManager.camScript.MouseCursorRay();
                 RaycastHit hit;
 
-                DeselectAll();
+                if (!append)
+                    DeselectAll();
 
                 int layerMask = 1 << LayerMask.NameToLayer("Entities");
                 if (Physics.Raycast(ray, out hit, 100, layerMask) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
@@ -247,8 +252,11 @@ public class GameMode : ControlMode
                 // sort units, then issue commands according to units' relative position towards the goal line
                 foreach (EntitySelector es in selectedUnits.AsList)
                 {
+                    // Entity might have been destroyed, so check if it still exists
+                    if (es == null)
+                        continue;
+                    // EntitySelector might have a faulty reference, so double-check this as well
                     Entity e = es.ParentEntity as Entity;
-
                     if (e == null)
                         continue;
 
@@ -267,6 +275,8 @@ public class GameMode : ControlMode
 
 
                 // Make sure nothing has gone horribly wrong (no units missing or counted twice)
+                // This will throw an error when a Unit is destroyed while it was selected.
+                // TODO: Properly remove these destroyed Units from the list
                 Debug.Assert(unitsSorted.Count == count);
                 if (unitsSorted.Count != count)
                     Debug.Log("UnitsSorted.Count: " + unitsSorted.Count + "; SelectedUnits.Count: " + count);
@@ -299,6 +309,10 @@ public class GameMode : ControlMode
                 if (hit.collider != null)
                     foreach (EntitySelector es in selectedUnits.AsList)
                     {
+                        // Entity might have been destroyed, so check if it still exists
+                        if (es == null)
+                            continue;
+
                         bool enqueue = Input.GetKey(KeyCode.LeftShift);
                         es.ParentEntity.ClickOrder(hit, enqueue);
                         //u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
