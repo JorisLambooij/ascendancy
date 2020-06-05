@@ -7,6 +7,7 @@ using UnityEngine;
 /// </summary>
 public enum ConstructionMethod { Unit, Building };
 
+[System.Serializable]
 [CreateAssetMenu(fileName = "NewEntityInfo", menuName = "Entity")]
 public class EntityInfo : ScriptableObject
 {
@@ -88,6 +89,7 @@ public class EntityInfo : ScriptableObject
     /// <summary>
     /// Base cost of the entity.
     /// </summary>
+    [SerializeField]
     public List<Resource_Amount> ResourceAmount;
 
     [Header("Features")]

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 361f5a2fc5354d049afe85306c6f8363, type: 3}
+  m_Name: TankRangedFeature
+  m_EditorClassIdentifier: 
+  clickPriority: 0
+  minRange: 0
+  maxRange: 100
+  rangedStrength:
+    damageComposition:
+    - type: 0
+      amount: 100
+      armorPiercing: 1
+  rangedAttackSpeed: 1
+  volley: 1
+  accuracy: 1
+  projectileInfo:
+    launchVelocity: 5
+    targetSeekingCoefficient: 0.2
+    lifeTime: 4
+    attackStrength:
+      damageComposition:
+      - type: 0
+        amount: 10
+        armorPiercing: 0

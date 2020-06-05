@@ -30,7 +30,7 @@ public class Entity : MonoBehaviour
     /// <summary>
     /// The current Health of this Entity.
     /// </summary>
-    public int Health
+    public float Health
     {
         get { return currentHealth; }
     }
@@ -50,16 +50,24 @@ public class Entity : MonoBehaviour
     /// <summary>
     /// The current health status of this Entity.
     /// </summary>
-    protected int currentHealth;
+    protected float currentHealth;
 
     /// <summary>
     /// Deal damage to this Entity.
     /// </summary>
     /// <param name="damage"></param>
-    public void TakeDamage(int damage)
+    public void TakeDamage(AttackStrength attackStrength)
     {
-        damage = Mathf.Clamp(damage, 0, currentHealth);
-        currentHealth -= damage;
+        float totalDamage = 0;
+        foreach(DamageAmount dmgAmount in attackStrength.damageComposition)
+        {
+            float modifiedDamage = dmgAmount.amount;
+            totalDamage += modifiedDamage;
+        }
+
+        
+        totalDamage = Mathf.Clamp(totalDamage, 0, currentHealth);
+        currentHealth -= totalDamage;
 
         if (currentHealth <= 0)
             Die();

@@ -32,7 +32,7 @@ public class Healthbar : MonoBehaviour
     void Update()
     {
         int maxHealth = entity.entityInfo.MaxHealth;
-        int currentHealth = entity.Health;
+        float currentHealth = entity.Health;
         bool visible = maxHealth > currentHealth || activeOverride;
 
         if (visible)

@@ -2,28 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewMeleeFeature", menuName = "Entity Features/Melee Feature")]
-public class MeleeFeature : EntityFeature
+[CreateAssetMenu(fileName = "NewRangedFeature", menuName = "Entity Features/Ranged Attack Feature")]
+public class RangedAttackFeature : EntityFeature
 {
-    [Tooltip("Melee Attack increases chance to land a melee hit.")]
-    public int meleeAttack;
-    
-    [Tooltip("Melee Defense decreases the chance for an enemy to land a melee hit.")]
-    public int meleeDefense;
-    
-    [Tooltip("The Strength of a melee attack.")]
-    public AttackStrength meleeStrength;
-    
-    [Tooltip("The range of a melee attack.")]
-    public int meleeRange;
-    
-    [Tooltip("How long it takes to perform one melee attack.")]
-    public float meleeAttackSpeed;
+    public int minRange;
 
-    /// <summary>
-    /// List of special abilities.
-    /// </summary>
-    //public List<>
+    public int maxRange;
+    
+    public AttackStrength rangedStrength;
+
+    public float rangedAttackSpeed;
+
+    public int volley;
+
+    public float accuracy;
+
+    public ProjectileInfo projectileInfo;
+    
 
     public override bool ClickOrder(RaycastHit hit, bool enqueue = false)
     {
@@ -37,8 +32,9 @@ public class MeleeFeature : EntityFeature
         {
             case ("Unit"):
             case ("Building"):
+            case ("Entity"):
                 Entity target = hit.collider.GetComponentInParent<Entity>();
-                MeleeAttackOrder attackOrder = new MeleeAttackOrder(entity, target);
+                RangedAttackOrder attackOrder = new RangedAttackOrder(entity, target);
                 entity.IssueOrder(attackOrder, enqueue);
                 return true;
             default:

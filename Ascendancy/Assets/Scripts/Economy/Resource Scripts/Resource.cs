@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 [CreateAssetMenu(fileName = "New Resource", menuName = "Resource SO", order = 1)]
 public class Resource : ScriptableObject
 {

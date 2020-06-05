@@ -26,9 +26,7 @@ MonoBehaviour:
   Category: Cavalry
   selectionPriority: 2
   BuildTime: 0
-  ResourceAmount:
-  - resource: {fileID: 11400000, guid: 12d5eb5b328016a40993a98535cbbd84, type: 2}
-    amount: 100
+  ResourceAmount: []
   EntityFeatures:
-  - {fileID: 11400000, guid: e386352aebb02e445958baa451193ebb, type: 2}
+  - {fileID: 11400000, guid: 60420139427ead948ada6fb9c16efec0, type: 2}
   - {fileID: 11400000, guid: bc1a033dab5d3bb41bef84a6e1288422, type: 2}

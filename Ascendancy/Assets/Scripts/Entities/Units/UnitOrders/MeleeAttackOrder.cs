@@ -2,52 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeAttackOrder : UnitOrder
+public class MeleeAttackOrder : AttackOrder
 {
-    /// <summary>
-    /// The target of the attack Order.
-    /// </summary>
-    private Entity target;
-
     /// <summary>
     /// The Combat-EntityFeature that enables this Entity to fight.
     /// </summary>
-    private MeleeFeature combatFeature;
-
-    /// <summary>
-    /// The Movement-EntityFeature that enables this Entity to move. If not found, Entity still will be able to defend its melee range.
-    /// </summary>
-    private MovementFeature moveFeature;
-
-    /// <summary>
-    /// Guard Mode means the unit will not follow the target when it gets out range.
-    /// </summary>
-    private bool guardMode;
-
-    public MeleeAttackOrder(Entity entity, Entity target, bool guardMode = false) : base(entity)
+    protected MeleeFeature meleeFeature;
+    
+    public MeleeAttackOrder(Entity entity, Entity target, bool guardMode = false) : base(entity, target, guardMode)
     {
-        Debug.Log("Order: " + target);
-        this.target = target;
-        this.guardMode = guardMode;
-        this.combatFeature = entity.FindFeature<MeleeFeature>();
-        moveFeature = entity.FindFeature<MovementFeature>();
-
-    }
-
-    public override Vector3 CurrentDestination
-    {
-        get { return target.transform.position; }
-    }
-
-    public void SetTarget(Entity e)
-    {
-        target = e;
+        Debug.Log("Melee Order: Attack " + target);
+        this.meleeFeature = entity.FindFeature<MeleeFeature>();
     }
     
     public override void Update()
     {
-        if (cooldown > 0)
-            cooldown -= Time.deltaTime;
+        base.Update();
 
         Vector3 targetPos = target.transform.position;
 
@@ -59,7 +29,7 @@ public class MeleeAttackOrder : UnitOrder
             if (cooldown <= 0)
             {
                 Attack();
-                cooldown = combatFeature.attackSpeed;
+                cooldown = meleeFeature.meleeAttackSpeed;
             }
         }
         else if (!guardMode && moveFeature != null)
@@ -72,15 +42,15 @@ public class MeleeAttackOrder : UnitOrder
     /// <summary>
     /// Whether or not the target is in melee range.
     /// </summary>
-    private bool IsInRange
+    protected override bool IsInRange
     {
-        get { return Vector3.Distance(entity.transform.position, target.transform.position) < combatFeature.meleeRange; }
+        get { return Vector3.Distance(entity.transform.position, target.transform.position) < meleeFeature.meleeRange; }
     }
 
     /// <summary>
     /// Carry out one attempt at a melee attack.
     /// </summary>
-    private void Attack()
+    protected void Attack()
     {
         MeleeFeature targetCombatFeature = target.FindFeature<MeleeFeature>();
         if (targetCombatFeature != null)
@@ -88,7 +58,7 @@ public class MeleeAttackOrder : UnitOrder
             // Target has combat capabilities, so enter a melee duel
             (target as Entity).Controller.EnterMelee(entity);
 
-            int unitAttack = combatFeature.meleeAttack;
+            int unitAttack = meleeFeature.meleeAttack;
             int targetDefense = targetCombatFeature.meleeDefense;
 
             int chanceToHit = Mathf.Clamp(50 + unitAttack - targetDefense, 10, 90);
@@ -96,26 +66,19 @@ public class MeleeAttackOrder : UnitOrder
             if (Random.Range(0, 100) < chanceToHit)
             {
                 // Successful attack
-                target.TakeDamage(combatFeature.meleeStrength);
+                target.TakeDamage(meleeFeature.meleeStrength);
             }
         }
         else
         {
             // Target entitiy can't defend itself, so auto-hit.
-            target.TakeDamage(combatFeature.meleeStrength);
-            cooldown = combatFeature.attackSpeed;
+            target.TakeDamage(meleeFeature.meleeStrength);
+            cooldown = meleeFeature.meleeAttackSpeed;
         }
 
     }
 
-    public override bool Fulfilled
-    {
-        get
-        {
-            float targetHealth = target.Health;
-            return targetHealth <= 0 || (guardMode && !IsInRange);
-        }
-    }
+    
 
     public bool GuardMode
     {

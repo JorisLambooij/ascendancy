@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Mirror.Examples.Tanks
 {
-    public class Projectile : NetworkBehaviour
+    public class TankProjectile : NetworkBehaviour
     {
         public float destroyAfter = 5;
         public Rigidbody rigidBody;
