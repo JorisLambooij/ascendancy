@@ -21,7 +21,6 @@ public abstract class AttackOrder : UnitOrder
 
     public AttackOrder(Entity entity, Entity target, bool guardMode = false) : base(entity)
     {
-        Debug.Log("Attack Order");
         this.target = target;
         this.guardMode = guardMode;
         this.moveFeature = entity.FindFeature<MovementFeature>();

@@ -8,6 +8,8 @@ public class Projectile : MonoBehaviour
 
     private Rigidbody rb;
     private Transform target;
+    private Vector3 launchPos;
+    private Vector3 predictedTargetLocation;
     private float remainingPiercingPower;
 
     // Each Entity can only be hit once by a projectile. This is to keep track of that.
@@ -19,57 +21,81 @@ public class Projectile : MonoBehaviour
     {
         this.info = rangedFeature.projectileInfo;
         this.target = target;
+        
+        this.launchPos = transform.position;
         RB = GetComponent<Rigidbody>();
 
-        Vector3 predictedTargetLocation = PredictedTargetLocation();
+        // Get the location we want this Projectile to aim for.
+        predictedTargetLocation = target.position;
         Vector3 distance = predictedTargetLocation - transform.position;
+
         // Add some inaccuracy
         float relativeRange = Mathf.InverseLerp(rangedFeature.minRange, rangedFeature.maxRange, distance.magnitude);
         float inaccuracyLerped = Mathf.Lerp(0, rangedFeature.inaccuracy, relativeRange);
         predictedTargetLocation += RandomUnitVector() * inaccuracyLerped;
 
+        // Launch the Projectile.
         transform.LookAt(predictedTargetLocation, Vector3.up);
+
+        /*
         Vector3 targetDir = (predictedTargetLocation - transform.position).normalized;
-        RB.velocity = targetDir * info.launchVelocity;
+
+        // Make the Projectile travel in a parabolic arc.
+        Vector3 arcing = new Vector3(0, Mathf.Sqrt(-Physics.gravity.y * info.arcHeight), 0);
+        //Debug.Log(targetDir.y);
+        RB.useGravity = arcing.y > 0;
+        RB.velocity = targetDir * info.launchVelocity + arcing;
+        */
 
         // Do not hit the launcher itself
         remainingPiercingPower = info.piercingPower;
         entitiesPierced = new HashSet<Entity>();
         entitiesPierced.Add(rangedFeature.entity);
+
+        // Handle the timing stuff
+        StartCoroutine(TempDeactivateCollider(0.2f));
         Destroy(this.gameObject, info.lifeTime);
     }
     
 
     void Update()
     {
-        if (target != null)
-        {
-            Vector3 predictedTargetLocation = PredictedTargetLocation();
+        PredictTargetLocation();
 
-            // Target-Seeking
-            Vector3 targetDir = predictedTargetLocation - transform.position;
+        // Predict next location for Target-Seeking
+        Vector3 targetDir = predictedTargetLocation - transform.position;
+        
+        Vector2 p0 = Project2D(launchPos);
+        Vector2 p1 = Project2D(predictedTargetLocation);
+        float dist = (p1 - p0).magnitude;
+        Vector2 nextP = Vector2.MoveTowards(Project2D(transform.position), p1, info.horizontalVelocity * Time.deltaTime);
+        float baseY = Mathf.Lerp(launchPos.y, predictedTargetLocation.y, (nextP - p0).magnitude / dist);
+        float arc = info.arcHeight * (nextP - p0).magnitude * (nextP - p1).magnitude / (0.25f * dist * dist);
+        Vector3 nextPos = new Vector3(nextP.x, baseY + arc, nextP.y);
 
-            // Only if the projectile could still reasonably hit the target, do we adjust the trajectory
-            // This prevents situations where projectiles that have clearly already missed still try to come back.
-            if (Vector3.Angle(targetDir, transform.forward) < 60)
-            {
-                float step = info.targetSeekingCoefficient * Time.deltaTime;
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0F);
-                Vector3 newVel = Vector3.RotateTowards(RB.velocity, targetDir, step, 0.0F);
-
-                Debug.DrawRay(transform.position, newDir, Color.red);
-                transform.rotation = Quaternion.LookRotation(newDir);
-                RB.velocity = newVel;
-            }
-        }
+        // Check if y is defined. If not, stop.
+        if (float.IsNaN(nextPos.y))
+            return;
+        // Rotate to face the next position, and then move there
+        if ((nextPos - transform.position).sqrMagnitude > 0)
+            transform.rotation = Quaternion.LookRotation(nextPos - transform.position, Vector3.up);
+        transform.position = nextPos;
     }
+    
 
     // TODO: Properly predict the target's location based on its current velocity
-    private Vector3 PredictedTargetLocation()
+    private void PredictTargetLocation()
     {
-        return target.position;
+        if (target == null)
+            return;
+
+        predictedTargetLocation = Vector3.MoveTowards(predictedTargetLocation, target.position, info.targetSeekingCoefficient * Time.deltaTime);
     }
 
+    /// <summary>
+    /// What happens when this Projectile hits something
+    /// </summary>
+    /// <param name="collider">The Collider that the Projectile hit.</param>
     void OnTriggerEnter(Collider collider)
     {
         if (collider.tag == "Unit" || collider.tag == "Building" || collider.tag == "Entity")
@@ -96,8 +122,16 @@ public class Projectile : MonoBehaviour
         else
         {
             //Debug.Log("Hit something else: " + collider.tag);
-            //Destroy(this.gameObject);
+            DestroyProjectile();
         }
+    }
+
+    IEnumerator TempDeactivateCollider(float time)
+    {
+        Collider coll = GetComponentInChildren<Collider>();
+        coll.enabled = false;
+        yield return new WaitForSeconds(time);
+        coll.enabled = true;
     }
 
     /// <summary>
@@ -109,7 +143,12 @@ public class Projectile : MonoBehaviour
         remainingPiercingPower -= entity.entityInfo.mass;
 
         if (remainingPiercingPower <= 0)
-            GameObject.Destroy(this.gameObject);
+            DestroyProjectile();
+    }
+
+    protected void DestroyProjectile()
+    {
+        Destroy(this.gameObject);
     }
 
     /// <summary>
@@ -120,6 +159,11 @@ public class Projectile : MonoBehaviour
     {
         float random = Random.Range(0f, 2 * Mathf.PI);
         return new Vector3(Mathf.Cos(random), 0, Mathf.Sin(random));
+    }
+
+    private Vector2 Project2D(Vector3 v)
+    {
+        return new Vector2(v.x, v.z);
     }
 }
     

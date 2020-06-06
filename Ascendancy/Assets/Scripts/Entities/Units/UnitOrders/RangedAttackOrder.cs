@@ -13,7 +13,7 @@ public class RangedAttackOrder : AttackOrder
 
     public RangedAttackOrder(Entity unit, Entity target, bool guardMode = false) : base(unit, target, guardMode)
     {
-        Debug.Log("Ranged Order: " + target);
+        //Debug.Log("Ranged Order: " + target);
         this.rangedFeature = unit.FindFeature<RangedAttackFeature>();
         isFiring = false;
     }

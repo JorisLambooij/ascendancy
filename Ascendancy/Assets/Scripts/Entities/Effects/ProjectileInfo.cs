@@ -6,7 +6,10 @@ using UnityEngine;
 public struct ProjectileInfo
 {
     [Tooltip("The Initial speed at which this Projectile is launched at."), Min(1)]
-    public float launchVelocity;
+    public float horizontalVelocity;
+
+    [Tooltip("The height of the arc this Projectile is travelling at."), Min(0)]
+    public float arcHeight;
     
     [Tooltip("How strong should the homing effect be"), Min(0)]
     public float targetSeekingCoefficient;

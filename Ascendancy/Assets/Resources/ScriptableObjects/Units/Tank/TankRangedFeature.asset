@@ -14,15 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clickPriority: 0
   minRange: 5
-  maxRange: 40
+  maxRange: 100
   rangedAttackCooldown: 1
   volley: 2
   volleyDuration: 0.2
   inaccuracy: 5
   projectileInfo:
-    launchVelocity: 5
-    targetSeekingCoefficient: 0.1
-    lifeTime: 4
+    horizontalVelocity: 8
+    arcHeight: 2
+    targetSeekingCoefficient: 1
+    lifeTime: 16
     attackStrength:
       damageComposition:
       - type: 0

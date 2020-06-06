@@ -118,8 +118,6 @@ public class RecruitmentFeature : EntityFeature
 
         //if (newEntity.Controller == null)
         //    newUnit.AddComponent<EntityOrderController>();
-
-        Debug.Log("Recruitment Success");
     }
     
 }
