@@ -17,8 +17,8 @@ public class SceneLoadingScript : MonoBehaviour
     {
         //collecting scene names
         sceneNames = new List<string>();
-        
-        #if (UNITY_EDITOR)
+
+#if (UNITY_EDITOR)
         foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes)
         {
             if (scene.enabled)
@@ -26,7 +26,14 @@ public class SceneLoadingScript : MonoBehaviour
                 sceneNames.Add(System.IO.Path.GetFileNameWithoutExtension(scene.path));
             }
         }
+#endif
 
+#if (UNITY_STANDALONE_WIN)
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        {
+            sceneNames.Add(System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i)));
+        }
+#endif
 
         if (sceneNames.Contains(NextSceneStatic.sceneName))
         {
@@ -36,10 +43,9 @@ public class SceneLoadingScript : MonoBehaviour
         else
         {
             Debug.LogError("Scene '" + NextSceneStatic.sceneName + "' could not be loaded. Maybe it is not enabled?");
-            foreach(string sceneName in sceneNames)
-                Debug.Log("'"+sceneName+"'");
+            foreach (string sceneName in sceneNames)
+                Debug.Log("'" + sceneName + "'");
         }
-        #endif
 
     }
 
@@ -49,7 +55,7 @@ public class SceneLoadingScript : MonoBehaviour
         AsyncOperation loadLevel = SceneManager.LoadSceneAsync(NextSceneStatic.sceneName);
 
         //while still loading fill progress bar
-        while(loadLevel.progress < 1)
+        while (loadLevel.progress < 1)
         {
             progressBarImage.fillAmount = loadLevel.progress;
             yield return new WaitForEndOfFrame();

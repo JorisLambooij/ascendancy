@@ -204,17 +204,20 @@ public class MP_Lobby : MonoBehaviour
             RemovePlayer(dictPlayer);
     }
 
-    public void UpdatePlayerNumbers()
-    {
-        Debug.Log("Updating player numbers");
-    }
+    //public void UpdatePlayerNumbers()
+    //{
+    //    Debug.Log("Updating player numbers");
+    //}
 
     public void ButtonReadyStartCLick()
     {
         if (isServer)
         {
             //Button Start
-            LoadGame();
+            foreach (Player client in playerDict.Values)
+            {
+                client.RpcStartGame();
+            }
         }
         else
         {

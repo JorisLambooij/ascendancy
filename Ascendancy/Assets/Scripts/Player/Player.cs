@@ -157,5 +157,12 @@ public class Player : NetworkBehaviour
     {
         return GetComponent<NetworkRoomPlayer>().readyToBegin;
     }
+
+    [ClientRpc]
+    public void RpcStartGame()
+    {
+        Debug.Log("Starting game for client " + playerName);
+        GetComponentInParent<MP_Lobby>().LoadGame();
+    }
     #endregion
 }
