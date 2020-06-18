@@ -44,9 +44,13 @@ public class RangedAttackFeature : EntityFeature
                 RangedAttackOrder attackOrder = new RangedAttackOrder(entity, target);
                 entity.IssueOrder(attackOrder, enqueue);
                 return true;
+            case ("Ground"):
+                MoveOrder moveOrder = new MoveOrder(entity, hit.point);
+                entity.IssueOrder(moveOrder, enqueue);
+                return true;
             default:
                 //Unknown tag
-                Debug.Log("Unknown tag hit with ray cast: tag '" + entity.tag + "' in " + hit.collider.ToString());
+                Debug.Log("Unknown tag hit with ray cast: tag '" + hit.collider.tag + "' in " + hit.collider.ToString());
 
                 Debug.Log(entity.Controller);
                 entity.Controller.orders.Clear();

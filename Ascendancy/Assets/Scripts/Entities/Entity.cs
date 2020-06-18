@@ -64,12 +64,11 @@ public class Entity : MonoBehaviour
         float totalDamage = 0;
         foreach(DamageAmount dmgAmount in attackStrength.damageComposition)
         {
-            float modifiedDamage = dmgAmount.APAmount;
-            modifiedDamage += Mathf.Max(dmgAmount.nonAPAmount - entityInfo.Armor, Mathf.Min(dmgAmount.nonAPAmount, 1 ));
+            float modifiedDamage = Mathf.Clamp(dmgAmount.nonAPAmount - entityInfo.Armor, 1, dmgAmount.nonAPAmount);
+            modifiedDamage += dmgAmount.APAmount;
             totalDamage += modifiedDamage;
         }
 
-        
         totalDamage = Mathf.Clamp(totalDamage, 0, currentHealth);
         currentHealth -= totalDamage;
 

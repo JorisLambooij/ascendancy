@@ -26,6 +26,7 @@ public struct ProjectileInfo
     [Tooltip("How much this Projectile can pierce through Entities"), Min(1)]
     public float piercingPower;
 
-    [Tooltip("Does this Projectile explode on death")]
-    public bool explosive;
+    [Tooltip("The explosion radius of this Projectile. Leave at 0 for no explosion."), Min(0)]
+    public float explosionRadius;
+    
 }

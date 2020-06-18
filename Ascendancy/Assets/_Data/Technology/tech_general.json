@@ -135,7 +135,9 @@
             ],
             "cost": 3000,
             "startTech": false,
-            "unitsUnlocked": [],
+            "unitsUnlocked": [
+                "ScriptableObjects/Units/Mortar/Mortar.asset"
+            ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
         },

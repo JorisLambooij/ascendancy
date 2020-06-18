@@ -48,7 +48,8 @@ public class Healthbar : MonoBehaviour
 
     void UpdateSize(float percentage)
     {
-        barFront.transform.localPosition = new Vector3((1 - percentage), 0, 0);
+        float relativePosition = Mathf.Clamp01(1 - percentage);
+        barFront.transform.localPosition = new Vector3(relativePosition, 0, 0);
         barFront.transform.localScale = new Vector3(20 * percentage, 1 + margin, 1);
 
         transform.LookAt(transform.position - cam.transform.forward);

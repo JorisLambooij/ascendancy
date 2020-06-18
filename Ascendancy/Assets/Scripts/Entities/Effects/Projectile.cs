@@ -148,6 +148,19 @@ public class Projectile : MonoBehaviour
 
     protected void DestroyProjectile()
     {
+        if (info.explosionRadius > 0)
+        {
+            // Get all colliders in explosion radius
+            Collider[] collidersInRange = Physics.OverlapSphere(transform.position, info.explosionRadius);
+            foreach (Collider coll in collidersInRange)
+            {
+                // only process if the collider has an Entity attached
+                Entity e = coll.GetComponentInParent<Entity>();
+                if (e != null && !entitiesPierced.Contains(e))
+                    e.TakeDamage(info.attackStrength);
+            }
+        }
+
         Destroy(this.gameObject);
     }
 
