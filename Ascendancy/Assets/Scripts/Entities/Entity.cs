@@ -59,10 +59,10 @@ public class Entity : MonoBehaviour
     /// Deal damage to this Entity.
     /// </summary>
     /// <param name="damage"></param>
-    public void TakeDamage(AttackStrength attackStrength)
+    public void TakeDamage(DamageComposition attackStrength)
     {
         float totalDamage = 0;
-        foreach(DamageAmount dmgAmount in attackStrength.damageComposition)
+        foreach(DamageAmount dmgAmount in attackStrength.dmgComp)
         {
             float modifiedDamage = Mathf.Clamp(dmgAmount.nonAPAmount - entityInfo.Armor, 1, dmgAmount.nonAPAmount);
             modifiedDamage += dmgAmount.APAmount;

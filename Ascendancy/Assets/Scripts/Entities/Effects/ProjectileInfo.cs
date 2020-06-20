@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [System.Serializable]
-public struct ProjectileInfo
+[CreateAssetMenu(fileName = "NewProjectileInfo", menuName = "Projectiles/Regular")]
+public class ProjectileInfo : ScriptableObject
 {
     [Tooltip("The Initial speed at which this Projectile is launched at."), Min(1)]
     public float horizontalVelocity;
@@ -18,7 +22,7 @@ public struct ProjectileInfo
     public float lifeTime;
     
     [Tooltip("The damage composition of this Projectile")]
-    public AttackStrength attackStrength;
+    public DamageComposition rangedDamage;
 
     [Tooltip("Can this Projectile be shot down")]
     public bool interceptable;
@@ -26,7 +30,11 @@ public struct ProjectileInfo
     [Tooltip("How much this Projectile can pierce through Entities"), Min(1)]
     public float piercingPower;
 
-    [Tooltip("The explosion radius of this Projectile. Leave at 0 for no explosion."), Min(0)]
-    public float explosionRadius;
-    
+    [Tooltip("The Model that this Projectile uses.")]
+    public Mesh projectileModel;
+
+
+#if UNITY_EDITOR
+    public virtual void DoAdditionalLayout() { }
+#endif
 }

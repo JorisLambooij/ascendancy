@@ -19,16 +19,4 @@ MonoBehaviour:
   volley: 2
   volleyDuration: 0.2
   inaccuracy: 5
-  projectileInfo:
-    horizontalVelocity: 8
-    arcHeight: 2
-    targetSeekingCoefficient: 1
-    lifeTime: 16
-    attackStrength:
-      damageComposition:
-      - type: 0
-        APAmount: 10
-        nonAPAmount: 0
-    interceptable: 0
-    piercingPower: 1
-    explosive: 0
+  projectileInfo: {fileID: 11400000, guid: 9a77501eee629fb4aa29219438d992ce, type: 2}

@@ -66,13 +66,13 @@ public class MeleeAttackOrder : AttackOrder
             if (Random.Range(0, 100) < chanceToHit)
             {
                 // Successful attack
-                target.TakeDamage(meleeFeature.meleeStrength);
+                target.TakeDamage(meleeFeature.meleeDamage);
             }
         }
         else
         {
             // Target entitiy can't defend itself, so auto-hit.
-            target.TakeDamage(meleeFeature.meleeStrength);
+            target.TakeDamage(meleeFeature.meleeDamage);
             cooldown = meleeFeature.meleeAttackSpeed;
         }
 

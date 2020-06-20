@@ -6,7 +6,7 @@ public class Projectile : MonoBehaviour
 {
     public ProjectileInfo info;
 
-    private Rigidbody rb;
+    private Entity launcher;
     private Transform target;
     private Vector3 launchPos;
     private Vector3 predictedTargetLocation;
@@ -14,16 +14,13 @@ public class Projectile : MonoBehaviour
 
     // Each Entity can only be hit once by a projectile. This is to keep track of that.
     private HashSet<Entity> entitiesPierced;
-
-    public Rigidbody RB { get => rb; protected set => rb = value; }
-
+    
     public void Launch(RangedAttackFeature rangedFeature, Transform target)
     {
         this.info = rangedFeature.projectileInfo;
         this.target = target;
         
         this.launchPos = transform.position;
-        RB = GetComponent<Rigidbody>();
 
         // Get the location we want this Projectile to aim for.
         predictedTargetLocation = target.position;
@@ -107,7 +104,7 @@ public class Projectile : MonoBehaviour
                 // If this Projectile has pierced Entities before, reduce its damage
                 float piercingFactor = remainingPiercingPower / info.piercingPower;
                 piercingFactor = Mathf.Lerp(0.2f, 1, piercingFactor);
-                AttackStrength attStr = info.attackStrength.MultiplyDamage(piercingFactor);
+                DamageComposition attStr = info.rangedDamage.MultiplyDamage(piercingFactor);
                 //Debug.Log(attStr.damageComposition[0].APAmount);
 
                 hitEntity.TakeDamage(attStr);
@@ -148,16 +145,24 @@ public class Projectile : MonoBehaviour
 
     protected void DestroyProjectile()
     {
-        if (info.explosionRadius > 0)
+        if (info is ExplodingProjectileInfo)
         {
-            // Get all colliders in explosion radius
-            Collider[] collidersInRange = Physics.OverlapSphere(transform.position, info.explosionRadius);
-            foreach (Collider coll in collidersInRange)
+            ExplodingProjectileInfo explodeInfo = info as ExplodingProjectileInfo;
+            if (explodeInfo == null)
             {
-                // only process if the collider has an Entity attached
-                Entity e = coll.GetComponentInParent<Entity>();
-                if (e != null && !entitiesPierced.Contains(e))
-                    e.TakeDamage(info.attackStrength);
+                Debug.LogError("Something horrible has gone wrong");
+                return;
+            }
+            if (explodeInfo.explosionEffect == null)
+                Debug.LogError("Explosion Radius set to >0, but no Effect was provided. Please check " + launcher.name);
+            else
+            {
+                Explosion explosion = Instantiate(explodeInfo.explosionEffect).GetComponent<Explosion>();
+                explosion.transform.position = transform.position;
+                if (explosion != null)
+                    explosion.Explode(explodeInfo, launcher);
+                else
+                    Debug.LogError(launcher.name + " Effect has no Explosion-script.");
             }
         }
 

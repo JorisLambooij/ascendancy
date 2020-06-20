@@ -15,26 +15,26 @@ public struct DamageAmount
 }
 
 [System.Serializable]
-public struct AttackStrength
+public struct DamageComposition
 {
-    public List<DamageAmount> damageComposition;
+    public List<DamageAmount> dmgComp;
 
-    public AttackStrength(List<DamageAmount> damageComposition)
+    public DamageComposition(List<DamageAmount> damageComposition)
     {
-        this.damageComposition = damageComposition;
+        this.dmgComp = damageComposition;
     }
 
-    public AttackStrength MultiplyDamage(float factor)
+    public DamageComposition MultiplyDamage(float factor)
     {
-        List<DamageAmount> newComposition = new List<DamageAmount>(damageComposition.Count);
-        for (int i = 0; i < damageComposition.Count; i++)
+        List<DamageAmount> newComposition = new List<DamageAmount>(dmgComp.Count);
+        for (int i = 0; i < dmgComp.Count; i++)
         {
-            DamageAmount amount = damageComposition[i];
+            DamageAmount amount = dmgComp[i];
             amount.APAmount *= factor;
             amount.nonAPAmount *= factor;
             newComposition.Add(amount);
         }
-        AttackStrength returnValue = new AttackStrength(newComposition);
+        DamageComposition returnValue = new DamageComposition(newComposition);
         return returnValue;
     }
 }

@@ -37,6 +37,8 @@ public class Healthbar : MonoBehaviour
 
         if (visible)
         {
+            if (float.IsNaN(currentHealth))
+                Debug.LogError("Current Health is NaN");
             float percentage = Mathf.Clamp((float)currentHealth / maxHealth, 0, 1);
             UpdateSize(percentage);
             //UpdateColor(percentage);

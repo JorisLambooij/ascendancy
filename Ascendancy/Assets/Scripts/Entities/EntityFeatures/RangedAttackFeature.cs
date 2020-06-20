@@ -25,7 +25,6 @@ public class RangedAttackFeature : EntityFeature
 
     [Tooltip("Properties of the projectiles")]
     public ProjectileInfo projectileInfo;
-    
 
     public override bool ClickOrder(RaycastHit hit, bool enqueue = false)
     {
@@ -57,4 +56,5 @@ public class RangedAttackFeature : EntityFeature
                 return false;
         }
     }
+    
 }

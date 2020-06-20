@@ -12,7 +12,7 @@ public class MeleeFeature : EntityFeature
     public int meleeDefense;
     
     [Tooltip("The Strength of a melee attack.")]
-    public AttackStrength meleeStrength;
+    public DamageComposition meleeDamage;
     
     [Tooltip("The range of a melee attack.")]
     public int meleeRange;
