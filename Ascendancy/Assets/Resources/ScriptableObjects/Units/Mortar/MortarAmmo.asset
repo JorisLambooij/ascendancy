@@ -20,7 +20,7 @@ MonoBehaviour:
     dmgComp: []
   interceptable: 0
   piercingPower: 1
-  projectileModel: {fileID: -2432090755550338912, guid: 8f6f00910d8546147b1e13423d84d5b1,
+  projectilePrefab: {fileID: 5276842915712408972, guid: e03e69f1c83c2dd48a07f57fb1749def,
     type: 3}
   explosionDamage:
     dmgComp:
@@ -30,7 +30,7 @@ MonoBehaviour:
     - type: 1
       APAmount: 10
       nonAPAmount: 10
-  explosionRadius: 8
+  explosionRadius: 4
   damageFalloff: 0.5
   explosionEffect: {fileID: 486930412876179047, guid: 5c28e524638d0e54a8fd562fb4fa73cd,
     type: 3}

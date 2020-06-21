@@ -74,10 +74,8 @@ public class RangedAttackOrder : AttackOrder
         // Stagger the projectiles slightly, so they do not come out all at once
         for (int i = 0; i < rangedFeature.volley; i++)
         {
-            GameObject projectilePrefab = Resources.Load("Prefabs/Entities/Standard Projectile") as GameObject;
-            GameObject projectile = GameObject.Instantiate(projectilePrefab);
-            projectile.GetComponentInChildren<MeshFilter>().mesh = rangedFeature.projectileInfo.projectileModel;
-            projectile.transform.position = entity.transform.position;
+            //GameObject projectilePrefab = Resources.Load("Prefabs/Entities/Standard Projectile") as GameObject;
+            GameObject projectile = GameObject.Instantiate(rangedFeature.projectileInfo.projectilePrefab);
             projectile.GetComponent<Projectile>().Launch(rangedFeature, target.transform);
 
             yield return new WaitForSeconds(rangedFeature.volleyDuration / rangedFeature.volley);

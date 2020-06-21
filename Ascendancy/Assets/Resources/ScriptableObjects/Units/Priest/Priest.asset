@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9cf974669d2fc41897d68bad847a3a, type: 3}
+  m_Name: Priest
+  m_EditorClassIdentifier: 
+  name: Priest
+  Description: Holy warrior
+  MaxHealth: 50
+  Armor: 1
+  dimensions: {x: 0, y: 0}
+  Mesh: {fileID: 8028644478956099555, guid: a9caf272762f9d94eb99054a3468f22f, type: 3}
+  Thumbnail: {fileID: 21300000, guid: 8845619b34f81644dbda093e5ed7d83d, type: 3}
+  MinimapMarker: {fileID: 21300000, guid: b91f40cb12512dc4f9178bbfd1526c84, type: 3}
+  mass: 1
+  ViewDistance: 10
+  ContextMenuOptions: 0
+  Construction_Method: 0
+  Category: Support
+  selectionPriority: 0
+  BuildTime: 0
+  ResourceAmount: []
+  EntityFeatures:
+  - {fileID: 11400000, guid: 7d71cff1547d7e54f89d490ea2c6634c, type: 2}
+  - {fileID: 11400000, guid: a4db399b7fc038244ae1b7447549092e, type: 2}

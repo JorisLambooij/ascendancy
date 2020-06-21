@@ -76,6 +76,11 @@ public class Entity : MonoBehaviour
             Die();
     }
 
+    public void TakeHealing(float amountRestored)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + amountRestored, 0, entityInfo.MaxHealth);
+    }
+
     protected virtual void Start()
     {
         // Create the Selection Marker

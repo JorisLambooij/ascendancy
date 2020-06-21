@@ -19,9 +19,9 @@ public class Projectile : MonoBehaviour
     {
         this.info = rangedFeature.projectileInfo;
         this.target = target;
-        
+        this.transform.position = rangedFeature.entity.transform.position;
         this.launchPos = transform.position;
-
+        
         // Get the location we want this Projectile to aim for.
         predictedTargetLocation = target.position;
         Vector3 distance = predictedTargetLocation - transform.position;
@@ -118,14 +118,14 @@ public class Projectile : MonoBehaviour
         }
         else
         {
-            //Debug.Log("Hit something else: " + collider.tag);
+            Debug.Log("Hit something else: " + collider.tag);
             DestroyProjectile();
         }
     }
 
     IEnumerator TempDeactivateCollider(float time)
     {
-        Collider coll = GetComponentInChildren<Collider>();
+        Collider coll = GetComponent<Collider>();
         coll.enabled = false;
         yield return new WaitForSeconds(time);
         coll.enabled = true;

@@ -31,7 +31,7 @@ public class ProjectileInfo : ScriptableObject
     public float piercingPower;
 
     [Tooltip("The Model that this Projectile uses.")]
-    public Mesh projectileModel;
+    public GameObject projectilePrefab;
 
 
 #if UNITY_EDITOR
