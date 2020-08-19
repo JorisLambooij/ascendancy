@@ -474,6 +474,36 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1937048505}
     m_Modifications:
+    - target: {fileID: 8865665651337764294, guid: 3104e35c2f843bc4abec9ba1c665e264,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8865665651337764294, guid: 3104e35c2f843bc4abec9ba1c665e264,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8865665651337764294, guid: 3104e35c2f843bc4abec9ba1c665e264,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8865665651337764294, guid: 3104e35c2f843bc4abec9ba1c665e264,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8865665651427677634, guid: 3104e35c2f843bc4abec9ba1c665e264,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8865665651427677634, guid: 3104e35c2f843bc4abec9ba1c665e264,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8865665652333324266, guid: 3104e35c2f843bc4abec9ba1c665e264,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -492,6 +522,16 @@ PrefabInstance:
     - target: {fileID: 8865665652600454441, guid: 3104e35c2f843bc4abec9ba1c665e264,
         type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8865665652741079224, guid: 3104e35c2f843bc4abec9ba1c665e264,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8865665652741079224, guid: 3104e35c2f843bc4abec9ba1c665e264,
+        type: 3}
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8865665652840546906, guid: 3104e35c2f843bc4abec9ba1c665e264,
