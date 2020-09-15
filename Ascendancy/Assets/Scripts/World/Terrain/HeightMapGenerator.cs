@@ -21,15 +21,15 @@ public class HeightMapGenerator : MonoBehaviour
 
     public float[,] GenerateHeightMap()
     {
-        return GenerateHeightMap(mapWidth, mapHeight, Vector2.zero);
+        return GenerateHeightMap(mapWidth, mapHeight);
     }
-    public float[,] GenerateHeightMap(int width, int height, Vector2 offset)
+
+    public float[,] GenerateHeightMap(int width, int height)
     {
         mapWidth = width;
         mapHeight = height;
-        perlinOffset = offset;
 
-        noise = GenerateNoiseMap(width, height, offset, octaves, lucanarity, persistance);
+        noise = GenerateNoiseMap(width, height, perlinOffset, octaves, lucanarity, persistance);
         
         return noise;
     }
@@ -96,7 +96,8 @@ public class HeightMapGenerator : MonoBehaviour
             float noise = Mathf.PerlinNoise(u, v) * 2 - 1;
             perlin += noise * Mathf.Pow(_persistance, i);
         }
-        
+
+        perlin = Mathf.Clamp(perlin, -0.1f, 1);
         if (perlin > 1 || perlin < -1)
             Debug.Log(x + " " + y + ": " + perlin);
 

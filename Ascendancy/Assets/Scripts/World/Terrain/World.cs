@@ -59,7 +59,7 @@ public class World : MonoBehaviour_Singleton
     /// </summary>
     private Chunk[,] chunks;
 
-    protected void Awake()
+    public void Awake()
     {
         base.Start();
 
@@ -79,7 +79,7 @@ public class World : MonoBehaviour_Singleton
     public void CreateWorld()
     {
         HeightMapGenerator heightMapGenerator = GetComponent<HeightMapGenerator>();
-        heightMapGenerator.GenerateHeightMap(worldSize, worldSize, new Vector2(1, 0));
+        heightMapGenerator.GenerateHeightMap(worldSize, worldSize);
         heightmap = heightMapGenerator.AmplifyCliffs();
 
         //initiate things
