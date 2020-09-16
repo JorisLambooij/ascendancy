@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Chunk : MonoBehaviour
+public class Chunk_old : MonoBehaviour
 {
     #region mesh creation variables
     //mesh creation variables

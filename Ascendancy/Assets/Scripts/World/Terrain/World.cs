@@ -60,7 +60,7 @@ public class World : MonoBehaviour_Singleton
     /// <summary>
     /// Set of all the chunks used to draw the world.
     /// </summary>
-    private Chunk[,] chunks;
+    private Chunk_old[,] chunks;
 
     public void Awake()
     {
@@ -91,7 +91,7 @@ public class World : MonoBehaviour_Singleton
         //initiate things
         map = new Tile[worldSize, worldSize];
 
-        chunks = new Chunk[numberOfChunks, numberOfChunks];
+        chunks = new Chunk_old[numberOfChunks, numberOfChunks];
         for (int x = 0; x < worldSize; x++)
             for (int z = 0; z < worldSize; z++)
                 map[x, z] = new Tile(x, z, 0f, tileSize);
@@ -133,11 +133,11 @@ public class World : MonoBehaviour_Singleton
     }
 
     // Generate a chunk, fill it with necessary data and return the Chunk object
-    Chunk GenerateChunk(int x, int z)
+    Chunk_old GenerateChunk(int x, int z)
     {
         GameObject chunkGO = Instantiate(chunkPrefab, ChunkCollector);
         chunkGO.transform.position = new Vector3(x, 0, z) * (worldSize / numberOfChunks) * tileSize;
-        Chunk chunk = chunkGO.GetComponent<Chunk>();
+        Chunk_old chunk = chunkGO.GetComponent<Chunk_old>();
         chunk.Initialize();
         chunk.tileSize = tileSize;
         chunk.chunkSize = worldSize / numberOfChunks;
