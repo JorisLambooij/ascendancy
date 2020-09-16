@@ -10,8 +10,11 @@ public class Chunk : MonoBehaviour
     private List<Vector2> newUV = new List<Vector2>();
 
     private float tUnit = 0.25f;
-    private Vector2 tStone = new Vector2(1, 0);
-    private Vector2 tGrass = new Vector2(0, 1);
+    
+    private Vector2 tStone = new Vector2(1, 3);
+    private Vector2 tGrass = new Vector2(3, 3);
+
+    private Vector2 tCliff = new Vector2(0, 0);
 
     private Mesh mesh;
     private MeshCollider col;
@@ -98,7 +101,7 @@ public class Chunk : MonoBehaviour
         {
             for (int hg = 0; hg < tilemap.GetLength(1); hg++)
             {
-                GenerateFace(tilemap[wd, hg]);
+                GenerateFace(tilemap[wd, hg], tGrass);
             }
         }
     }
@@ -267,7 +270,7 @@ public class Chunk : MonoBehaviour
                             botLeft = Neighbor.topRight //down left
                         };
 
-                        GenerateFace(cliff);
+                        GenerateFace(cliff, tCliff);
                     }
                 }
 
@@ -286,7 +289,7 @@ public class Chunk : MonoBehaviour
                             botLeft = Neighbor.botRight //down left
                         };
 
-                        GenerateFace(cliff);
+                        GenerateFace(cliff, tCliff);
                     }
                 }
 
@@ -305,7 +308,7 @@ public class Chunk : MonoBehaviour
                             botLeft = Neighbor.botLeft //down left
                         };
 
-                        GenerateFace(cliff);
+                        GenerateFace(cliff, tCliff);
                     }
                 }
 
@@ -324,7 +327,7 @@ public class Chunk : MonoBehaviour
                             botLeft = Neighbor.topLeft //down left
                         };
 
-                        GenerateFace(cliff);
+                        GenerateFace(cliff, tCliff);
                     }
                 }
 
@@ -332,12 +335,12 @@ public class Chunk : MonoBehaviour
         }
     }
 
-    private void GenerateFace(FaceData voxel)
+    private void GenerateFace(FaceData face, Vector2 texture)
     {
-        newVertices.Add(voxel.topLeft);
-        newVertices.Add(voxel.topRight);
-        newVertices.Add(voxel.botRight);
-        newVertices.Add(voxel.botLeft);
+        newVertices.Add(face.topLeft);
+        newVertices.Add(face.topRight);
+        newVertices.Add(face.botRight);
+        newVertices.Add(face.botLeft);
 
         newTriangles.Add(faceCount * 4); //1
         newTriangles.Add(faceCount * 4 + 1); //2
@@ -348,7 +351,7 @@ public class Chunk : MonoBehaviour
 
         Vector2 texturePos;
 
-        texturePos = tStone;
+        texturePos = texture;
 
         newUV.Add(UVProjection(voxel.topLeft));
         newUV.Add(UVProjection(voxel.topRight));
