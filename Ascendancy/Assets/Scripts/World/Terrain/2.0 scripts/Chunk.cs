@@ -312,7 +312,7 @@ public class Chunk : MonoBehaviour
                 {
                     Neighbor = tilemap[wd, hg - 1];
 
-                    if (Neighbor.topRight.y < me.topLeft.y || Neighbor.botRight.y < me.botLeft.y)
+                    if (Neighbor.topLeft.y < me.botLeft.y || Neighbor.topRight.y < me.botRight.y)
                     {
                         FaceData cliff = new FaceData
                         {
