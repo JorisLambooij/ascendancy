@@ -83,7 +83,7 @@ public class World : MonoBehaviour_Singleton
     {
         //TODO: Fix it so that chunks can be larger than 64
         numberOfChunks = Mathf.CeilToInt(worldSize / 64);
-        Chunk.chunkSize = 64;
+        Chunk.chunkSize = 65;
 
         HeightMapGenerator heightMapGenerator = GetComponent<HeightMapGenerator>();
         heightmap = heightMapGenerator.GenerateHeightMap(worldSize, worldSize, noiseScale);
@@ -142,7 +142,7 @@ public class World : MonoBehaviour_Singleton
     Chunk GenerateChunk(int x, int z, float[,] globalHeightmap)
     {
         GameObject chunkGO = Instantiate(chunkPrefab, ChunkCollector);
-        chunkGO.transform.position = new Vector3(x, 0, z) * (worldSize / numberOfChunks) * tileSize;
+        chunkGO.transform.position = new Vector3(x, 0, z) * 64 * tileSize;
         Chunk chunk = chunkGO.GetComponent<Chunk>();
         chunk.chunkIndex = new Vector2Int(x, z);
         chunk.Initialize(globalHeightmap);

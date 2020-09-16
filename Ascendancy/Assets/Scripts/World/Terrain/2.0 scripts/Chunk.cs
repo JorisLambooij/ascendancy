@@ -64,7 +64,7 @@ public class Chunk : MonoBehaviour
         faceCount = 0;
     }
 
-    public void GenerateTerrain(float[,] floatHeightmap)
+    public void GenerateTerrain(float[,] globalHeightmap)
     {
 
         tilemap = new FaceData[chunkSize, chunkSize];
@@ -75,10 +75,10 @@ public class Chunk : MonoBehaviour
         for (int dx = 0; dx < chunkSize; dx++)
             for (int dy = 0; dy < chunkSize; dy++)
             {
-                int u = startX + dx;
-                int v = startY + dy;
+                int u = Mathf.Min(globalHeightmap.GetLength(0) - 1, startX + dx);
+                int v = Mathf.Min(globalHeightmap.GetLength(1) -1, startY + dy);
                 //get y and insert to int heightmap for later
-                int y = Mathf.RoundToInt(floatHeightmap[u, v] * 10);
+                int y = Mathf.RoundToInt(globalHeightmap[u, v] * 10);
 
                 //Debug.Assert(wd < heightmap.GetLength(0) && hg < heightmap.GetLength(1), "Error. WD/HG: " + wd + " " + hg);
                 heightmap[dx, dy] = y;
@@ -329,6 +329,7 @@ public class Chunk : MonoBehaviour
             }
         }
     }
+    
 
     private void GenerateFace(FaceData face, Vector2 texture)
     {
@@ -350,8 +351,8 @@ public class Chunk : MonoBehaviour
 
         newUV.Add(UVProjection(face.topLeft));
         newUV.Add(UVProjection(face.topRight));
-        newUV.Add(UVProjection(face.botLeft));
         newUV.Add(UVProjection(face.botRight));
+        newUV.Add(UVProjection(face.botLeft));
 
         //newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y));
         //newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y + tUnit));
