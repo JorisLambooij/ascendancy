@@ -60,7 +60,7 @@ public class World : MonoBehaviour_Singleton
     /// <summary>
     /// Set of all the chunks used to draw the world.
     /// </summary>
-    private Chunk_old[,] chunks;
+    private Chunk[,] chunks;
 
     public void Awake()
     {
@@ -83,7 +83,8 @@ public class World : MonoBehaviour_Singleton
     {
         //TODO: Fix it so that chunks can be larger than 64
         numberOfChunks = Mathf.CeilToInt(worldSize / 64);
-        
+        Chunk.chunkSize = 64;
+
         HeightMapGenerator heightMapGenerator = GetComponent<HeightMapGenerator>();
         heightmap = heightMapGenerator.GenerateHeightMap(worldSize, worldSize, noiseScale);
         //heightmap = heightMapGenerator.AmplifyCliffs();
@@ -91,7 +92,7 @@ public class World : MonoBehaviour_Singleton
         //initiate things
         map = new Tile[worldSize, worldSize];
 
-        chunks = new Chunk_old[numberOfChunks, numberOfChunks];
+        chunks = new Chunk[numberOfChunks, numberOfChunks];
         for (int x = 0; x < worldSize; x++)
             for (int z = 0; z < worldSize; z++)
                 map[x, z] = new Tile(x, z, 0f, tileSize);
@@ -103,15 +104,12 @@ public class World : MonoBehaviour_Singleton
         //tell all the chunks to draw their share of the mesh
         for (int i = 0; i < chunks.GetLength(0); i++)
             for (int j = 0; j < chunks.GetLength(1); j++)
-            {
-                chunks[i, j] = GenerateChunk(i, j);
-                chunks[i, j].DrawTiles(map);
-            }
+                chunks[i, j] = GenerateChunk(i, j, heightmap);
 
         GenerateTexture(heightMapGenerator);
 
         waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, -4, worldSize * tileSize / 2);
-        float size = worldSize / 9.84f;
+        float size = worldSize / 9.86f;
         waterPlane.transform.localScale = new Vector3(size * tileSize, 1, size * tileSize);
 
         navMeshBuilder.UpdateNavMesh(false);
@@ -133,15 +131,13 @@ public class World : MonoBehaviour_Singleton
     }
 
     // Generate a chunk, fill it with necessary data and return the Chunk object
-    Chunk_old GenerateChunk(int x, int z)
+    Chunk GenerateChunk(int x, int z, float[,] globalHeightmap)
     {
         GameObject chunkGO = Instantiate(chunkPrefab, ChunkCollector);
         chunkGO.transform.position = new Vector3(x, 0, z) * (worldSize / numberOfChunks) * tileSize;
-        Chunk_old chunk = chunkGO.GetComponent<Chunk_old>();
-        chunk.Initialize();
-        chunk.tileSize = tileSize;
-        chunk.chunkSize = worldSize / numberOfChunks;
+        Chunk chunk = chunkGO.GetComponent<Chunk>();
         chunk.chunkIndex = new Vector2Int(x, z);
+        chunk.Initialize(globalHeightmap);
         return chunk;
     }
 

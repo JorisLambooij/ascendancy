@@ -56,6 +56,7 @@ public class Chunk_old : MonoBehaviour
 
         vertCount += 4;
     }
+
     Vector2 UVProjection(Vector3 point)
     {
         int numberOfChunks = ((World)World.Instance).numberOfChunks;

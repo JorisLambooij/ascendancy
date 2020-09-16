@@ -20,20 +20,17 @@ public class Chunk : MonoBehaviour
 
     private FaceData[,] tilemap;
     private int[,] heightmap;
-
-    [SerializeField]
-    int mapHeight = 128;
-
-    [SerializeField]
-    int mapWidth = 128;
+    
+    public static int chunkSize = 64;
+    public Vector2Int chunkIndex;
 
     // Start is called before the first frame update
-    void Start()
+    public void Initialize(float[,] globalHeightmap)
     {
         mesh = GetComponent<MeshFilter>().mesh;
         col = GetComponent<MeshCollider>();
-
-        GenerateTerrain(mapHeight, mapWidth);
+        
+        GenerateTerrain(globalHeightmap);
 
         AdditiveSmoothing();
 
@@ -41,11 +38,11 @@ public class Chunk : MonoBehaviour
         FillCliffs();
 
         UpdateMesh();
+        
     }
 
-    void UpdateMesh()
+    public void UpdateMesh()
     {
-
         mesh.Clear();
         mesh.vertices = newVertices.ToArray();
         mesh.uv = newUV.ToArray();
@@ -63,34 +60,37 @@ public class Chunk : MonoBehaviour
         faceCount = 0;
     }
 
-    void GenerateTerrain(int width, int height)
+    public void GenerateTerrain(float[,] floatHeightmap)
     {
-        float[,] floatHeightmap = new HeightMapGenerator().GenerateHeightMap(width, height);
 
-        tilemap = new FaceData[width, height];
-        heightmap = new int[width, height];
+        tilemap = new FaceData[chunkSize, chunkSize];
+        heightmap = new int[chunkSize, chunkSize];
 
-        for (int wd = 0; wd < width; wd++)
-        {
-            for (int hg = 0; hg < height; hg++)
+        int startX = chunkIndex.x * chunkSize, startY = chunkIndex.y * chunkSize;
+
+        for (int dx = 0; dx < chunkSize; dx++)
+            for (int dy = 0; dy < chunkSize; dy++)
             {
+                int u = startX + dx;
+                int v = startY + dy;
                 //get y and insert to int heightmap for later
-                int y = Mathf.RoundToInt(floatHeightmap[wd, hg] * 10);
-                heightmap[wd, hg] = y;
+                int y = Mathf.RoundToInt(floatHeightmap[u, v] * 10);
+
+                //Debug.Assert(wd < heightmap.GetLength(0) && hg < heightmap.GetLength(1), "Error. WD/HG: " + wd + " " + hg);
+                heightmap[dx, dy] = y;
 
 
-                tilemap[wd, hg] = new FaceData
+                tilemap[dx, dy] = new FaceData
                 {
-                    topLeft = new Vector3(wd - 0.5f, y, hg + 0.5f), //top left
-                    topRight = new Vector3(wd + 0.5f, y, hg + 0.5f), //up right
-                    botRight = new Vector3(wd + 0.5f, y, hg - 0.5f), //down right
-                    botLeft = new Vector3(wd - 0.5f, y, hg - 0.5f) //down left
+                    topLeft = new Vector3(dx - 0.5f, y, dy + 0.5f), //top left
+                    topRight = new Vector3(dx + 0.5f, y, dy + 0.5f), //up right
+                    botRight = new Vector3(dx + 0.5f, y, dy - 0.5f), //down right
+                    botLeft = new Vector3(dx - 0.5f, y, dy - 0.5f) //down left
                 };
             }
-        }
     }
 
-    void GenerateMesh()
+    public void GenerateMesh()
     {
         Debug.Log("Generate Mesh for tilemap " + tilemap.GetLength(0) + "/" + tilemap.GetLength(1));
 
@@ -103,7 +103,7 @@ public class Chunk : MonoBehaviour
         }
     }
 
-    void AdditiveSmoothing()
+    public void AdditiveSmoothing()
     {
         FaceData Neighbor;
         bool tl = false;
@@ -242,7 +242,7 @@ public class Chunk : MonoBehaviour
         }
     }
 
-    void FillCliffs()
+    public void FillCliffs()
     {
         FaceData Neighbor;
 
@@ -350,11 +350,27 @@ public class Chunk : MonoBehaviour
 
         texturePos = tStone;
 
-        newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y));
-        newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y + tUnit));
-        newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y + tUnit));
-        newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y));
+        newUV.Add(UVProjection(voxel.topLeft));
+        newUV.Add(UVProjection(voxel.topRight));
+        newUV.Add(UVProjection(voxel.botLeft));
+        newUV.Add(UVProjection(voxel.botRight));
+
+        //newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y));
+        //newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y + tUnit));
+        //newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y + tUnit));
+        //newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y));
 
         faceCount++;
+    }
+
+    private Vector2 UVProjection(Vector3 point)
+    {
+        int numberOfChunks = ((World)World.Instance).numberOfChunks;
+        Vector3 UV_projectionInChunk = Vector3.ProjectOnPlane(point, Vector3.up) / (chunkSize * ((World)World.Instance).tileSize * numberOfChunks);
+
+        float x = UV_projectionInChunk.x + chunkIndex.x * (1f / numberOfChunks);
+        float y = UV_projectionInChunk.z + chunkIndex.y * (1f / numberOfChunks);
+
+        return new Vector2(x, y);
     }
 }

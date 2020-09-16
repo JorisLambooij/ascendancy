@@ -29,7 +29,7 @@ public class World_EditorScript : Editor
 
     private void Generate(World world, Vector2 seed)
     {
-        Chunk_old[] chunks = world.ChunkCollector.GetComponentsInChildren<Chunk_old>();
+        Chunk[] chunks = world.ChunkCollector.GetComponentsInChildren<Chunk>();
         for (int i = 0; i < chunks.Length; i++)
         {
             DestroyImmediate(chunks[i].gameObject);
