@@ -112,7 +112,15 @@ public class World : MonoBehaviour_Singleton
         float size = worldSize / 9.86f;
         waterPlane.transform.localScale = new Vector3(size * tileSize, 1, size * tileSize);
 
-        navMeshBuilder.UpdateNavMesh(false);
+        try
+        {
+            navMeshBuilder.UpdateNavMesh(false);
+        }
+        catch (System.Exception e)
+        {
+            if (Application.IsPlaying(this))
+                throw e;
+        }
         Debug.Log("World Generated: ");
     }
 

@@ -30,7 +30,8 @@ public class Chunk : MonoBehaviour
     // Start is called before the first frame update
     public void Initialize(float[,] globalHeightmap)
     {
-        mesh = GetComponent<MeshFilter>().mesh;
+        //mesh = GetComponent<MeshFilter>().mesh;
+        mesh = new Mesh();
         col = GetComponent<MeshCollider>();
         
         GenerateTerrain(globalHeightmap);
@@ -41,7 +42,7 @@ public class Chunk : MonoBehaviour
         FillCliffs();
 
         UpdateMesh();
-        
+        GetComponent<MeshFilter>().sharedMesh = mesh;
     }
 
     public void UpdateMesh()
@@ -95,15 +96,9 @@ public class Chunk : MonoBehaviour
 
     public void GenerateMesh()
     {
-        Debug.Log("Generate Mesh for tilemap " + tilemap.GetLength(0) + "/" + tilemap.GetLength(1));
-
         for (int wd = 0; wd < tilemap.GetLength(0); wd++)
-        {
             for (int hg = 0; hg < tilemap.GetLength(1); hg++)
-            {
                 GenerateFace(tilemap[wd, hg], tGrass);
-            }
-        }
     }
 
     public void AdditiveSmoothing()
