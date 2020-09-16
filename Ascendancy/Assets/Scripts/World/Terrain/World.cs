@@ -9,9 +9,9 @@ using System.Collections.Generic;
 
 public class World : MonoBehaviour_Singleton
 {
-    public enum DisplayMode { Height, Color };
+    public enum DisplayMode { Height, Color, Gradient };
     public DisplayMode displayMode = DisplayMode.Color;
-
+    
     #region Tweakables
     [Header("Tweakables")]
     /// <summary>
@@ -27,8 +27,10 @@ public class World : MonoBehaviour_Singleton
     /// <summary>
     /// Number of chunk per side of the world.
     /// </summary>
+    [HideInInspector]
     public int numberOfChunks = 2;
 
+    public float noiseScale = 2;
     public float tileSize = 5f; //meters per side of each tiles
     public float heightScale = 1f;   //meters of elevation each new level gives us
     public float heightResolution = 1f; // amount of different levels of elevation
@@ -43,6 +45,7 @@ public class World : MonoBehaviour_Singleton
     public Transform ChunkCollector;
     public GameObject fow_plane;
     public Texture2D tex;
+    public Transform waterPlane;
 
     /// <summary>
     /// Contains the information about the height of the tiles.
@@ -78,9 +81,12 @@ public class World : MonoBehaviour_Singleton
 
     public void CreateWorld()
     {
+        //TODO: Fix it so that chunks can be larger than 64
+        numberOfChunks = Mathf.CeilToInt(worldSize / 64);
+        
         HeightMapGenerator heightMapGenerator = GetComponent<HeightMapGenerator>();
-        heightMapGenerator.GenerateHeightMap(worldSize, worldSize);
-        heightmap = heightMapGenerator.AmplifyCliffs();
+        heightmap = heightMapGenerator.GenerateHeightMap(worldSize, worldSize, noiseScale);
+        //heightmap = heightMapGenerator.AmplifyCliffs();
 
         //initiate things
         map = new Tile[worldSize, worldSize];
@@ -90,8 +96,8 @@ public class World : MonoBehaviour_Singleton
             for (int z = 0; z < worldSize; z++)
                 map[x, z] = new Tile(x, z, 0f, tileSize);
 
-        Debug.Log("Building Terrain");
         //generate the terrain!
+        Debug.Log("Building Terrain");
         GenerateTerrain();
 
         //tell all the chunks to draw their share of the mesh
@@ -100,15 +106,21 @@ public class World : MonoBehaviour_Singleton
             {
                 chunks[i, j] = GenerateChunk(i, j);
                 chunks[i, j].DrawTiles(map);
-
-                //chunks[i, j].GetComponent<MeshRenderer>().material.SetTexture("_TerrainTexture", heightMapGenerator.HeightTexture(i, j, worldSize / numberOfChunks, displayMode));
             }
 
+        GenerateTexture(heightMapGenerator);
 
-        chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TerrainTexture", heightMapGenerator.WorldTexture(heightMapGenerator.noise, displayMode));
+        waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, -4, worldSize * tileSize / 2);
+        float size = worldSize / 9.84f;
+        waterPlane.transform.localScale = new Vector3(size * tileSize, 1, size * tileSize);
 
         navMeshBuilder.UpdateNavMesh(false);
+        Debug.Log("World Generated: ");
+    }
 
+    public void GenerateTexture(HeightMapGenerator heightMapGenerator)
+    {
+        chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TerrainTexture", heightMapGenerator.WorldTexture(heightmap, displayMode));
     }
 
     public void DestroyWorld()
@@ -144,7 +156,8 @@ public class World : MonoBehaviour_Singleton
 
                 if (active.isSlope)
                 {
-                    break;
+                    continue;
+                    //break;
                 }
                 active.upperLeft = AdjustVector(active.upperLeft);
                 active.upperRight = AdjustVector(active.upperRight);
@@ -190,7 +203,7 @@ public class World : MonoBehaviour_Singleton
     public bool IsFlat(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);
-        return map[v.x, v.y].flatLand;
+        return map[v.x, v.y].FlatLand;
     }
 
     public bool IsAreaFlat(Vector3 pos, Vector2Int dimensions)
@@ -206,7 +219,7 @@ public class World : MonoBehaviour_Singleton
             {
                 int finalX = v.x + x - halfX, finalY = v.y + y - halfY;
 
-                if (!map[finalX, finalY].flatLand)
+                if (!map[finalX, finalY].FlatLand)
                     return false;
             }
         return true;

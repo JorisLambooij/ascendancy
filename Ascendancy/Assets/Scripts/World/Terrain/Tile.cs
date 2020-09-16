@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Tile
 {
+    #region Internal data
     public Vector3 upperLeft;
     public Vector3 upperRight;
     public Vector3 lowerRight;
@@ -11,8 +12,6 @@ public class Tile
     public float height;    //the idealized height of this tile
     public bool isSlope = false;
 
-    public bool flatLand;
-
     public float tileSize = 3f; //tile size in meters
 
     //cached things
@@ -20,11 +19,19 @@ public class Tile
     private float centerZ;
 
     public float worldX, worldZ;
+    #endregion
+
+    #region Terrain Data
+
+    private bool flatLand;
+    private TerrainType type;
+
+    #endregion
+    public bool FlatLand { get => flatLand; set => flatLand = value; }
 
     //basic constructor
     public Tile(float centerX, float centerZ, float height, float size)
     {
-
         this.height = height;
         this.centerX = centerX;
         this.centerZ = centerZ;
@@ -58,7 +65,6 @@ public class Tile
         if ((upperLeft.y + upperRight.y + lowerLeft.y + lowerRight.y) / 4f != height)
             isSlope = true;
 
-        flatLand = (upperLeft.y == upperRight.y && upperRight.y == lowerRight.y && lowerRight.y == lowerLeft.y);
-
+        FlatLand = (upperLeft.y == upperRight.y && upperRight.y == lowerRight.y && lowerRight.y == lowerLeft.y);
     }
 }

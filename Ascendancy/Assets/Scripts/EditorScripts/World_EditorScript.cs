@@ -21,6 +21,10 @@ public class World_EditorScript : Editor
             Vector2 seed = new Vector2(Random.Range(-1000, 1000), Random.Range(-1000, 1000));
             Generate(world, seed);
         }
+        if (GUILayout.Button("Re-Generate Texture"))
+        {
+            ReGenerateTexture(world);
+        }
     }
 
     private void Generate(World world, Vector2 seed)
@@ -34,6 +38,12 @@ public class World_EditorScript : Editor
         HeightMapGenerator hmGen = world.transform.GetComponent<HeightMapGenerator>();
         hmGen.perlinOffset = seed;
         world.Awake();
+    }
+
+    private void ReGenerateTexture(World world)
+    {
+        HeightMapGenerator hmGen = world.transform.GetComponent<HeightMapGenerator>();
+        world.GenerateTexture(hmGen);
     }
 }
 #endif

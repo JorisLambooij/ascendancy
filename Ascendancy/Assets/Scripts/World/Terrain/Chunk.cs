@@ -25,6 +25,7 @@ public class Chunk : MonoBehaviour
     {
         //fetch objects
         //TODO: fix this for instantiation
+
         mesh = GetComponent<MeshFilter>().mesh;
         col = GetComponent<MeshCollider>();
     }
@@ -58,7 +59,7 @@ public class Chunk : MonoBehaviour
     Vector2 UVProjection(Vector3 point)
     {
         int numberOfChunks = ((World)World.Instance).numberOfChunks;
-        Vector3 UV_projectionInChunk = Vector3.ProjectOnPlane(point, Vector3.up) / chunkSize / tileSize / numberOfChunks;
+        Vector3 UV_projectionInChunk = Vector3.ProjectOnPlane(point, Vector3.up) / (chunkSize * tileSize * numberOfChunks);
 
         float x = UV_projectionInChunk.x + chunkIndex.x * (1f / numberOfChunks);
         float y = UV_projectionInChunk.z + chunkIndex.y * (1f / numberOfChunks);
@@ -301,8 +302,8 @@ public class Chunk : MonoBehaviour
     public void DrawTiles(Tile[,] map)
     {
         //figure out where we should start!
-        int startX = (int)(transform.position.x / tileSize);
-        int startZ = (int)(transform.position.z / tileSize);
+        int startX = (int)Mathf.Max(transform.position.x / tileSize, 0);
+        int startZ = (int)Mathf.Max(transform.position.z / tileSize, 0);
 
         //find out where we should END
         int endX = Mathf.Min(startX + chunkSize, map.GetLength(0));
@@ -310,13 +311,11 @@ public class Chunk : MonoBehaviour
 
         //iterate though the list
         for (int x = startX; x < endX; x++)
-        {
             for (int z = startZ; z < endZ; z++)
             {
                 Tile t = map[x, z];
                 DrawTile(t);
             }
-        }
 
         //then comit to the changes
         ComitMeshChanges();
