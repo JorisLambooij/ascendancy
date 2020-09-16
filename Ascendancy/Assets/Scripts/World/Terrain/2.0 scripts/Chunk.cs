@@ -353,10 +353,10 @@ public class Chunk : MonoBehaviour
 
         texturePos = texture;
 
-        newUV.Add(UVProjection(voxel.topLeft));
-        newUV.Add(UVProjection(voxel.topRight));
-        newUV.Add(UVProjection(voxel.botLeft));
-        newUV.Add(UVProjection(voxel.botRight));
+        newUV.Add(UVProjection(face.topLeft));
+        newUV.Add(UVProjection(face.topRight));
+        newUV.Add(UVProjection(face.botLeft));
+        newUV.Add(UVProjection(face.botRight));
 
         //newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y));
         //newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y + tUnit));
