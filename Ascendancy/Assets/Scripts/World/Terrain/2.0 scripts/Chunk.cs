@@ -191,8 +191,8 @@ public class Chunk : MonoBehaviour
         int numberOfChunks = ((World)World.Instance).numberOfChunks;
         Vector3 UV_projectionInChunk = Vector3.ProjectOnPlane(point, Vector3.up) / (chunkSize * ((World)World.Instance).tileSize * numberOfChunks);
 
-        float x = UV_projectionInChunk.x + chunkIndex.x * (1f / numberOfChunks);
-        float y = UV_projectionInChunk.z + chunkIndex.y * (1f / numberOfChunks);
+        float x = UV_projectionInChunk.x;
+        float y = UV_projectionInChunk.z;
 
         return new Vector2(x, y);
     }
