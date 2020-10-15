@@ -4,10 +4,10 @@ using System.Collections;
 public class Tile
 {
     #region Internal data
-    public Vector3 upperLeft;
-    public Vector3 upperRight;
-    public Vector3 lowerRight;
-    public Vector3 lowerLeft;
+    public Vector3 topLeft;
+    public Vector3 topRight;
+    public Vector3 botLeft;
+    public Vector3 botRight;
 
     public float height;    //the idealized height of this tile
     public bool isSlope = false;
@@ -30,41 +30,10 @@ public class Tile
     public bool FlatLand { get => flatLand; set => flatLand = value; }
 
     //basic constructor
-    public Tile(float centerX, float centerZ, float height, float size)
+    public Tile()
     {
-        this.height = height;
-        this.centerX = centerX;
-        this.centerZ = centerZ;
-        //make sure we're set to the right size
-        tileSize = size;
-        float halfSize = size / 2f;
-
-        //setup the vectors!
-        upperLeft = new Vector3((centerX * tileSize), height, (centerZ * tileSize) + tileSize);
-        upperRight = new Vector3((centerX * tileSize) + tileSize, height, (centerZ * tileSize) + tileSize);
-        lowerRight = new Vector3((centerX * tileSize) + tileSize, height, (centerZ * tileSize));
-        lowerLeft = new Vector3((centerX * tileSize), height, (centerZ * tileSize));
-
-        worldX = (centerX + 0.5f) * tileSize;
-        worldZ = (centerZ + 0.5f) * tileSize;
+       
     }
 
-    public void recalculate()
-    {
-        //reset our vectors
-        upperLeft = new Vector3((centerX * tileSize), height, (centerZ * tileSize) + tileSize);
-        upperRight = new Vector3((centerX * tileSize) + tileSize, height, (centerZ * tileSize) + tileSize);
-        lowerRight = new Vector3((centerX * tileSize) + tileSize, height, (centerZ * tileSize));
-        lowerLeft = new Vector3((centerX * tileSize), height, (centerZ * tileSize));
-    }
-
-    public void ReSetStats()
-    {
-        height = Mathf.Max(upperRight.y, upperLeft.y, lowerLeft.y, lowerRight.y);
-
-        if ((upperLeft.y + upperRight.y + lowerLeft.y + lowerRight.y) / 4f != height)
-            isSlope = true;
-
-        FlatLand = (upperLeft.y == upperRight.y && upperRight.y == lowerRight.y && lowerRight.y == lowerLeft.y);
-    }
+ 
 }

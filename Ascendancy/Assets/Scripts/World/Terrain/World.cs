@@ -11,7 +11,7 @@ public class World : MonoBehaviour_Singleton
 {
     public enum DisplayMode { Height, Color, Gradient };
     public DisplayMode displayMode = DisplayMode.Color;
-    
+
     #region Tweakables
     [Header("Tweakables")]
     /// <summary>
@@ -61,7 +61,7 @@ public class World : MonoBehaviour_Singleton
     /// Set of all the chunks used to draw the world.
     /// </summary>
     private Chunk[,] chunks;
-
+    
     public void Awake()
     {
         base.Start();
@@ -70,7 +70,7 @@ public class World : MonoBehaviour_Singleton
 
         //resize fow_plane
         if (fow_plane == null) { }
-            //Debug.LogError("FoW_Plane not found, no fog for you! Go fog yourself!");
+        //Debug.LogError("FoW_Plane not found, no fog for you! Go fog yourself!");
         else
         {
             //TODO Calculate stuff instead of estimating '25.5'
@@ -83,7 +83,7 @@ public class World : MonoBehaviour_Singleton
     {
         //TODO: Fix it so that chunks can be larger than 64
         numberOfChunks = Mathf.CeilToInt(worldSize / 64);
-        Chunk.chunkSize = 65;
+        Chunk.chunkSize = 64;
 
         HeightMapGenerator heightMapGenerator = GetComponent<HeightMapGenerator>();
         heightmap = heightMapGenerator.GenerateHeightMap(worldSize, worldSize, noiseScale);
@@ -93,18 +93,17 @@ public class World : MonoBehaviour_Singleton
         map = new Tile[worldSize, worldSize];
 
         chunks = new Chunk[numberOfChunks, numberOfChunks];
-        for (int x = 0; x < worldSize; x++)
-            for (int z = 0; z < worldSize; z++)
-                map[x, z] = new Tile(x, z, 0f, tileSize);
 
         //generate the terrain!
         Debug.Log("Building Terrain");
         GenerateTerrain();
 
         //tell all the chunks to draw their share of the mesh
-        for (int i = 0; i < chunks.GetLength(0); i++)
-            for (int j = 0; j < chunks.GetLength(1); j++)
-                chunks[i, j] = GenerateChunk(i, j, heightmap);
+        for (int x = 0; x < chunks.GetLength(0)-1; x++)
+            for (int z = 0; z < chunks.GetLength(1)-1; z++)
+            {
+                chunks[x, z] = GenerateChunk(x, z);
+            }
 
         GenerateTexture(heightMapGenerator);
 
@@ -124,6 +123,165 @@ public class World : MonoBehaviour_Singleton
         Debug.Log("World Generated: ");
     }
 
+    Chunk GenerateChunk(int startX, int startZ)
+    {
+        int chunkSize = Chunk.chunkSize;
+        GameObject chunkGO = Instantiate(chunkPrefab, ChunkCollector);
+        chunkGO.transform.position = new Vector3(startX, 0, startZ) * 64 * tileSize;
+        Chunk chunk = chunkGO.GetComponent<Chunk>();
+        chunk.chunkIndex = new Vector2Int(startX, startZ);
+
+        Tile[,] chunkTilemap = new Tile[chunkSize, chunkSize];
+
+        for (int x = 0; x < chunkSize; x++)
+            for (int z = 0; z < chunkSize; z++)
+            {
+                chunkTilemap[x, z] = map[chunkSize * startX + x, chunkSize * startZ + z];
+            }
+
+        chunk.Initialize(chunkTilemap);
+        return chunk;
+    }
+
+    public void AdditiveSmoothing()
+    {
+        Tile Neighbor;
+        bool tl = false;
+        bool tr = false;
+        bool bl = false;
+        bool br = false;
+        Tile me;
+
+        for (int wd = 0; wd < map.GetLength(0); wd++)
+        {
+            for (int hg = 0; hg < map.GetLength(1); hg++)
+            {
+                me = map[wd, hg];
+                tl = false;
+                tr = false;
+                bl = false;
+                br = false;
+
+                #region direct
+                //check left
+                if (wd > 0)
+                {
+                    Neighbor = map[wd - 1, hg];
+
+                    if (Neighbor.topRight.y > me.topLeft.y && Neighbor.botRight.y > me.botLeft.y)
+                    {
+                        tl = true;
+                        bl = true;
+                    }
+                }
+
+                //check above
+                if (hg < map.GetLength(1) - 1)
+                {
+                    Neighbor = map[wd, hg + 1];
+
+                    if (Neighbor.botLeft.y > me.topLeft.y && Neighbor.botRight.y > me.topRight.y)
+                    {
+                        tl = true;
+                        tr = true;
+                    }
+                }
+
+                //check right
+                if (wd < map.GetLength(0) - 1)
+                {
+                    Neighbor = map[wd + 1, hg];
+
+                    if (Neighbor.topLeft.y > me.topRight.y && Neighbor.botLeft.y > me.botRight.y)
+                    {
+                        tr = true;
+                        br = true;
+                    }
+                }
+
+                //check below
+                if (hg > 0)
+                {
+                    Neighbor = map[wd, hg - 1];
+
+                    if (Neighbor.topLeft.y > me.botLeft.y && Neighbor.topRight.y > me.botRight.y)
+                    {
+                        bl = true;
+                        br = true;
+                    }
+                }
+                #endregion
+
+                #region diagonal
+                //check topLeft
+                if (wd > 0 && hg < map.GetLength(1) - 1)
+                {
+                    Neighbor = map[wd - 1, hg + 1];
+
+                    if (Neighbor.botRight.y > me.topLeft.y)
+                    {
+                        tl = true;
+                    }
+                }
+
+                //check topRight
+                if (hg < map.GetLength(1) - 1 && wd < map.GetLength(0) - 1)
+                {
+                    Neighbor = map[wd + 1, hg + 1];
+
+                    if (Neighbor.botLeft.y > me.topRight.y)
+                    {
+                        tr = true;
+                    }
+                }
+
+                //check botRight
+                if (hg > 0 && wd < map.GetLength(0) - 1)
+                {
+                    Neighbor = map[wd + 1, hg - 1];
+
+                    if (Neighbor.topLeft.y > me.botRight.y)
+                    {
+                        br = true;
+                    }
+                }
+
+                //check botLeft
+                if (hg > 0 && wd > 0)
+                {
+                    Neighbor = map[wd - 1, hg - 1];
+
+                    if (Neighbor.topRight.y > me.botLeft.y)
+                    {
+                        bl = true;
+                    }
+                }
+
+
+                #endregion
+
+
+                if (tl)
+                {
+                    map[wd, hg].topLeft.y += 1;
+                }
+                if (tr)
+                {
+                    map[wd, hg].topRight.y += 1;
+                }
+                if (br)
+                {
+                    map[wd, hg].botRight.y += 1;
+                }
+                if (bl)
+                {
+                    map[wd, hg].botLeft.y += 1;
+                }
+
+            }
+        }
+    }
+
     public void GenerateTexture(HeightMapGenerator heightMapGenerator)
     {
         chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TerrainTexture", heightMapGenerator.WorldTexture(heightmap, displayMode));
@@ -135,41 +293,32 @@ public class World : MonoBehaviour_Singleton
             for (int i = 0; i < chunks.GetLength(0); i++)
                 for (int j = 0; j < chunks.GetLength(1); j++)
                     if (chunks[i, j] != null)
-                    DestroyImmediate(chunks[i, j].gameObject);
+                        DestroyImmediate(chunks[i, j].gameObject);
     }
 
-    // Generate a chunk, fill it with necessary data and return the Chunk object
-    Chunk GenerateChunk(int x, int z, float[,] globalHeightmap)
-    {
-        GameObject chunkGO = Instantiate(chunkPrefab, ChunkCollector);
-        chunkGO.transform.position = new Vector3(x, 0, z) * 64 * tileSize;
-        Chunk chunk = chunkGO.GetComponent<Chunk>();
-        chunk.chunkIndex = new Vector2Int(x, z);
-        chunk.Initialize(globalHeightmap);
-        return chunk;
-    }
 
     void GenerateTerrain()
     {
-        //make some height
-        for (int x = 0; x < worldSize; x++)
-        {
-            for (int z = 0; z < worldSize; z++)
+        for (int dx = 0; dx < worldSize; dx++)
+            for (int dy = 0; dy < worldSize; dy++)
             {
-                Tile active = map[x, z];
+                int u = Mathf.Min(heightmap.GetLength(0) - 1, dx);
+                int v = Mathf.Min(heightmap.GetLength(1) - 1, dy);
+                //get y and insert to int heightmap for later
+                int y = Mathf.RoundToInt(heightmap[u, v] * 10);
 
-                if (active.isSlope)
+                //Debug.Assert(wd < heightmap.GetLength(0) && hg < heightmap.GetLength(1), "Error. WD/HG: " + wd + " " + hg);
+                heightmap[dx, dy] = y;
+
+
+                map[dx, dy] = new Tile
                 {
-                    continue;
-                    //break;
-                }
-                active.upperLeft = AdjustVector(active.upperLeft);
-                active.upperRight = AdjustVector(active.upperRight);
-                active.lowerRight = AdjustVector(active.lowerRight);
-                active.lowerLeft = AdjustVector(active.lowerLeft);
-                active.ReSetStats();
+                    topLeft = new Vector3(dx - 0.5f, y, dy + 0.5f), //top left
+                    topRight = new Vector3(dx + 0.5f, y, dy + 0.5f), //up right
+                    botRight = new Vector3(dx + 0.5f, y, dy - 0.5f), //down right
+                    botLeft = new Vector3(dx - 0.5f, y, dy - 0.5f) //down left
+                };
             }
-        }
     }
 
     Vector3 AdjustVector(Vector3 input)
@@ -192,7 +341,7 @@ public class World : MonoBehaviour_Singleton
 
         return heightmap[texX, texY] * heightResolution;
     }
-    
+
     public Collider GetCollider()
     {
         return chunks[0, 0].GetComponent<MeshCollider>();
@@ -228,7 +377,7 @@ public class World : MonoBehaviour_Singleton
             }
         return true;
     }
-    
+
     public Tile GetTile(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);
