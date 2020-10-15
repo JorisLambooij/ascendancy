@@ -41,7 +41,7 @@ public class Chunk : MonoBehaviour
         //AdditiveSmoothing();
 
         GenerateMesh(chunkTilemap);
-        //FillCliffs();
+        //FillCliffs(chunkTilemap);
 
         UpdateMesh();
         GetComponent<MeshFilter>().sharedMesh = mesh;
@@ -66,7 +66,7 @@ public class Chunk : MonoBehaviour
         faceCount = 0;
     }
 
-    private void GenerateFace(Tile face, Vector2 texture)
+    private void GenerateFace(Face face, Vector2 texture)
     {
         newVertices.Add(face.topLeft);
         newVertices.Add(face.topRight);
@@ -93,98 +93,98 @@ public class Chunk : MonoBehaviour
         faceCount++;
     }
 
-    public void FillCliffs(Tile[,] chunkTilemap)
-    {
-        Vector2 tCliff = new Vector2(0, 0);
-        Tile Neighbor;
-        Tile me;
-        Tile cliff;
+    //public void FillCliffs(Tile[,] chunkTilemap)
+    //{
+    //    Vector2 tCliff = new Vector2(0, 0);
+    //    Tile Neighbor;
+    //    Tile me;
+    //    Tile cliff;
 
-        for (int wd = 0; wd < chunkTilemap.GetLength(0); wd++)
-        {
-            for (int hg = 0; hg < chunkTilemap.GetLength(1); hg++)
-            {
-                me = chunkTilemap[wd, hg];
+    //    for (int wd = 0; wd < chunkTilemap.GetLength(0); wd++)
+    //    {
+    //        for (int hg = 0; hg < chunkTilemap.GetLength(1); hg++)
+    //        {
+    //            me = chunkTilemap[wd, hg];
 
-                //check left
-                if (wd > 0)
-                {
-                    Neighbor = chunkTilemap[wd - 1, hg];
+    //            //check left
+    //            if (wd > 0)
+    //            {
+    //                Neighbor = chunkTilemap[wd - 1, hg];
 
-                    if (Neighbor.topRight.y < me.topLeft.y || Neighbor.botRight.y < me.botLeft.y)
-                    {
-                        cliff = new Tile
-                        {
-                            topLeft = me.topLeft, //top left
-                            topRight = me.botLeft, //up right
-                            botRight = Neighbor.botRight, //down right
-                            botLeft = Neighbor.topRight //down left
-                        };
+    //                if (Neighbor.topRight.y < me.topLeft.y || Neighbor.botRight.y < me.botLeft.y)
+    //                {
+    //                    cliff = new Tile
+    //                    {
+    //                        topLeft = me.topLeft, //top left
+    //                        topRight = me.botLeft, //up right
+    //                        botRight = Neighbor.botRight, //down right
+    //                        botLeft = Neighbor.topRight //down left
+    //                    };
 
-                        GenerateFace(cliff, tCliff);
-                    }
-                }
+    //                    GenerateFace(cliff, tCliff);
+    //                }
+    //            }
 
-                //check above
-                if (hg < chunkTilemap.GetLength(1) - 1)
-                {
-                    Neighbor = chunkTilemap[wd, hg + 1];
+    //            //check above
+    //            if (hg < chunkTilemap.GetLength(1) - 1)
+    //            {
+    //                Neighbor = chunkTilemap[wd, hg + 1];
 
-                    if (Neighbor.botLeft.y < me.topLeft.y || Neighbor.botRight.y < me.topRight.y)
-                    {
-                        cliff = new Tile
-                        {
-                            topLeft = me.topRight, //top left
-                            topRight = me.topLeft, //up right
-                            botRight = Neighbor.botLeft, //down right
-                            botLeft = Neighbor.botRight //down left
-                        };
+    //                if (Neighbor.botLeft.y < me.topLeft.y || Neighbor.botRight.y < me.topRight.y)
+    //                {
+    //                    cliff = new Tile
+    //                    {
+    //                        topLeft = me.topRight, //top left
+    //                        topRight = me.topLeft, //up right
+    //                        botRight = Neighbor.botLeft, //down right
+    //                        botLeft = Neighbor.botRight //down left
+    //                    };
 
-                        GenerateFace(cliff, tCliff);
-                    }
-                }
+    //                    GenerateFace(cliff, tCliff);
+    //                }
+    //            }
 
-                //check right
-                if (wd < chunkTilemap.GetLength(0) - 1)
-                {
-                    Neighbor = chunkTilemap[wd + 1, hg];
+    //            //check right
+    //            if (wd < chunkTilemap.GetLength(0) - 1)
+    //            {
+    //                Neighbor = chunkTilemap[wd + 1, hg];
 
-                    if (Neighbor.topLeft.y < me.topRight.y || Neighbor.botLeft.y < me.botRight.y)
-                    {
-                        cliff = new Tile
-                        {
-                            topLeft = me.botRight, //top left
-                            topRight = me.topRight, //up right
-                            botRight = Neighbor.topLeft, //down right
-                            botLeft = Neighbor.botLeft //down left
-                        };
+    //                if (Neighbor.topLeft.y < me.topRight.y || Neighbor.botLeft.y < me.botRight.y)
+    //                {
+    //                    cliff = new Tile
+    //                    {
+    //                        topLeft = me.botRight, //top left
+    //                        topRight = me.topRight, //up right
+    //                        botRight = Neighbor.topLeft, //down right
+    //                        botLeft = Neighbor.botLeft //down left
+    //                    };
 
-                        GenerateFace(cliff, tCliff);
-                    }
-                }
+    //                    GenerateFace(cliff, tCliff);
+    //                }
+    //            }
 
-                //check below
-                if (hg > 0)
-                {
-                    Neighbor = chunkTilemap[wd, hg - 1];
+    //            //check below
+    //            if (hg > 0)
+    //            {
+    //                Neighbor = chunkTilemap[wd, hg - 1];
 
-                    if (Neighbor.topLeft.y < me.botLeft.y || Neighbor.topRight.y < me.botRight.y)
-                    {
-                        cliff = new Tile
-                        {
-                            topLeft = me.botLeft, //top left
-                            topRight = me.botRight, //up right
-                            botRight = Neighbor.topRight, //down right
-                            botLeft = Neighbor.topLeft //down left
-                        };
+    //                if (Neighbor.topLeft.y < me.botLeft.y || Neighbor.topRight.y < me.botRight.y)
+    //                {
+    //                    cliff = new Tile
+    //                    {
+    //                        topLeft = me.botLeft, //top left
+    //                        topRight = me.botRight, //up right
+    //                        botRight = Neighbor.topRight, //down right
+    //                        botLeft = Neighbor.topLeft //down left
+    //                    };
 
-                        GenerateFace(cliff, tCliff);
-                    }
-                }
+    //                    GenerateFace(cliff, tCliff);
+    //                }
+    //            }
 
-            }
-        }
-    }
+    //        }
+    //    }
+    //}
 
     private Vector2 UVProjection(Vector3 point)
     {
@@ -231,7 +231,36 @@ public class Chunk : MonoBehaviour
     {
         for (int wd = 0; wd < chunkTilemap.GetLength(0); wd++)
             for (int hg = 0; hg < chunkTilemap.GetLength(1); hg++)
-                GenerateFace(chunkTilemap[wd, hg], tGrass);
+            {
+                GenerateFace(chunkTilemap[wd, hg].face, tGrass);
+
+                if (chunkTilemap[wd, hg] is TileCliff)
+                {
+                    TileCliff cliff = (TileCliff)chunkTilemap[wd, hg];
+                    Debug.Log("Tilecliff!" + cliff.topCliff + "/" + cliff.rightCliff + "/" + cliff.botCliff + "/" + cliff.leftCliff + "/");
+
+                    if (cliff.topCliff != null)
+                    {
+                        GenerateFace(cliff.topCliff, tStone);
+                    }
+
+                    if (cliff.rightCliff != null)
+                    {
+                        GenerateFace(cliff.rightCliff, tStone);
+                    }
+
+                    if (cliff.botCliff != null)
+                    {
+                        GenerateFace(cliff.botCliff, tStone);
+                    }
+
+                    if (cliff.leftCliff != null)
+                    {
+                        GenerateFace(cliff.leftCliff, tStone);
+                    }
+
+                }
+            }
     }
 
     

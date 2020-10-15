@@ -61,7 +61,7 @@ public class World : MonoBehaviour_Singleton
     /// Set of all the chunks used to draw the world.
     /// </summary>
     private Chunk[,] chunks;
-    
+
     public void Awake()
     {
         base.Start();
@@ -97,6 +97,7 @@ public class World : MonoBehaviour_Singleton
         //generate the terrain!
         Debug.Log("Building Terrain");
         GenerateTerrain();
+        FillCliffs();
 
         //tell all the chunks to draw their share of the mesh
         for (int x = 0; x < chunks.GetLength(0); x++)
@@ -143,6 +144,119 @@ public class World : MonoBehaviour_Singleton
         return chunk;
     }
 
+    public void FillCliffs()
+    {
+        Vector2 tCliff = new Vector2(0, 0);
+        Tile Neighbor;
+        Tile me;
+        TileCliff cliff;
+
+        for (int wd = 0; wd < map.GetLength(0); wd++)
+        {
+            for (int hg = 0; hg < map.GetLength(1); hg++)
+            {
+                me = map[wd, hg];
+
+                //check left
+                if (wd > 0)
+                {
+                    Neighbor = map[wd - 1, hg];
+
+                    if (Neighbor.face.topRight.y < me.face.topLeft.y || Neighbor.face.botRight.y < me.face.botLeft.y)
+                    {
+                        //check if tile is already a cliff
+                        if (!(me is TileCliff))
+                        {
+                            map[wd, hg] = new TileCliff(map[wd, hg]);
+                        }
+                        cliff = (TileCliff)map[wd, hg];
+
+                        cliff.leftCliff = new Face();
+                        cliff.leftCliff.topLeft = me.face.topLeft; //top left
+                        cliff.leftCliff.topRight = me.face.botLeft; //up right
+                        cliff.leftCliff.botRight = Neighbor.face.botRight; //down right
+                        cliff.leftCliff.botLeft = Neighbor.face.topRight; //down left
+
+                        map[wd, hg] = cliff;
+                    }
+                }
+
+                //check above
+                if (hg < map.GetLength(1) - 1)
+                {
+                    Neighbor = map[wd, hg + 1];
+
+                    if (Neighbor.face.botLeft.y < me.face.topLeft.y || Neighbor.face.botRight.y < me.face.topRight.y)
+                    {
+                        //check if tile is already a cliff
+                        if (!(me is TileCliff))
+                        {
+                            map[wd, hg] = new TileCliff(map[wd, hg]);
+                        }
+                        cliff = (TileCliff)map[wd, hg];
+
+                        cliff.topCliff = new Face();
+                        cliff.topCliff.topLeft = me.face.topRight; //top left
+                        cliff.topCliff.topRight = me.face.topLeft; //up right
+                        cliff.topCliff.botRight = Neighbor.face.botLeft; //down right
+                        cliff.topCliff.botLeft = Neighbor.face.botRight; //down left
+
+                        map[wd, hg] = cliff;
+                    }
+                }
+
+                //check right
+                if (wd < map.GetLength(0) - 1)
+                {
+                    Neighbor = map[wd + 1, hg];
+
+                    if (Neighbor.face.topLeft.y < me.face.topRight.y || Neighbor.face.botLeft.y < me.face.botRight.y)
+                    {
+                        //check if tile is already a cliff
+                        if (!(me is TileCliff))
+                        {
+                            map[wd, hg] = new TileCliff(map[wd, hg]);
+                        }
+                        cliff = (TileCliff)map[wd, hg];
+
+                        cliff.rightCliff = new Face();
+                        cliff.rightCliff.topLeft = me.face.botRight; //top left
+                        cliff.rightCliff.topRight = me.face.topRight; //up right
+                        cliff.rightCliff.botRight = Neighbor.face.topLeft; //down right
+                        cliff.rightCliff.botLeft = Neighbor.face.botLeft; //down left
+
+                        map[wd, hg] = cliff;
+                    }
+                }
+
+                //check below
+                if (hg > 0)
+                {
+                    Neighbor = map[wd, hg - 1];
+
+                    if (Neighbor.face.topLeft.y < me.face.botLeft.y || Neighbor.face.topRight.y < me.face.botRight.y)
+                    {
+                        //check if tile is already a cliff
+                        if (!(me is TileCliff))
+                        {
+                            map[wd, hg] = new TileCliff(map[wd, hg]);
+                        }
+                        cliff = (TileCliff)map[wd, hg];
+
+                        cliff.botCliff = new Face();
+                        cliff.botCliff.topLeft = me.face.botLeft; //top left
+                        cliff.botCliff.topRight = me.face.botRight; //up right
+                        cliff.botCliff.botRight = Neighbor.face.topRight; //down right
+                        cliff.botCliff.botLeft = Neighbor.face.topLeft; //down left
+
+                        map[wd, hg] = cliff;
+                    }
+                }
+
+            }
+        }
+    }
+
     public void AdditiveSmoothing()
     {
         Tile Neighbor;
@@ -168,7 +282,7 @@ public class World : MonoBehaviour_Singleton
                 {
                     Neighbor = map[wd - 1, hg];
 
-                    if (Neighbor.topRight.y > me.topLeft.y && Neighbor.botRight.y > me.botLeft.y)
+                    if (Neighbor.face.topRight.y > me.face.topLeft.y && Neighbor.face.botRight.y > me.face.botLeft.y)
                     {
                         tl = true;
                         bl = true;
@@ -180,7 +294,7 @@ public class World : MonoBehaviour_Singleton
                 {
                     Neighbor = map[wd, hg + 1];
 
-                    if (Neighbor.botLeft.y > me.topLeft.y && Neighbor.botRight.y > me.topRight.y)
+                    if (Neighbor.face.botLeft.y > me.face.topLeft.y && Neighbor.face.botRight.y > me.face.topRight.y)
                     {
                         tl = true;
                         tr = true;
@@ -192,7 +306,7 @@ public class World : MonoBehaviour_Singleton
                 {
                     Neighbor = map[wd + 1, hg];
 
-                    if (Neighbor.topLeft.y > me.topRight.y && Neighbor.botLeft.y > me.botRight.y)
+                    if (Neighbor.face.topLeft.y > me.face.topRight.y && Neighbor.face.botLeft.y > me.face.botRight.y)
                     {
                         tr = true;
                         br = true;
@@ -204,7 +318,7 @@ public class World : MonoBehaviour_Singleton
                 {
                     Neighbor = map[wd, hg - 1];
 
-                    if (Neighbor.topLeft.y > me.botLeft.y && Neighbor.topRight.y > me.botRight.y)
+                    if (Neighbor.face.topLeft.y > me.face.botLeft.y && Neighbor.face.topRight.y > me.face.botRight.y)
                     {
                         bl = true;
                         br = true;
@@ -218,7 +332,7 @@ public class World : MonoBehaviour_Singleton
                 {
                     Neighbor = map[wd - 1, hg + 1];
 
-                    if (Neighbor.botRight.y > me.topLeft.y)
+                    if (Neighbor.face.botRight.y > me.face.topLeft.y)
                     {
                         tl = true;
                     }
@@ -229,7 +343,7 @@ public class World : MonoBehaviour_Singleton
                 {
                     Neighbor = map[wd + 1, hg + 1];
 
-                    if (Neighbor.botLeft.y > me.topRight.y)
+                    if (Neighbor.face.botLeft.y > me.face.topRight.y)
                     {
                         tr = true;
                     }
@@ -240,7 +354,7 @@ public class World : MonoBehaviour_Singleton
                 {
                     Neighbor = map[wd + 1, hg - 1];
 
-                    if (Neighbor.topLeft.y > me.botRight.y)
+                    if (Neighbor.face.topLeft.y > me.face.botRight.y)
                     {
                         br = true;
                     }
@@ -251,7 +365,7 @@ public class World : MonoBehaviour_Singleton
                 {
                     Neighbor = map[wd - 1, hg - 1];
 
-                    if (Neighbor.topRight.y > me.botLeft.y)
+                    if (Neighbor.face.topRight.y > me.face.botLeft.y)
                     {
                         bl = true;
                     }
@@ -263,19 +377,19 @@ public class World : MonoBehaviour_Singleton
 
                 if (tl)
                 {
-                    map[wd, hg].topLeft.y += 1;
+                    map[wd, hg].face.topLeft.y += 1;
                 }
                 if (tr)
                 {
-                    map[wd, hg].topRight.y += 1;
+                    map[wd, hg].face.topRight.y += 1;
                 }
                 if (br)
                 {
-                    map[wd, hg].botRight.y += 1;
+                    map[wd, hg].face.botRight.y += 1;
                 }
                 if (bl)
                 {
-                    map[wd, hg].botLeft.y += 1;
+                    map[wd, hg].face.botLeft.y += 1;
                 }
 
             }
@@ -296,7 +410,6 @@ public class World : MonoBehaviour_Singleton
                         DestroyImmediate(chunks[i, j].gameObject);
     }
 
-
     void GenerateTerrain()
     {
         for (int dx = 0; dx < worldSize; dx++)
@@ -311,8 +424,9 @@ public class World : MonoBehaviour_Singleton
                 heightmap[dx, dy] = y;
 
 
-                map[dx, dy] = new Tile
-                {
+                map[dx, dy] = new Tile();
+                map[dx,dy].face = new Face
+                {                    
                     topLeft = new Vector3(dx - 0.5f, y, dy + 0.5f), //top left
                     topRight = new Vector3(dx + 0.5f, y, dy + 0.5f), //up right
                     botRight = new Vector3(dx + 0.5f, y, dy - 0.5f), //down right
