@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 public class World : MonoBehaviour_Singleton
 {
-    public enum DisplayMode { Height, Color, Gradient };
+    public enum DisplayMode { Height, Color, Gradient, Monochrome };
     public DisplayMode displayMode = DisplayMode.Color;
 
     #region Tweakables
@@ -99,8 +99,8 @@ public class World : MonoBehaviour_Singleton
         GenerateTerrain();
 
         //tell all the chunks to draw their share of the mesh
-        for (int x = 0; x < chunks.GetLength(0)-1; x++)
-            for (int z = 0; z < chunks.GetLength(1)-1; z++)
+        for (int x = 0; x < chunks.GetLength(0); x++)
+            for (int z = 0; z < chunks.GetLength(1); z++)
             {
                 chunks[x, z] = GenerateChunk(x, z);
             }
@@ -127,7 +127,7 @@ public class World : MonoBehaviour_Singleton
     {
         int chunkSize = Chunk.chunkSize;
         GameObject chunkGO = Instantiate(chunkPrefab, ChunkCollector);
-        chunkGO.transform.position = new Vector3(startX, 0, startZ) * 64 * tileSize;
+        //chunkGO.transform.position = new Vector3(startX, 0, startZ) * 64 * tileSize;
         Chunk chunk = chunkGO.GetComponent<Chunk>();
         chunk.chunkIndex = new Vector2Int(startX, startZ);
 

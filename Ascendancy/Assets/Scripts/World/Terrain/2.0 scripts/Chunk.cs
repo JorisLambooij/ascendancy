@@ -67,13 +67,13 @@ public class Chunk : MonoBehaviour
     }
 
     private void GenerateFace(Tile face, Vector2 texture)
-    {       
-
+    {
         newVertices.Add(face.topLeft);
         newVertices.Add(face.topRight);
         newVertices.Add(face.botRight);
         newVertices.Add(face.botLeft);
-
+        
+        
         newTriangles.Add(faceCount * 4); //1
         newTriangles.Add(faceCount * 4 + 1); //2
         newTriangles.Add(faceCount * 4 + 2); //3

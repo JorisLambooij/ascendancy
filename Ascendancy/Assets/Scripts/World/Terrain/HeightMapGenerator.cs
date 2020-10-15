@@ -130,9 +130,11 @@ public class HeightMapGenerator : MonoBehaviour
                         gradient *= 8;
                         color = new Color(gradient, gradient, gradient);
                         break;
-                    default:
                     case World.DisplayMode.Color:
                         color = terrainHeightGradient.Evaluate(intensity);
+                        break;
+                    default:
+                        color = new Color(.1f, .7f, .2f);
                         break;
                 }
 
