@@ -146,7 +146,7 @@ public class World : MonoBehaviour_Singleton
 
     public void FillCliffs()
     {
-        Vector2 tCliff = new Vector2(0, 0);
+        //Vector2 tCliff = new Vector2(0, 0);
         Tile Neighbor;
         Tile me;
         TileCliff cliff;
@@ -165,7 +165,7 @@ public class World : MonoBehaviour_Singleton
                     if (Neighbor.face.topRight.y < me.face.topLeft.y || Neighbor.face.botRight.y < me.face.botLeft.y)
                     {
                         //check if tile is already a cliff
-                        if (!(me is TileCliff))
+                        if (!(me.GetType() == typeof(TileCliff)))
                         {
                             map[wd, hg] = new TileCliff(map[wd, hg]);
                         }
@@ -189,7 +189,7 @@ public class World : MonoBehaviour_Singleton
                     if (Neighbor.face.botLeft.y < me.face.topLeft.y || Neighbor.face.botRight.y < me.face.topRight.y)
                     {
                         //check if tile is already a cliff
-                        if (!(me is TileCliff))
+                        if (!(me.GetType() == typeof(TileCliff)))
                         {
                             map[wd, hg] = new TileCliff(map[wd, hg]);
                         }
@@ -213,7 +213,7 @@ public class World : MonoBehaviour_Singleton
                     if (Neighbor.face.topLeft.y < me.face.topRight.y || Neighbor.face.botLeft.y < me.face.botRight.y)
                     {
                         //check if tile is already a cliff
-                        if (!(me is TileCliff))
+                        if (!(me.GetType() == typeof(TileCliff)))
                         {
                             map[wd, hg] = new TileCliff(map[wd, hg]);
                         }
@@ -237,7 +237,7 @@ public class World : MonoBehaviour_Singleton
                     if (Neighbor.face.topLeft.y < me.face.botLeft.y || Neighbor.face.topRight.y < me.face.botRight.y)
                     {
                         //check if tile is already a cliff
-                        if (!(me is TileCliff))
+                        if (!(me.GetType() == typeof(TileCliff)))
                         {
                             map[wd, hg] = new TileCliff(map[wd, hg]);
                         }
