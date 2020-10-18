@@ -97,6 +97,8 @@ public class World : MonoBehaviour_Singleton
         //generate the terrain!
         Debug.Log("Building Terrain");
         GenerateTerrain();
+        
+        AdditiveSmoothing();
         FillCliffs();
 
         //tell all the chunks to draw their share of the mesh
@@ -108,7 +110,7 @@ public class World : MonoBehaviour_Singleton
 
         GenerateTexture(heightMapGenerator);
 
-        waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, -4, worldSize * tileSize / 2);
+        waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, -4.25f, worldSize * tileSize / 2);
         float size = worldSize / 9.86f;
         waterPlane.transform.localScale = new Vector3(size * tileSize, 1, size * tileSize);
 
@@ -147,7 +149,7 @@ public class World : MonoBehaviour_Singleton
     public void FillCliffs()
     {
         //Vector2 tCliff = new Vector2(0, 0);
-        Tile Neighbor;
+        Tile neighbor;
         Tile me;
         TileCliff cliff;
 
@@ -160,12 +162,12 @@ public class World : MonoBehaviour_Singleton
                 //check left
                 if (wd > 0)
                 {
-                    Neighbor = map[wd - 1, hg];
+                    neighbor = map[wd - 1, hg];
 
-                    if (Neighbor.face.topRight.y < me.face.topLeft.y || Neighbor.face.botRight.y < me.face.botLeft.y)
+                    if (neighbor.face.topRight.y < me.face.topLeft.y || neighbor.face.botRight.y < me.face.botLeft.y)
                     {
                         //check if tile is already a cliff
-                        if (!(me.GetType() == typeof(TileCliff)))
+                        if (!(map[wd, hg].GetType() == typeof(TileCliff)))
                         {
                             map[wd, hg] = new TileCliff(map[wd, hg]);
                         }
@@ -174,8 +176,8 @@ public class World : MonoBehaviour_Singleton
                         cliff.leftCliff = new Face();
                         cliff.leftCliff.topLeft = me.face.topLeft; //top left
                         cliff.leftCliff.topRight = me.face.botLeft; //up right
-                        cliff.leftCliff.botRight = Neighbor.face.botRight; //down right
-                        cliff.leftCliff.botLeft = Neighbor.face.topRight; //down left
+                        cliff.leftCliff.botRight = neighbor.face.botRight; //down right
+                        cliff.leftCliff.botLeft = neighbor.face.topRight; //down left
 
                         map[wd, hg] = cliff;
                     }
@@ -184,12 +186,12 @@ public class World : MonoBehaviour_Singleton
                 //check above
                 if (hg < map.GetLength(1) - 1)
                 {
-                    Neighbor = map[wd, hg + 1];
+                    neighbor = map[wd, hg + 1];
 
-                    if (Neighbor.face.botLeft.y < me.face.topLeft.y || Neighbor.face.botRight.y < me.face.topRight.y)
+                    if (neighbor.face.botLeft.y < me.face.topLeft.y || neighbor.face.botRight.y < me.face.topRight.y)
                     {
                         //check if tile is already a cliff
-                        if (!(me.GetType() == typeof(TileCliff)))
+                        if (!(map[wd, hg].GetType() == typeof(TileCliff)))
                         {
                             map[wd, hg] = new TileCliff(map[wd, hg]);
                         }
@@ -198,8 +200,8 @@ public class World : MonoBehaviour_Singleton
                         cliff.topCliff = new Face();
                         cliff.topCliff.topLeft = me.face.topRight; //top left
                         cliff.topCliff.topRight = me.face.topLeft; //up right
-                        cliff.topCliff.botRight = Neighbor.face.botLeft; //down right
-                        cliff.topCliff.botLeft = Neighbor.face.botRight; //down left
+                        cliff.topCliff.botRight = neighbor.face.botLeft; //down right
+                        cliff.topCliff.botLeft = neighbor.face.botRight; //down left
 
                         map[wd, hg] = cliff;
                     }
@@ -208,12 +210,12 @@ public class World : MonoBehaviour_Singleton
                 //check right
                 if (wd < map.GetLength(0) - 1)
                 {
-                    Neighbor = map[wd + 1, hg];
+                    neighbor = map[wd + 1, hg];
 
-                    if (Neighbor.face.topLeft.y < me.face.topRight.y || Neighbor.face.botLeft.y < me.face.botRight.y)
+                    if (neighbor.face.topLeft.y < me.face.topRight.y || neighbor.face.botLeft.y < me.face.botRight.y)
                     {
                         //check if tile is already a cliff
-                        if (!(me.GetType() == typeof(TileCliff)))
+                        if (!(map[wd, hg].GetType() == typeof(TileCliff)))
                         {
                             map[wd, hg] = new TileCliff(map[wd, hg]);
                         }
@@ -222,8 +224,8 @@ public class World : MonoBehaviour_Singleton
                         cliff.rightCliff = new Face();
                         cliff.rightCliff.topLeft = me.face.botRight; //top left
                         cliff.rightCliff.topRight = me.face.topRight; //up right
-                        cliff.rightCliff.botRight = Neighbor.face.topLeft; //down right
-                        cliff.rightCliff.botLeft = Neighbor.face.botLeft; //down left
+                        cliff.rightCliff.botRight = neighbor.face.topLeft; //down right
+                        cliff.rightCliff.botLeft = neighbor.face.botLeft; //down left
 
                         map[wd, hg] = cliff;
                     }
@@ -232,12 +234,12 @@ public class World : MonoBehaviour_Singleton
                 //check below
                 if (hg > 0)
                 {
-                    Neighbor = map[wd, hg - 1];
+                    neighbor = map[wd, hg - 1];
 
-                    if (Neighbor.face.topLeft.y < me.face.botLeft.y || Neighbor.face.topRight.y < me.face.botRight.y)
+                    if (neighbor.face.topLeft.y < me.face.botLeft.y || neighbor.face.topRight.y < me.face.botRight.y)
                     {
                         //check if tile is already a cliff
-                        if (!(me.GetType() == typeof(TileCliff)))
+                        if (!(map[wd, hg].GetType() == typeof(TileCliff)))
                         {
                             map[wd, hg] = new TileCliff(map[wd, hg]);
                         }
@@ -246,8 +248,8 @@ public class World : MonoBehaviour_Singleton
                         cliff.botCliff = new Face();
                         cliff.botCliff.topLeft = me.face.botLeft; //top left
                         cliff.botCliff.topRight = me.face.botRight; //up right
-                        cliff.botCliff.botRight = Neighbor.face.topRight; //down right
-                        cliff.botCliff.botLeft = Neighbor.face.topLeft; //down left
+                        cliff.botCliff.botRight = neighbor.face.topRight; //down right
+                        cliff.botCliff.botLeft = neighbor.face.topLeft; //down left
 
                         map[wd, hg] = cliff;
                     }
