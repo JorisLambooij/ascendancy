@@ -34,7 +34,7 @@ public class TileCliff : Tile
         this.worldZ = baseTile.worldZ;
 
         this.flatLand = baseTile.FlatLand;
-        this.tType = baseTile.tType;
+        this.terrainType = baseTile.terrainType;
     }
 
 }

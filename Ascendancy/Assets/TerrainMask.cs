@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TerrainType { Land, Water, Cliff }
+public enum TerrainTypeOld { Land, Water, Cliff }
 public class TerrainMap
 {
     public float[,] heightmap;

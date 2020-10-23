@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
 
+
 public class World : MonoBehaviour_Singleton
 {
     public enum DisplayMode { Height, Color, Gradient, Monochrome };
@@ -41,11 +42,17 @@ public class World : MonoBehaviour_Singleton
 
     //public float seaLevel = 0;
 
+    [Header("Tilemap")]
+    public Texture2D tilemapTexture;
+    public int textureTilesize = 64;
+
     [Header("Misc References")]
     public Transform ChunkCollector;
-    public GameObject fow_plane;
+    public bool useHeightmapAsTexture = false;
     public Texture2D tex;
     public Transform waterPlane;
+
+    private Texture2D[,] tileArray;
 
     /// <summary>
     /// Contains the information about the height of the tiles.
@@ -68,15 +75,6 @@ public class World : MonoBehaviour_Singleton
 
         CreateWorld();
 
-        //resize fow_plane
-        if (fow_plane == null) { }
-        //Debug.LogError("FoW_Plane not found, no fog for you! Go fog yourself!");
-        else
-        {
-            //TODO Calculate stuff instead of estimating '25.5'
-            fow_plane.transform.localScale = new Vector3(25.5f, 1, 25.5f);
-            fow_plane.transform.position = new Vector3(worldSize, fow_plane.transform.position.y, worldSize);
-        }
     }
 
     public void CreateWorld()
@@ -97,7 +95,7 @@ public class World : MonoBehaviour_Singleton
         //generate the terrain!
         Debug.Log("Building Terrain");
         GenerateTerrain();
-        
+
         AdditiveSmoothing();
         FillCliffs();
 
@@ -108,7 +106,31 @@ public class World : MonoBehaviour_Singleton
                 chunks[x, z] = GenerateChunk(x, z);
             }
 
-        GenerateTexture(heightMapGenerator);
+        if (useHeightmapAsTexture)
+            GenerateTexture(heightMapGenerator);
+        else
+        {
+            int xSize = tilemapTexture.width / textureTilesize;
+            int ySize = tilemapTexture.height / textureTilesize;
+
+            tileArray = new Texture2D[xSize, ySize];
+
+            //populating tile array
+            Texture2D destTex;
+            Color[] pix;
+
+            for (int x = 0; x < xSize; x++)
+                for (int y = 0; y < ySize; y++)
+                {
+                    pix = tilemapTexture.GetPixels(x * textureTilesize, y * textureTilesize, textureTilesize, textureTilesize);
+                    destTex = new Texture2D(textureTilesize, textureTilesize);
+                    destTex.SetPixels(pix);
+                    destTex.Apply();
+                    tileArray[x, y] = destTex;
+                }
+
+
+        }
 
         waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, -4.25f, worldSize * tileSize / 2);
         float size = worldSize / 9.86f;
@@ -284,7 +306,7 @@ public class World : MonoBehaviour_Singleton
                 {
                     Neighbor = map[wd - 1, hg];
 
-                    if (Neighbor.face.topRight.y > me.face.topLeft.y && Neighbor.face.botRight.y > me.face.botLeft.y)
+                    if (Neighbor.face.topRight.y == me.face.topLeft.y + 1 && Neighbor.face.botRight.y == me.face.botLeft.y + 1)
                     {
                         tl = true;
                         bl = true;
@@ -296,7 +318,7 @@ public class World : MonoBehaviour_Singleton
                 {
                     Neighbor = map[wd, hg + 1];
 
-                    if (Neighbor.face.botLeft.y > me.face.topLeft.y && Neighbor.face.botRight.y > me.face.topRight.y)
+                    if (Neighbor.face.botLeft.y == me.face.topLeft.y + 1 && Neighbor.face.botRight.y == me.face.topRight.y + 1)
                     {
                         tl = true;
                         tr = true;
@@ -308,7 +330,7 @@ public class World : MonoBehaviour_Singleton
                 {
                     Neighbor = map[wd + 1, hg];
 
-                    if (Neighbor.face.topLeft.y > me.face.topRight.y && Neighbor.face.botLeft.y > me.face.botRight.y)
+                    if (Neighbor.face.topLeft.y == me.face.topRight.y + 1 && Neighbor.face.botLeft.y == me.face.botRight.y + 1)
                     {
                         tr = true;
                         br = true;
@@ -320,7 +342,7 @@ public class World : MonoBehaviour_Singleton
                 {
                     Neighbor = map[wd, hg - 1];
 
-                    if (Neighbor.face.topLeft.y > me.face.botLeft.y && Neighbor.face.topRight.y > me.face.botRight.y)
+                    if (Neighbor.face.topLeft.y == me.face.botLeft.y + 1 && Neighbor.face.topRight.y == me.face.botRight.y + 1)
                     {
                         bl = true;
                         br = true;
@@ -400,7 +422,41 @@ public class World : MonoBehaviour_Singleton
 
     public void GenerateTexture(HeightMapGenerator heightMapGenerator)
     {
-        chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TerrainTexture", heightMapGenerator.WorldTexture(heightmap, displayMode));
+
+        if (useHeightmapAsTexture)
+        {
+            Texture2D TerrainTexture = heightMapGenerator.WorldTexture(heightmap, displayMode);
+            chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TerrainTexture", TerrainTexture);
+        }
+        else
+        {
+            //SetTerrainType
+            for (int x = 0; x < map.GetLength(0); x++)
+            {
+                for (int y = 0; y < map.GetLength(1); y++)
+                {
+                    switch ((int)map[x, y].height)
+                    {
+                        case int n when (n < 5):
+                            map[x, y].terrainType = TerrainType.Water;
+                            break;
+                        case int n when (n >= 5):
+                            map[x, y].terrainType = TerrainType.Sand;
+                            break;
+                        case int n when (n >= 10):
+                            map[x, y].terrainType = TerrainType.Grass;
+                            break;
+                        case int n when (n >= 20):
+                            map[x, y].terrainType = TerrainType.Dirt;
+                            break;
+                        default:
+                            map[x, y].terrainType = TerrainType.Rock;
+                            break;
+                    }
+                }
+            }
+
+        }
     }
 
     public void DestroyWorld()
@@ -427,8 +483,8 @@ public class World : MonoBehaviour_Singleton
 
 
                 map[dx, dy] = new Tile();
-                map[dx,dy].face = new Face
-                {                    
+                map[dx, dy].face = new Face
+                {
                     topLeft = new Vector3(dx - 0.5f, y, dy + 0.5f), //top left
                     topRight = new Vector3(dx + 0.5f, y, dy + 0.5f), //up right
                     botRight = new Vector3(dx + 0.5f, y, dy - 0.5f), //down right

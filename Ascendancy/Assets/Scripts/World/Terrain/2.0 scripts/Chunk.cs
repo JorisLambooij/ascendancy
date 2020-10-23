@@ -7,8 +7,8 @@ public class Chunk : MonoBehaviour
 {  
     private float tUnit = 0.25f;
     
-    private Vector2 tStone = new Vector2(1, 3);
-    private Vector2 tGrass = new Vector2(3, 3);
+    //private Vector2 tStone = new Vector2(1, 3);
+    //private Vector2 tGrass = new Vector2(3, 3);
 
     private Mesh mesh;
     private MeshCollider col;
@@ -66,7 +66,7 @@ public class Chunk : MonoBehaviour
         faceCount = 0;
     }
 
-    private void GenerateFace(Face face, Vector2 texture)
+    private void GenerateFace(Face face)
     {
         newVertices.Add(face.topLeft);
         newVertices.Add(face.topRight);
@@ -80,10 +80,6 @@ public class Chunk : MonoBehaviour
         newTriangles.Add(faceCount * 4); //1
         newTriangles.Add(faceCount * 4 + 2); //3
         newTriangles.Add(faceCount * 4 + 3); //4
-
-        Vector2 texturePos;
-
-        texturePos = texture;
 
         newUV.Add(UVProjection(face.topLeft));
         newUV.Add(UVProjection(face.topRight));
@@ -232,31 +228,30 @@ public class Chunk : MonoBehaviour
         for (int wd = 0; wd < chunkTilemap.GetLength(0); wd++)
             for (int hg = 0; hg < chunkTilemap.GetLength(1); hg++)
             {
-                GenerateFace(chunkTilemap[wd, hg].face, tGrass);
+                GenerateFace(chunkTilemap[wd, hg].face);
 
                 if (chunkTilemap[wd, hg] is TileCliff)
                 {
                     TileCliff cliff = (TileCliff)chunkTilemap[wd, hg];
-                    //Debug.Log("Tilecliff!" + cliff.topCliff + "/" + cliff.rightCliff + "/" + cliff.botCliff + "/" + cliff.leftCliff + "/");
 
                     if (cliff.topCliff != null)
                     {
-                        GenerateFace(cliff.topCliff, tStone);
+                        GenerateFace(cliff.topCliff);
                     }
 
                     if (cliff.rightCliff != null)
                     {
-                        GenerateFace(cliff.rightCliff, tStone);
+                        GenerateFace(cliff.rightCliff);
                     }
 
                     if (cliff.botCliff != null)
                     {
-                        GenerateFace(cliff.botCliff, tStone);
+                        GenerateFace(cliff.botCliff);
                     }
 
                     if (cliff.leftCliff != null)
                     {
-                        GenerateFace(cliff.leftCliff, tStone);
+                        GenerateFace(cliff.leftCliff);
                     }
 
                 }
