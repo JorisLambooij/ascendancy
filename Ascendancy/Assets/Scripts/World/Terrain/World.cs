@@ -455,7 +455,7 @@ public class World : MonoBehaviour_Singleton
                     }
                 }
             }
-            chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TerrainTexture", TerrainTexture);
+            chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TerrainTexture", tilemapTexture);
         }
     }
 
