@@ -128,6 +128,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 220739976, guid: 81ff75b4e357e8344a5a43139fca663d, type: 3}
+      propertyPath: useDebugHeightmap
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 379759339, guid: 81ff75b4e357e8344a5a43139fca663d, type: 3}
       propertyPath: m_LocalScale.x
       value: 25.96349

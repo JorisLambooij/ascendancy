@@ -21,15 +21,23 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2DArray_8010739F:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 8f465642450d0cc4ca8ea2003b6d7fcf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_A1C3AEFB:
         m_Texture: {fileID: 2800000, guid: e9866699a4ddce642b7da4aeaa74d279, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - Texture2D_AA075013:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - Texture2D_C52C5863:
         m_Texture: {fileID: 2800000, guid: 3787ecf31b318914f908bb48537ebf10, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_E37783BF:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_E3CEAC0A:
@@ -77,7 +85,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TerrainTexture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 8f465642450d0cc4ca8ea2003b6d7fcf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -85,7 +93,7 @@ Material:
     - Boolean_5E37AC99: 0
     - Vector1_1C40ABDE: 5.31
     - Vector1_46842222: 0.123
-    - Vector1_ACCEAFF0: 0.554
+    - Vector1_ACCEAFF0: 0
     - Vector1_B77E4A80: 0.759
     - Vector1_E5DB5A6F: 0.065
     - Vector1_F0A85FEC: 0.08
