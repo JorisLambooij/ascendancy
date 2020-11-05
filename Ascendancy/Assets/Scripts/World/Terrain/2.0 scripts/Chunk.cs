@@ -5,10 +5,6 @@ using UnityEngine;
 
 public class Chunk : MonoBehaviour
 {  
-    private float tUnit = 0.25f;
-    
-    //private Vector2 tStone = new Vector2(1, 3);
-    //private Vector2 tGrass = new Vector2(3, 3);
 
     private Mesh mesh;
     private MeshCollider col;
@@ -24,9 +20,10 @@ public class Chunk : MonoBehaviour
     private List<Vector3> newVertices = new List<Vector3>();
     private List<int> newTriangles = new List<int>();
     private List<Vector2> newUV = new List<Vector2>();
+    private List<Color32> newColors = new List<Color32>();
 
     // Start is called before the first frame update
-    public void Initialize(Tile[,] chunkTilemap)
+    public void Initialize(Tile[,] chunkTilemap, Color32[,] colormap)
     {
         newVertices = new List<Vector3>();
         newUV = new List<Vector2>();
@@ -40,7 +37,7 @@ public class Chunk : MonoBehaviour
 
         //AdditiveSmoothing();
 
-        GenerateMesh(chunkTilemap);
+        GenerateMesh(chunkTilemap, colormap);
         //FillCliffs(chunkTilemap);
 
         UpdateMesh();
@@ -53,6 +50,7 @@ public class Chunk : MonoBehaviour
         mesh.vertices = newVertices.ToArray();
         mesh.uv = newUV.ToArray();
         mesh.triangles = newTriangles.ToArray();
+        mesh.colors32 = newColors.ToArray();
         mesh.Optimize();
         mesh.RecalculateNormals();
 
@@ -62,18 +60,23 @@ public class Chunk : MonoBehaviour
         newVertices.Clear();
         newUV.Clear();
         newTriangles.Clear();
+        newColors.Clear();
 
         faceCount = 0;
     }
 
-    private void GenerateFace(Face face)
+    private void GenerateFace(Face face, Color c)
     {
         newVertices.Add(face.topLeft);
         newVertices.Add(face.topRight);
         newVertices.Add(face.botRight);
         newVertices.Add(face.botLeft);
-        
-        
+
+        newColors.Add(c);
+        newColors.Add(c);
+        newColors.Add(c);
+        newColors.Add(c);
+
         newTriangles.Add(faceCount * 4); //1
         newTriangles.Add(faceCount * 4 + 1); //2
         newTriangles.Add(faceCount * 4 + 2); //3
@@ -223,12 +226,19 @@ public class Chunk : MonoBehaviour
     //        }
     //}
 
-    public void GenerateMesh(Tile[,] chunkTilemap)
+    public void GenerateMesh(Tile[,] chunkTilemap, Color32[,] colormap)
     {
         for (int wd = 0; wd < chunkTilemap.GetLength(0); wd++)
             for (int hg = 0; hg < chunkTilemap.GetLength(1); hg++)
             {
-                GenerateFace(chunkTilemap[wd, hg].face);
+                Color32 faceColor = colormap[wd, hg];
+
+                GenerateFace(chunkTilemap[wd, hg].face, faceColor);
+
+                //darker for cliffs
+                faceColor.r -= 10;
+                faceColor.g -= 10;
+                faceColor.b -= 10;
 
                 if (chunkTilemap[wd, hg] is TileCliff)
                 {
@@ -236,22 +246,22 @@ public class Chunk : MonoBehaviour
 
                     if (cliff.topCliff != null)
                     {
-                        GenerateFace(cliff.topCliff);
+                        GenerateFace(cliff.topCliff, colormap[wd, hg]);
                     }
 
                     if (cliff.rightCliff != null)
                     {
-                        GenerateFace(cliff.rightCliff);
+                        GenerateFace(cliff.rightCliff, colormap[wd, hg]);
                     }
 
                     if (cliff.botCliff != null)
                     {
-                        GenerateFace(cliff.botCliff);
+                        GenerateFace(cliff.botCliff, colormap[wd, hg]);
                     }
 
                     if (cliff.leftCliff != null)
                     {
-                        GenerateFace(cliff.leftCliff);
+                        GenerateFace(cliff.leftCliff, colormap[wd, hg]);
                     }
 
                 }

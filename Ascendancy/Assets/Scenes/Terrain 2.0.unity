@@ -235,6 +235,36 @@ PrefabInstance:
       propertyPath: tilemapTexture
       value: 
       objectReference: {fileID: 2800000, guid: 8f465642450d0cc4ca8ea2003b6d7fcf, type: 3}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[0].rgba
+      value: 4294902015
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[1].rgba
+      value: 4279137079
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[2].rgba
+      value: 4286407009
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[3].rgba
+      value: 4284182677
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[4].rgba
+      value: 4290177525
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[5].rgba
+      value: 4294626677
+      objectReference: {fileID: 0}
     - target: {fileID: 4013592521898558204, guid: 81ff75b4e357e8344a5a43139fca663d,
         type: 3}
       propertyPath: m_Name

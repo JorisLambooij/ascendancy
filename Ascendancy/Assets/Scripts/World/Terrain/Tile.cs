@@ -29,4 +29,10 @@ public class Tile
         face = new Face();
     }
 
+    public Face[] GetFaces()
+    {
+        Face[] faces = new Face[1];
+        faces[0] = face;
+        return faces;
+    }
 }

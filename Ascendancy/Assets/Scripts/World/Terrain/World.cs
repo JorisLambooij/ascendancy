@@ -42,18 +42,20 @@ public class World : MonoBehaviour_Singleton
 
     //public float seaLevel = 0;
 
-    [Header("Tilemap")]
-    public Texture2D tilemapTexture;
-    public int textureTilesize = 64;
+    //[Header("Tilemap")]
+    //public Texture2D tilemapTexture;
+    //public int textureTilesize = 64;
 
     [Header("Misc References")]
     public Transform ChunkCollector;
     public bool useHeightmapAsTexture = false;
     public Texture2D tex;
     public Transform waterPlane;
+    [Tooltip("ERROR, GRASS, ROCK, DIRT, SAND, WATER")]
+    public Color32[] terrainColors = new Color32[6];    
 
-    private Texture2D[] tileArray;
-    private Texture2D terrainTexture;
+    //private Texture2D[] tileArray;
+    //private Texture2D terrainTexture;
 
     /// <summary>
     /// Contains the information about the height of the tiles.
@@ -64,6 +66,7 @@ public class World : MonoBehaviour_Singleton
     /// Set of all the tiles that make up the world
     /// </summary>
     private Tile[,] map;
+    private Color32[,] colormap;
 
     /// <summary>
     /// Set of all the chunks used to draw the world.
@@ -90,7 +93,8 @@ public class World : MonoBehaviour_Singleton
 
         //initiate things
         map = new Tile[worldSize, worldSize];
-        terrainTexture = new Texture2D(worldSize * textureTilesize, worldSize * textureTilesize);
+        colormap = new Color32[worldSize, worldSize];
+        //terrainTexture = new Texture2D(worldSize * textureTilesize, worldSize * textureTilesize);
 
         chunks = new Chunk[numberOfChunks, numberOfChunks];
 
@@ -101,6 +105,45 @@ public class World : MonoBehaviour_Singleton
         AdditiveSmoothing();
         FillCliffs();
 
+        //int xSize = tilemapTexture.width / textureTilesize;
+        //int ySize = tilemapTexture.height / textureTilesize;
+
+        //tileArray = new Texture2D[xSize * ySize];
+
+        ////populating tile array
+        //Texture2D destTex;
+        //Color[] pix;
+
+        //int i = 0;
+
+        //for (int y = ySize - 1; y >= 0; y--)
+        //    for (int x = 0; x < xSize; x++)
+        //    {
+        //        pix = tilemapTexture.GetPixels(x * textureTilesize, y * textureTilesize, textureTilesize, textureTilesize);
+        //        destTex = new Texture2D(textureTilesize, textureTilesize);
+        //        destTex.SetPixels(pix);
+        //        destTex.Apply();
+        //        tileArray[i] = destTex;
+        //        i++;
+        //    }
+
+        //map iteration with methods
+        for (int x = 0; x < map.GetLength(0); x++)
+        {
+            for (int y = 0; y < map.GetLength(1); y++)
+            {
+                GenerateTerrainTypes(x, y);
+                //generate texture
+                //terrainTexture.SetPixels(x * textureTilesize, y * textureTilesize, textureTilesize, textureTilesize, tileArray[(int)map[x, y].terrainType].GetPixels());
+                //vertex colors
+                //UpdateVertexColors(x, y);
+                colormap[x, y] = GetColorForType(map[x, y].terrainType);
+            }
+        }
+
+        //apply texture
+        //terrainTexture.Apply();
+
         //tell all the chunks to draw their share of the mesh
         for (int x = 0; x < chunks.GetLength(0); x++)
             for (int z = 0; z < chunks.GetLength(1); z++)
@@ -108,33 +151,7 @@ public class World : MonoBehaviour_Singleton
                 chunks[x, z] = GenerateChunk(x, z);
             }
 
-
-
-
-        int xSize = tilemapTexture.width / textureTilesize;
-        int ySize = tilemapTexture.height / textureTilesize;
-
-        tileArray = new Texture2D[xSize * ySize];
-
-        //populating tile array
-        Texture2D destTex;
-        Color[] pix;
-
-        int i = 0;
-
-        for (int y = ySize - 1; y >= 0; y--)
-            for (int x = 0; x < xSize; x++)
-            {
-                pix = tilemapTexture.GetPixels(x * textureTilesize, y * textureTilesize, textureTilesize, textureTilesize);
-                destTex = new Texture2D(textureTilesize, textureTilesize);
-                destTex.SetPixels(pix);
-                destTex.Apply();
-                tileArray[i] = destTex;
-                i++;
-            }
-
-        GenerateTexture(heightMapGenerator);
-
+        //chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("Texture2D_AA075013", terrainTexture);
 
         waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, -4.25f, worldSize * tileSize / 2);
         float size = worldSize / 9.86f;
@@ -161,14 +178,16 @@ public class World : MonoBehaviour_Singleton
         chunk.chunkIndex = new Vector2Int(startX, startZ);
 
         Tile[,] chunkTilemap = new Tile[chunkSize, chunkSize];
+        Color32[,] chunkColormap = new Color32[chunkSize, chunkSize];
 
         for (int x = 0; x < chunkSize; x++)
             for (int z = 0; z < chunkSize; z++)
             {
                 chunkTilemap[x, z] = map[chunkSize * startX + x, chunkSize * startZ + z];
+                chunkColormap[x, z] = colormap[chunkSize * startX + x, chunkSize* startZ +z];
             }
 
-        chunk.Initialize(chunkTilemap);
+        chunk.Initialize(chunkTilemap, chunkColormap);
         return chunk;
     }
 
@@ -424,42 +443,131 @@ public class World : MonoBehaviour_Singleton
         }
     }
 
-    public void GenerateTexture(HeightMapGenerator heightMapGenerator)
+    public void GenerateTerrainTypes(int x, int y)
     {
         TerrainType tileType;
 
+
+        switch ((int)map[x, y].height)
+        {
+            case int n when (n < -4):
+                tileType = TerrainType.WATER;
+                break;
+            case int n when (n < -0):
+                tileType = TerrainType.SAND;
+                break;
+            case int n when (n < 5):
+                tileType = TerrainType.GRASS;
+                break;
+            case int n when (n < 10):
+                tileType = TerrainType.DIRT;
+                break;
+            default:
+                tileType = TerrainType.ROCK;
+                break;
+        }
+        map[x, y].terrainType = tileType;
+
+    }
+
+    public void RegenerateTexture()
+    {
         for (int x = 0; x < map.GetLength(0); x++)
         {
             for (int y = 0; y < map.GetLength(1); y++)
             {
-                switch ((int)map[x, y].height)
-                {
-                    case int n when (n < -4):
-                        tileType = TerrainType.WATER;
-                        break;
-                    case int n when (n < -0):
-                        tileType = TerrainType.SAND;
-                        break;
-                    case int n when (n < 5):
-                        tileType = TerrainType.GRASS;
-                        break;
-                    case int n when (n < 10):
-                        tileType = TerrainType.DIRT;
-                        break;
-                    default:
-                        tileType = TerrainType.ROCK;
-                        break;
-                }
-                map[x, y].terrainType = tileType;
+                GenerateTerrainTypes(x, y);
 
-                terrainTexture.SetPixels(x * textureTilesize, y * textureTilesize, textureTilesize, textureTilesize, tileArray[(int)tileType].GetPixels());
+                //generate texture
+                //terrainTexture.SetPixels(x * textureTilesize, y * textureTilesize, textureTilesize, textureTilesize, tileArray[(int)map[x, y].terrainType].GetPixels());
             }
         }
-
-
-        terrainTexture.Apply();
-        chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("Texture2D_AA075013", terrainTexture);
     }
+
+    public Color32 GetColorForType(TerrainType t)
+    {
+            switch (t)
+        {
+            case TerrainType.WATER:
+                return terrainColors[5];
+            case TerrainType.SAND:
+                return terrainColors[4];
+            case TerrainType.GRASS:
+                return terrainColors[1];
+            case TerrainType.DIRT:
+                return terrainColors[3];
+            case TerrainType.ROCK:
+                return terrainColors[2];
+            default:
+                return terrainColors[0];
+        }
+    }
+
+
+    //public void UpdateVertexColors(int x, int y)
+    //{
+    //    Mesh terrainMesh = chunks[0, 0].GetComponent<MeshFilter>().mesh;
+    //    Color32 tileColor = Color.magenta;
+    //    Color32[] meshColors = terrainMesh.colors32;
+
+    //    if (meshColors.Length == 0)
+    //    {
+    //        meshColors = new Color32[terrainMesh.vertices.Length];
+    //    }
+
+    //    //GetColors
+    //    switch (map[x, y].terrainType)
+    //    {
+    //        case TerrainType.WATER:
+    //            tileColor = Color.blue;
+    //            break;
+    //        case TerrainType.SAND:
+    //            tileColor = Color.yellow;
+    //            break;
+    //        case TerrainType.GRASS:
+    //            tileColor = Color.green;
+    //            break;
+    //        case TerrainType.DIRT:
+    //            tileColor = new Color32(210, 105, 30, 255);
+    //            break;
+    //        case TerrainType.ROCK:
+    //            tileColor = Color.gray;
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //    foreach (Face f in map[x, y].GetFaces())
+    //    {
+
+    //        Vector3[] faceVectors = f.GetVectors();
+    //        for (int i = 0; i < faceVectors.Length; i++)
+    //        {
+    //            Vector3 v2 = faceVectors[i];
+
+    //            for (int j = 0; j < terrainMesh.vertices.Length; j++)
+    //            {
+    //                Vector3 v1 = terrainMesh.vertices[j];
+
+    //                if (v1.Equals(v2))
+    //                {
+    //                    if (i == 0) //not a cliff
+    //                    {
+    //                        meshColors[j] = tileColor;
+    //                    }
+    //                    else
+    //                    {
+    //                        tileColor.r -= 10;
+    //                        tileColor.g -= 10;
+    //                        tileColor.b -= 10;
+    //                        meshColors[j] = tileColor;
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+
+    //    terrainMesh.colors32 = meshColors;
+    //}
 
     public void DestroyWorld()
     {
