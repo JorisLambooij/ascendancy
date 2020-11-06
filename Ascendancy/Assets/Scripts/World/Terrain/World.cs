@@ -40,12 +40,6 @@ public class World : MonoBehaviour_Singleton
     public GameObject chunkPrefab;
     public LocalNavMeshBuilder navMeshBuilder;
 
-    //public float seaLevel = 0;
-
-    //[Header("Tilemap")]
-    //public Texture2D tilemapTexture;
-    //public int textureTilesize = 64;
-
     [Header("Misc References")]
     public Transform ChunkCollector;
     //public bool useHeightmapAsTexture = false;
@@ -57,8 +51,6 @@ public class World : MonoBehaviour_Singleton
     [Header("DevTools")]
     public bool tintFlippedTiles = false;
 
-    //private Texture2D[] tileArray;
-    //private Texture2D terrainTexture;
 
     /// <summary>
     /// Contains the information about the height of the tiles.
@@ -114,27 +106,6 @@ public class World : MonoBehaviour_Singleton
                 FlipTriangleSmoothing(x, y);
             }
         }
-        //int xSize = tilemapTexture.width / textureTilesize;
-        //int ySize = tilemapTexture.height / textureTilesize;
-
-        //tileArray = new Texture2D[xSize * ySize];
-
-        ////populating tile array
-        //Texture2D destTex;
-        //Color[] pix;
-
-        //int i = 0;
-
-        //for (int y = ySize - 1; y >= 0; y--)
-        //    for (int x = 0; x < xSize; x++)
-        //    {
-        //        pix = tilemapTexture.GetPixels(x * textureTilesize, y * textureTilesize, textureTilesize, textureTilesize);
-        //        destTex = new Texture2D(textureTilesize, textureTilesize);
-        //        destTex.SetPixels(pix);
-        //        destTex.Apply();
-        //        tileArray[i] = destTex;
-        //        i++;
-        //    }
 
         //2nd map iteration with methods
         for (int x = 0; x < map.GetLength(0); x++)
@@ -481,7 +452,7 @@ public class World : MonoBehaviour_Singleton
 
         switch ((int)map[x, y].height)
         {
-            case int n when (n < -4):
+            case int n when (n < -5):
                 tileType = TerrainType.WATER;
                 break;
             case int n when (n < -0):
