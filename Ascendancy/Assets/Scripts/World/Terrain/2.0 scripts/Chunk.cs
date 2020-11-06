@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 public class Chunk : MonoBehaviour
-{  
+{
 
     private Mesh mesh;
     private MeshCollider col;
@@ -13,7 +13,7 @@ public class Chunk : MonoBehaviour
 
     //private Tile[,] chunkTilemap;
     private int[,] heightmap;
-    
+
     public static int chunkSize = 64;
     public Vector2Int chunkIndex;
 
@@ -23,7 +23,7 @@ public class Chunk : MonoBehaviour
     private List<Color32> newColors = new List<Color32>();
 
     // Start is called before the first frame update
-    public void Initialize(Tile[,] chunkTilemap, Color32[,] colormap)
+    public void Initialize(Tile[,] chunkTilemap, Color32[,] colormap, bool tintFlippedTiles)
     {
         newVertices = new List<Vector3>();
         newUV = new List<Vector2>();
@@ -37,7 +37,7 @@ public class Chunk : MonoBehaviour
 
         //AdditiveSmoothing();
 
-        GenerateMesh(chunkTilemap, colormap);
+        GenerateMesh(chunkTilemap, colormap, tintFlippedTiles);
         //FillCliffs(chunkTilemap);
 
         UpdateMesh();
@@ -65,30 +65,45 @@ public class Chunk : MonoBehaviour
         faceCount = 0;
     }
 
-    private void GenerateFace(Face face, Color c)
+    private void GenerateFace(Face face, Color c, bool flipTriangles)
     {
+
         newVertices.Add(face.topLeft);
         newVertices.Add(face.topRight);
         newVertices.Add(face.botRight);
         newVertices.Add(face.botLeft);
 
+
         newColors.Add(c);
         newColors.Add(c);
         newColors.Add(c);
         newColors.Add(c);
 
-        newTriangles.Add(faceCount * 4); //1
-        newTriangles.Add(faceCount * 4 + 1); //2
-        newTriangles.Add(faceCount * 4 + 2); //3
-        newTriangles.Add(faceCount * 4); //1
-        newTriangles.Add(faceCount * 4 + 2); //3
-        newTriangles.Add(faceCount * 4 + 3); //4
+        if (!flipTriangles)
+        {
+            newTriangles.Add(faceCount * 4);        //1
+            newTriangles.Add(faceCount * 4 + 1);    //2
+            newTriangles.Add(faceCount * 4 + 2);    //3
+            newTriangles.Add(faceCount * 4);        //1
+            newTriangles.Add(faceCount * 4 + 2);    //3
+            newTriangles.Add(faceCount * 4 + 3);    //4
+        }
+        else
+        {
+            newTriangles.Add(faceCount * 4);        //1
+            newTriangles.Add(faceCount * 4 + 1);    //2
+            newTriangles.Add(faceCount * 4 + 3);    //4
+            newTriangles.Add(faceCount * 4 + 1);    //2
+            newTriangles.Add(faceCount * 4 + 2);    //3
+            newTriangles.Add(faceCount * 4 + 3);    //4
+
+        }
 
         newUV.Add(UVProjection(face.topLeft));
         newUV.Add(UVProjection(face.topRight));
         newUV.Add(UVProjection(face.botRight));
         newUV.Add(UVProjection(face.botLeft));
-        
+
         faceCount++;
     }
 
@@ -226,14 +241,23 @@ public class Chunk : MonoBehaviour
     //        }
     //}
 
-    public void GenerateMesh(Tile[,] chunkTilemap, Color32[,] colormap)
+    public void GenerateMesh(Tile[,] chunkTilemap, Color32[,] colormap, bool tintFlippedTiles)
     {
         for (int wd = 0; wd < chunkTilemap.GetLength(0); wd++)
             for (int hg = 0; hg < chunkTilemap.GetLength(1); hg++)
             {
                 Color32 faceColor = colormap[wd, hg];
 
-                GenerateFace(chunkTilemap[wd, hg].face, faceColor);
+                //See flipped Tiles in red
+                if (tintFlippedTiles)
+                    if (chunkTilemap[wd, hg].flippedTriangles)
+                    {
+                        faceColor = Color.red;
+                    }
+
+                GenerateFace(chunkTilemap[wd, hg].face, faceColor, chunkTilemap[wd, hg].flippedTriangles);
+
+
 
                 //darker for cliffs
                 faceColor.r -= 10;
@@ -246,27 +270,27 @@ public class Chunk : MonoBehaviour
 
                     if (cliff.topCliff != null)
                     {
-                        GenerateFace(cliff.topCliff, colormap[wd, hg]);
+                        GenerateFace(cliff.topCliff, colormap[wd, hg], false);
                     }
 
                     if (cliff.rightCliff != null)
                     {
-                        GenerateFace(cliff.rightCliff, colormap[wd, hg]);
+                        GenerateFace(cliff.rightCliff, colormap[wd, hg], false);
                     }
 
                     if (cliff.botCliff != null)
                     {
-                        GenerateFace(cliff.botCliff, colormap[wd, hg]);
+                        GenerateFace(cliff.botCliff, colormap[wd, hg], false);
                     }
 
                     if (cliff.leftCliff != null)
                     {
-                        GenerateFace(cliff.leftCliff, colormap[wd, hg]);
+                        GenerateFace(cliff.leftCliff, colormap[wd, hg], false);
                     }
 
                 }
             }
     }
 
-    
+
 }
