@@ -23,7 +23,7 @@ public class Chunk : MonoBehaviour
     private List<Color32> newColors = new List<Color32>();
 
     // Start is called before the first frame update
-    public void Initialize(Tile[,] chunkTilemap, Color32[,] colormap, bool tintFlippedTiles)
+    public void Initialize(Tile[,] chunkTilemap, Color32[,] colormap, bool tintFlippedTiles, List<int> highlightedTiles)
     {
         newVertices = new List<Vector3>();
         newUV = new List<Vector2>();
@@ -37,7 +37,7 @@ public class Chunk : MonoBehaviour
 
         //AdditiveSmoothing();
 
-        GenerateMesh(chunkTilemap, colormap, tintFlippedTiles);
+        GenerateMesh(chunkTilemap, colormap, tintFlippedTiles, highlightedTiles);
         //FillCliffs(chunkTilemap);
 
         UpdateMesh();
@@ -141,7 +141,7 @@ public class Chunk : MonoBehaviour
         return new Vector2(x, y);
     }
 
-    public void GenerateMesh(Tile[,] chunkTilemap, Color32[,] colormap, bool tintFlippedTiles)
+    public void GenerateMesh(Tile[,] chunkTilemap, Color32[,] colormap, bool tintFlippedTiles, List<int> highlightedTiles)
     {
         for (int wd = 0; wd < chunkTilemap.GetLength(0); wd++)
             for (int hg = 0; hg < chunkTilemap.GetLength(1); hg++)
@@ -155,12 +155,12 @@ public class Chunk : MonoBehaviour
                         faceColor = Color.red;
                     }
 
-                GenerateFace(chunkTilemap[wd, hg].face, faceColor, chunkTilemap[wd, hg].flippedTriangles);
+                if (highlightedTiles != null)
+                    if (highlightedTiles.Count > 0)
+                        if (highlightedTiles.Contains(chunkTilemap[wd, hg].GetTileType()))
+                            faceColor = Color.magenta;
 
-                ////darker for cliffs
-                //faceColor.r -= 10;
-                //faceColor.g -= 10;
-                //faceColor.b -= 10;
+                GenerateFace(chunkTilemap[wd, hg].face, faceColor, chunkTilemap[wd, hg].flippedTriangles);
 
                 if (chunkTilemap[wd, hg] is TileCliff)
                 {

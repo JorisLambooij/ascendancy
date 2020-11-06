@@ -50,6 +50,7 @@ public class World : MonoBehaviour_Singleton
 
     [Header("DevTools")]
     public bool tintFlippedTiles = false;
+    public List<int> highlightedTiles;
 
 
     /// <summary>
@@ -120,6 +121,8 @@ public class World : MonoBehaviour_Singleton
                 //vertex colors
                 //UpdateVertexColors(x, y);
                 colormap[x, y] = GetColorForType(map[x, y].terrainType);
+
+                FlipTriangleSmoothing(x, y);
             }
         }
 
@@ -169,7 +172,7 @@ public class World : MonoBehaviour_Singleton
                 chunkColormap[x, z] = colormap[chunkSize * startX + x, chunkSize * startZ + z];
             }
 
-        chunk.Initialize(chunkTilemap, chunkColormap, tintFlippedTiles);
+        chunk.Initialize(chunkTilemap, chunkColormap, tintFlippedTiles, highlightedTiles);
         return chunk;
     }
 
@@ -288,28 +291,28 @@ public class World : MonoBehaviour_Singleton
         int tileType = me.GetTileType();
 
         //topLeft - flip
-        if (tileType == 111 || tileType == 121 || tileType == 2111 || tileType == 2101)
+        if (tileType == 111 || tileType == 2111)
         {
             if (!(me).flippedTriangles)
                 (me).ToggleTriangleFlip();
         }
 
         //topRight - unflip
-        if (tileType == 1011 || tileType == 1012 || tileType == 1211 || tileType == 1210)
+        if (tileType == 1011 || tileType == 1211)
         {
             if ((me).flippedTriangles)
                 (me).ToggleTriangleFlip();
         }
 
         //botRight - flip
-        if (tileType == 1101 || tileType == 2101 || tileType == 1121 || tileType == 121)
+        if (tileType == 1101 || tileType == 1121)
         {
             if (!(me).flippedTriangles)
-                (me).ToggleTriangleFlip(); ;
+                (me).ToggleTriangleFlip();
         }
 
         //botLeft - unflip
-        if (tileType == 1110 || tileType == 1210 || tileType == 1112 || tileType == 1012)
+        if (tileType == 1110 || tileType == 1112)
         {
             if ((me).flippedTriangles)
                 (me).ToggleTriangleFlip();
@@ -324,6 +327,12 @@ public class World : MonoBehaviour_Singleton
         bool tr = false;
         bool bl = false;
         bool br = false;
+
+        bool tl2 = false;
+        bool tr2 = false;
+        bool bl2 = false;
+        bool br2 = false;
+
         Tile me = map[x, y];
 
         #region direct
@@ -384,7 +393,22 @@ public class World : MonoBehaviour_Singleton
 
             if (Neighbor.face.botRight.y > me.face.topLeft.y)
             {
-                tl = true;
+                ////check left & top neighbor
+                //if (x > 0 && y < map.GetLength(1) - 1)
+                //    if (map[x - 1, y].face.topRight.y > me.face.topLeft.y && map[x, y + 1].face.botLeft.y > me.face.topLeft.y)
+                //    {
+                        tl = true;
+                    //}
+            }
+
+            if (Neighbor.face.botRight.y - 1 > me.face.topLeft.y)
+            {
+                //check left & top neighbor
+                if (x > 0 && y < map.GetLength(1) - 1)
+                    //if (map[x - 1, y].face.topRight.y > me.face.topLeft.y && map[x, y + 1].face.botLeft.y > me.face.topLeft.y)
+                    //{
+                        tl2 = true;
+                    //}
             }
         }
 
@@ -397,6 +421,11 @@ public class World : MonoBehaviour_Singleton
             {
                 tr = true;
             }
+
+            if (Neighbor.face.botLeft.y - 1 > me.face.topRight.y)
+            {
+                tr2 = true;
+            }
         }
 
         //check botRight
@@ -406,7 +435,12 @@ public class World : MonoBehaviour_Singleton
 
             if (Neighbor.face.topLeft.y > me.face.botRight.y)
             {
-                br = true;
+                        br = true;
+            }
+
+            if (Neighbor.face.topLeft.y - 1 > me.face.botRight.y)
+            {                
+                        br2 = true;
             }
         }
 
@@ -418,6 +452,11 @@ public class World : MonoBehaviour_Singleton
             if (Neighbor.face.topRight.y > me.face.botLeft.y)
             {
                 bl = true;
+            }
+
+            if (Neighbor.face.topRight.y - 1 > me.face.botLeft.y)
+            {
+                bl2 = true;
             }
         }
 
@@ -440,6 +479,31 @@ public class World : MonoBehaviour_Singleton
         if (bl)
         {
             map[x, y].face.botLeft.y += 1;
+        }
+
+        if (tl2)
+        {
+            if (map[x, y].GetTileType() == 1101 || map[x, y].GetTileType() == 2212)
+                map[x, y].face.topLeft.y += 1;
+        }
+        if (tr2)
+        {
+            if (map[x, y].GetTileType() == 1110 || map[x, y].GetTileType() == 2221)
+                map[x, y].face.topRight.y += 1;
+        }
+        if (br2)
+        {
+            if (map[x, y].GetTileType() == 0111 || map[x, y].GetTileType() == 1222)                
+                //if (x < map.GetLength(0) - 1 && y > 0)      //check right & bot neighbor
+                //    if (map[x + 1, y].face.botLeft.y > me.face.botRight.y && map[x, y - 1].face.topRight.y > me.face.botRight.y)
+                //    {
+                        map[x, y].face.botRight.y += 1;
+                    //}
+        }
+        if (bl2)
+        {
+            if (map[x, y].GetTileType() == 1011 || map[x, y].GetTileType() == 2122)
+                map[x, y].face.botLeft.y += 1;
         }
 
 
