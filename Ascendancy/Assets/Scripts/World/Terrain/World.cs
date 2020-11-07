@@ -393,22 +393,12 @@ public class World : MonoBehaviour_Singleton
 
             if (Neighbor.face.botRight.y > me.face.topLeft.y)
             {
-                ////check left & top neighbor
-                //if (x > 0 && y < map.GetLength(1) - 1)
-                //    if (map[x - 1, y].face.topRight.y > me.face.topLeft.y && map[x, y + 1].face.botLeft.y > me.face.topLeft.y)
-                //    {
-                        tl = true;
-                    //}
+                tl = true;
             }
 
             if (Neighbor.face.botRight.y - 1 > me.face.topLeft.y)
             {
-                //check left & top neighbor
-                if (x > 0 && y < map.GetLength(1) - 1)
-                    //if (map[x - 1, y].face.topRight.y > me.face.topLeft.y && map[x, y + 1].face.botLeft.y > me.face.topLeft.y)
-                    //{
-                        tl2 = true;
-                    //}
+                tl2 = true;
             }
         }
 
@@ -435,12 +425,12 @@ public class World : MonoBehaviour_Singleton
 
             if (Neighbor.face.topLeft.y > me.face.botRight.y)
             {
-                        br = true;
+                br = true;
             }
 
             if (Neighbor.face.topLeft.y - 1 > me.face.botRight.y)
-            {                
-                        br2 = true;
+            {
+                br2 = true;
             }
         }
 
@@ -481,29 +471,79 @@ public class World : MonoBehaviour_Singleton
             map[x, y].face.botLeft.y += 1;
         }
 
+        int tileType = (map[x, y].GetTileType());
+
         if (tl2)
         {
-            if (map[x, y].GetTileType() == 1101 || map[x, y].GetTileType() == 2212)
-                map[x, y].face.topLeft.y += 1;
+            if (tileType == 1101 || tileType == 2212)
+                if (map[x - 1, y].face.topRight.y > me.face.topLeft.y || map[x, y + 1].face.botLeft.y > me.face.topLeft.y)
+                {
+                    map[x, y].face.topLeft.y += 1;
+                }
         }
         if (tr2)
         {
-            if (map[x, y].GetTileType() == 1110 || map[x, y].GetTileType() == 2221)
-                map[x, y].face.topRight.y += 1;
+            if (tileType == 1110 || tileType == 2221)
+                //TODO Ist immer noch sehr blocky,
+                //viel besser, wenn das if drumherum weg ist,
+                //dann aber weird z.b. in chunk 0/0 beim berg,                
+                //komische spitzen.
+                //Am besten das if fixen, ich komme nicht drauf :(
+                if (map[x + 1, y].face.topLeft.y > me.face.topRight.y || map[x, y + 1].face.botRight.y > me.face.topRight.y)
+                {
+                    map[x, y].face.topRight.y += 1;
+                }
         }
         if (br2)
         {
-            if (map[x, y].GetTileType() == 0111 || map[x, y].GetTileType() == 1222)                
-                //if (x < map.GetLength(0) - 1 && y > 0)      //check right & bot neighbor
-                //    if (map[x + 1, y].face.botLeft.y > me.face.botRight.y && map[x, y - 1].face.topRight.y > me.face.botRight.y)
-                //    {
-                        map[x, y].face.botRight.y += 1;
-                    //}
+            if (tileType == 0111 || tileType == 1222)
+                if (map[x + 1, y].face.botLeft.y > me.face.botRight.y || map[x, y - 1].face.topRight.y > me.face.botRight.y)
+                {
+                    map[x, y].face.botRight.y += 1;
+                }
         }
         if (bl2)
         {
-            if (map[x, y].GetTileType() == 1011 || map[x, y].GetTileType() == 2122)
-                map[x, y].face.botLeft.y += 1;
+            if (tileType == 1011 || tileType == 2122)
+                if (map[x - 1, y].face.botRight.y > me.face.botLeft.y || map[x, y - 1].face.topLeft.y > me.face.botLeft.y)
+                {
+                    map[x, y].face.botLeft.y += 1;
+                }
+        }
+
+        //now lets find illegal tiles and make em legal
+
+        //update tileType
+        tileType = (map[x, y].GetTileType());
+
+        //case: double slope
+        switch (tileType)
+        {
+            //case: double slope1
+            case 1010:
+            case 2121:
+                RaisePointAt(x, y, 100);
+                RaisePointAt(x, y, 1);
+                //if (System.Convert.ToBoolean((x + y) % 2))
+                //    RaisePointAt(x, y, 100);
+                //else
+                //    RaisePointAt(x, y, 1);
+                break;
+
+            //case: double slope1
+            case 1212:
+            case 101:
+                RaisePointAt(x, y, 1000);
+                RaisePointAt(x, y, 10);
+
+                //if (System.Convert.ToBoolean((x + y) % 2))
+                //    RaisePointAt(x, y, 1000);
+                //else
+                //    RaisePointAt(x, y, 10);
+                break;
+
+            default:
+                break;
         }
 
 
@@ -692,5 +732,28 @@ public class World : MonoBehaviour_Singleton
         }
 
         chunks[0, 0].GetComponent<Renderer>().material.SetFloat("_grid", gridfloat);
+    }
+
+    public void RaisePointAt(int x, int y, int corner)
+    {
+        switch (corner)
+        {
+            case 1000:
+                map[x, y].face.topLeft.y += 1;
+                break;
+            case 100:
+                map[x, y].face.topRight.y += 1;
+                break;
+            case 10:
+                map[x, y].face.botRight.y += 1;
+                break;
+            case 1:
+                map[x, y].face.botLeft.y += 1;
+                break;
+            default:
+                Debug.LogError("Call of RaisePointAt() at " + x + "," + y + " with wrong integer " + corner);
+                break;
+        }
+
     }
 }
