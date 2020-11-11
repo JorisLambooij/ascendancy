@@ -42,8 +42,8 @@ public class World_EditorScript : Editor
 
     private void ReGenerateTexture(World world)
     {
-        HeightMapGenerator hmGen = world.transform.GetComponent<HeightMapGenerator>();
-        world.GenerateTexture(hmGen);
+        //HeightMapGenerator hmGen = world.transform.GetComponent<HeightMapGenerator>();
+        world.RegenerateTexture();
     }
 }
 #endif

@@ -107,7 +107,7 @@ public class HeightMapGenerator : MonoBehaviour
         return noisemap;
     }
 
-    public Texture2D WorldTexture(float[,] noiseMap, World.DisplayMode displayMode)
+        public Texture2D WorldTexture(float[,] noiseMap, World.DisplayMode displayMode)
     {
         Texture2D texture = new Texture2D(mapWidth, mapHeight);
 

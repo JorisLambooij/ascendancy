@@ -7,10 +7,11 @@ using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
 
+
 public class World : MonoBehaviour_Singleton
 {
-    public enum DisplayMode { Height, Color, Gradient, Monochrome, Water };
-    public DisplayMode displayMode = DisplayMode.Color;
+    public enum DisplayMode { Height, Color, Gradient, Monochrome };    //Was macht das?
+    public DisplayMode displayMode = DisplayMode.Color;                 //Können die beiden weg? :D
 
     #region Tweakables
     [Header("Tweakables")]
@@ -32,7 +33,7 @@ public class World : MonoBehaviour_Singleton
 
     public float waterLevel = -1.2f;
     public float noiseScale = 2;
-    public float tileSize = 5f; //meters per side of each tiles
+    public float tileSize = 1f; //meters per side of each tiles
     public float heightScale = 1f;   //meters of elevation each new level gives us
     public float heightResolution = 1f; // amount of different levels of elevation
     #endregion
@@ -40,13 +41,18 @@ public class World : MonoBehaviour_Singleton
     public GameObject chunkPrefab;
     public LocalNavMeshBuilder navMeshBuilder;
 
-    //public float seaLevel = 0;
-
     [Header("Misc References")]
     public Transform ChunkCollector;
-    public GameObject fow_plane;
+    //public bool useHeightmapAsTexture = false;
     public Texture2D tex;
     public Transform waterPlane;
+    [Tooltip("ERROR, GRASS, ROCK, DIRT, SAND, WATER")]
+    public Color32[] terrainColors = new Color32[6];
+
+    [Header("DevTools")]
+    public bool tintFlippedTiles = false;
+    public List<int> highlightedTiles;
+
 
     /// <summary>
     /// Contains the information about the height of the tiles.
@@ -57,6 +63,7 @@ public class World : MonoBehaviour_Singleton
     /// Set of all the tiles that make up the world
     /// </summary>
     private Tile[,] map;
+    private Color32[,] colormap;
 
     /// <summary>
     /// Set of all the chunks used to draw the world.
@@ -69,15 +76,6 @@ public class World : MonoBehaviour_Singleton
 
         CreateWorld();
 
-        //resize fow_plane
-        if (fow_plane == null) { }
-        //Debug.LogError("FoW_Plane not found, no fog for you! Go fog yourself!");
-        else
-        {
-            //TODO Calculate stuff instead of estimating '25.5'
-            fow_plane.transform.localScale = new Vector3(25.5f, 1, 25.5f);
-            fow_plane.transform.position = new Vector3(worldSize, fow_plane.transform.position.y, worldSize);
-        }
     }
 
     public void CreateWorld()
@@ -92,15 +90,45 @@ public class World : MonoBehaviour_Singleton
 
         //initiate things
         map = new Tile[worldSize, worldSize];
+        colormap = new Color32[worldSize, worldSize];
+        //terrainTexture = new Texture2D(worldSize * textureTilesize, worldSize * textureTilesize);
 
         chunks = new Chunk[numberOfChunks, numberOfChunks];
 
         //generate the terrain!
         Debug.Log("Building Terrain");
         GenerateTerrain();
-        
-        AdditiveSmoothing();
-        FillCliffs();
+
+        //1st map iteration with methods
+        for (int x = 0; x < map.GetLength(0); x++)
+        {
+            for (int y = 0; y < map.GetLength(1); y++)
+            {
+                AdditiveSmoothing(x, y);
+                FlipTriangleSmoothing(x, y);
+            }
+        }
+
+        //2nd map iteration with methods
+        for (int x = 0; x < map.GetLength(0); x++)
+        {
+            for (int y = 0; y < map.GetLength(1); y++)
+            {
+                GenerateTerrainTypes(x, y);
+
+                FillCliffs(x, y);
+                //generate texture
+                //terrainTexture.SetPixels(x * textureTilesize, y * textureTilesize, textureTilesize, textureTilesize, tileArray[(int)map[x, y].terrainType].GetPixels());
+                //vertex colors
+                //UpdateVertexColors(x, y);
+                colormap[x, y] = GetColorForType(map[x, y].terrainType);
+
+                FlipTriangleSmoothing(x, y);
+            }
+        }
+
+        //apply texture
+        //terrainTexture.Apply();
 
         //tell all the chunks to draw their share of the mesh
         for (int x = 0; x < chunks.GetLength(0); x++)
@@ -109,7 +137,7 @@ public class World : MonoBehaviour_Singleton
                 chunks[x, z] = GenerateChunk(x, z);
             }
 
-        GenerateTexture(heightMapGenerator);
+        //chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("Texture2D_AA075013", terrainTexture);
 
         waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, waterLevel, worldSize * tileSize / 2);
         float size = worldSize / 9.86f;
@@ -136,276 +164,450 @@ public class World : MonoBehaviour_Singleton
         chunk.chunkIndex = new Vector2Int(startX, startZ);
 
         Tile[,] chunkTilemap = new Tile[chunkSize, chunkSize];
+        Color32[,] chunkColormap = new Color32[chunkSize, chunkSize];
 
         for (int x = 0; x < chunkSize; x++)
             for (int z = 0; z < chunkSize; z++)
             {
                 chunkTilemap[x, z] = map[chunkSize * startX + x, chunkSize * startZ + z];
+                chunkColormap[x, z] = colormap[chunkSize * startX + x, chunkSize * startZ + z];
             }
 
-        chunk.Initialize(chunkTilemap);
+        chunk.Initialize(chunkTilemap, chunkColormap, tintFlippedTiles, highlightedTiles);
         return chunk;
     }
 
-    public void FillCliffs()
+    public void FillCliffs(int x, int y)
     {
         //Vector2 tCliff = new Vector2(0, 0);
         Tile neighbor;
         Tile me;
         TileCliff cliff;
 
-        for (int wd = 0; wd < map.GetLength(0); wd++)
+        me = map[x, y];
+
+        //check left
+        if (x > 0)
         {
-            for (int hg = 0; hg < map.GetLength(1); hg++)
+            neighbor = map[x - 1, y];
+
+            if (neighbor.face.topRight.y < me.face.topLeft.y || neighbor.face.botRight.y < me.face.botLeft.y)
             {
-                me = map[wd, hg];
-
-                //check left
-                if (wd > 0)
+                //check if tile is already a cliff
+                if (!(map[x, y].GetType() == typeof(TileCliff)))
                 {
-                    neighbor = map[wd - 1, hg];
-
-                    if (neighbor.face.topRight.y < me.face.topLeft.y || neighbor.face.botRight.y < me.face.botLeft.y)
-                    {
-                        //check if tile is already a cliff
-                        if (!(map[wd, hg].GetType() == typeof(TileCliff)))
-                        {
-                            map[wd, hg] = new TileCliff(map[wd, hg]);
-                        }
-                        cliff = (TileCliff)map[wd, hg];
-
-                        cliff.leftCliff = new Face();
-                        cliff.leftCliff.topLeft = me.face.topLeft; //top left
-                        cliff.leftCliff.topRight = me.face.botLeft; //up right
-                        cliff.leftCliff.botRight = neighbor.face.botRight; //down right
-                        cliff.leftCliff.botLeft = neighbor.face.topRight; //down left
-
-                        map[wd, hg] = cliff;
-                    }
+                    map[x, y] = new TileCliff(map[x, y]);
                 }
+                cliff = (TileCliff)map[x, y];
 
-                //check above
-                if (hg < map.GetLength(1) - 1)
+                cliff.leftCliff = new Face();
+                cliff.leftCliff.topLeft = me.face.topLeft; //top left
+                cliff.leftCliff.topRight = me.face.botLeft; //up right
+                cliff.leftCliff.botRight = neighbor.face.botRight; //down right
+                cliff.leftCliff.botLeft = neighbor.face.topRight; //down left
+
+                map[x, y] = cliff;
+            }
+        }
+
+        //check above
+        if (y < map.GetLength(1) - 1)
+        {
+            neighbor = map[x, y + 1];
+
+            if (neighbor.face.botLeft.y < me.face.topLeft.y || neighbor.face.botRight.y < me.face.topRight.y)
+            {
+                //check if tile is already a cliff
+                if (!(map[x, y].GetType() == typeof(TileCliff)))
                 {
-                    neighbor = map[wd, hg + 1];
-
-                    if (neighbor.face.botLeft.y < me.face.topLeft.y || neighbor.face.botRight.y < me.face.topRight.y)
-                    {
-                        //check if tile is already a cliff
-                        if (!(map[wd, hg].GetType() == typeof(TileCliff)))
-                        {
-                            map[wd, hg] = new TileCliff(map[wd, hg]);
-                        }
-                        cliff = (TileCliff)map[wd, hg];
-
-                        cliff.topCliff = new Face();
-                        cliff.topCliff.topLeft = me.face.topRight; //top left
-                        cliff.topCliff.topRight = me.face.topLeft; //up right
-                        cliff.topCliff.botRight = neighbor.face.botLeft; //down right
-                        cliff.topCliff.botLeft = neighbor.face.botRight; //down left
-
-                        map[wd, hg] = cliff;
-                    }
+                    map[x, y] = new TileCliff(map[x, y]);
                 }
+                cliff = (TileCliff)map[x, y];
 
-                //check right
-                if (wd < map.GetLength(0) - 1)
+                cliff.topCliff = new Face();
+                cliff.topCliff.topLeft = me.face.topRight; //top left
+                cliff.topCliff.topRight = me.face.topLeft; //up right
+                cliff.topCliff.botRight = neighbor.face.botLeft; //down right
+                cliff.topCliff.botLeft = neighbor.face.botRight; //down left
+
+                map[x, y] = cliff;
+            }
+        }
+
+        //check right
+        if (x < map.GetLength(0) - 1)
+        {
+            neighbor = map[x + 1, y];
+
+            if (neighbor.face.topLeft.y < me.face.topRight.y || neighbor.face.botLeft.y < me.face.botRight.y)
+            {
+                //check if tile is already a cliff
+                if (!(map[x, y].GetType() == typeof(TileCliff)))
                 {
-                    neighbor = map[wd + 1, hg];
-
-                    if (neighbor.face.topLeft.y < me.face.topRight.y || neighbor.face.botLeft.y < me.face.botRight.y)
-                    {
-                        //check if tile is already a cliff
-                        if (!(map[wd, hg].GetType() == typeof(TileCliff)))
-                        {
-                            map[wd, hg] = new TileCliff(map[wd, hg]);
-                        }
-                        cliff = (TileCliff)map[wd, hg];
-
-                        cliff.rightCliff = new Face();
-                        cliff.rightCliff.topLeft = me.face.botRight; //top left
-                        cliff.rightCliff.topRight = me.face.topRight; //up right
-                        cliff.rightCliff.botRight = neighbor.face.topLeft; //down right
-                        cliff.rightCliff.botLeft = neighbor.face.botLeft; //down left
-
-                        map[wd, hg] = cliff;
-                    }
+                    map[x, y] = new TileCliff(map[x, y]);
                 }
+                cliff = (TileCliff)map[x, y];
 
-                //check below
-                if (hg > 0)
+                cliff.rightCliff = new Face();
+                cliff.rightCliff.topLeft = me.face.botRight; //top left
+                cliff.rightCliff.topRight = me.face.topRight; //up right
+                cliff.rightCliff.botRight = neighbor.face.topLeft; //down right
+                cliff.rightCliff.botLeft = neighbor.face.botLeft; //down left
+
+                map[x, y] = cliff;
+            }
+        }
+
+        //check below
+        if (y > 0)
+        {
+            neighbor = map[x, y - 1];
+
+            if (neighbor.face.topLeft.y < me.face.botLeft.y || neighbor.face.topRight.y < me.face.botRight.y)
+            {
+                //check if tile is already a cliff
+                if (!(map[x, y].GetType() == typeof(TileCliff)))
                 {
-                    neighbor = map[wd, hg - 1];
-
-                    if (neighbor.face.topLeft.y < me.face.botLeft.y || neighbor.face.topRight.y < me.face.botRight.y)
-                    {
-                        //check if tile is already a cliff
-                        if (!(map[wd, hg].GetType() == typeof(TileCliff)))
-                        {
-                            map[wd, hg] = new TileCliff(map[wd, hg]);
-                        }
-                        cliff = (TileCliff)map[wd, hg];
-
-                        cliff.botCliff = new Face();
-                        cliff.botCliff.topLeft = me.face.botLeft; //top left
-                        cliff.botCliff.topRight = me.face.botRight; //up right
-                        cliff.botCliff.botRight = neighbor.face.topRight; //down right
-                        cliff.botCliff.botLeft = neighbor.face.topLeft; //down left
-
-                        map[wd, hg] = cliff;
-                    }
+                    map[x, y] = new TileCliff(map[x, y]);
                 }
+                cliff = (TileCliff)map[x, y];
 
+                cliff.botCliff = new Face();
+                cliff.botCliff.topLeft = me.face.botLeft; //top left
+                cliff.botCliff.topRight = me.face.botRight; //up right
+                cliff.botCliff.botRight = neighbor.face.topRight; //down right
+                cliff.botCliff.botLeft = neighbor.face.topLeft; //down left
+
+                map[x, y] = cliff;
             }
         }
     }
 
-    public void AdditiveSmoothing()
+    //flips the triangles of diagonal slopes in two directions
+    public void FlipTriangleSmoothing(int x, int y)
+    {
+        Tile me;
+
+        me = map[x, y];
+        int tileType = me.GetTileType();
+
+        //topLeft - flip
+        if (tileType == 111 || tileType == 2111)
+        {
+            if (!(me).flippedTriangles)
+                (me).ToggleTriangleFlip();
+        }
+
+        //topRight - unflip
+        if (tileType == 1011 || tileType == 1211)
+        {
+            if ((me).flippedTriangles)
+                (me).ToggleTriangleFlip();
+        }
+
+        //botRight - flip
+        if (tileType == 1101 || tileType == 1121)
+        {
+            if (!(me).flippedTriangles)
+                (me).ToggleTriangleFlip();
+        }
+
+        //botLeft - unflip
+        if (tileType == 1110 || tileType == 1112)
+        {
+            if ((me).flippedTriangles)
+                (me).ToggleTriangleFlip();
+        }
+
+    }
+
+    public void AdditiveSmoothing(int x, int y)
     {
         Tile Neighbor;
         bool tl = false;
         bool tr = false;
         bool bl = false;
         bool br = false;
-        Tile me;
 
-        for (int wd = 0; wd < map.GetLength(0); wd++)
+        bool tl2 = false;
+        bool tr2 = false;
+        bool bl2 = false;
+        bool br2 = false;
+
+        Tile me = map[x, y];
+
+        #region direct
+        //check left
+        if (x > 0)
         {
-            for (int hg = 0; hg < map.GetLength(1); hg++)
+            Neighbor = map[x - 1, y];
+
+            if (Neighbor.face.topRight.y == me.face.topLeft.y + 1 && Neighbor.face.botRight.y == me.face.botLeft.y + 1)
             {
-                me = map[wd, hg];
-                tl = false;
-                tr = false;
-                bl = false;
-                br = false;
+                tl = true;
+                bl = true;
+            }
+        }
 
-                #region direct
-                //check left
-                if (wd > 0)
+        //check above
+        if (y < map.GetLength(1) - 1)
+        {
+            Neighbor = map[x, y + 1];
+
+            if (Neighbor.face.botLeft.y == me.face.topLeft.y + 1 && Neighbor.face.botRight.y == me.face.topRight.y + 1)
+            {
+                tl = true;
+                tr = true;
+            }
+        }
+
+        //check right
+        if (x < map.GetLength(0) - 1)
+        {
+            Neighbor = map[x + 1, y];
+
+            if (Neighbor.face.topLeft.y == me.face.topRight.y + 1 && Neighbor.face.botLeft.y == me.face.botRight.y + 1)
+            {
+                tr = true;
+                br = true;
+            }
+        }
+
+        //check below
+        if (y > 0)
+        {
+            Neighbor = map[x, y - 1];
+
+            if (Neighbor.face.topLeft.y == me.face.botLeft.y + 1 && Neighbor.face.topRight.y == me.face.botRight.y + 1)
+            {
+                bl = true;
+                br = true;
+            }
+        }
+        #endregion
+
+        #region diagonal
+        //check topLeft
+        if (x > 0 && y < map.GetLength(1) - 1)
+        {
+            Neighbor = map[x - 1, y + 1];
+
+            if (Neighbor.face.botRight.y > me.face.topLeft.y)
+            {
+                tl = true;
+            }
+
+            if (Neighbor.face.botRight.y - 1 > me.face.topLeft.y)
+            {
+                tl2 = true;
+            }
+        }
+
+        //check topRight
+        if (y < map.GetLength(1) - 1 && x < map.GetLength(0) - 1)
+        {
+            Neighbor = map[x + 1, y + 1];
+
+            if (Neighbor.face.botLeft.y > me.face.topRight.y)
+            {
+                tr = true;
+            }
+
+            if (Neighbor.face.botLeft.y - 1 > me.face.topRight.y)
+            {
+                tr2 = true;
+            }
+        }
+
+        //check botRight
+        if (y > 0 && x < map.GetLength(0) - 1)
+        {
+            Neighbor = map[x + 1, y - 1];
+
+            if (Neighbor.face.topLeft.y > me.face.botRight.y)
+            {
+                br = true;
+            }
+
+            if (Neighbor.face.topLeft.y - 1 > me.face.botRight.y)
+            {
+                br2 = true;
+            }
+        }
+
+        //check botLeft
+        if (y > 0 && x > 0)
+        {
+            Neighbor = map[x - 1, y - 1];
+
+            if (Neighbor.face.topRight.y > me.face.botLeft.y)
+            {
+                bl = true;
+            }
+
+            if (Neighbor.face.topRight.y - 1 > me.face.botLeft.y)
+            {
+                bl2 = true;
+            }
+        }
+
+
+        #endregion
+
+
+        if (tl)
+        {
+            map[x, y].face.topLeft.y += 1;
+        }
+        if (tr)
+        {
+            map[x, y].face.topRight.y += 1;
+        }
+        if (br)
+        {
+            map[x, y].face.botRight.y += 1;
+        }
+        if (bl)
+        {
+            map[x, y].face.botLeft.y += 1;
+        }
+
+        int tileType = (map[x, y].GetTileType());
+
+        if (tl2)
+        {
+            if (tileType == 1101 || tileType == 2212)
+                if (map[x - 1, y].face.topRight.y > me.face.topLeft.y || map[x, y + 1].face.botLeft.y > me.face.topLeft.y)
                 {
-                    Neighbor = map[wd - 1, hg];
-
-                    if (Neighbor.face.topRight.y > me.face.topLeft.y && Neighbor.face.botRight.y > me.face.botLeft.y)
-                    {
-                        tl = true;
-                        bl = true;
-                    }
+                    map[x, y].face.topLeft.y += 1;
                 }
-
-                //check above
-                if (hg < map.GetLength(1) - 1)
+        }
+        if (tr2)
+        {
+            if (tileType == 1110 || tileType == 2221)
+                //TODO Ist immer noch sehr blocky,
+                //viel besser, wenn das if drumherum weg ist,
+                //dann aber weird z.b. in chunk 0/0 beim berg,                
+                //komische spitzen.
+                //Am besten das if fixen, ich komme nicht drauf :(
+                if (map[x + 1, y].face.topLeft.y > me.face.topRight.y || map[x, y + 1].face.botRight.y > me.face.topRight.y)
                 {
-                    Neighbor = map[wd, hg + 1];
-
-                    if (Neighbor.face.botLeft.y > me.face.topLeft.y && Neighbor.face.botRight.y > me.face.topRight.y)
-                    {
-                        tl = true;
-                        tr = true;
-                    }
+                    map[x, y].face.topRight.y += 1;
                 }
-
-                //check right
-                if (wd < map.GetLength(0) - 1)
+        }
+        if (br2)
+        {
+            if (tileType == 0111 || tileType == 1222)
+                if (map[x + 1, y].face.botLeft.y > me.face.botRight.y || map[x, y - 1].face.topRight.y > me.face.botRight.y)
                 {
-                    Neighbor = map[wd + 1, hg];
-
-                    if (Neighbor.face.topLeft.y > me.face.topRight.y && Neighbor.face.botLeft.y > me.face.botRight.y)
-                    {
-                        tr = true;
-                        br = true;
-                    }
+                    map[x, y].face.botRight.y += 1;
                 }
-
-                //check below
-                if (hg > 0)
+        }
+        if (bl2)
+        {
+            if (tileType == 1011 || tileType == 2122)
+                if (map[x - 1, y].face.botRight.y > me.face.botLeft.y || map[x, y - 1].face.topLeft.y > me.face.botLeft.y)
                 {
-                    Neighbor = map[wd, hg - 1];
-
-                    if (Neighbor.face.topLeft.y > me.face.botLeft.y && Neighbor.face.topRight.y > me.face.botRight.y)
-                    {
-                        bl = true;
-                        br = true;
-                    }
+                    map[x, y].face.botLeft.y += 1;
                 }
-                #endregion
+        }
 
-                #region diagonal
-                //check topLeft
-                if (wd > 0 && hg < map.GetLength(1) - 1)
-                {
-                    Neighbor = map[wd - 1, hg + 1];
+        //now lets find illegal tiles and make em legal
 
-                    if (Neighbor.face.botRight.y > me.face.topLeft.y)
-                    {
-                        tl = true;
-                    }
-                }
+        //update tileType
+        tileType = (map[x, y].GetTileType());
 
-                //check topRight
-                if (hg < map.GetLength(1) - 1 && wd < map.GetLength(0) - 1)
-                {
-                    Neighbor = map[wd + 1, hg + 1];
+        //case: double slope
+        switch (tileType)
+        {
+            //case: double slope1
+            case 1010:
+            case 2121:
+                RaisePointAt(x, y, 100);
+                RaisePointAt(x, y, 1);
+                //if (System.Convert.ToBoolean((x + y) % 2))
+                //    RaisePointAt(x, y, 100);
+                //else
+                //    RaisePointAt(x, y, 1);
+                break;
 
-                    if (Neighbor.face.botLeft.y > me.face.topRight.y)
-                    {
-                        tr = true;
-                    }
-                }
+            //case: double slope1
+            case 1212:
+            case 101:
+                RaisePointAt(x, y, 1000);
+                RaisePointAt(x, y, 10);
 
-                //check botRight
-                if (hg > 0 && wd < map.GetLength(0) - 1)
-                {
-                    Neighbor = map[wd + 1, hg - 1];
+                //if (System.Convert.ToBoolean((x + y) % 2))
+                //    RaisePointAt(x, y, 1000);
+                //else
+                //    RaisePointAt(x, y, 10);
+                break;
 
-                    if (Neighbor.face.topLeft.y > me.face.botRight.y)
-                    {
-                        br = true;
-                    }
-                }
-
-                //check botLeft
-                if (hg > 0 && wd > 0)
-                {
-                    Neighbor = map[wd - 1, hg - 1];
-
-                    if (Neighbor.face.topRight.y > me.face.botLeft.y)
-                    {
-                        bl = true;
-                    }
-                }
+            default:
+                break;
+        }
 
 
-                #endregion
+    }
+
+    public void GenerateTerrainTypes(int x, int y)
+    {
+        TerrainType tileType;
 
 
-                if (tl)
-                {
-                    map[wd, hg].face.topLeft.y += 1;
-                }
-                if (tr)
-                {
-                    map[wd, hg].face.topRight.y += 1;
-                }
-                if (br)
-                {
-                    map[wd, hg].face.botRight.y += 1;
-                }
-                if (bl)
-                {
-                    map[wd, hg].face.botLeft.y += 1;
-                }
+        switch ((int)map[x, y].height)
+        {
+            case int n when (n < -5):
+                tileType = TerrainType.WATER;
+                break;
+            case int n when (n < -0):
+                tileType = TerrainType.SAND;
+                break;
+            case int n when (n < 5):
+                tileType = TerrainType.GRASS;
+                break;
+            case int n when (n < 10):
+                tileType = TerrainType.DIRT;
+                break;
+            default:
+                tileType = TerrainType.ROCK;
+                break;
+        }
+        map[x, y].terrainType = tileType;
 
+    }
+
+    public void RegenerateTexture()
+    {
+        for (int x = 0; x < map.GetLength(0); x++)
+        {
+            for (int y = 0; y < map.GetLength(1); y++)
+            {
+                GenerateTerrainTypes(x, y);
+
+                //generate texture
+                //terrainTexture.SetPixels(x * textureTilesize, y * textureTilesize, textureTilesize, textureTilesize, tileArray[(int)map[x, y].terrainType].GetPixels());
             }
         }
     }
 
-    public void GenerateTexture(HeightMapGenerator heightMapGenerator)
+    public Color32 GetColorForType(TerrainType t)
     {
-        chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TerrainTexture", heightMapGenerator.WorldTexture(heightmap, displayMode));
-        
-        waterPlane.GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_WaterDepthMap", heightMapGenerator.WaterMap(heightmap, displayMode));
-        chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_WaterLevel", waterLevel);
-
+        switch (t)
+        {
+            case TerrainType.WATER:
+                return terrainColors[5];
+            case TerrainType.SAND:
+                return terrainColors[4];
+            case TerrainType.GRASS:
+                return terrainColors[1];
+            case TerrainType.DIRT:
+                return terrainColors[3];
+            case TerrainType.ROCK:
+                return terrainColors[2];
+            default:
+                return terrainColors[0];
+        }
     }
 
     public void DestroyWorld()
@@ -432,13 +634,14 @@ public class World : MonoBehaviour_Singleton
 
 
                 map[dx, dy] = new Tile();
-                map[dx,dy].face = new Face
-                {                    
+                map[dx, dy].face = new Face
+                {
                     topLeft = new Vector3(dx - 0.5f, y, dy + 0.5f), //top left
                     topRight = new Vector3(dx + 0.5f, y, dy + 0.5f), //up right
                     botRight = new Vector3(dx + 0.5f, y, dy - 0.5f), //down right
                     botLeft = new Vector3(dx - 0.5f, y, dy - 0.5f) //down left
                 };
+                map[dx, dy].height = y;
             }
     }
 
@@ -530,5 +733,28 @@ public class World : MonoBehaviour_Singleton
         }
 
         chunks[0, 0].GetComponent<Renderer>().material.SetFloat("_grid", gridfloat);
+    }
+
+    public void RaisePointAt(int x, int y, int corner)
+    {
+        switch (corner)
+        {
+            case 1000:
+                map[x, y].face.topLeft.y += 1;
+                break;
+            case 100:
+                map[x, y].face.topRight.y += 1;
+                break;
+            case 10:
+                map[x, y].face.botRight.y += 1;
+                break;
+            case 1:
+                map[x, y].face.botLeft.y += 1;
+                break;
+            default:
+                Debug.LogError("Call of RaisePointAt() at " + x + "," + y + " with wrong integer " + corner);
+                break;
+        }
+
     }
 }

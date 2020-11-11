@@ -20,12 +20,24 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2DArray_8010739F:
+        m_Texture: {fileID: 2800000, guid: 8f465642450d0cc4ca8ea2003b6d7fcf, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - Texture2D_A1C3AEFB:
         m_Texture: {fileID: 2800000, guid: e9866699a4ddce642b7da4aeaa74d279, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - Texture2D_AA075013:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - Texture2D_C52C5863:
         m_Texture: {fileID: 2800000, guid: 3787ecf31b318914f908bb48537ebf10, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_E37783BF:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_E3CEAC0A:
@@ -73,7 +85,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TerrainTexture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 8f465642450d0cc4ca8ea2003b6d7fcf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _WaterDepthMap:
@@ -83,10 +95,13 @@ Material:
     m_Floats:
     - Boolean_38021BFA: 1
     - Boolean_5E37AC99: 0
-    - Vector1_173F298C: 1
+    - Boolean_A4093A0F: 1
+    - Vector1_1C40ABDE: 5.31
     - Vector1_46842222: 0.123
-    - Vector1_A3E094A3: 0.021
-    - Vector1_CB42C052: 4.2
+    - Vector1_ACCEAFF0: 0.899
+    - Vector1_B77E4A80: 0.818
+    - Vector1_D6C5C416: -0.814
+    - Vector1_E5DB5A6F: 0.957
     - Vector1_F0A85FEC: 0.08
     - _AlphaClip: 0
     - _Blend: 0
@@ -116,7 +131,7 @@ Material:
     - _gridStrength: 0.875
     m_Colors:
     - Color_283B0952: {r: 0.12156863, g: 0.6313726, b: 0.14117648, a: 0}
-    - Color_681E2D59: {r: 0, g: 0, b: 0, a: 1}
+    - Vector2_39A8A895: {r: 1, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
