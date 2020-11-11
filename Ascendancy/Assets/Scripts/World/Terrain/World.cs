@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 public class World : MonoBehaviour_Singleton
 {
-    public enum DisplayMode { Height, Color, Gradient, Monochrome };
+    public enum DisplayMode { Height, Color, Gradient, Monochrome, Water };
     public DisplayMode displayMode = DisplayMode.Color;
 
     #region Tweakables
@@ -30,6 +30,7 @@ public class World : MonoBehaviour_Singleton
     [HideInInspector]
     public int numberOfChunks = 2;
 
+    public float waterLevel = -1.2f;
     public float noiseScale = 2;
     public float tileSize = 5f; //meters per side of each tiles
     public float heightScale = 1f;   //meters of elevation each new level gives us
@@ -110,7 +111,7 @@ public class World : MonoBehaviour_Singleton
 
         GenerateTexture(heightMapGenerator);
 
-        waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, -4.25f, worldSize * tileSize / 2);
+        waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, waterLevel, worldSize * tileSize / 2);
         float size = worldSize / 9.86f;
         waterPlane.transform.localScale = new Vector3(size * tileSize, 1, size * tileSize);
 
@@ -401,6 +402,10 @@ public class World : MonoBehaviour_Singleton
     public void GenerateTexture(HeightMapGenerator heightMapGenerator)
     {
         chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TerrainTexture", heightMapGenerator.WorldTexture(heightmap, displayMode));
+        
+        waterPlane.GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_WaterDepthMap", heightMapGenerator.WaterMap(heightmap, displayMode));
+        chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_WaterLevel", waterLevel);
+
     }
 
     public void DestroyWorld()

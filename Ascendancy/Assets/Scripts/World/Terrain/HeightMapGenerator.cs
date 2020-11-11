@@ -115,7 +115,7 @@ public class HeightMapGenerator : MonoBehaviour
             for (int y = 0; y < mapHeight; y++)
             {
                 Color color;
-                float intensity = noiseMap[x, y];
+                float intensity = noiseMap[x, y] / 8; //TODO: Scale properly with max height
 
                 intensity = (intensity + 1) / 2;
 
@@ -133,6 +133,11 @@ public class HeightMapGenerator : MonoBehaviour
                     case World.DisplayMode.Color:
                         color = terrainHeightGradient.Evaluate(intensity);
                         break;
+                    case World.DisplayMode.Water:
+                        float c = -Mathf.Min(0, noiseMap[x, y] - ((World)World.Instance).waterLevel);
+                        color = new Color(1-c, 0, c);
+                        texture.SetPixel(x, y, color);
+                        break;
                     default:
                         color = new Color(.1f, .7f, .2f);
                         break;
@@ -147,6 +152,49 @@ public class HeightMapGenerator : MonoBehaviour
         return texture;
     }
     
+    public Texture2D WaterMap(float[,] noiseMap, World.DisplayMode displayMode)
+    {
+        Texture2D texture = new Texture2D(mapWidth, mapHeight);
+        float deepestPoint = 0;
+        float waterLevel = ((World)World.Instance).waterLevel;
+        for (int x = 0; x < mapWidth; x++)
+            for (int y = 0; y < mapHeight; y++)
+            {
+                Color color;
+                float intensity = (-noiseMap[x, y] + waterLevel);
+                
+                deepestPoint = Mathf.Max(intensity, deepestPoint);
+                float g = 0;
+                if (intensity > 0)
+                {
+                    bool coast = false;
+                    // because of the way the heightmap is utilized, we need to look two steps in positive directions, but only one in the negative
+                    for (int dx = Mathf.Max(0, x - 1); dx < Mathf.Min(mapWidth, x + 2); dx++)
+                        for (int dy = Mathf.Max(0, y - 1); dy < Mathf.Min(mapHeight, y + 2) && !coast; dy++)
+                        {
+                            float neighborIntensity = (-noiseMap[dx, dy] + ((World)World.Instance).waterLevel);
+                            if (neighborIntensity <= 0)
+                                coast = true;
+                        }
+                    if (coast)
+                        g = 1;
+                }
+
+
+                color = new Color(0, g, intensity);
+                texture.SetPixel(x, y, color);
+            }
+
+        for (int x = 0; x < mapWidth; x++)
+            for (int y = 0; y < mapHeight; y++)
+                noiseMap[x, y] /= deepestPoint;
+
+        texture.wrapMode = TextureWrapMode.Clamp;
+        texture.filterMode = FilterMode.Bilinear;
+        texture.Apply();
+        return texture;
+    }
+
     private void FillHeightmap()
     {
         

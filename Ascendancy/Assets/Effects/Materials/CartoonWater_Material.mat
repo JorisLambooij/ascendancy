@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: CartoonWater_Material
-  m_Shader: {fileID: -6465566751694194690, guid: 50147d089d2a76e47adb280ec0eabb55,
+  m_Shader: {fileID: -6465566751694194690, guid: c5f086a90a2a3fb4a8565eded3c77b8c,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -28,24 +28,32 @@ Material:
         m_Texture: {fileID: 2800000, guid: e7906aa7e70d18e489128537eb2c9c9f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _WaterDepthMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - Boolean_7B328EE6: 1
-    - Vector1_151E3CC0: 4
+    - Vector1_151E3CC0: 0.23
     - Vector1_175CCE8F: 1
     - Vector1_366F2D15: 0
-    - Vector1_4773759F: 1.22
+    - Vector1_3F34986: 1
+    - Vector1_4773759F: 1.2
+    - Vector1_5AE40E08: 10000
     - Vector1_5E3819F: 0.651
     - Vector1_5F8F673: 1
     - Vector1_5FF7D8C3: 2
-    - Vector1_60BB597F: 0.5
+    - Vector1_60BB597F: 0.71
     - Vector1_62F306D2: 0
     - Vector1_653BD1D0: 0.1
     - Vector1_8AD9574A: 1
+    - Vector1_9C0AC9F0: 0.01
     - Vector1_9DDBDE34: 0.53
     - Vector1_AEE3B29B: 0.123
     - Vector1_B6400B69: 81.4
     - Vector1_C39B4576: 0.182
     - Vector1_CB9EFDF6: 3
+    - Vector1_CCE78657: 0
     - Vector1_D0BD1686: 0.406
     - Vector1_FD90248D: 2.54
     - Vector1_FE60B8A6: 4

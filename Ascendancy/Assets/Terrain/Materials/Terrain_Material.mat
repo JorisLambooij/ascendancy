@@ -76,10 +76,17 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _WaterDepthMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - Boolean_38021BFA: 1
     - Boolean_5E37AC99: 0
+    - Vector1_173F298C: 1
     - Vector1_46842222: 0.123
+    - Vector1_A3E094A3: 0.021
+    - Vector1_CB42C052: 4.2
     - Vector1_F0A85FEC: 0.08
     - _AlphaClip: 0
     - _Blend: 0
@@ -101,6 +108,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
+    - _WaterLevel: -1.5
     - _WorkflowMode: 1
     - _ZWrite: 1
     - _boolTextured: 0
@@ -108,6 +116,7 @@ Material:
     - _gridStrength: 0.875
     m_Colors:
     - Color_283B0952: {r: 0.12156863, g: 0.6313726, b: 0.14117648, a: 0}
+    - Color_681E2D59: {r: 0, g: 0, b: 0, a: 1}
     - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
