@@ -7,7 +7,7 @@ public class AdditiveSmoothing : TerrainOperation
     public override void TileOperation(int x, int y)
     {
 
-        Tile Neighbor;
+        Tile neighbor;
         bool tl = false;
         bool tr = false;
         bool bl = false;
@@ -24,9 +24,9 @@ public class AdditiveSmoothing : TerrainOperation
         //check left
         if (x > 0)
         {
-            Neighbor = originalTilemap[x - 1, y];
+            neighbor = originalTilemap[x - 1, y];
 
-            if (Neighbor.face.topRight.y == me.face.topLeft.y + 1 && Neighbor.face.botRight.y == me.face.botLeft.y + 1)
+            if (neighbor.face.topRight.y == me.face.topLeft.y + 1 && neighbor.face.botRight.y == me.face.botLeft.y + 1)
             {
                 tl = true;
                 bl = true;
@@ -36,9 +36,9 @@ public class AdditiveSmoothing : TerrainOperation
         //check above
         if (y < originalTilemap.GetLength(1) - 1)
         {
-            Neighbor = originalTilemap[x, y + 1];
+            neighbor = originalTilemap[x, y + 1];
 
-            if (Neighbor.face.botLeft.y == me.face.topLeft.y + 1 && Neighbor.face.botRight.y == me.face.topRight.y + 1)
+            if (neighbor.face.botLeft.y == me.face.topLeft.y + 1 && neighbor.face.botRight.y == me.face.topRight.y + 1)
             {
                 tl = true;
                 tr = true;
@@ -48,9 +48,9 @@ public class AdditiveSmoothing : TerrainOperation
         //check right
         if (x < originalTilemap.GetLength(0) - 1)
         {
-            Neighbor = originalTilemap[x + 1, y];
+            neighbor = originalTilemap[x + 1, y];
 
-            if (Neighbor.face.topLeft.y == me.face.topRight.y + 1 && Neighbor.face.botLeft.y == me.face.botRight.y + 1)
+            if (neighbor.face.topLeft.y == me.face.topRight.y + 1 && neighbor.face.botLeft.y == me.face.botRight.y + 1)
             {
                 tr = true;
                 br = true;
@@ -60,9 +60,9 @@ public class AdditiveSmoothing : TerrainOperation
         //check below
         if (y > 0)
         {
-            Neighbor = originalTilemap[x, y - 1];
+            neighbor = originalTilemap[x, y - 1];
 
-            if (Neighbor.face.topLeft.y == me.face.botLeft.y + 1 && Neighbor.face.topRight.y == me.face.botRight.y + 1)
+            if (neighbor.face.topLeft.y == me.face.botLeft.y + 1 && neighbor.face.topRight.y == me.face.botRight.y + 1)
             {
                 bl = true;
                 br = true;
@@ -74,65 +74,49 @@ public class AdditiveSmoothing : TerrainOperation
         //check topLeft
         if (x > 0 && y < originalTilemap.GetLength(1) - 1)
         {
-            Neighbor = originalTilemap[x - 1, y + 1];
+            neighbor = originalTilemap[x - 1, y + 1];
 
-            if (Neighbor.face.botRight.y > me.face.topLeft.y)
-            {
+            if (neighbor.face.botRight.y > me.face.topLeft.y)
                 tl = true;
-            }
 
-            if (Neighbor.face.botRight.y - 1 > me.face.topLeft.y)
-            {
+            if (neighbor.face.botRight.y - 1 > me.face.topLeft.y)
                 tl2 = true;
-            }
         }
 
         //check topRight
         if (y < originalTilemap.GetLength(1) - 1 && x < originalTilemap.GetLength(0) - 1)
         {
-            Neighbor = originalTilemap[x + 1, y + 1];
+            neighbor = originalTilemap[x + 1, y + 1];
 
-            if (Neighbor.face.botLeft.y > me.face.topRight.y)
-            {
+            if (neighbor.face.botLeft.y > me.face.topRight.y)
                 tr = true;
-            }
 
-            if (Neighbor.face.botLeft.y - 1 > me.face.topRight.y)
-            {
+            if (neighbor.face.botLeft.y - 1 > me.face.topRight.y)
                 tr2 = true;
-            }
         }
 
         //check botRight
         if (y > 0 && x < originalTilemap.GetLength(0) - 1)
         {
-            Neighbor = originalTilemap[x + 1, y - 1];
+            neighbor = originalTilemap[x + 1, y - 1];
 
-            if (Neighbor.face.topLeft.y > me.face.botRight.y)
-            {
+            if (neighbor.face.topLeft.y > me.face.botRight.y)
                 br = true;
-            }
 
-            if (Neighbor.face.topLeft.y - 1 > me.face.botRight.y)
-            {
+            if (neighbor.face.topLeft.y - 1 > me.face.botRight.y)
                 br2 = true;
-            }
         }
 
         //check botLeft
         if (y > 0 && x > 0)
         {
-            Neighbor = originalTilemap[x - 1, y - 1];
+            neighbor = originalTilemap[x - 1, y - 1];
 
-            if (Neighbor.face.topRight.y > me.face.botLeft.y)
-            {
+            if (neighbor.face.topRight.y > me.face.botLeft.y)
                 bl = true;
-            }
 
-            if (Neighbor.face.topRight.y - 1 > me.face.botLeft.y)
-            {
+            if (neighbor.face.topRight.y - 1 > me.face.botLeft.y)
                 bl2 = true;
-            }
         }
 
 
@@ -157,7 +141,7 @@ public class AdditiveSmoothing : TerrainOperation
         if (tl2)
         {
             if (tileType == 1101 || tileType == 2212)
-                if (originalTilemap[x - 1, y].face.topRight.y > me.face.topLeft.y || originalTilemap[x, y + 1].face.botLeft.y > me.face.topLeft.y)
+                if (me.face.topRight.y + 1 == originalTilemap[x - 1, y + 1].face.botLeft.y || originalTilemap[x - 1, y].face.topRight.y > me.face.topLeft.y || originalTilemap[x, y + 1].face.botLeft.y > me.face.topLeft.y)
                     newTilemap[x, y].face.topLeft.y += 1;
                 
         }
@@ -169,21 +153,22 @@ public class AdditiveSmoothing : TerrainOperation
                 //dann aber weird z.b. in chunk 0/0 beim berg,                
                 //komische spitzen.
                 //Am besten das if fixen, ich komme nicht drauf :(
-                if (originalTilemap[x + 1, y].face.topLeft.y > me.face.topRight.y || originalTilemap[x, y + 1].face.botRight.y > me.face.topRight.y)
+                //if (originalTilemap[x + 1, y].face.topLeft.y > me.face.topRight.y || originalTilemap[x, y + 1].face.botRight.y > me.face.topRight.y)
+                if (me.face.topRight.y + 1 == originalTilemap[x + 1, y + 1].face.botLeft.y || originalTilemap[x + 1, y].face.topLeft.y > me.face.topRight.y || originalTilemap[x, y + 1].face.botRight.y > me.face.topRight.y)
                     newTilemap[x, y].face.topRight.y += 1;
                 
         }
         if (br2)
         {
             if (tileType == 0111 || tileType == 1222)
-                if (originalTilemap[x + 1, y].face.botLeft.y > me.face.botRight.y || originalTilemap[x, y - 1].face.topRight.y > me.face.botRight.y)
+                if (me.face.topRight.y + 1 == originalTilemap[x + 1, y - 1].face.botLeft.y || originalTilemap[x + 1, y].face.botLeft.y > me.face.botRight.y || originalTilemap[x, y - 1].face.topRight.y > me.face.botRight.y)
                     newTilemap[x, y].face.botRight.y += 1;
                 
         }
         if (bl2)
         {
             if (tileType == 1011 || tileType == 2122)
-                if (originalTilemap[x - 1, y].face.botRight.y > me.face.botLeft.y || originalTilemap[x, y - 1].face.topLeft.y > me.face.botLeft.y)
+                if (me.face.topRight.y + 1 == originalTilemap[x - 1, y - 1].face.botLeft.y || originalTilemap[x - 1, y].face.botRight.y > me.face.botLeft.y || originalTilemap[x, y - 1].face.topLeft.y > me.face.botLeft.y)
                     newTilemap[x, y].face.botLeft.y += 1;
                 
         }

@@ -115,6 +115,7 @@ public class World : MonoBehaviour_Singleton
 
         map = triangleSmoothing.Run(map, parallelizationBatchSize);
 
+
         //2nd map iteration with methods
         for (int x = 0; x < map.GetLength(0); x++)
             for (int y = 0; y < map.GetLength(1); y++)
