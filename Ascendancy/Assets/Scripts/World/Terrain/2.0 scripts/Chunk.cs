@@ -22,6 +22,8 @@ public class Chunk : MonoBehaviour
     private List<Vector2> newUV = new List<Vector2>();
     private List<Color32> newColors = new List<Color32>();
 
+    private List<int> colorCorrectableTiles = new List<int> { 1110, 2221, 1101, 2212, 1011, 2122, 0111, 1222 };
+
     // Start is called before the first frame update
     public void Initialize(Tile[,] chunkTilemap, Color32[,] colormap, bool tintFlippedTiles, List<int> highlightedTiles)
     {
@@ -66,21 +68,15 @@ public class Chunk : MonoBehaviour
         faceCount = 0;
     }
 
-    private void GenerateFace(Face face, Color c, bool flipTriangles)
+    private void GenerateFace(Face face, Color[] vertexColors, bool flipTriangles)
     {
-
         newVertices.Add(face.topLeft);      //1
         newVertices.Add(face.topRight);     //2
         newVertices.Add(face.botRight);     //3
         newVertices.Add(face.botLeft);      //4
 
-
-        newColors.Add(c);
-        newColors.Add(c);
-        newColors.Add(c);
-        newColors.Add(c);
-        newColors.Add(c);
-        newColors.Add(c);
+        for (int i = 0; i < 6; i++)
+            newColors.Add(vertexColors[i]);
 
         if (!flipTriangles)
         {
@@ -125,8 +121,6 @@ public class Chunk : MonoBehaviour
             newUV.Add(UVProjection(face.botLeft));
         }
 
-
-
         faceCount++;
     }    
 
@@ -146,7 +140,8 @@ public class Chunk : MonoBehaviour
         for (int wd = 0; wd < chunkTilemap.GetLength(0); wd++)
             for (int hg = 0; hg < chunkTilemap.GetLength(1); hg++)
             {
-                Color32 faceColor = colormap[wd, hg];
+                // colormap is shifted by one due to neighbor info, so correct for that
+                Color32 faceColor = colormap[wd + 1, hg + 1];
 
                 //See flipped Tiles in red
                 if (tintFlippedTiles)
@@ -160,32 +155,62 @@ public class Chunk : MonoBehaviour
                         if (highlightedTiles.Contains(chunkTilemap[wd, hg].GetTileType()))
                             faceColor = Color.magenta;
 
-                GenerateFace(chunkTilemap[wd, hg].face, faceColor, chunkTilemap[wd, hg].flippedTriangles);
+                Color[] vertexColors = { faceColor, faceColor, faceColor, faceColor, faceColor, faceColor };
+                
+                int tileType = chunkTilemap[wd, hg].GetTileType();
+                // if this tile type doesn't need color correction, proceed as normal
+                if (!colorCorrectableTiles.Contains(tileType))
+                    GenerateFace(chunkTilemap[wd, hg].face, vertexColors, chunkTilemap[wd, hg].flippedTriangles);
+                // otherwise, determine the orientation and color in as necessary
+                else
+                {
+                    Color nbColor = Color.red;
+                    switch (tileType)
+                    {
+                        case 0111:
+                        case 1222:
+                            nbColor = colormap[wd + 2, hg + 1];
+                            vertexColors = new Color[] { faceColor, faceColor, nbColor, faceColor, nbColor, nbColor };
+                            break;
+                        case 1011:
+                        case 2122:
+                            nbColor = colormap[wd + 1, hg];
+                            vertexColors = new Color[] { faceColor, faceColor, faceColor, nbColor, nbColor, nbColor };
+                            break;
+                        case 1101:
+                        case 2212:
+                            nbColor = colormap[wd, hg + 1];
+                            vertexColors = new Color[] { nbColor, nbColor, faceColor, nbColor, faceColor, faceColor };
+                            break;
+                        case 1110:
+                        case 2221:
+                            nbColor = colormap[wd + 1, hg + 2];
+                            vertexColors = new Color[] { nbColor, nbColor, nbColor, faceColor, faceColor, faceColor};
+                            break;
+                        default:
+                            vertexColors = new Color[] { Color.white, Color.white, Color.white, Color.white, Color.white, Color.white };
+                            break;
+                    }
+
+                    GenerateFace(chunkTilemap[wd, hg].face, vertexColors, chunkTilemap[wd, hg].flippedTriangles);
+                }
+                
 
                 if (chunkTilemap[wd, hg] is TileCliff)
                 {
                     TileCliff cliff = (TileCliff)chunkTilemap[wd, hg];
 
                     if (cliff.topCliff != null)
-                    {
-                        GenerateFace(cliff.topCliff, colormap[wd, hg], false);
-                    }
-
+                        GenerateFace(cliff.topCliff, vertexColors, false);
+                    
                     if (cliff.rightCliff != null)
-                    {
-                        GenerateFace(cliff.rightCliff, colormap[wd, hg], false);
-                    }
-
+                        GenerateFace(cliff.rightCliff, vertexColors, false);
+                    
                     if (cliff.botCliff != null)
-                    {
-                        GenerateFace(cliff.botCliff, colormap[wd, hg], false);
-                    }
-
+                        GenerateFace(cliff.botCliff, vertexColors, false);
+                    
                     if (cliff.leftCliff != null)
-                    {
-                        GenerateFace(cliff.leftCliff, colormap[wd, hg], false);
-                    }
-
+                        GenerateFace(cliff.leftCliff, vertexColors, false);
                 }
             }
     }

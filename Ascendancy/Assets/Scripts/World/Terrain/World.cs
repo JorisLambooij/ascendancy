@@ -166,13 +166,22 @@ public class World : MonoBehaviour_Singleton
         chunk.chunkIndex = new Vector2Int(startX, startZ);
         
         Tile[,] chunkTilemap = new Tile[chunkSize, chunkSize];
-        Color32[,] chunkColormap = new Color32[chunkSize, chunkSize];
+        Color32[,] chunkColormap = new Color32[chunkSize + 2, chunkSize + 2];
 
         for (int x = 0; x < chunkSize; x++)
             for (int z = 0; z < chunkSize; z++)
             {
                 chunkTilemap[x, z] = map[chunkSize * startX + x, chunkSize * startZ + z];
-                chunkColormap[x, z] = colormap[chunkSize * startX + x, chunkSize * startZ + z];
+            }
+
+        // in order to fix the "corner tiles", we need some neighbor info. this gets tricky at a chunk border,
+        // so each chunk gets the info from the first row of each of its neighbors
+        for (int x = 0; x < chunkSize + 2; x++)
+            for (int z = 0; z < chunkSize + 2; z++)
+            {
+                int u = Mathf.Clamp(chunkSize * startX + x - 1, 0, colormap.GetLength(0) - 1);
+                int v = Mathf.Clamp(chunkSize * startZ + z - 1, 0, colormap.GetLength(1) - 1);
+                chunkColormap[x, z] = colormap[u, v];
             }
 
         chunk.Initialize(chunkTilemap, chunkColormap, tintFlippedTiles, highlightedTiles);
@@ -186,16 +195,16 @@ public class World : MonoBehaviour_Singleton
 
         switch ((int)map[x, y].height)
         {
-            case int n when (n < -5):
+            case int n when (n < -1):
                 tileType = TerrainType.WATER;
                 break;
-            case int n when (n < -0):
+            case int n when (n < 0):
                 tileType = TerrainType.SAND;
                 break;
-            case int n when (n < 5):
+            case int n when (n < 1):
                 tileType = TerrainType.GRASS;
                 break;
-            case int n when (n < 10):
+            case int n when (n < 2):
                 tileType = TerrainType.DIRT;
                 break;
             default:
@@ -256,7 +265,7 @@ public class World : MonoBehaviour_Singleton
                 int u = Mathf.Min(heightmap.GetLength(0) - 1, dx);
                 int v = Mathf.Min(heightmap.GetLength(1) - 1, dy);
                 //get y and insert to int heightmap for later
-                int y = Mathf.RoundToInt(heightmap[u, v] * 10);
+                int y = Mathf.RoundToInt(heightmap[u, v] * heightResolution);
 
                 //Debug.Assert(wd < heightmap.GetLength(0) && hg < heightmap.GetLength(1), "Error. WD/HG: " + wd + " " + hg);
                 heightmap[dx, dy] = y;
