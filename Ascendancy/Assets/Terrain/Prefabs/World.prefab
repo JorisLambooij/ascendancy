@@ -54,7 +54,7 @@ MeshRenderer:
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
@@ -147,7 +147,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4013592521898558202}
-  - component: {fileID: 5055995879029336884}
   - component: {fileID: 4013592521898558203}
   - component: {fileID: 220739975}
   - component: {fileID: 220739976}
@@ -176,21 +175,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5055995879029336884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4013592521898558204}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b5f6bd1d933cc149a743201a41935c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hills: 0
-  lakes: 0
-  seed: {x: 0, y: 0}
 --- !u!114 &4013592521898558203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,6 +190,7 @@ MonoBehaviour:
   displayMode: 1
   worldSize: 256
   numberOfChunks: 4
+  waterLevel: -1.2
   noiseScale: 10
   tileSize: 2
   heightScale: 8
@@ -214,9 +199,23 @@ MonoBehaviour:
     type: 3}
   navMeshBuilder: {fileID: 4013592521617630386}
   ChunkCollector: {fileID: 4013592522798339917}
-  fow_plane: {fileID: 0}
   tex: {fileID: 2800000, guid: c895adc2b849df8489e1195b82eb665c, type: 3}
   waterPlane: {fileID: 379759339}
+  terrainColors:
+  - serializedVersion: 2
+    rgba: 0
+  - serializedVersion: 2
+    rgba: 0
+  - serializedVersion: 2
+    rgba: 0
+  - serializedVersion: 2
+    rgba: 0
+  - serializedVersion: 2
+    rgba: 0
+  - serializedVersion: 2
+    rgba: 0
+  tintFlippedTiles: 0
+  highlightedTiles: 
 --- !u!114 &220739975
 MonoBehaviour:
   m_ObjectHideFlags: 0
