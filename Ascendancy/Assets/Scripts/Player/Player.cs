@@ -14,7 +14,7 @@ public class Player : NetworkBehaviour
     public string playerName;
     [SyncVar]
     public Color playerColor;
-    [SyncVar]
+    [SyncVar(hook = nameof(HookColorChange))]
     public int playerColorIndex;
 
     private Economy economy;
@@ -35,6 +35,9 @@ public class Player : NetworkBehaviour
     public UnityEvent setReadyEvent = new UnityEvent();
 
 
+    private MP_Lobby lobby;
+
+
     // When the NetworkManager creates this Player, do this
     private void Awake()
     {
@@ -50,6 +53,8 @@ public class Player : NetworkBehaviour
         transform.SetParent(playerManager);
         playerManager.GetComponent<MP_Lobby>().AddPlayer(this);
 
+
+        lobby = GameObject.Find("PlayerManager").GetComponent<MP_Lobby>();
     }
 
     public void Initialize()
@@ -68,7 +73,14 @@ public class Player : NetworkBehaviour
         this.playerColor = newColor;
         this.playerColorIndex = index;
         colorChangeEvent.Invoke();
-        Debug.Log("Player " + playerName +" changes color to " + newColor);
+        Debug.Log("Player " + playerName +" changes color to " + index);
+    }
+
+    public void HookColorChange(int oldColorIndex, int newColorIndex)
+    {
+        this.playerColor = lobby.playerColors[newColorIndex];
+
+        Debug.Log("HOOK: Player " + playerName + " color changed from " + oldColorIndex + " to " + newColorIndex);
     }
 
     #endregion
