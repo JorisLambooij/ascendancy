@@ -68,18 +68,16 @@ public class Player : NetworkBehaviour
     #region playerColor
 
     [Command]
-    public void CmdColorChange(Color newColor, int index)
+    public void CmdColorChange(int newColorindex)
     {
-        this.playerColor = newColor;
-        this.playerColorIndex = index;
-        colorChangeEvent.Invoke();
-        Debug.Log("Player " + playerName +" changes color to " + index);
+        this.playerColorIndex = newColorindex;
+        //colorChangeEvent.Invoke();
+        Debug.Log("Player " + playerName +" changes color to " + newColorindex);
     }
 
     public void HookColorChange(int oldColorIndex, int newColorIndex)
     {
         this.playerColor = lobby.playerColors[newColorIndex];
-
         Debug.Log("HOOK: Player " + playerName + " color changed from " + oldColorIndex + " to " + newColorIndex);
     }
 

@@ -59,8 +59,8 @@ public class PlayerEntryUI : NetworkBehaviour
         if (player.hasAuthority)
         {
             player.playerColorIndex = PlayerColorIndex;
-            //player.CmdColorChange(lobby.playerColors[PlayerColorIndex], PlayerColorIndex);
-            //Debug.Log("Color changed");
+            player.CmdColorChange(PlayerColorIndex);
+            Debug.Log("Color changed");
         }
     }
 }
