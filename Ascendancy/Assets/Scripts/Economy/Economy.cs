@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class Economy : MonoBehaviour
+public class Economy : NetworkBehaviour
 {
     public SubscribableDictionary<Resource, float> resourceStorage;
     public SubscribableList<Resource> availableResources;

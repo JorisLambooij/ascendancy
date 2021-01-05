@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class TechnologyLevel : MonoBehaviour
+public class TechnologyLevel : NetworkBehaviour
 {
     public TechnologyTree techTree { get; private set; }
     public int currentFocus;
