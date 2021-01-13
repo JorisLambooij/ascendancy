@@ -41,7 +41,7 @@ public class EntityInfo : ScriptableObject
     /// <summary>
     /// The Prefab used to instantiate this entity.
     /// </summary>
-    public Mesh Mesh;
+    public GameObject Model;
 
     /// <summary>
     /// entity Thumbnail.
@@ -121,7 +121,14 @@ public class EntityInfo : ScriptableObject
         GameObject go = Instantiate(prefab, targetParent);
         go.transform.position = position;
 
-        go.GetComponentInChildren<MeshFilter>().mesh = Mesh;
+        GameObject model = Instantiate(Model, go.transform);
+        foreach (MeshRenderer mr in model.GetComponentsInChildren<MeshRenderer>())
+        {
+            foreach (Material mat in mr.materials)
+                if (mat.name.ToLower().Contains("playercolor"))
+                    mat.SetColor("_BaseColor", owner.playerColor);
+        }
+        //go.GetComponentInChildren<MeshFilter>().mesh = Mesh;
         go.GetComponent<Entity>().entityInfo = this;
 
         go.name = name;

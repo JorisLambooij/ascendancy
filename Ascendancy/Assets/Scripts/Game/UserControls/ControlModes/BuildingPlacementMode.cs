@@ -5,16 +5,18 @@ using UnityEngine.EventSystems;
 
 public class BuildingPlacementMode : ControlMode
 {
-    private EntityInfo building;
+    private GameObject ghostBuilding;
+    private EntityInfo buildingInfo;
     public GameObject preview;
 
     public EntityInfo Building
     {
-        get => building;
+        get => buildingInfo;
         set
         {
-            building = value;
-            preview.GetComponentInChildren<MeshFilter>().mesh = building.Mesh;
+            buildingInfo = value;
+            GameObject.Destroy(ghostBuilding);
+            ghostBuilding = GameObject.Instantiate(buildingInfo.Model, preview.transform);
         }
     }
 
@@ -53,7 +55,7 @@ public class BuildingPlacementMode : ControlMode
             bool freeSpace = gameManager.occupationMap.AreTilesFree(preview.transform.position, Building.dimensions);
             bool validLocation = flatArea && freeSpace;
 
-            preview.GetComponent<BuildingPreview>().valid = validLocation;
+            preview.GetComponent<BuildingPreview>().Valid = validLocation;
             
             if (Input.GetMouseButtonDown(0))
                 if (validLocation)

@@ -175,7 +175,8 @@
             "cost": 0,
             "startTech": true,
             "unitsUnlocked": [
-                "ScriptableObjects/Buildings/Production Buildings/Lumberyard/Lumberyard.asset"
+                "ScriptableObjects/Buildings/Production Buildings/Lumberyard/Lumberyard.asset",
+                "ScriptableObjects/Buildings/Wooden House/Wooden House.asset"
             ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": [
