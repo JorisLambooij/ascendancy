@@ -1,24 +1,91 @@
 {
     "technologies": [
         {
-            "name": "Agriculture",
+            "name": "Emergency Survival Protocols",
             "id": 0,
-            "iconPath": "Advanced_Farming.png",
+            "iconPath": "Logistics.png",
             "dependencies": [],
             "cost": 0,
             "startTech": true,
             "unitsUnlocked": [
-                "ScriptableObjects/Buildings/Command Center/Command Center.asset"
+                "ScriptableObjects/Buildings/Research Lab/Lab.asset"
+            ],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
+        },
+        {
+            "name": "Woodworking",
+            "id": 1,
+            "iconPath": "Woodcutting.png",
+            "dependencies": [
+                0
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
+        },
+        {
+            "name": "Defensive Structures",
+            "id": 2,
+            "iconPath": "Fortifications.png",
+            "dependencies": [
+                1
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Defense/Wooden/Tower/Wooden Tower.asset"
             ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
         },
         {
             "name": "Masonry",
-            "id": 1,
+            "id": 3,
             "iconPath": "Masonry.png",
             "dependencies": [
-                2
+                1
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
+        },
+        {
+            "name": "Primitive Weaponry",
+            "id": 4,
+            "iconPath": "Advanced_Weapon_Crafting.png",
+            "dependencies": [
+                0
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
+        },
+        {
+            "name": "Xenobiology",
+            "id": 5,
+            "iconPath": "Surgery.png",
+            "dependencies": [
+                0
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
+        },
+        {
+            "name": "Xeno Domestication",
+            "id": 6,
+            "iconPath": "Advanced_Horse_Riding.png",
+            "dependencies": [
+                5
             ],
             "cost": 500,
             "startTech": false,
@@ -28,59 +95,10 @@
         },
         {
             "name": "Metalworking",
-            "id": 2,
+            "id": 7,
             "iconPath": "Metalworking.png",
             "dependencies": [
-                0
-            ],
-            "cost": 1000,
-            "startTech": false,
-            "unitsUnlocked": [
-                "ScriptableObjects/Buildings/Production Buildings/Iron Mine/Iron Mine.asset",
-                "ScriptableObjects/Buildings/Production Buildings/Blacksmith/Blacksmith.asset",
-                "ScriptableObjects/Buildings/Production Buildings/Gold Mine/Gold Mine.asset"
-            ],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": [
-                "ScriptableObjects/Resource/Iron.asset",
-                "ScriptableObjects/Resource/Tools.asset",
-                "ScriptableObjects/Resource/Gold.asset"
-            ]
-        },
-        {
-            "name": "Writing",
-            "id": 3,
-            "iconPath": "Philosophy.png",
-            "dependencies": [],
-            "cost": 2000,
-            "startTech": false,
-            "unitsUnlocked": [
-                "ScriptableObjects/Buildings/Research Lab/Lab.asset"
-            ],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": []
-        },
-        {
-            "name": "Iron Weapons",
-            "id": 4,
-            "iconPath": "Swordsmanship.png",
-            "dependencies": [
-                2
-            ],
-            "cost": 500,
-            "startTech": false,
-            "unitsUnlocked": [
-                "ScriptableObjects/Buildings/Production Buildings/Blacksmith/Blacksmith.asset"
-            ],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": []
-        },
-        {
-            "name": "Husbandry",
-            "id": 6,
-            "iconPath": "Animal_Husbandry.png",
-            "dependencies": [
-                0
+                3
             ],
             "cost": 500,
             "startTech": false,
@@ -89,177 +107,13 @@
             "resourcesUnlocked": []
         },
         {
-            "name": "Horseriding",
+            "name": "Dynachlorite Analysis",
             "id": 8,
-            "iconPath": "Horse_Riding_2.png",
+            "iconPath": "Geometry.png",
             "dependencies": [
-                4,
-                6
+                7
             ],
-            "cost": 1500,
-            "startTech": false,
-            "unitsUnlocked": [],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": []
-        },
-        {
-            "name": "Sailing",
-            "id": 10,
-            "iconPath": "Astronomy_1.png",
-            "dependencies": [],
-            "cost": 0,
-            "startTech": true,
-            "unitsUnlocked": [],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": []
-        },
-        {
-            "name": "Fortification",
-            "id": 11,
-            "iconPath": "Fortifications.png",
-            "dependencies": [
-                1
-            ],
-            "cost": 1500,
-            "startTech": false,
-            "unitsUnlocked": [],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": []
-        },
-        {
-            "name": "Steelworking",
-            "id": 12,
-            "iconPath": "Foundry.png",
-            "dependencies": [
-                2
-            ],
-            "cost": 3000,
-            "startTech": false,
-            "unitsUnlocked": [
-                "ScriptableObjects/Units/Mortar/Mortar.asset"
-            ],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": []
-        },
-        {
-            "name": "Steel Weapons",
-            "id": 13,
-            "iconPath": "Defensive_Training.png",
-            "dependencies": [
-                12
-            ],
-            "cost": 5000,
-            "startTech": false,
-            "unitsUnlocked": [],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": []
-        },
-        {
-            "name": "Siege Engines",
-            "id": 18,
-            "iconPath": "Siege.png",
-            "dependencies": [
-                11
-            ],
-            "cost": 5000,
-            "startTech": false,
-            "unitsUnlocked": [],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": []
-        },
-        {
-            "name": "Woodworking",
-            "id": 19,
-            "iconPath": "Woodworking.png",
-            "dependencies": [],
-            "cost": 0,
-            "startTech": true,
-            "unitsUnlocked": [
-                "ScriptableObjects/Buildings/Production Buildings/Lumberyard/Lumberyard.asset",
-                "ScriptableObjects/Buildings/Wooden House/Wooden House.asset"
-            ],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": [
-                "ScriptableObjects/Resource/Wood.asset"
-            ]
-        },
-        {
-            "name": "Orichalcum",
-            "id": 20,
-            "iconPath": "Foundry.png",
-            "dependencies": [
-                21
-            ],
-            "cost": 1000,
-            "startTech": false,
-            "unitsUnlocked": [],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": [
-                "ScriptableObjects/Resource/Orichalcum.asset"
-            ]
-        },
-        {
-            "name": "Heavy CavalryM",
-            "id": 15,
-            "iconPath": "Armor_Training.png",
-            "dependencies": [
-                8
-            ],
-            "cost": 5000,
-            "startTech": false,
-            "unitsUnlocked": [],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": []
-        },
-        {
-            "name": "Magic",
-            "id": 16,
-            "iconPath": "Philosophy.png",
-            "dependencies": [
-                3,
-                20
-            ],
-            "cost": 5000,
-            "startTech": false,
-            "unitsUnlocked": [],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": []
-        },
-        {
-            "name": "Siege Engines of Hell's Creation",
-            "id": 17,
-            "iconPath": "Celebrations.png",
-            "dependencies": [
-                18,
-                22
-            ],
-            "cost": 10000,
-            "startTech": false,
-            "unitsUnlocked": [],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": []
-        },
-        {
-            "name": "Exotic Metals",
-            "id": 21,
-            "iconPath": "Metallurgy.png",
-            "dependencies": [
-                2
-            ],
-            "cost": 2000,
-            "startTech": false,
-            "unitsUnlocked": [],
-            "buildingsUnlocked": [],
-            "resourcesUnlocked": []
-        },
-        {
-            "name": "Orichalcum Weapons",
-            "id": 22,
-            "iconPath": "Advanced_Sword_Training.png",
-            "dependencies": [
-                20
-            ],
-            "cost": 5000,
+            "cost": 500,
             "startTech": false,
             "unitsUnlocked": [],
             "buildingsUnlocked": [],
