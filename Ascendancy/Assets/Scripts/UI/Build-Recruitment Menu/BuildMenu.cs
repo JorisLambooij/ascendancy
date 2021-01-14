@@ -38,6 +38,7 @@ public class BuildMenu : MonoBehaviour, ListSubscriber<EntityInfo>
 
     private void AddNewBuildingOption(EntityInfo info)
     {
+        Debug.Log(info.Category);
         if (categories.ContainsKey(info.Category))
             categories[info.Category].AddBuildOption(info);
         else
@@ -46,8 +47,9 @@ public class BuildMenu : MonoBehaviour, ListSubscriber<EntityInfo>
 
     private void CreateNewCategory(string name, EntityInfo firstEntry = null)
     {
-        GameObject newCat = Instantiate(categoryPrefab, this.transform);
-        newCat.name = "Build Category - " + name;
+        BuildMenuCategory newCat = Instantiate(categoryPrefab, this.transform).GetComponent<BuildMenuCategory>();
+        newCat.gameObject.name = "Build Category - " + name;
+        categories.Add(name, newCat);
 
         if (firstEntry != null)
             newCat.GetComponent<BuildMenuCategory>().AddBuildOption(firstEntry);

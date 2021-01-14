@@ -22,7 +22,7 @@ public class ProductionFeature : EntityFeature
         if (consumedResource != null && !owner.PlayerEconomy.availableResources.Contains(consumedResource))
         // Consumed Resource has not been unlocked yet
         {
-            Debug.Log("Resource " + consumedResource.resourceName + " not unlocked.");
+            Debug.Log("Resource " + consumedResource.name + " not unlocked.");
             return false;
         }
         if (producedResource != null && !owner.PlayerEconomy.availableResources.Contains(producedResource))

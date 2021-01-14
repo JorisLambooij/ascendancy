@@ -8,6 +8,58 @@
             "cost": 0,
             "startTech": true,
             "unitsUnlocked": [
+<<<<<<< Updated upstream
+=======
+                "ScriptableObjects/Buildings/Command Center/Command Center.asset"
+            ],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": [
+                "ScriptableObjects/Resource/Gold.asset"
+            ]
+        },
+        {
+            "name": "Masonry",
+            "id": 1,
+            "iconPath": "Masonry.png",
+            "dependencies": [
+                2
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
+        },
+        {
+            "name": "Metalworking",
+            "id": 2,
+            "iconPath": "Metalworking.png",
+            "dependencies": [
+                0
+            ],
+            "cost": 100,
+            "startTech": false,
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Production Buildings/Iron Mine/Iron Mine.asset",
+                "ScriptableObjects/Buildings/Production Buildings/Blacksmith/Blacksmith.asset",
+                "ScriptableObjects/Buildings/Production Buildings/Gold Mine/Gold Mine.asset"
+            ],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": [
+                "ScriptableObjects/Resource/Iron.asset",
+                "ScriptableObjects/Resource/Tools.asset",
+                "ScriptableObjects/Resource/Gold.asset"
+            ]
+        },
+        {
+            "name": "Writing",
+            "id": 3,
+            "iconPath": "Philosophy.png",
+            "dependencies": [],
+            "cost": 2000,
+            "startTech": false,
+            "unitsUnlocked": [
+>>>>>>> Stashed changes
                 "ScriptableObjects/Buildings/Research Lab/Lab.asset"
             ],
             "buildingsUnlocked": [],
@@ -55,9 +107,47 @@
             "resourcesUnlocked": []
         },
         {
+<<<<<<< Updated upstream
             "name": "Primitive Weaponry",
             "id": 4,
             "iconPath": "Advanced_Weapon_Crafting.png",
+=======
+            "name": "Woodworking",
+            "id": 19,
+            "iconPath": "Woodworking.png",
+            "dependencies": [],
+            "cost": 0,
+            "startTech": true,
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Production Buildings/Lumberyard/Lumberyard.asset",
+                "ScriptableObjects/Buildings/Wooden House/Wooden House.asset",
+                "ScriptableObjects/Buildings/Research Lab/Lab.asset"
+            ],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": [
+                "ScriptableObjects/Resource/Wood.asset"
+            ]
+        },
+        {
+            "name": "Orichalcum",
+            "id": 20,
+            "iconPath": "Foundry.png",
+            "dependencies": [
+                21
+            ],
+            "cost": 1000,
+            "startTech": false,
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": [
+                "ScriptableObjects/Resource/Orichalcum.asset"
+            ]
+        },
+        {
+            "name": "Heavy CavalryM",
+            "id": 15,
+            "iconPath": "Armor_Training.png",
+>>>>>>> Stashed changes
             "dependencies": [
                 0
             ],
