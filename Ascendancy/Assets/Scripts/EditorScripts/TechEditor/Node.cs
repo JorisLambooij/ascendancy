@@ -80,7 +80,7 @@ public class Node
         OnRemoveNode = OnClickRemoveNode;
 
         // Create new Rect and GUIStyle for our title and custom fields
-        float rowHeight = height / 8;
+        float rowHeight = height / 7;
 
         rectID = new Rect(position.x, position.y + rowHeight, width, rowHeight);
         styleID = new GUIStyle();
@@ -90,11 +90,12 @@ public class Node
         float wf = 1 / 3f;
         float mid = position.x + width * wf - 2;
 
+
         rectName = new Rect(mid,
-            position.y + 3 * rowHeight, width * (1 - wf - 0.1f), rowHeight);
+            position.y + 2 * rowHeight, width * (1 - wf - 0.1f), 2 * rowHeight);
 
         rectNameLabel = new Rect(position.x,
-            position.y + 3 * rowHeight, width * wf, rowHeight);
+            position.y + 2 * rowHeight, width * wf, rowHeight);
 
         rectCost = new Rect(mid,
             position.y + 4 * rowHeight, width * wf / 2 + 20, rowHeight);
@@ -150,7 +151,7 @@ public class Node
         Drag(delta);
     }
 
-    public void Draw()
+    public void Draw(float zoomFactor)
     {
         inPoint.Draw();
         outPoint.Draw();
@@ -158,12 +159,12 @@ public class Node
 
         // Print the title
         GUI.Label(rectID, nodeTitle.ToString(), styleID);
-        
+
         // Print the name field
         GUI.Label(rectNameLabel, "Name: ", styleField);
         try
         {
-            tech.name = GUI.TextField(rectName, tech.name.ToString());
+            tech.name = GUI.TextArea(rectName, tech.name.ToString());
         }
         catch
         {
