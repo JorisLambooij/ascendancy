@@ -3,7 +3,7 @@
         {
             "name": "Emergency Survival Protocols",
             "id": 0,
-            "iconPath": "Logistics.png",
+            "iconPath": "AA_Emergency Survival Protocols.png",
             "dependencies": [],
             "cost": 0,
             "startTech": true,
@@ -16,7 +16,7 @@
         {
             "name": "Woodworking",
             "id": 1,
-            "iconPath": "Woodcutting.png",
+            "iconPath": "AA_Woodworking.png",
             "dependencies": [
                 0
             ],
@@ -29,7 +29,7 @@
         {
             "name": "Defensive Structures",
             "id": 2,
-            "iconPath": "Fortifications.png",
+            "iconPath": "AA_Defensive Structures.png",
             "dependencies": [
                 1
             ],
