@@ -44,7 +44,7 @@
         {
             "name": "Masonry",
             "id": 3,
-            "iconPath": "Masonry.png",
+            "iconPath": "AA_Masonry.png",
             "dependencies": [
                 1
             ],
@@ -57,7 +57,7 @@
         {
             "name": "Primitive Weaponry",
             "id": 4,
-            "iconPath": "Advanced_Weapon_Crafting.png",
+            "iconPath": "AA_Primitve Weaponry.png",
             "dependencies": [
                 0
             ],
@@ -70,7 +70,7 @@
         {
             "name": "Xenobiology",
             "id": 5,
-            "iconPath": "Surgery.png",
+            "iconPath": "AA_Xenobiology.png",
             "dependencies": [
                 0
             ],
@@ -83,7 +83,7 @@
         {
             "name": "Xeno Domestication",
             "id": 6,
-            "iconPath": "Advanced_Horse_Riding.png",
+            "iconPath": "AA_Xeno Domestication.png",
             "dependencies": [
                 5
             ],
@@ -96,7 +96,7 @@
         {
             "name": "Metalworking",
             "id": 7,
-            "iconPath": "Metalworking.png",
+            "iconPath": "AA_Metalworking.png",
             "dependencies": [
                 3
             ],
@@ -109,7 +109,7 @@
         {
             "name": "Dynachlorite Analysis",
             "id": 8,
-            "iconPath": "Geometry.png",
+            "iconPath": "AA_Dyna Analysis.png",
             "dependencies": [
                 7
             ],
