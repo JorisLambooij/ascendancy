@@ -737,7 +737,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startResources:
   - resource: {fileID: 11400000, guid: 73d299aab683abc428b8e867394aa0ce, type: 2}
-    amount: 100
+    amount: 200
   - resource: {fileID: 11400000, guid: a01bdeeab68f31f488705611ebf4a82b, type: 2}
     amount: 50
   - resource: {fileID: 11400000, guid: 9cc7efb598dbbd54597147701dce21d6, type: 2}

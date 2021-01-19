@@ -12,7 +12,8 @@
             ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": [
-                "ScriptableObjects/Resource/Wood.asset"
+                "ScriptableObjects/Resource/Wood.asset",
+                "ScriptableObjects/Resource/Gold.asset"
             ]
         },
         {
@@ -24,7 +25,9 @@
             ],
             "cost": 500,
             "startTech": false,
-            "unitsUnlocked": [],
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Production Buildings/Lumberyard/Lumberyard.asset"
+            ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
         },
