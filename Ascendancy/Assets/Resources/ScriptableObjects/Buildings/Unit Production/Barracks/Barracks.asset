@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a9cf974669d2fc41897d68bad847a3a, type: 3}
-  m_Name: Lab
+  m_Name: Barracks
   m_EditorClassIdentifier: 
-  name: Research Lab
-  Description: A place for all your big brain people.
-  MaxHealth: 100
-  Armor: 0
-  dimensions: {x: 1, y: 3}
-  Model: {fileID: -927199367670048503, guid: ffc36f59a169f9949adac70180097275, type: 3}
-  Thumbnail: {fileID: 21300000, guid: 17ed54445f1961a46911f2f9a737ecbb, type: 3}
+  name: Barracks
+  Description: Makeshift military training facility.
+  MaxHealth: 200
+  Armor: 20
+  dimensions: {x: 2, y: 2}
+  Model: {fileID: -927199367670048503, guid: 960a3ebace202d94a9ae45e35069229e, type: 3}
+  Thumbnail: {fileID: 21300000, guid: 830cb6da3451d734d91592a8db1e8276, type: 3}
   MinimapMarker: {fileID: 0}
   mass: 0
-  ViewDistance: 0
+  ViewDistance: 50
   ContextMenuOptions: 0
   Construction_Method: 1
   Category: Production
-  selectionPriority: 0
-  BuildTime: 0
+  selectionPriority: 1
+  BuildTime: 100
   ResourceAmount:
   - resource: {fileID: 11400000, guid: 12d5eb5b328016a40993a98535cbbd84, type: 2}
-    amount: 50
+    amount: 10
   EntityFeatures:
-  - {fileID: 11400000, guid: 1567fcc3fd0c89948a0ca71c1b9a81dc, type: 2}
+  - {fileID: 11400000, guid: 97cde2d91d438e94596831bccba4f4fc, type: 2}

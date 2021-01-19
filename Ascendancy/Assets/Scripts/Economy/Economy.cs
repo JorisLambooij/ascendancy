@@ -6,21 +6,30 @@ public class Economy : MonoBehaviour
 {
     public SubscribableDictionary<Resource, float> resourceStorage;
     public SubscribableList<Resource> availableResources;
+
+    private List<Resource_Amount> startResources;
     
     public void Initialize()
     {
+        //adding start resources
+        startResources = GameSettingsManager.instance.startResources;
+
         resourceStorage = new SubscribableDictionary<Resource, float>();
         availableResources = new SubscribableList<Resource>();
-
-        foreach (Resource resource in availableResources.AsList)
-            NewAvailableResource(resource);
     }
 
     public void NewAvailableResource(Resource r)
     {
-        //Debug.Log("New Resource: " + r.resourceName);
+        Debug.Log("New Resource: " + r.name);
         availableResources.Add(r);
-        resourceStorage.Add(r, r.initialAmount);
+        resourceStorage.Add(r, 0f);
+
+        foreach (Resource_Amount resAm in startResources)
+        {
+            if (resAm.resource.Equals(r))
+                AddResources(resAm);
+        }
+
     }
 
     /// <summary>
