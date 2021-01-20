@@ -3,7 +3,7 @@
         {
             "name": "Emergency Survival Protocols",
             "id": 0,
-            "iconPath": "AA_Emergency Survival Protocols.png",
+            "iconPath": "1_Emergency Survival Protocols.png",
             "dependencies": [],
             "cost": 0,
             "startTech": true,
@@ -19,7 +19,7 @@
         {
             "name": "Woodworking",
             "id": 1,
-            "iconPath": "AA_Woodworking.png",
+            "iconPath": "1_Woodworking.png",
             "dependencies": [
                 0
             ],
@@ -34,7 +34,7 @@
         {
             "name": "Defensive Structures",
             "id": 2,
-            "iconPath": "AA_Defensive Structures.png",
+            "iconPath": "1_Defensive Structures.png",
             "dependencies": [
                 1
             ],
@@ -49,7 +49,7 @@
         {
             "name": "Masonry",
             "id": 3,
-            "iconPath": "AA_Masonry.png",
+            "iconPath": "1_Masonry.png",
             "dependencies": [
                 1
             ],
@@ -62,7 +62,7 @@
         {
             "name": "Primitive Weaponry",
             "id": 4,
-            "iconPath": "AA_Primitve Weaponry.png",
+            "iconPath": "1_Primitive Weaponry.png",
             "dependencies": [
                 0
             ],
@@ -77,7 +77,7 @@
         {
             "name": "Xenobiology",
             "id": 5,
-            "iconPath": "AA_Xenobiology.png",
+            "iconPath": "1_Xenobiology.png",
             "dependencies": [
                 0
             ],
@@ -90,7 +90,7 @@
         {
             "name": "Xeno Domestication",
             "id": 6,
-            "iconPath": "AA_Xeno Domestication.png",
+            "iconPath": "1_Xeno Domestication.png",
             "dependencies": [
                 5
             ],
@@ -103,7 +103,7 @@
         {
             "name": "Metalworking",
             "id": 7,
-            "iconPath": "AA_Metalworking.png",
+            "iconPath": "1_Metalworking.png",
             "dependencies": [
                 3
             ],

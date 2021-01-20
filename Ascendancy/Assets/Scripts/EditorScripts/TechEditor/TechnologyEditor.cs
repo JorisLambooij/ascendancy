@@ -62,7 +62,9 @@ public class TechnologyEditor : EditorWindow, PropertySubscriber<Node>
                 
                 icon = AssetDatabase.LoadAssetAtPath<Sprite>(techSpriteFolder + selectedNode.tech.iconPath);
                 if (icon == null)
-                    Debug.LogError("Icon Missing:  " + AssetDatabase.GetAssetPath(icon));
+                {
+                    Debug.LogError("Icon Missing:  " + AssetDatabase.GetAssetPath(icon) + " | " + techSpriteFolder + selectedNode.tech.iconPath);
+                }
                 
                 icon = EditorGUILayout.ObjectField("Icon", icon, typeof(Sprite), false) as Sprite;
 
@@ -73,15 +75,15 @@ public class TechnologyEditor : EditorWindow, PropertySubscriber<Node>
                 }
                 
                 unitList.elements     = ConvertFromStringArray<EntityInfo>(tech.unitsUnlocked);
-                buildingList.elements = ConvertFromStringArray<BuildingInfo>(tech.buildingsUnlocked);
+                //buildingList.elements = ConvertFromStringArray<BuildingInfo>(tech.buildingsUnlocked);
                 resourceList.elements = ConvertFromStringArray<Resource>(tech.resourcesUnlocked);
 
                 unitList.OnGUI();
-                buildingList.OnGUI();
+                //buildingList.OnGUI();
                 resourceList.OnGUI();
 
                 tech.unitsUnlocked     = ConvertToStringArray(unitList.elements);
-                tech.buildingsUnlocked = ConvertToStringArray(buildingList.elements);
+                //tech.buildingsUnlocked = ConvertToStringArray(buildingList.elements);
                 tech.resourcesUnlocked = ConvertToStringArray(resourceList.elements);
             }
         }
@@ -90,6 +92,9 @@ public class TechnologyEditor : EditorWindow, PropertySubscriber<Node>
 
     private List<T> ConvertFromStringArray<T>(string[] oldArray) where T : Object
     {
+        if (oldArray == null)
+            oldArray = new string[0];
+
         List<T> newList = new List<T>(oldArray.Length);
 
         foreach (string s in oldArray)
