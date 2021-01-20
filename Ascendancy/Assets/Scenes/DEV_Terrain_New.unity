@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -893,6 +893,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityInfo: {fileID: 11400000, guid: 39bbb6d7bf6e084479023a9e58e7fcdf, type: 2}
+  OnDestroyCallbacks:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!54 &564403230
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1131,7 +1134,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &722815574
 Transform:
   m_ObjectHideFlags: 0
@@ -11211,7 +11214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af47ec6c1fa411468214bbc9ef90549, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  valid: 0
+  material: {fileID: 0}
   validColor: {r: 0, g: 0.78431374, b: 0, a: 0.5019608}
   invalidColor: {r: 0.78431374, g: 0, b: 0, a: 0.5019608}
 --- !u!1001 &1392769519

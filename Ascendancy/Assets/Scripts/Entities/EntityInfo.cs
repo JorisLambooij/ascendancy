@@ -121,6 +121,8 @@ public class EntityInfo : ScriptableObject
         GameObject go = Instantiate(prefab, targetParent);
         go.transform.position = position;
 
+        Debug.Assert(Model != null, "No Model selected for EntityInfo " + name);
+
         GameObject model = Instantiate(Model, go.transform);
         foreach (MeshRenderer mr in model.GetComponentsInChildren<MeshRenderer>())
         {

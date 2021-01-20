@@ -18,16 +18,16 @@ public class Economy : MonoBehaviour
         availableResources = new SubscribableList<Resource>();
     }
 
-    public void NewAvailableResource(Resource r)
+    public void NewAvailableResource(Resource resource)
     {
-        Debug.Log("New Resource: " + r.name);
-        availableResources.Add(r);
-        resourceStorage.Add(r, 0f);
+        Debug.Log("New Resource: " + resource.name);
+        availableResources.Add(resource);
+        resourceStorage.Add(resource, 0f);
 
         foreach (Resource_Amount resAm in startResources)
         {
-            if (resAm.resource.Equals(r))
-                AddResources(resAm);
+            if (resAm.resource.Equals(resource))
+                AddResourceAmount(resAm);
         }
 
     }
@@ -35,37 +35,52 @@ public class Economy : MonoBehaviour
     /// <summary>
     /// Checks the Resource_Amount r against the player's stored Resources.
     /// </summary>
-    /// <param name="r"></param>
     /// <returns>True if the storage contains enough of the corresponding Resource. </returns>
-    public bool CheckResource(Resource_Amount r)
+    public bool CheckResourceAmount(Resource_Amount res_amount)
     {
-        return r.amount <= GetResourceAmount(r.resource);
+        return res_amount.amount <= GetResourceAmount(res_amount.resource);
     }
     /// <summary>
-    /// Checks the current amount of stored Resource r.
+    /// Returns the current amount of stored Resource r.
     /// </summary>
-    /// <param name="r"></param>
-    /// <returns></returns>
-    public float GetResourceAmount(Resource r)
+    public float GetResourceAmount(Resource resource)
     {
-        Debug.Assert(availableResources.Contains(r), "Unavailable Resource checked: " + r);
-        return resourceStorage.GetValue(r);
+        Debug.Assert(availableResources.Contains(resource), "Unavailable Resource checked: " + resource.name);
+        return resourceStorage.GetValue(resource);
     }
 
-    public void AddResources(Resource_Amount res_amount)
+    #region Resource Addition/Subtraction
+    public void SetResourceAmount(Resource resource, float amount)
     {
-        Debug.Assert(res_amount.amount > 0, "Amount must be positive: " + res_amount.amount);
+        Debug.Assert(availableResources.Contains(resource), "Unavailable Resource checked: " + resource.name);
+        Debug.Assert(amount > 0, "Amount must be positive: " + amount);
 
-        float newAmount = GetResourceAmount(res_amount.resource) + res_amount.amount;
-        resourceStorage.SetValue(res_amount.resource, newAmount);
+        resourceStorage.SetValue(resource, amount);
+    }
+    public void SetResourceAmount(Resource_Amount res_amount)
+    {
+        SetResourceAmount(res_amount.resource, res_amount.amount);
     }
 
-    public void RemoveResources(Resource_Amount res_amount)
+    public void AddResourceAmount(Resource resource, float amount)
+    {
+        Debug.Assert(amount > 0, "Amount must be positive: " + amount);
+
+        float newAmount = GetResourceAmount(resource) + amount;
+        resourceStorage.SetValue(resource, newAmount);
+    }
+    public void AddResourceAmount(Resource_Amount res_amount)
+    {
+        AddResourceAmount(res_amount.resource, res_amount.amount);
+    }
+
+    public void RemoveResourceAmount(Resource_Amount res_amount)
     {
         Debug.Assert(res_amount.amount > 0, "Amount must be positive: " + res_amount.amount);
-        Debug.Assert(CheckResource(res_amount), "Not enough of Resource " + res_amount.resource.name + " in storage (" + res_amount.amount + ")");
+        Debug.Assert(CheckResourceAmount(res_amount), "Not enough of Resource " + res_amount.resource.name + " in storage (" + res_amount.amount + ")");
 
         float newAmount = GetResourceAmount(res_amount.resource) - res_amount.amount;
         resourceStorage.SetValue(res_amount.resource, newAmount);
     }
+    #endregion
 }

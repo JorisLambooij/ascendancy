@@ -68,7 +68,7 @@ public class BuildingPlacementMode : ControlMode
                     {
                         if (!cheatMode)
                             foreach (Resource_Amount res_amount in buildingInfo.ResourceAmount)
-                                gameManager.GetPlayer.PlayerEconomy.RemoveResources(res_amount);
+                                gameManager.GetPlayer.PlayerEconomy.RemoveResourceAmount(res_amount);
 
                         // valid spot, place building
                         GameObject newBuildingGO = Building.CreateInstance(gameManager.GetPlayer, preview.transform.position);
@@ -93,7 +93,7 @@ public class BuildingPlacementMode : ControlMode
     {
         foreach (Resource_Amount resource_Amount in buildingInfo.ResourceAmount)
         {
-            if (!gameManager.GetPlayer.PlayerEconomy.CheckResource(resource_Amount))
+            if (!gameManager.GetPlayer.PlayerEconomy.CheckResourceAmount(resource_Amount))
             {
                 Debug.Log("Not enough resources to build! (" + resource_Amount.amount + " " + resource_Amount.resource.name + ")");
                 return false;

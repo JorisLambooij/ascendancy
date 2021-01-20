@@ -55,6 +55,7 @@ public class Player : NetworkBehaviour
     {
         PlayerEconomy.Initialize();
         TechLevel.Initialize();
+        GetComponent<CheatCodes>().Initialize();
     }
 
     #region playerColor

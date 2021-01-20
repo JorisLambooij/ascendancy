@@ -30,15 +30,6 @@ public class TechnologyLevel : MonoBehaviour
             UnlockThingsFromTech(tech.id);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            AddResearchPoints(500);
-        }
-    }
-
     public void AddResearchPoints(float amount)
     {
         // No current Research, so keep the points until a Focus is set.
