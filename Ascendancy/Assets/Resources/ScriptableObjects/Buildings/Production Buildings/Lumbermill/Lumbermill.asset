@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a9cf974669d2fc41897d68bad847a3a, type: 3}
-  m_Name: Lumberyard
+  m_Name: Lumbermill
   m_EditorClassIdentifier: 
-  name: Lumberyard
-  Description: A yard that lumbers.
-  MaxHealth: 50
-  Armor: 0
-  dimensions: {x: 0, y: 0}
-  Model: {fileID: -927199367670048503, guid: a1bf6d3f2eab333479fcc5a596345659, type: 3}
-  Thumbnail: {fileID: 21300000, guid: 2213cc82d124bc543a968fc7380aeaf1, type: 3}
-  MinimapMarker: {fileID: 0}
-  mass: 0
-  ViewDistance: 0
-  ContextMenuOptions: 0
-  Construction_Method: 1
-  Category: Production
-  selectionPriority: 0
-  BuildTime: 0
-  ResourceAmount:
-  - resource: {fileID: 11400000, guid: 73d299aab683abc428b8e867394aa0ce, type: 2}
-    amount: 100
-  EntityFeatures:
+  name: Lumbermill
+  description: A mill that lumbers
+  maxHealth: 100
+  armor: 10
+  dimensions: {x: 1, y: 1}
+  model: {fileID: -927199367670048503, guid: a1bf6d3f2eab333479fcc5a596345659, type: 3}
+  thumbnail: {fileID: 21300000, guid: 2213cc82d124bc543a968fc7380aeaf1, type: 3}
+  minimapMarker: {fileID: 0}
+  mass: 10
+  viewDistance: 0
+  contextMenuOptions: 0
+  construction_Method: 1
+  category: {fileID: 11400000, guid: 9bda4db0562bdd54182206091826f134, type: 2}
+  selectionPriority: 1
+  buildTime: 0
+  resourceAmount:
+  - resource: {fileID: 11400000, guid: 12d5eb5b328016a40993a98535cbbd84, type: 2}
+    amount: 25
+  entityFeatures:
   - {fileID: 11400000, guid: cd96553d1dde8ed4199b83ce70baf4b7, type: 2}

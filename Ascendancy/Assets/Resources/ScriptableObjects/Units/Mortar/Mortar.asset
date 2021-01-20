@@ -13,21 +13,21 @@ MonoBehaviour:
   m_Name: Mortar
   m_EditorClassIdentifier: 
   name: Mortar
-  Description: Fires explosive shells in a high arc.
-  MaxHealth: 50
-  Armor: 1
+  description: Long-range area denial
+  maxHealth: 100
+  armor: 10
   dimensions: {x: 1, y: 1}
-  Model: {fileID: -927199367670048503, guid: b7f4013f1c0df954f870aab033a54cfb, type: 3}
-  Thumbnail: {fileID: 21300000, guid: 7488b9e0e2b8ca843b87d701d4b3e3e3, type: 3}
-  MinimapMarker: {fileID: 21300000, guid: b91f40cb12512dc4f9178bbfd1526c84, type: 3}
+  model: {fileID: -927199367670048503, guid: b7f4013f1c0df954f870aab033a54cfb, type: 3}
+  thumbnail: {fileID: 21300000, guid: 6feb382f38fc35d45b4d88f2469aca13, type: 3}
+  minimapMarker: {fileID: 0}
   mass: 10
-  ViewDistance: 10
-  ContextMenuOptions: 0
-  Construction_Method: 0
-  Category: Artillery
+  viewDistance: 0
+  contextMenuOptions: 0
+  construction_Method: 0
+  category: {fileID: 0}
   selectionPriority: 2
-  BuildTime: 0
-  ResourceAmount: []
-  EntityFeatures:
+  buildTime: 0
+  resourceAmount: []
+  entityFeatures:
   - {fileID: 11400000, guid: cb865466538c3e0448d4c829a78a9c57, type: 2}
   - {fileID: 11400000, guid: 8952a5a88f9264149a98d8c038124b7c, type: 2}

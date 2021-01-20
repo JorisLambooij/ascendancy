@@ -13,22 +13,22 @@ MonoBehaviour:
   m_Name: Barracks
   m_EditorClassIdentifier: 
   name: Barracks
-  Description: Makeshift military training facility.
-  MaxHealth: 200
-  Armor: 20
+  description: A place to recruit new soldiers
+  maxHealth: 200
+  armor: 20
   dimensions: {x: 2, y: 2}
-  Model: {fileID: -927199367670048503, guid: 960a3ebace202d94a9ae45e35069229e, type: 3}
-  Thumbnail: {fileID: 21300000, guid: 830cb6da3451d734d91592a8db1e8276, type: 3}
-  MinimapMarker: {fileID: 0}
-  mass: 0
-  ViewDistance: 50
-  ContextMenuOptions: 0
-  Construction_Method: 1
-  Category: Production
+  model: {fileID: -927199367670048503, guid: 960a3ebace202d94a9ae45e35069229e, type: 3}
+  thumbnail: {fileID: 21300000, guid: 830cb6da3451d734d91592a8db1e8276, type: 3}
+  minimapMarker: {fileID: 0}
+  mass: 100
+  viewDistance: 0
+  contextMenuOptions: 0
+  construction_Method: 0
+  category: {fileID: 11400000, guid: 271b300bc5c02194f8aecdc6edd5affa, type: 2}
   selectionPriority: 1
-  BuildTime: 100
-  ResourceAmount:
+  buildTime: 1
+  resourceAmount:
   - resource: {fileID: 11400000, guid: 12d5eb5b328016a40993a98535cbbd84, type: 2}
-    amount: 10
-  EntityFeatures:
+    amount: 25
+  entityFeatures:
   - {fileID: 11400000, guid: 97cde2d91d438e94596831bccba4f4fc, type: 2}

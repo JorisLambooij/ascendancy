@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 770b69597f5f6f84ca3756586b75c2fd, type: 3}
   m_Name: Defense
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: a3e2cb09aef36234585b25e172ff00ba, type: 3}
   description: 

@@ -13,21 +13,21 @@ MonoBehaviour:
   m_Name: Wooden Tower
   m_EditorClassIdentifier: 
   name: Wooden Tower
-  Description: Basic defense building
-  MaxHealth: 100
-  Armor: 50
+  description: It's a tower
+  maxHealth: 200
+  armor: 30
   dimensions: {x: 1, y: 1}
-  Model: {fileID: -927199367670048503, guid: 5cad16a5100f33946989a83bb1db0207, type: 3}
-  Thumbnail: {fileID: 21300000, guid: 8962f081998cae745b19432ac38fe221, type: 3}
-  MinimapMarker: {fileID: 0}
+  model: {fileID: -927199367670048503, guid: 5cad16a5100f33946989a83bb1db0207, type: 3}
+  thumbnail: {fileID: 21300000, guid: 8962f081998cae745b19432ac38fe221, type: 3}
+  minimapMarker: {fileID: 0}
   mass: 100
-  ViewDistance: 0
-  ContextMenuOptions: 0
-  Construction_Method: 1
-  Category: Defense
+  viewDistance: 0
+  contextMenuOptions: 0
+  construction_Method: 1
+  category: {fileID: 11400000, guid: 58d4cc2208a5b374bb32feb203cc58d3, type: 2}
   selectionPriority: 0
-  BuildTime: 0
-  ResourceAmount:
+  buildTime: 2
+  resourceAmount:
   - resource: {fileID: 11400000, guid: 12d5eb5b328016a40993a98535cbbd84, type: 2}
     amount: 100
-  EntityFeatures: []
+  entityFeatures: []

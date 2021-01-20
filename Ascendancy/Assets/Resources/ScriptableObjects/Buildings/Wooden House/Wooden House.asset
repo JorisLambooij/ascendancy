@@ -13,21 +13,21 @@ MonoBehaviour:
   m_Name: Wooden House
   m_EditorClassIdentifier: 
   name: Wooden House
-  Description: A place to live
-  MaxHealth: 50
-  Armor: 20
+  description: A place for people to live
+  maxHealth: 100
+  armor: 10
   dimensions: {x: 1, y: 1}
-  Model: {fileID: -927199367670048503, guid: cd937495946d0984aa39a7c75a7cbf58, type: 3}
-  Thumbnail: {fileID: 21300000, guid: a6e9cd6fe8c7732488c48eaad81e3b34, type: 3}
-  MinimapMarker: {fileID: 0}
-  mass: 0
-  ViewDistance: 0
-  ContextMenuOptions: 0
-  Construction_Method: 1
-  Category: Basic
+  model: {fileID: -927199367670048503, guid: c78abd7c0f809074280dd8e2a515bba3, type: 3}
+  thumbnail: {fileID: 21300000, guid: db3a20636b22b064084246b82e675968, type: 3}
+  minimapMarker: {fileID: 0}
+  mass: 10
+  viewDistance: 0
+  contextMenuOptions: 0
+  construction_Method: 1
+  category: {fileID: 11400000, guid: eae2dede5d2272543ae5a83f42986218, type: 2}
   selectionPriority: 0
-  BuildTime: 0
-  ResourceAmount:
+  buildTime: 0
+  resourceAmount:
   - resource: {fileID: 11400000, guid: 12d5eb5b328016a40993a98535cbbd84, type: 2}
     amount: 50
-  EntityFeatures: []
+  entityFeatures: []

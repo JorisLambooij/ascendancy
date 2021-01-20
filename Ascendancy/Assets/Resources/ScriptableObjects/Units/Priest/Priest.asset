@@ -13,21 +13,23 @@ MonoBehaviour:
   m_Name: Priest
   m_EditorClassIdentifier: 
   name: Priest
-  Description: Holy warrior
-  MaxHealth: 50
-  Armor: 1
+  description: A holy warrior
+  maxHealth: 50
+  armor: 10
   dimensions: {x: 0, y: 0}
-  Model: {fileID: -927199367670048503, guid: a9caf272762f9d94eb99054a3468f22f, type: 3}
-  Thumbnail: {fileID: 21300000, guid: 8845619b34f81644dbda093e5ed7d83d, type: 3}
-  MinimapMarker: {fileID: 21300000, guid: b91f40cb12512dc4f9178bbfd1526c84, type: 3}
+  model: {fileID: -927199367670048503, guid: a9caf272762f9d94eb99054a3468f22f, type: 3}
+  thumbnail: {fileID: 21300000, guid: 425aa1389e096cc47aec644e33da79c0, type: 3}
+  minimapMarker: {fileID: 0}
   mass: 1
-  ViewDistance: 10
-  ContextMenuOptions: 0
-  Construction_Method: 0
-  Category: Support
-  selectionPriority: 0
-  BuildTime: 0
-  ResourceAmount: []
-  EntityFeatures:
+  viewDistance: 0
+  contextMenuOptions: 0
+  construction_Method: 0
+  category: {fileID: 0}
+  selectionPriority: 2
+  buildTime: 0
+  resourceAmount:
+  - resource: {fileID: 11400000, guid: 73d299aab683abc428b8e867394aa0ce, type: 2}
+    amount: 150
+  entityFeatures:
   - {fileID: 11400000, guid: 7d71cff1547d7e54f89d490ea2c6634c, type: 2}
   - {fileID: 11400000, guid: a4db399b7fc038244ae1b7447549092e, type: 2}

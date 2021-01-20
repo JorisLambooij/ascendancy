@@ -13,21 +13,22 @@ MonoBehaviour:
   m_Name: Tank
   m_EditorClassIdentifier: 
   name: Debug Tank
-  Description: A simple tank.
-  MaxHealth: 100
-  Armor: 10
+  description: A simple tank
+  maxHealth: 200
+  armor: 50
   dimensions: {x: 0, y: 0}
-  Model: {fileID: 100010, guid: 38b49695fc0a4418bbc350f2366660c5, type: 3}
-  Thumbnail: {fileID: 21300000, guid: ee68f3592be87f944baf9081ab72913e, type: 3}
-  MinimapMarker: {fileID: 0}
+  model: {fileID: 100010, guid: 38b49695fc0a4418bbc350f2366660c5, type: 3}
+  thumbnail: {fileID: 21300000, guid: e9841421b82fbaf4c98515529b08832e, type: 3}
+  minimapMarker: {fileID: 0}
   mass: 10
-  ViewDistance: 10
-  ContextMenuOptions: 0
-  Construction_Method: 0
-  Category: Cavalry
+  viewDistance: 0
+  contextMenuOptions: 0
+  construction_Method: 0
+  category: {fileID: 0}
   selectionPriority: 2
-  BuildTime: 0
-  ResourceAmount: []
-  EntityFeatures:
-  - {fileID: 11400000, guid: 60420139427ead948ada6fb9c16efec0, type: 2}
+  buildTime: 0
+  resourceAmount: []
+  entityFeatures:
   - {fileID: 11400000, guid: bc1a033dab5d3bb41bef84a6e1288422, type: 2}
+  - {fileID: 11400000, guid: e386352aebb02e445958baa451193ebb, type: 2}
+  - {fileID: 11400000, guid: 60420139427ead948ada6fb9c16efec0, type: 2}
