@@ -20,17 +20,17 @@ public class EntityInfo : ScriptableObject
     /// <summary>
     /// Short description.
     /// </summary>
-    public string Description;
+    public string description;
 
     /// <summary>
     /// Maximum Health of this entity.
     /// </summary>
-    public int MaxHealth;
+    public int maxHealth;
 
     /// <summary>
     /// Armor will reduce incoming damage.
     /// </summary>
-    public int Armor;
+    public int armor;
 
     /// <summary>
     /// The size (measured in Tiles) of this Entity.
@@ -41,18 +41,18 @@ public class EntityInfo : ScriptableObject
     /// <summary>
     /// The Prefab used to instantiate this entity.
     /// </summary>
-    public GameObject Model;
+    public GameObject model;
 
     /// <summary>
     /// entity Thumbnail.
     /// </summary>
-    public Sprite Thumbnail;
+    public Sprite thumbnail;
 
     /// <summary>
     /// The Sprite used for the minimap.
     /// NULL means default marker.
     /// </summary>
-    public Sprite MinimapMarker;
+    public Sprite minimapMarker;
 
     [Header("Technical")]
     /// <summary>
@@ -63,51 +63,51 @@ public class EntityInfo : ScriptableObject
     /// <summary>
     /// Entity view distance in tiles.
     /// </summary>
-    public float ViewDistance;
+    public float viewDistance;
 
     /// <summary>
     /// How many options the context menu has for this entity.
     /// </summary>
-    public int ContextMenuOptions;
+    public int contextMenuOptions;
 
     /// <summary>
     /// What type of Entity if this?
     /// </summary>
-    public ConstructionMethod Construction_Method;
+    public ConstructionMethod construction_Method;
 
     /// <summary>
     /// What category of Entity is this? (E.g. production, military, cavalry etc.)
     /// </summary>
-    public string Category;
+    public EntityCategoryInfo category;
 
     /// <summary>
     /// Only entities of the highest selectionPriority will be selected when dragging the mouse.
     /// </summary>
-    public int selectionPriority;
+    public int selectionPriority = 1;
 
     [Header("Building Cost")]
     /// <summary>
     /// Time needed to build the entity in seconds.
     /// </summary>
-    public float BuildTime;
+    public float buildTime;
 
     /// <summary>
     /// Base cost of the entity.
     /// </summary>
     [SerializeField]
-    public List<Resource_Amount> ResourceAmount;
+    public List<Resource_Amount> resourceAmount;
 
     [Header("Features")]
     /// <summary>
     /// List of all EntityFeatures.
     /// </summary>
-    public List<EntityFeature> EntityFeatures;
+    public List<EntityFeature> entityFeatures;
 
     public virtual GameObject CreateInstance(Player owner, Vector3 position)
     {
         GameObject prefab;
         Transform targetParent;
-        if (Construction_Method == ConstructionMethod.Building)
+        if (construction_Method == ConstructionMethod.Building)
         {
             targetParent = owner.BuildingsGO.transform;
             prefab = Resources.Load("Prefabs/Entities/Building Prefab") as GameObject;
@@ -121,10 +121,10 @@ public class EntityInfo : ScriptableObject
         GameObject go = Instantiate(prefab, targetParent);
         go.transform.position = position;
 
-        Debug.Assert(Model != null, "No Model selected for EntityInfo " + name);
+        Debug.Assert(model != null, "No Model selected for EntityInfo " + name);
 
-        GameObject model = Instantiate(Model, go.transform);
-        foreach (MeshRenderer mr in model.GetComponentsInChildren<MeshRenderer>())
+        GameObject e_model = Instantiate(model, go.transform);
+        foreach (MeshRenderer mr in e_model.GetComponentsInChildren<MeshRenderer>())
         {
             foreach (Material mat in mr.materials)
                 if (mat.name.ToLower().Contains("playercolor"))

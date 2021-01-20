@@ -26,7 +26,7 @@
             "cost": 500,
             "startTech": false,
             "unitsUnlocked": [
-                "ScriptableObjects/Buildings/Production Buildings/Lumberyard/Lumberyard.asset"
+                "ScriptableObjects/Buildings/Production Buildings/Lumbermill/Lumbermill.asset"
             ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []

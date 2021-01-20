@@ -16,9 +16,9 @@ public class Unit : Entity
     {
         base.Start();
 
-        currentHealth = entityInfo.MaxHealth;
+        currentHealth = entityInfo.maxHealth;
 
-        foreach (EntityFeature feature in entityInfo.EntityFeatures)
+        foreach (EntityFeature feature in entityInfo.entityFeatures)
             feature.Initialize(this);
 
         //unit_features?
@@ -27,7 +27,7 @@ public class Unit : Entity
     // Update is called once per frame
     protected override void Update()
     {
-        foreach (EntityFeature feature in entityInfo.EntityFeatures)
+        foreach (EntityFeature feature in entityInfo.entityFeatures)
             feature.UpdateOverride();
     }
 

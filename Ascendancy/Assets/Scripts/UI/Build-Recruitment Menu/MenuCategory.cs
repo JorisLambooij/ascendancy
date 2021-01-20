@@ -8,7 +8,7 @@ public class MenuCategory : MonoBehaviour
     /// <summary>
     /// Name of this Category
     /// </summary>
-    public string category;
+    public EntityCategoryInfo category;
 
     /// <summary>
     /// If this Category is expanded or not.

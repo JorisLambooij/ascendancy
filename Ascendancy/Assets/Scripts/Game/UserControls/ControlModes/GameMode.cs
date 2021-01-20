@@ -363,12 +363,12 @@ public class GameMode : ControlMode
                     else if (e.GetComponentInParent<Entity>().GetType() == typeof(Unit))
                     {
                         EntityInfo uInfo = e.GetComponentInParent<Unit>().entityInfo;
-                        thismanybuttons = uInfo.ContextMenuOptions;
+                        thismanybuttons = uInfo.contextMenuOptions;
                     }
                     else if (e.GetComponentInParent<Entity>().GetType() == typeof(Building))
                     {
                         BuildingInfo bInfo = e.GetComponentInParent<Building>().buildingInfo;
-                        thismanybuttons = bInfo.ContextMenuOptions;
+                        thismanybuttons = bInfo.contextMenuOptions;
                     }
 
                     if (thismanybuttons > 0 && thismanybuttons < 9)

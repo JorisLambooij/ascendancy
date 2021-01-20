@@ -31,7 +31,7 @@ public class Healthbar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int maxHealth = entity.entityInfo.MaxHealth;
+        int maxHealth = entity.entityInfo.maxHealth;
         float currentHealth = entity.Health;
         bool visible = maxHealth > currentHealth || activeOverride;
 

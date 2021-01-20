@@ -22,6 +22,9 @@ public class BuildMenuCategory : MenuCategory
 
         // Get all existing options and save them as a list.
         buildOptions = new List<BuildMenuOption>(GetComponentsInChildren<BuildMenuOption>());
+
+        if (category.icon != null)
+            GetComponent<Image>().sprite = category.icon;
     }
 
     public void AddBuildOption(EntityInfo entity)

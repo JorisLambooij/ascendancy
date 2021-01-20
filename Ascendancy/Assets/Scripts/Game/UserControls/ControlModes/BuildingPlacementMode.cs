@@ -18,7 +18,7 @@ public class BuildingPlacementMode : ControlMode
         {
             buildingInfo = value;
             GameObject.Destroy(ghostBuilding);
-            ghostBuilding = GameObject.Instantiate(buildingInfo.Model, preview.transform);
+            ghostBuilding = GameObject.Instantiate(buildingInfo.model, preview.transform);
         }
     }
 
@@ -67,7 +67,7 @@ public class BuildingPlacementMode : ControlMode
                     if (cheatMode || EnoughResources())
                     {
                         if (!cheatMode)
-                            foreach (Resource_Amount res_amount in buildingInfo.ResourceAmount)
+                            foreach (Resource_Amount res_amount in buildingInfo.resourceAmount)
                                 gameManager.GetPlayer.PlayerEconomy.RemoveResourceAmount(res_amount);
 
                         // valid spot, place building
@@ -91,7 +91,7 @@ public class BuildingPlacementMode : ControlMode
     }
     private bool EnoughResources()
     {
-        foreach (Resource_Amount resource_Amount in buildingInfo.ResourceAmount)
+        foreach (Resource_Amount resource_Amount in buildingInfo.resourceAmount)
         {
             if (!gameManager.GetPlayer.PlayerEconomy.CheckResourceAmount(resource_Amount))
             {

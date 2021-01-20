@@ -41,6 +41,6 @@ public class RecruitmentOption : MonoBehaviour
 
     protected void UpdateThumbnail()
     {
-        GetComponent<Image>().sprite = Unit.Thumbnail;
+        GetComponent<Image>().sprite = Unit.thumbnail;
     }
 }
