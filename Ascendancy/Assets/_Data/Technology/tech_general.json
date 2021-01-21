@@ -116,7 +116,7 @@
         {
             "name": "Dynachlorite Analysis",
             "id": 8,
-            "iconPath": "AA_Dyna Analysis.png",
+            "iconPath": "1_Dyna Analysis.png",
             "dependencies": [
                 7
             ],

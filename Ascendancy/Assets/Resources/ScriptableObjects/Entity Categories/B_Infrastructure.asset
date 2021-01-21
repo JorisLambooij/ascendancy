@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 770b69597f5f6f84ca3756586b75c2fd, type: 3}
-  m_Name: Infrastructure
+  m_Name: B_Infrastructure
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 1879bf5b405775242bae67b64eba6995, type: 3}
   description: 
