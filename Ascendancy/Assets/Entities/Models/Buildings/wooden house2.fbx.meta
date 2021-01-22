@@ -3,7 +3,22 @@ guid: c78abd7c0f809074280dd8e2a515bba3
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Glass_nonTranslucent
+    second: {fileID: 2100000, guid: a67a30f3fd053f44791c4e24c13a363b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ScrapMetal
+    second: {fileID: 2100000, guid: 3f26ac7333ac4c440a194fce4281497e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wood
+    second: {fileID: 2100000, guid: 2983a26118c15fd4b838d1d9b4601899, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

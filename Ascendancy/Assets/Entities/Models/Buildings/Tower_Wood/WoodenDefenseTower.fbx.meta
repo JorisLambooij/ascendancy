@@ -3,7 +3,17 @@ guid: 5cad16a5100f33946989a83bb1db0207
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: 2983a26118c15fd4b838d1d9b4601899, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ScrapMetal
+    second: {fileID: 2100000, guid: 3f26ac7333ac4c440a194fce4281497e, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
