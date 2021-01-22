@@ -55,9 +55,13 @@
             ],
             "cost": 500,
             "startTech": false,
-            "unitsUnlocked": [],
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Production Buildings/Quarry/Quarry.asset"
+            ],
             "buildingsUnlocked": [],
-            "resourcesUnlocked": []
+            "resourcesUnlocked": [
+                "ScriptableObjects/Resource/Stone.asset"
+            ]
         },
         {
             "name": "Primitive Weaponry",
