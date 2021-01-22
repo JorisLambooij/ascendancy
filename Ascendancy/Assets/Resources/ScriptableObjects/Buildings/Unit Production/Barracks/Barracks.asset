@@ -23,7 +23,7 @@ MonoBehaviour:
   mass: 100
   viewDistance: 0
   contextMenuOptions: 0
-  construction_Method: 0
+  construction_Method: 1
   category: {fileID: 11400000, guid: 271b300bc5c02194f8aecdc6edd5affa, type: 2}
   selectionPriority: 1
   buildTime: 1
