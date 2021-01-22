@@ -143,8 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62da5a22e48ede944a7977d6b9bf65e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  category: 
-  optionsGO: {fileID: 0}
+  optionsGO: {fileID: 3909428005258487694}
   pool: {fileID: 3580239205541166705}
   SelectedRecruiter: {fileID: 0}
 --- !u!114 &3580239205541166705

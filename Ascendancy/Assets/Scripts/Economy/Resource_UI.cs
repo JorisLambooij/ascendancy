@@ -70,7 +70,7 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
             if (!resourceEntries.ContainsKey(kvp.Key))
             {
                 InstantiateNewField(kvp.Key, kvp.Value);
-                Debug.Log("Instantiating new field for: " + kvp.Key.resourceName + ". Please check");
+                Debug.Log("Instantiating new field for: " + kvp.Key.name + ". Please check");
             }
             resourceEntries[kvp.Key].Count = kvp.Value;
         }

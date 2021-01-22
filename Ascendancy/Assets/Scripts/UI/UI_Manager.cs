@@ -13,6 +13,7 @@ public class UI_Manager : MonoBehaviour
     void Start()
     {
         uiList = new List<UI_Screen>(GetComponentsInChildren<UI_Screen>());
+        uiList.ForEach(ui => ui.Initialize.Invoke());
         uiList.Remove(gameScreen);
 
         CloseAllScreens();

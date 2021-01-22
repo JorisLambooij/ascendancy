@@ -47,6 +47,12 @@ public abstract class UnitOrder
     /// </summary>
     public virtual void Update()
     {
+        if (cooldown > 0)
+            cooldown -= Time.deltaTime;
+    }
+
+    public virtual void Cancel()
+    {
 
     }
 

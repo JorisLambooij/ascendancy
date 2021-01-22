@@ -120,7 +120,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5932712309612716270}
-        m_MethodName: Expand
+        m_MethodName: ToggleExpand
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

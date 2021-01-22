@@ -34,3 +34,9 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+Ascendancy/Ascendancy.sln
+Ascendancy/Assets/_Store/EffectExamples/FireExplosionEffects/Materials/FlameRoundYellowParticle.mat
+Ascendancy/Assets/Effects/Materials/New Folder.meta
+Ascendancy/Assets/Effects/ParticleSystems.meta
+Ascendancy/Assets/Entities/Shaders.meta
+Ascendancy/Assets/Resources/ScriptableObjects/Other.meta

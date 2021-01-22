@@ -41,28 +41,5 @@ public abstract class EntityFeature : ScriptableObject
     {
         return true;
     }
-
-    #if UNITY_EDITOR
-    public void DrawLayout()
-    {
-        EditorGUILayout.LabelField(this.GetType().ToString(), EditorStyles.boldLabel);
-
-        SerializedObject serializedObject = new SerializedObject(this);
-        SerializedProperty list = serializedObject.FindProperty("test");
-        
-        EditorGUI.BeginChangeCheck();
-
-        SerializedProperty prop = serializedObject.GetIterator();
-
-        if (prop.NextVisible(true))
-        {
-            do
-                EditorGUILayout.PropertyField(serializedObject.FindProperty(prop.name), true);
-            while (prop.NextVisible(false));
-
-        }
-        if (EditorGUI.EndChangeCheck())
-            serializedObject.ApplyModifiedProperties();
-    }
-    #endif
+    
 }

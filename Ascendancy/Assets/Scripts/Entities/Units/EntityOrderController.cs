@@ -46,6 +46,8 @@ public class EntityOrderController : MonoBehaviour
 
     public void NewOrder(UnitOrder order)
     {
+        if (currentOrder != null)
+            currentOrder.Cancel();
         currentOrder = order;
         order.Execute();
     }

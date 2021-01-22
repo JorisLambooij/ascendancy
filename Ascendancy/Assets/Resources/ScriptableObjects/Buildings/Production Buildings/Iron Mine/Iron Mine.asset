@@ -16,13 +16,19 @@ MonoBehaviour:
   Description: 
   MaxHealth: 0
   Armor: 0
-  Mesh: {fileID: 0}
+  dimensions: {x: 0, y: 0}
+  Model: {fileID: 0}
   Thumbnail: {fileID: 21300000, guid: 7e082cc2cf2a4433d85e388c6bf94234, type: 3}
   MinimapMarker: {fileID: 0}
+  mass: 0
   ViewDistance: 0
   ContextMenuOptions: 0
-  EntityType: 0
+  Construction_Method: 1
+  Category: Production
   selectionPriority: 0
   BuildTime: 0
-  ResourceAmount: []
-  EntityFeatures: []
+  ResourceAmount:
+  - resource: {fileID: 11400000, guid: 12d5eb5b328016a40993a98535cbbd84, type: 2}
+    amount: 150
+  EntityFeatures:
+  - {fileID: 11400000, guid: f77458f3896124e469c924d58516868c, type: 2}

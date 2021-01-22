@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Runtime;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Entity : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class Entity : MonoBehaviour
 
     protected Sprite minimapMarker;
 
+    public UnityEvent OnDestroyCallbacks;
+
     /// <summary>
     /// The player who owns this Entity.
     /// </summary>
@@ -30,7 +33,7 @@ public class Entity : MonoBehaviour
     /// <summary>
     /// The current Health of this Entity.
     /// </summary>
-    public int Health
+    public float Health
     {
         get { return currentHealth; }
     }
@@ -50,19 +53,32 @@ public class Entity : MonoBehaviour
     /// <summary>
     /// The current health status of this Entity.
     /// </summary>
-    protected int currentHealth;
+    protected float currentHealth;
 
     /// <summary>
     /// Deal damage to this Entity.
     /// </summary>
     /// <param name="damage"></param>
-    public void TakeDamage(int damage)
+    public void TakeDamage(DamageComposition attackStrength)
     {
-        damage = Mathf.Clamp(damage, 0, currentHealth);
-        currentHealth -= damage;
+        float totalDamage = 0;
+        foreach(DamageAmount dmgAmount in attackStrength.dmgComp)
+        {
+            float modifiedDamage = Mathf.Clamp(dmgAmount.nonAPAmount - entityInfo.armor, 1, dmgAmount.nonAPAmount);
+            modifiedDamage += dmgAmount.APAmount;
+            totalDamage += modifiedDamage;
+        }
+
+        totalDamage = Mathf.Clamp(totalDamage, 0, currentHealth);
+        currentHealth -= totalDamage;
 
         if (currentHealth <= 0)
             Die();
+    }
+
+    public void TakeHealing(float amountRestored)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + amountRestored, 0, entityInfo.maxHealth);
     }
 
     protected virtual void Start()
@@ -77,7 +93,7 @@ public class Entity : MonoBehaviour
         //    Debug.LogWarning("EntityController not found on " + transform.name);
 
         // Create a map marker for this Entity
-        minimapMarker = entityInfo.MinimapMarker;
+        minimapMarker = entityInfo.minimapMarker;
         GameObject markerObject = Resources.Load("Prefabs/UI/MinimapMarker") as GameObject;
 
         // If a sprite was provided, we use it while keeping the position and settings
@@ -89,15 +105,15 @@ public class Entity : MonoBehaviour
         Instantiate(markerObject, this.transform);
 
         // Start with max Health
-        this.currentHealth = entityInfo.MaxHealth;
+        this.currentHealth = entityInfo.maxHealth;
 
         // Copy all features as new objects, and immediately sort them by priority.
-        int count = entityInfo.EntityFeatures.Count;
+        int count = entityInfo.entityFeatures.Count;
         EntityFeature[] featuresCopy = new EntityFeature[count];
 
         for (int i = 0; i < count; i++)
         {
-            EntityFeature f = Instantiate(entityInfo.EntityFeatures[i]);
+            EntityFeature f = Instantiate(entityInfo.entityFeatures[i]);
             featuresCopy[i] = f;
         }
         //entityInfo.EntityFeatures.CopyTo(featuresCopy);
@@ -139,6 +155,7 @@ public class Entity : MonoBehaviour
     /// </summary>
     protected virtual void Die()
     {
+        OnDestroyCallbacks.Invoke();
         Destroy(this.gameObject);
     }
 

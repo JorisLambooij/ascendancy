@@ -29,7 +29,7 @@ public class RecruitmentFeature : EntityFeature
                 queue.RemoveAt(0);
 
                 if (queue.Count > 0)
-                    timer = queue[0].BaseUnit.BuildTime;
+                    timer = queue[0].BaseUnit.buildTime;
                 else
                     timer = 0f;
             }
@@ -61,7 +61,7 @@ public class RecruitmentFeature : EntityFeature
         }
 
         //check resource amount
-        List<Resource_Amount> unitRecruitmentCosts = unit.ResourceAmount;
+        List<Resource_Amount> unitRecruitmentCosts = unit.resourceAmount;
 
         bool enough = true;
         List<Resource_Amount> missingResources = new List<Resource_Amount>();
@@ -86,9 +86,9 @@ public class RecruitmentFeature : EntityFeature
             }
 
             if (queue.Count == 0)
-                timer = unit.BuildTime;
+                timer = unit.buildTime;
 
-            queue.Add(new QueueObject(unit, unit.ResourceAmount));
+            queue.Add(new QueueObject(unit, unit.resourceAmount));
 
             //Debug.Log("Successfully added " + unit.name + " to the queue!");
 
@@ -118,8 +118,6 @@ public class RecruitmentFeature : EntityFeature
 
         //if (newEntity.Controller == null)
         //    newUnit.AddComponent<EntityOrderController>();
-
-        Debug.Log("Recruitment Success");
     }
     
 }
