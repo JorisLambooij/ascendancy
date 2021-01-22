@@ -12,6 +12,11 @@ public class BuildMenuCategory : MenuCategory
     /// </summary>
     protected List<BuildMenuOption> buildOptions;
 
+    /// <summary>
+    /// Name of this Category
+    /// </summary>
+    public EntityCategoryInfo category;
+
     protected override void Start()
     {
         base.Start();

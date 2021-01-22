@@ -6,11 +6,6 @@ using UnityEngine.UI;
 public class MenuCategory : MonoBehaviour
 {
     /// <summary>
-    /// Name of this Category
-    /// </summary>
-    public EntityCategoryInfo category;
-
-    /// <summary>
     /// If this Category is expanded or not.
     /// </summary>
     protected bool expanded;
