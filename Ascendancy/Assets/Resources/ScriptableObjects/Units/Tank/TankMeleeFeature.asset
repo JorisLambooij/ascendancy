@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 273c1be3b5edf3b4bb931c6ab0bbed60, type: 3}
   m_Name: TankMeleeFeature
   m_EditorClassIdentifier: 
+  clickPriority: 0
   meleeAttack: 30
   meleeDefense: 40
-  meleeStrength: 20
+  meleeDamage:
+    dmgComp:
+    - type: 0
+      APAmount: 10
+      nonAPAmount: 10
   meleeRange: 2
-  attackSpeed: 5
+  meleeAttackSpeed: 2

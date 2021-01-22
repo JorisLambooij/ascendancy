@@ -206,6 +206,9 @@ public class World : MonoBehaviour_Singleton
             {
                 int finalX = v.x + x - halfX, finalY = v.y + y - halfY;
 
+                if (finalX < 0 || finalX >= map.GetLength(0) || finalY < 0 || finalY >= map.GetLength(1))
+                    return false;
+
                 if (!map[finalX, finalY].flatLand)
                     return false;
             }

@@ -59,10 +59,9 @@ public class Player : NetworkBehaviour
 
     public void Initialize()
     {
-        Debug.Log("Init player " + playerNo);
-
         PlayerEconomy.Initialize();
         TechLevel.Initialize();
+        GetComponent<CheatCodes>().Initialize();
     }
 
     #region playerColor

@@ -209,7 +209,7 @@ public class MP_Lobby : MonoBehaviour
     //    Debug.Log("Updating player numbers");
     //}
 
-    public void ButtonReadyStartCLick()
+    public void ButtonReadyStartClick()
     {
         if (isServer)
         {

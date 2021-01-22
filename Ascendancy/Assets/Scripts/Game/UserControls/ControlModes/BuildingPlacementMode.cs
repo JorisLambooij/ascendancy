@@ -5,16 +5,20 @@ using UnityEngine.EventSystems;
 
 public class BuildingPlacementMode : ControlMode
 {
-    private EntityInfo building;
+    public static bool cheatMode = false;
+
+    private GameObject ghostBuilding;
+    private EntityInfo buildingInfo;
     public GameObject preview;
 
     public EntityInfo Building
     {
-        get => building;
+        get => buildingInfo;
         set
         {
-            building = value;
-            preview.GetComponentInChildren<MeshFilter>().mesh = building.Mesh;
+            buildingInfo = value;
+            GameObject.Destroy(ghostBuilding);
+            ghostBuilding = GameObject.Instantiate(buildingInfo.model, preview.transform);
         }
     }
 
@@ -53,17 +57,26 @@ public class BuildingPlacementMode : ControlMode
             bool freeSpace = gameManager.occupationMap.AreTilesFree(preview.transform.position, Building.dimensions);
             bool validLocation = flatArea && freeSpace;
 
-            preview.GetComponent<BuildingPreview>().valid = validLocation;
-            
+            //bool canAffordResources = EnoughResources();
+
+            preview.GetComponent<BuildingPreview>().Valid = validLocation;
+
             if (Input.GetMouseButtonDown(0))
                 if (validLocation)
                 {
-                    // valid spot, place building
-                    GameObject newBuildingGO = Building.CreateInstance(gameManager.GetPlayer, preview.transform.position);
-                    Entity b = newBuildingGO.GetComponent<Entity>();
-                    
-                    // Mark all the spots that this building occupies as occupied in the world map.
-                    gameManager.occupationMap.NewOccupation(preview.transform.position, b, TileOccupation.OccupationLayer.Building);
+                    if (cheatMode || EnoughResources())
+                    {
+                        if (!cheatMode)
+                            foreach (Resource_Amount res_amount in buildingInfo.resourceAmount)
+                                gameManager.GetPlayer.PlayerEconomy.RemoveResourceAmount(res_amount);
+
+                        // valid spot, place building
+                        GameObject newBuildingGO = Building.CreateInstance(gameManager.GetPlayer, preview.transform.position);
+                        Entity b = newBuildingGO.GetComponent<Entity>();
+
+                        // Mark all the spots that this building occupies as occupied in the world map.
+                        gameManager.occupationMap.NewOccupation(preview.transform.position, b, TileOccupation.OccupationLayer.Building);
+                    }
                 }
                 else
                 {
@@ -76,10 +89,24 @@ public class BuildingPlacementMode : ControlMode
         }
         
     }
+    private bool EnoughResources()
+    {
+        foreach (Resource_Amount resource_Amount in buildingInfo.resourceAmount)
+        {
+            if (!gameManager.GetPlayer.PlayerEconomy.CheckResourceAmount(resource_Amount))
+            {
+                Debug.Log("Not enough resources to build! (" + resource_Amount.amount + " " + resource_Amount.resource.name + ")");
+                return false;
+            }
+        }
+        return true;
+    }
+
     public override void Start()
     {
         preview.SetActive(true);
     }
+
     public override void Stop()
     {
         preview.SetActive(false);

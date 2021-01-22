@@ -12,6 +12,11 @@ public class BuildMenuCategory : MenuCategory
     /// </summary>
     protected List<BuildMenuOption> buildOptions;
 
+    /// <summary>
+    /// Name of this Category
+    /// </summary>
+    public EntityCategoryInfo category;
+
     protected override void Start()
     {
         base.Start();
@@ -22,6 +27,9 @@ public class BuildMenuCategory : MenuCategory
 
         // Get all existing options and save them as a list.
         buildOptions = new List<BuildMenuOption>(GetComponentsInChildren<BuildMenuOption>());
+
+        if (category != null && category.icon != null)
+            GetComponent<Image>().sprite = category.icon;
     }
 
     public void AddBuildOption(EntityInfo entity)

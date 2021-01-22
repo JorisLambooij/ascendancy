@@ -25,7 +25,8 @@ public class EntitySelector : MonoBehaviour
         set
         {
             selected = value;
-            spriteRenderer.enabled = value;
+            if (spriteRenderer != null)
+                spriteRenderer.enabled = value;
         }
     }
 

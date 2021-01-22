@@ -27,8 +27,10 @@ public class TechTreeEditor : EditorWindow
     private Vector2 offset;
     private Vector2 drag;
 
-    private int nodeWidth = 160;
-    private int nodeHeight = 100;
+    private int nodeWidth = 180;
+    private int nodeHeight = 120;
+
+    private float zoomFactor = 1;
 
     private string techPath = TechTreeReader.techPath;
     private string nodePath = TechTreeReader.nodePath;
@@ -278,12 +280,12 @@ public class TechTreeEditor : EditorWindow
 
     private void OnGUI()
     {
-        DrawGrid(20, 0.2f, Color.gray);
-        DrawGrid(100, 0.4f, Color.gray);
+        DrawGrid(20 / zoomFactor, 0.2f, Color.gray);
+        DrawGrid(100 / zoomFactor, 0.4f, Color.gray);
         DrawAxes(0.6f, Color.red);
 
-        DrawNodes();
-        DrawConnections();
+        DrawNodes(zoomFactor);
+        DrawConnections(zoomFactor);
 
         DrawConnectionLine(Event.current);
 
@@ -347,18 +349,18 @@ public class TechTreeEditor : EditorWindow
         Handles.EndGUI();
     }
 
-    private void DrawNodes()
+    private void DrawNodes(float zoomFactor)
     {
         if (nodes != null)
         {
             for (int i = 0; i < nodes.Count; i++)
             {
-                nodes[i].Draw();
+                nodes[i].Draw(zoomFactor);
             }
         }
     }
 
-    private void DrawConnections()
+    private void DrawConnections(float zoomFactor)
     {
         if (connections != null)
         {
@@ -371,7 +373,6 @@ public class TechTreeEditor : EditorWindow
 
     private void ProcessEvents(Event e)
     {
-
         drag = Vector2.zero;
 
         switch (e.type)
@@ -393,6 +394,9 @@ public class TechTreeEditor : EditorWindow
                 {
                     OnDrag(e.delta);
                 }
+                break;
+            case EventType.ScrollWheel:
+                zoomFactor = 1 / zoomFactor;
                 break;
         }
     }

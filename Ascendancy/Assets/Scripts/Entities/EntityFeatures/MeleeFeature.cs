@@ -5,30 +5,20 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewMeleeFeature", menuName = "Entity Features/Melee Feature")]
 public class MeleeFeature : EntityFeature
 {
-    /// <summary>
-    /// Melee Attack increases chance to land a melee hit.
-    /// </summary>
+    [Tooltip("Melee Attack increases chance to land a melee hit.")]
     public int meleeAttack;
-
-    /// <summary>
-    /// Melee Defense decreases the chance for an enemy to land a melee hit.
-    /// </summary>
+    
+    [Tooltip("Melee Defense decreases the chance for an enemy to land a melee hit.")]
     public int meleeDefense;
-
-    /// <summary>
-    /// The Strength of a melee attack.
-    /// </summary>
-    public int meleeStrength;
-
-    /// <summary>
-    /// The range of a melee attack.
-    /// </summary>
+    
+    [Tooltip("The Strength of a melee attack.")]
+    public DamageComposition meleeDamage;
+    
+    [Tooltip("The range of a melee attack.")]
     public int meleeRange;
-
-    /// <summary>
-    /// How long it takes to perform one melee attack.
-    /// </summary>
-    public float attackSpeed;
+    
+    [Tooltip("How long it takes to perform one melee attack.")]
+    public float meleeAttackSpeed;
 
     /// <summary>
     /// List of special abilities.

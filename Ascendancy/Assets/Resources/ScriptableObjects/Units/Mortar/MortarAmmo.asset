@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a5cb45a69425e749b9857bb2290f361, type: 3}
+  m_Name: MortarAmmo
+  m_EditorClassIdentifier: 
+  horizontalVelocity: 6
+  arcHeight: 8
+  targetSeekingCoefficient: 0
+  lifeTime: 10
+  rangedDamage:
+    dmgComp: []
+  interceptable: 0
+  piercingPower: 1
+  projectilePrefab: {fileID: 5276842915712408972, guid: e03e69f1c83c2dd48a07f57fb1749def,
+    type: 3}
+  explosionDamage:
+    dmgComp:
+    - type: 0
+      APAmount: 5
+      nonAPAmount: 5
+    - type: 1
+      APAmount: 10
+      nonAPAmount: 10
+  explosionRadius: 4
+  damageFalloff: 0.5
+  explosionEffect: {fileID: 486930412876179047, guid: 5c28e524638d0e54a8fd562fb4fa73cd,
+    type: 3}

@@ -12,7 +12,7 @@ public class BuildMenu : MonoBehaviour, ListSubscriber<EntityInfo>
     [SerializeField]
     protected GameObject categoryPrefab;
     
-    protected Dictionary<string, BuildMenuCategory> categories;
+    protected Dictionary<EntityCategoryInfo, BuildMenuCategory> categories;
 
     void Start()
     {
@@ -29,7 +29,7 @@ public class BuildMenu : MonoBehaviour, ListSubscriber<EntityInfo>
     
     private void GenerateCategories()
     {
-        categories = new Dictionary<string, BuildMenuCategory>();
+        categories = new Dictionary<EntityCategoryInfo, BuildMenuCategory>();
         foreach (EntityInfo info in player.TechLevel.entitiesUnlocked.AsList)
         {
             AddNewBuildingOption(info);
@@ -38,16 +38,19 @@ public class BuildMenu : MonoBehaviour, ListSubscriber<EntityInfo>
 
     private void AddNewBuildingOption(EntityInfo info)
     {
-        if (categories.ContainsKey(info.Category))
-            categories[info.Category].AddBuildOption(info);
+        Debug.Log("New Building in " + info.category.name);
+        if (categories.ContainsKey(info.category))
+            categories[info.category].AddBuildOption(info);
         else
-            CreateNewCategory(info.Category, info);
+            CreateNewCategory(info.category, info);
     }
 
-    private void CreateNewCategory(string name, EntityInfo firstEntry = null)
+    private void CreateNewCategory(EntityCategoryInfo categoryInfo, EntityInfo firstEntry = null)
     {
-        GameObject newCat = Instantiate(categoryPrefab, this.transform);
-        newCat.name = "Build Category - " + name;
+        BuildMenuCategory newCat = Instantiate(categoryPrefab, this.transform).GetComponent<BuildMenuCategory>();
+        newCat.category = categoryInfo;
+        newCat.gameObject.name = "Build Category - " + categoryInfo.name;
+        categories.Add(categoryInfo, newCat);
 
         if (firstEntry != null)
             newCat.GetComponent<BuildMenuCategory>().AddBuildOption(firstEntry);
@@ -55,7 +58,7 @@ public class BuildMenu : MonoBehaviour, ListSubscriber<EntityInfo>
 
     public void NewElementCallback(EntityInfo updatedValue)
     {
-        Debug.Log("New Building: " + updatedValue.name);
+        Debug.Log("New Building: " + updatedValue);
         AddNewBuildingOption(updatedValue);
     }
 

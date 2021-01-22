@@ -12,20 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a9cf974669d2fc41897d68bad847a3a, type: 3}
   m_Name: Lab
   m_EditorClassIdentifier: 
-  name: Research Lab
-  Description: A place for all your big brain people.
-  MaxHealth: 100
-  Armor: 0
-  dimensions: {x: 1, y: 3}
-  Mesh: {fileID: -2432090755550338912, guid: ffc36f59a169f9949adac70180097275, type: 3}
-  Thumbnail: {fileID: 21300000, guid: e8700ef684d825442b85087ad6636bf9, type: 3}
-  MinimapMarker: {fileID: 0}
-  ViewDistance: 0
-  ContextMenuOptions: 0
-  Construction_Method: 1
-  Category: Research
-  selectionPriority: 0
-  BuildTime: 0
-  ResourceAmount: []
-  EntityFeatures:
+  name: Research Tent
+  description: A place for your big brain people
+  maxHealth: 50
+  armor: 0
+  dimensions: {x: 1, y: 1}
+  model: {fileID: -927199367670048503, guid: 730908c984ca2674facf817c4b82131b, type: 3}
+  thumbnail: {fileID: 21300000, guid: 17ed54445f1961a46911f2f9a737ecbb, type: 3}
+  minimapMarker: {fileID: 0}
+  mass: 0
+  viewDistance: 0
+  contextMenuOptions: 0
+  construction_Method: 1
+  category: {fileID: 11400000, guid: eae2dede5d2272543ae5a83f42986218, type: 2}
+  selectionPriority: 1
+  buildTime: 1
+  resourceAmount:
+  - resource: {fileID: 11400000, guid: 12d5eb5b328016a40993a98535cbbd84, type: 2}
+    amount: 50
+  entityFeatures:
   - {fileID: 11400000, guid: 1567fcc3fd0c89948a0ca71c1b9a81dc, type: 2}

@@ -8,9 +8,12 @@ public class GOPool : MonoBehaviour
     public GameObject prefab;
     public List<GameObject> pool { get; protected set; }
 
+    protected int currentlyInUse;
+
     void Awake()
     {
         pool = new List<GameObject>();
+        currentlyInUse = 0;
         if (targetParent == null)
             targetParent = this.transform;
     }
@@ -35,6 +38,31 @@ public class GOPool : MonoBehaviour
         for (; i < pool.Count; i++)
             pool[i].SetActive(false);
 
+        currentlyInUse = amount;
         return returnList;
+    }
+
+    /// <summary>
+    /// Adds one GameObject to the Pool. Expands the pool if necessary.
+    /// </summary>
+    /// <returns>A GameObject ready for use.</returns>
+    public GameObject Add()
+    {
+        GameObject returnObj;
+        if (currentlyInUse < pool.Count)
+        {
+            returnObj = pool[currentlyInUse];
+            return returnObj;
+        }
+        else
+        {
+            returnObj = Instantiate(prefab, targetParent);
+            pool.Add(returnObj);
+            currentlyInUse++;
+        }
+
+        currentlyInUse++;
+        returnObj.SetActive(true);
+        return returnObj;
     }
 }

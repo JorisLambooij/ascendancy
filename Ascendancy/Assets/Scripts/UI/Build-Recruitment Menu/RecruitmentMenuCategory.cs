@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(GOPool))]
 public class RecruitmentMenuCategory : MenuCategory
@@ -24,7 +25,11 @@ public class RecruitmentMenuCategory : MenuCategory
 
     public void SelectRecruiter(Entity recruiter)
     {
+        Debug.Assert(recruiter != null, "ERROR: Recruiter Entity was null");
         this.SelectedRecruiter = recruiter;
+
+        if (recruiter != null && recruiter.entityInfo.thumbnail != null)
+            GetComponent<Image>().sprite = recruiter.entityInfo.thumbnail;
 
         RecruitmentFeature recruitmentFeature = SelectedRecruiter.FindFeature<RecruitmentFeature>();
         if (recruitmentFeature != null)

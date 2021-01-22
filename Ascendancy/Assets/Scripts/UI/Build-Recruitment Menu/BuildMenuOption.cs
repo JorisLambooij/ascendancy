@@ -14,7 +14,7 @@ public class BuildMenuOption : MonoBehaviour
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
 
-        GetComponentInChildren<Image>().sprite = building.Thumbnail;
+        GetComponentInChildren<Image>().sprite = building.thumbnail;
     }
 
     public void SelectBuilding()
