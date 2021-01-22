@@ -105,6 +105,10 @@ public class GameMode : ControlMode
                 dragStopPosM1 = Input.mousePosition;
                 rectPos = dragStartPosM1;
                 rectSize = dragStopPosM1 - dragStartPosM1;
+
+                rectPos = new Vector2(Mathf.Min(dragStartPosM1.x, dragStopPosM1.x), Mathf.Max(dragStartPosM1.y, dragStopPosM1.y));
+                rectSize = new Vector2(Mathf.Abs(dragStartPosM1.x - dragStopPosM1.x), Mathf.Abs(dragStartPosM1.y - dragStopPosM1.y));
+                /*
                 if (rectSize.x < 0)
                 {
                     rectPos.x = dragStopPosM1.x;
@@ -114,7 +118,7 @@ public class GameMode : ControlMode
                     rectSize.y *= -1;
                 else
                     rectPos.y = dragStopPosM1.y;
-
+                */
                 selectionBox.rectTransform.position = rectPos;
                 selectionBox.rectTransform.sizeDelta = new Vector2(rectSize.x, rectSize.y);
             }
