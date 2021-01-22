@@ -19,7 +19,7 @@ public class HeightMapDebugger : MonoBehaviour
 
         Texture2D heightmap = heightMapGen.WorldTexture(heightMapGen.noise, World.DisplayMode.Height);
         Texture2D firstDerivMap = heightMapGen.WorldTexture(heightMapGen.AmplifyCliffs(), World.DisplayMode.Height);
-        Texture2D secondDerivMap = heightMapGen.WorldTexture(heightMapGen.Derivative2(), World.DisplayMode.Height);
+        Texture2D secondDerivMap = heightMapGen.WorldTexture(heightMapGen.Derivative2(heightMapGen.noise), World.DisplayMode.Height);
         
 
         heightmapTarget.material.SetTexture("_BaseMap", heightmap);

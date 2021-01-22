@@ -14,7 +14,7 @@ public class Player : NetworkBehaviour
     public string playerName;
     [SyncVar]
     public Color playerColor;
-    [SyncVar]
+    [SyncVar(hook = nameof(HookColorChange))]
     public int playerColorIndex;
 
     private Economy economy;
@@ -32,6 +32,10 @@ public class Player : NetworkBehaviour
     //Events
     public UnityEvent nameChangeEvent = new UnityEvent();
     public UnityEvent colorChangeEvent = new UnityEvent();
+    public UnityEvent setReadyEvent = new UnityEvent();
+
+
+    private MP_Lobby lobby;
 
 
     // When the NetworkManager creates this Player, do this
@@ -49,6 +53,8 @@ public class Player : NetworkBehaviour
         transform.SetParent(playerManager);
         playerManager.GetComponent<MP_Lobby>().AddPlayer(this);
 
+
+        lobby = GameObject.Find("PlayerManager").GetComponent<MP_Lobby>();
     }
 
     public void Initialize()
@@ -61,12 +67,17 @@ public class Player : NetworkBehaviour
     #region playerColor
 
     [Command]
-    public void CmdColorChange(Color newColor, int index)
+    public void CmdColorChange(int newColorindex)
     {
-        this.playerColor = newColor;
-        this.playerColorIndex = index;
-        colorChangeEvent.Invoke();
-        Debug.Log("Player " + playerName +" changes color to " + newColor);
+        this.playerColorIndex = newColorindex;
+        //colorChangeEvent.Invoke();
+        Debug.Log("Player " + playerName +" changes color to " + newColorindex);
+    }
+
+    public void HookColorChange(int oldColorIndex, int newColorIndex)
+    {
+        this.playerColor = lobby.playerColors[newColorIndex];
+        Debug.Log("HOOK: Player " + playerName + " color changed from " + oldColorIndex + " to " + newColorIndex);
     }
 
     #endregion
@@ -128,5 +139,39 @@ public class Player : NetworkBehaviour
         base.OnStartClient();
     }
 
+    #endregion
+
+    #region Lobby
+
+    public void SetReady(bool ready)
+    {
+        NetworkRoomPlayer nwrPlayer = GetComponent<NetworkRoomPlayer>();
+        nwrPlayer.readyToBegin = ready;
+        setReadyEvent.Invoke();
+        CmdSetReady(ready);
+    }
+
+    [Command]
+    private void CmdSetReady(bool ready)
+    {
+        NetworkRoomPlayer nwrPlayer = GetComponent<NetworkRoomPlayer>();
+        nwrPlayer.readyToBegin = ready;
+
+        setReadyEvent.Invoke();
+        Debug.Log("Player " + playerName + " is ready? " + ready);
+    }
+
+
+    public bool isReady()
+    {
+        return GetComponent<NetworkRoomPlayer>().readyToBegin;
+    }
+
+    [ClientRpc]
+    public void RpcStartGame()
+    {
+        Debug.Log("Starting game for client " + playerName);
+        GetComponentInParent<MP_Lobby>().LoadGame();
+    }
     #endregion
 }

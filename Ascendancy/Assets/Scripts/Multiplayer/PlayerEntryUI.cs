@@ -56,11 +56,10 @@ public class PlayerEntryUI : NetworkBehaviour
 
     public void UpdateColor()
     {
-        Debug.Log("I wanna change color!");
-
         if (player.hasAuthority)
         {
-            player.CmdColorChange(lobby.playerColors[PlayerColorIndex], PlayerColorIndex);
+            player.playerColorIndex = PlayerColorIndex;
+            player.CmdColorChange(PlayerColorIndex);
             Debug.Log("Color changed");
         }
     }

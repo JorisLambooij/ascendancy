@@ -9,7 +9,9 @@ namespace Mirror
     {
         public override void OnRoomServerPlayersReady()
         {
-            GameObject.Find("PlayerManager").GetComponent<MP_Lobby>().InitializePlayers();
+            Debug.Log("Players Ready!");
+            GameObject.Find("PlayerManager").GetComponent<MP_Lobby>().ToggleStartButton(true);
+            //GameObject.Find("PlayerManager").GetComponent<MP_Lobby>().InitializePlayers();
             base.OnRoomServerPlayersReady();
         }
         public override void OnServerSceneChanged(string sceneName)
