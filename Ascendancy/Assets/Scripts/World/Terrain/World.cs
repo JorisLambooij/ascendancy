@@ -6,10 +6,12 @@ using NavMeshBuilder = UnityEngine.AI.NavMeshBuilder;
 using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 
 public class World : MonoBehaviour_Singleton
 {
-    public enum DisplayMode { Height, Color };
+    // Different debug display modes.
+    public enum DisplayMode { Height, Color, Gradient, Monochrome, Water };
     public DisplayMode displayMode = DisplayMode.Color;
 
     #region Tweakables
@@ -27,9 +29,13 @@ public class World : MonoBehaviour_Singleton
     /// <summary>
     /// Number of chunk per side of the world.
     /// </summary>
+    [HideInInspector]
     public int numberOfChunks = 2;
+    private int parallelizationBatchSize = 1024;
 
-    public float tileSize = 5f; //meters per side of each tiles
+    public float waterLevel = -1.2f;
+    public float noiseScale = 2;
+    public float tileSize = 1f; //meters per side of each tiles
     public float heightScale = 1f;   //meters of elevation each new level gives us
     public float heightResolution = 1f; // amount of different levels of elevation
     #endregion
@@ -37,12 +43,18 @@ public class World : MonoBehaviour_Singleton
     public GameObject chunkPrefab;
     public LocalNavMeshBuilder navMeshBuilder;
 
-    //public float seaLevel = 0;
-
     [Header("Misc References")]
     public Transform ChunkCollector;
-    public GameObject fow_plane;
+    //public bool useHeightmapAsTexture = false;
     public Texture2D tex;
+    public Transform waterPlane;
+    [Tooltip("ERROR, GRASS, ROCK, DIRT, SAND, WATER")]
+    public Color32[] terrainColors = new Color32[6];
+
+    [Header("DevTools")]
+    public bool tintFlippedTiles = false;
+    public List<int> highlightedTiles;
+
 
     /// <summary>
     /// Contains the information about the height of the tiles.
@@ -53,62 +65,187 @@ public class World : MonoBehaviour_Singleton
     /// Set of all the tiles that make up the world
     /// </summary>
     private Tile[,] map;
+    private Color32[,] colormap;
 
     /// <summary>
     /// Set of all the chunks used to draw the world.
     /// </summary>
     private Chunk[,] chunks;
 
-    protected void Awake()
+    public void Awake()
     {
         base.Start();
 
+        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
         CreateWorld();
-
-        //resize fow_plane
-        if (fow_plane == null) { }
-            //Debug.LogError("FoW_Plane not found, no fog for you! Go fog yourself!");
-        else
-        {
-            //TODO Calculate stuff instead of estimating '25.5'
-            fow_plane.transform.localScale = new Vector3(25.5f, 1, 25.5f);
-            fow_plane.transform.position = new Vector3(worldSize, fow_plane.transform.position.y, worldSize);
-        }
+        sw.Stop();
+        Debug.Log("CreateWorld() finished in " + sw.ElapsedMilliseconds + " ms.");
     }
 
     public void CreateWorld()
     {
+        //TODO: Fix it so that chunks can be larger than 64
+        numberOfChunks = Mathf.CeilToInt(worldSize / 64);
+        Chunk.chunkSize = 64;
+
         HeightMapGenerator heightMapGenerator = GetComponent<HeightMapGenerator>();
-        heightMapGenerator.GenerateHeightMap(worldSize, worldSize, new Vector2(1, 0));
-        heightmap = heightMapGenerator.AmplifyCliffs();
+        heightmap = heightMapGenerator.GenerateHeightMap(worldSize, worldSize, noiseScale);
+        //heightmap = heightMapGenerator.AmplifyCliffs();
 
         //initiate things
         map = new Tile[worldSize, worldSize];
+        colormap = new Color32[worldSize, worldSize];
+        //terrainTexture = new Texture2D(worldSize * textureTilesize, worldSize * textureTilesize);
 
         chunks = new Chunk[numberOfChunks, numberOfChunks];
-        for (int x = 0; x < worldSize; x++)
-            for (int z = 0; z < worldSize; z++)
-                map[x, z] = new Tile(x, z, 0f, tileSize);
 
-        Debug.Log("Building Terrain");
         //generate the terrain!
+        Debug.Log("Building Terrain");
         GenerateTerrain();
 
-        //tell all the chunks to draw their share of the mesh
-        for (int i = 0; i < chunks.GetLength(0); i++)
-            for (int j = 0; j < chunks.GetLength(1); j++)
-            {
-                chunks[i, j] = GenerateChunk(i, j);
-                chunks[i, j].DrawTiles(map);
+        AdditiveSmoothing additiveSmoothing = new AdditiveSmoothing();
+        map = additiveSmoothing.Run(map, parallelizationBatchSize);
 
-                //chunks[i, j].GetComponent<MeshRenderer>().material.SetTexture("_TerrainTexture", heightMapGenerator.HeightTexture(i, j, worldSize / numberOfChunks, displayMode));
+        FlipTriangleSmoothing triangleSmoothing = new FlipTriangleSmoothing();
+        map = triangleSmoothing.Run(map, parallelizationBatchSize);
+
+        CliffFilling cliffFill = new CliffFilling();
+        map = cliffFill.Run(map, parallelizationBatchSize);
+
+        map = triangleSmoothing.Run(map, parallelizationBatchSize);
+
+
+        //2nd map iteration with methods
+        for (int x = 0; x < map.GetLength(0); x++)
+            for (int y = 0; y < map.GetLength(1); y++)
+            {
+                GenerateTerrainTypes(x, y);
+                //generate texture
+                //terrainTexture.SetPixels(x * textureTilesize, y * textureTilesize, textureTilesize, textureTilesize, tileArray[(int)map[x, y].terrainType].GetPixels());
+                //vertex colors
+                //UpdateVertexColors(x, y);
+                colormap[x, y] = GetColorForType(map[x, y].terrainType);
+
             }
 
+        //apply texture
+        //terrainTexture.Apply();
 
-        chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TerrainTexture", heightMapGenerator.WorldTexture(heightMapGenerator.noise, displayMode));
+        //tell all the chunks to draw their share of the mesh
+        for (int x = 0; x < chunks.GetLength(0); x++)
+            for (int z = 0; z < chunks.GetLength(1); z++)
+            {
+                chunks[x, z] = GenerateChunk(x, z);
+            }
 
-        navMeshBuilder.UpdateNavMesh(false);
+        //chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("Texture2D_AA075013", terrainTexture);
 
+        waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, waterLevel, worldSize * tileSize / 2);
+        float size = worldSize / 9.86f;
+        waterPlane.transform.localScale = new Vector3(size * tileSize, 1, size * tileSize);
+
+        try
+        {
+            navMeshBuilder.UpdateNavMesh(false);
+        }
+        catch (System.Exception e)
+        {
+            if (Application.IsPlaying(this))
+                throw e;
+        }
+        Debug.Log("World Generated: ");
+    }
+
+    Chunk GenerateChunk(int startX, int startZ)
+    {
+        int chunkSize = Chunk.chunkSize;
+        GameObject chunkGO = Instantiate(chunkPrefab, ChunkCollector);
+        //chunkGO.transform.position = new Vector3(startX, 0, startZ) * 64 * tileSize;
+        Chunk chunk = chunkGO.GetComponent<Chunk>();
+        chunk.chunkIndex = new Vector2Int(startX, startZ);
+        
+        Tile[,] chunkTilemap = new Tile[chunkSize, chunkSize];
+        Color32[,] chunkColormap = new Color32[chunkSize + 2, chunkSize + 2];
+
+        for (int x = 0; x < chunkSize; x++)
+            for (int z = 0; z < chunkSize; z++)
+            {
+                chunkTilemap[x, z] = map[chunkSize * startX + x, chunkSize * startZ + z];
+            }
+
+        // in order to fix the "corner tiles", we need some neighbor info. this gets tricky at a chunk border,
+        // so each chunk gets the info from the first row of each of its neighbors
+        for (int x = 0; x < chunkSize + 2; x++)
+            for (int z = 0; z < chunkSize + 2; z++)
+            {
+                int u = Mathf.Clamp(chunkSize * startX + x - 1, 0, colormap.GetLength(0) - 1);
+                int v = Mathf.Clamp(chunkSize * startZ + z - 1, 0, colormap.GetLength(1) - 1);
+                chunkColormap[x, z] = colormap[u, v];
+            }
+
+        chunk.Initialize(chunkTilemap, chunkColormap, tintFlippedTiles, highlightedTiles);
+        return chunk;
+    }
+
+    public void GenerateTerrainTypes(int x, int y)
+    {
+        TerrainType tileType;
+
+
+        switch ((int)map[x, y].height)
+        {
+            case int n when (n < -1):
+                tileType = TerrainType.WATER;
+                break;
+            case int n when (n < 0):
+                tileType = TerrainType.SAND;
+                break;
+            case int n when (n < 1):
+                tileType = TerrainType.GRASS;
+                break;
+            case int n when (n < 2):
+                tileType = TerrainType.DIRT;
+                break;
+            default:
+                tileType = TerrainType.ROCK;
+                break;
+        }
+        map[x, y].terrainType = tileType;
+
+    }
+
+    public void RegenerateTexture()
+    {
+        for (int x = 0; x < map.GetLength(0); x++)
+        {
+            for (int y = 0; y < map.GetLength(1); y++)
+            {
+                GenerateTerrainTypes(x, y);
+
+                //generate texture
+                //terrainTexture.SetPixels(x * textureTilesize, y * textureTilesize, textureTilesize, textureTilesize, tileArray[(int)map[x, y].terrainType].GetPixels());
+            }
+        }
+    }
+
+    public Color32 GetColorForType(TerrainType t)
+    {
+        switch (t)
+        {
+            case TerrainType.WATER:
+                return terrainColors[5];
+            case TerrainType.SAND:
+                return terrainColors[4];
+            case TerrainType.GRASS:
+                return terrainColors[1];
+            case TerrainType.DIRT:
+                return terrainColors[3];
+            case TerrainType.ROCK:
+                return terrainColors[2];
+            default:
+                return terrainColors[0];
+        }
     }
 
     public void DestroyWorld()
@@ -117,44 +254,37 @@ public class World : MonoBehaviour_Singleton
             for (int i = 0; i < chunks.GetLength(0); i++)
                 for (int j = 0; j < chunks.GetLength(1); j++)
                     if (chunks[i, j] != null)
-                    DestroyImmediate(chunks[i, j].gameObject);
-    }
-
-    // Generate a chunk, fill it with necessary data and return the Chunk object
-    Chunk GenerateChunk(int x, int z)
-    {
-        GameObject chunkGO = Instantiate(chunkPrefab, ChunkCollector);
-        chunkGO.transform.position = new Vector3(x, 0, z) * (worldSize / numberOfChunks) * tileSize;
-        Chunk chunk = chunkGO.GetComponent<Chunk>();
-        chunk.Initialize();
-        chunk.tileSize = tileSize;
-        chunk.chunkSize = worldSize / numberOfChunks;
-        chunk.chunkIndex = new Vector2Int(x, z);
-        return chunk;
+                        DestroyImmediate(chunks[i, j].gameObject);
     }
 
     void GenerateTerrain()
     {
-        //make some height
-        for (int x = 0; x < worldSize; x++)
-        {
-            for (int z = 0; z < worldSize; z++)
+        for (int dx = 0; dx < worldSize; dx++)
+            for (int dy = 0; dy < worldSize; dy++)
             {
-                Tile active = map[x, z];
+                int u = Mathf.Min(heightmap.GetLength(0) - 1, dx);
+                int v = Mathf.Min(heightmap.GetLength(1) - 1, dy);
+                //get y and insert to int heightmap for later
+                int y = Mathf.RoundToInt(heightmap[u, v] * heightResolution);
 
-                if (active.isSlope)
+                //Debug.Assert(wd < heightmap.GetLength(0) && hg < heightmap.GetLength(1), "Error. WD/HG: " + wd + " " + hg);
+                heightmap[dx, dy] = y;
+
+
+                map[dx, dy] = new Tile();
+                map[dx, dy].face = new Face
                 {
-                    break;
-                }
-                active.upperLeft = AdjustVector(active.upperLeft);
-                active.upperRight = AdjustVector(active.upperRight);
-                active.lowerRight = AdjustVector(active.lowerRight);
-                active.lowerLeft = AdjustVector(active.lowerLeft);
-                active.ReSetStats();
+                    topLeft = new Vector3(dx - 0.5f, y, dy + 0.5f), //top left
+                    topRight = new Vector3(dx + 0.5f, y, dy + 0.5f), //up right
+                    botRight = new Vector3(dx + 0.5f, y, dy - 0.5f), //down right
+                    botLeft = new Vector3(dx - 0.5f, y, dy - 0.5f) //down left
+                };
+                map[dx, dy].height = y;
             }
-        }
     }
 
+
+    #region auxiliary functions
     Vector3 AdjustVector(Vector3 input)
     {
         float newHeight = input.y;
@@ -175,7 +305,7 @@ public class World : MonoBehaviour_Singleton
 
         return heightmap[texX, texY] * heightResolution;
     }
-    
+
     public Collider GetCollider()
     {
         return chunks[0, 0].GetComponent<MeshCollider>();
@@ -190,7 +320,7 @@ public class World : MonoBehaviour_Singleton
     public bool IsFlat(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);
-        return map[v.x, v.y].flatLand;
+        return map[v.x, v.y].FlatLand;
     }
 
     public bool IsAreaFlat(Vector3 pos, Vector2Int dimensions)
@@ -208,13 +338,12 @@ public class World : MonoBehaviour_Singleton
 
                 if (finalX < 0 || finalX >= map.GetLength(0) || finalY < 0 || finalY >= map.GetLength(1))
                     return false;
-
-                if (!map[finalX, finalY].flatLand)
+                if (!map[finalX, finalY].FlatLand)
                     return false;
             }
         return true;
     }
-    
+
     public Tile GetTile(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);
@@ -247,4 +376,5 @@ public class World : MonoBehaviour_Singleton
 
         chunks[0, 0].GetComponent<Renderer>().material.SetFloat("_grid", gridfloat);
     }
+    #endregion
 }

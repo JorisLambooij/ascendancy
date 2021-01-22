@@ -1,64 +1,133 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+public enum TerrainType { NONE, NONE_WALL, GRASS, GRASS_WALL, ROCK, ROCK_WALL, DIRT, DIRT_WALL, SAND, SAND_WALL, WATER, WATER_WALL };
 
 public class Tile
 {
-    public Vector3 upperLeft;
-    public Vector3 upperRight;
-    public Vector3 lowerRight;
-    public Vector3 lowerLeft;
+    #region Internal data
+    public Face face;
+    public bool flippedTriangles { get; private set; } = false;
+
+    public TerrainType terrainType = 0;
 
     public float height;    //the idealized height of this tile
-    public bool isSlope = false;
-
-    public bool flatLand;
-
-    public float tileSize = 3f; //tile size in meters
-
-    //cached things
-    private float centerX;
-    private float centerZ;
 
     public float worldX, worldZ;
+    #endregion
+
+    #region Terrain Data
+
+    protected bool flatLand;
+
+
+    #endregion
+    public bool FlatLand { get => flatLand; set => flatLand = value; }
 
     //basic constructor
-    public Tile(float centerX, float centerZ, float height, float size)
+    public Tile()
     {
-
-        this.height = height;
-        this.centerX = centerX;
-        this.centerZ = centerZ;
-        //make sure we're set to the right size
-        tileSize = size;
-        float halfSize = size / 2f;
-
-        //setup the vectors!
-        upperLeft = new Vector3((centerX * tileSize), height, (centerZ * tileSize) + tileSize);
-        upperRight = new Vector3((centerX * tileSize) + tileSize, height, (centerZ * tileSize) + tileSize);
-        lowerRight = new Vector3((centerX * tileSize) + tileSize, height, (centerZ * tileSize));
-        lowerLeft = new Vector3((centerX * tileSize), height, (centerZ * tileSize));
-
-        worldX = (centerX + 0.5f) * tileSize;
-        worldZ = (centerZ + 0.5f) * tileSize;
+        face = new Face();
     }
 
-    public void recalculate()
+    public Face[] GetFaces()
     {
-        //reset our vectors
-        upperLeft = new Vector3((centerX * tileSize), height, (centerZ * tileSize) + tileSize);
-        upperRight = new Vector3((centerX * tileSize) + tileSize, height, (centerZ * tileSize) + tileSize);
-        lowerRight = new Vector3((centerX * tileSize) + tileSize, height, (centerZ * tileSize));
-        lowerLeft = new Vector3((centerX * tileSize), height, (centerZ * tileSize));
+        Face[] faces = new Face[1];
+        faces[0] = face;
+        return faces;
     }
 
-    public void ReSetStats()
+    /// <summary>
+    /// returns a specific ID based on edge level of tile, starting from top left
+    /// </summary>
+    /// <returns>specific integer</returns>
+    public int GetTileType()
     {
-        height = Mathf.Max(upperRight.y, upperLeft.y, lowerLeft.y, lowerRight.y);
+        int returnMe = 0;
 
-        if ((upperLeft.y + upperRight.y + lowerLeft.y + lowerRight.y) / 4f != height)
-            isSlope = true;
+        int avgHeight = 0;        
 
-        flatLand = (upperLeft.y == upperRight.y && upperRight.y == lowerRight.y && lowerRight.y == lowerLeft.y);
+        foreach (Vector3 v in face.GetVectors())
+        {
+            avgHeight += (int)v.y;
+        }
 
+        avgHeight = System.Convert.ToInt32(avgHeight / 4f);
+
+        //topLeft
+        int compareVertex = -1;
+
+        if ((int)face.topLeft.y == avgHeight)
+            compareVertex = 1;
+        else if ((int)face.topLeft.y < avgHeight)
+            compareVertex = 0; 
+        else if ((int)face.topLeft.y > avgHeight)
+            compareVertex = 2;
+        else        
+            Debug.LogError("wtf");
+
+        returnMe += compareVertex * 1000;
+
+        //topRight
+        compareVertex = -1;
+
+        if ((int)face.topRight.y == avgHeight)
+            compareVertex = 1;
+        else if ((int)face.topRight.y < avgHeight)
+            compareVertex = 0;
+        else if ((int)face.topRight.y > avgHeight)
+            compareVertex = 2;
+        else
+            Debug.LogError("wtf");
+
+        returnMe += compareVertex * 100;
+
+        //botRight
+        compareVertex = -1;
+
+        if ((int)face.botRight.y == avgHeight)
+            compareVertex = 1;
+        else if ((int)face.botRight.y < avgHeight)
+            compareVertex = 0;
+        else if ((int)face.botRight.y > avgHeight)
+            compareVertex = 2;
+        else
+            Debug.LogError("wtf");
+
+        returnMe += compareVertex * 10;
+
+        //botLeft
+        compareVertex = -1;
+
+        if ((int)face.botLeft.y == avgHeight)
+            compareVertex = 1;
+        else if ((int)face.botLeft.y < avgHeight)
+            compareVertex = 0;
+        else if ((int)face.botLeft.y > avgHeight)
+            compareVertex = 2;
+        else
+            Debug.LogError("wtf");
+
+        returnMe += compareVertex * 1;
+
+        if (returnMe == 1000)
+        {
+            Debug.Log("returnme = " + returnMe + " with " + face.GetVectors()[0].y + "/" + face.GetVectors()[1].y + "/" + face.GetVectors()[2].y + "/" + face.GetVectors()[3].y + " and avgHeight = " + avgHeight);
+        }
+
+        return returnMe;
+    }
+
+    public void ToggleTriangleFlip()
+    {
+        if (!flippedTriangles)
+        {
+            flippedTriangles = true;
+        }
+        else
+        {
+            flippedTriangles = false;
+        }
     }
 }

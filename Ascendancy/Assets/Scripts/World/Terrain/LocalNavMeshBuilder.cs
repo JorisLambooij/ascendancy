@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
@@ -55,7 +55,7 @@ public class LocalNavMeshBuilder : MonoBehaviour
         NavMeshSourceTag.Collect(ref m_Sources);
         var defaultBuildSettings = NavMesh.GetSettingsByID(0);
         var bounds = QuantizedBounds();
-        Debug.Log("Baking NavMesh");
+        //Debug.Log("Baking NavMesh");
         if (asyncUpdate)
             m_Operation = NavMeshBuilder.UpdateNavMeshDataAsync(m_NavMesh, defaultBuildSettings, m_Sources, bounds);
         else
