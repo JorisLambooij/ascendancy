@@ -43,6 +43,13 @@ public class UI_Manager : MonoBehaviour
 
         if (ui != null)
             ui.SetStatus(status);
+
+        foreach (UI_Screen screen in uiList)
+            if (!screen.GetStatus)
+                return;
+
+
+        gameScreen.SetStatus(true);
     }
     
     public bool GetScreenStatus(string uiName)
