@@ -43,6 +43,6 @@ public class Zoom : MonoBehaviour
         transform.position = transformPosInScreenSpace * newScale + halfRes;
         transform.localScale = new Vector3(newScale, newScale, 1);
 
-        Debug.Log(transformPosInScreenSpace + " | " + mousePosInScreenSpace);
+        //Debug.Log(transformPosInScreenSpace + " | " + mousePosInScreenSpace);
     }
 }

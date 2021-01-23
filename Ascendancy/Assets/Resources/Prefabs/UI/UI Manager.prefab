@@ -4211,12 +4211,12 @@ PrefabInstance:
     - target: {fileID: 3655036190104528852, guid: 622b3ce687146d945ab1537398255da8,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 3655036190104528852, guid: 622b3ce687146d945ab1537398255da8,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 2
+      value: 900
       objectReference: {fileID: 0}
     - target: {fileID: 3655036190104528852, guid: 622b3ce687146d945ab1537398255da8,
         type: 3}
