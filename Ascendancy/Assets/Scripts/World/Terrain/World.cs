@@ -193,7 +193,7 @@ public class World : MonoBehaviour_Singleton
         TerrainType tileType;
 
 
-        switch ((int)map[x, y].height)
+        switch (Mathf.RoundToInt(map[x, y].height))
         {
             case int n when (n < -1):
                 tileType = TerrainType.WATER;
