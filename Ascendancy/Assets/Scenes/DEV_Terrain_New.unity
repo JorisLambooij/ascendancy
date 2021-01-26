@@ -702,6 +702,36 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[0].rgba
+      value: 4281894820
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[1].rgba
+      value: 4282171392
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[2].rgba
+      value: 4286677634
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[3].rgba
+      value: 4278798744
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[4].rgba
+      value: 4278437602
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[5].rgba
+      value: 4293138943
+      objectReference: {fileID: 0}
     - target: {fileID: 4013592521898558204, guid: 81ff75b4e357e8344a5a43139fca663d,
         type: 3}
       propertyPath: m_Name
