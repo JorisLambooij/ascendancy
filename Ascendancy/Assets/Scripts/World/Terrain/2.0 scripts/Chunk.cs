@@ -44,6 +44,7 @@ public class Chunk : MonoBehaviour
 
         UpdateMesh();
         GetComponent<MeshFilter>().sharedMesh = mesh;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
     public void UpdateMesh()

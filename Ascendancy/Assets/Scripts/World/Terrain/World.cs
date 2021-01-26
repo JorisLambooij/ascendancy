@@ -271,7 +271,7 @@ public class World : MonoBehaviour_Singleton
                 heightmap[dx, dy] = y;
 
 
-                map[dx, dy] = new Tile();
+                map[dx, dy] = new Tile(dx, dy);
                 map[dx, dy].face = new Face
                 {
                     topLeft = new Vector3(dx - 0.5f, y, dy + 0.5f), //top left
@@ -314,19 +314,15 @@ public class World : MonoBehaviour_Singleton
     public float GetHeight(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);
+
+        Debug.Assert(v.x >= 0 && v.x < map.GetLength(0), "World.GetHeight: Tile Index out of range (X=" + v.x + ")");
+        Debug.Assert(v.y >= 0 && v.y < map.GetLength(1), "World.GetHeight: Tile Index out of range (Y=" + v.y + ")");
+
         return map[v.x, v.y].height;
     }
 
-    public bool IsFlat(Vector3 pos)
+    public bool IsAreaFlat(Vector2Int pos, Vector2Int dimensions)
     {
-        Vector2Int v = IntVector(pos);
-        return map[v.x, v.y].FlatLand;
-    }
-
-    public bool IsAreaFlat(Vector3 pos, Vector2Int dimensions)
-    {
-        Vector2Int v = IntVector(pos);
-
         int halfX = dimensions.x / 2;
         int halfY = dimensions.y / 2;
 
@@ -334,11 +330,11 @@ public class World : MonoBehaviour_Singleton
         for (int x = 0; x < dimensions.x; x++)
             for (int y = 0; y < dimensions.y; y++)
             {
-                int finalX = v.x + x - halfX, finalY = v.y + y - halfY;
+                int finalX = pos.x + x - halfX, finalY = pos.y + y - halfY;
 
                 if (finalX < 0 || finalX >= map.GetLength(0) || finalY < 0 || finalY >= map.GetLength(1))
                     return false;
-                if (!map[finalX, finalY].FlatLand)
+                if (!map[finalX, finalY].FlatLand())
                     return false;
             }
         return true;
@@ -347,6 +343,9 @@ public class World : MonoBehaviour_Singleton
     public Tile GetTile(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);
+        if (v.x < 0 || v.x >= map.GetLength(0) || v.x < 0 ||  v.x >= map.GetLength(1))
+            return null;
+
         return map[v.x, v.y];
     }
 
