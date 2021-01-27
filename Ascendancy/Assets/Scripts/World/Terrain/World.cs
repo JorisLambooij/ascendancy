@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
+using System.Linq;
 
 public class World : MonoBehaviour_Singleton
 {
@@ -72,15 +73,38 @@ public class World : MonoBehaviour_Singleton
     /// </summary>
     private Chunk[,] chunks;
 
+    /// <summary>
+    /// Texture that functions as terrain alpha.
+    /// </summary>
+    private Texture2D terrainMaskTexture;
+
     public void Awake()
     {
         base.Start();
+
+        // initialize the mask texture
+        terrainMaskTexture = new Texture2D(worldSize, worldSize);
+        Color[] whitePixels = Enumerable.Repeat(Color.white, worldSize * worldSize).ToArray();
+        terrainMaskTexture.SetPixels(whitePixels);
+        terrainMaskTexture.Apply();
+        terrainMaskTexture.wrapMode = TextureWrapMode.Clamp;
 
         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
         sw.Start();
         CreateWorld();
         sw.Stop();
         Debug.Log("CreateWorld() finished in " + sw.ElapsedMilliseconds + " ms.");
+
+        // the following can be used to test the texture mask
+        //for (int ix = 0; ix < 32; ix++)
+        //{
+        //    for (int iy = 0; iy < 32; iy++)
+        //    {
+        //        SetTileVisible(ix, iy, false);
+        //    }
+        //}
+
+
     }
 
     public void CreateWorld()
@@ -354,8 +378,8 @@ public class World : MonoBehaviour_Singleton
         float x = v.x / tileSize;
         float y = v.z / tileSize;
 
-        int x_int = Mathf.FloorToInt(x);
-        int y_int = Mathf.FloorToInt(y);
+        int x_int = Mathf.RoundToInt(x);
+        int y_int = Mathf.RoundToInt(y);
 
         return new Vector2Int(x_int, y_int);
     }
@@ -373,7 +397,31 @@ public class World : MonoBehaviour_Singleton
             gridfloat = 0;
         }
 
-        chunks[0, 0].GetComponent<Renderer>().material.SetFloat("_grid", gridfloat);
+        foreach (Chunk c in chunks)
+        {
+            c.GetComponent<Renderer>().material.SetFloat("_grid", gridfloat);
+        }
     }
-    #endregion
-}
+
+    public void SetTileVisible(int x, int y, bool visible)
+    {
+        if (visible)
+            terrainMaskTexture.SetPixel(x, y, Color.white);
+        else
+            terrainMaskTexture.SetPixel(x, y, Color.black);
+
+        terrainMaskTexture.Apply();
+
+        foreach (Chunk c in chunks)
+        {
+            c.GetComponent<Renderer>().material.SetTexture("_mask", terrainMaskTexture);
+        }
+    }
+
+    public void SetTileVisible(Vector3 pos, bool visible)
+    {
+        Vector2Int v = IntVector(pos);
+        SetTileVisible(v.x, v.y, visible);
+    }
+        #endregion
+    }
