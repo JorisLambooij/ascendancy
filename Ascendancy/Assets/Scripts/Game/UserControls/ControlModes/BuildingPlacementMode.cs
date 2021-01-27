@@ -9,6 +9,8 @@ public class BuildingPlacementMode : ControlMode
 
     private GameObject ghostBuilding;
     private EntityInfo buildingInfo;
+    private float floorClipthrough = 0.01f;
+
     public GameObject preview;
 
     public EntityInfo Building
@@ -52,7 +54,7 @@ public class BuildingPlacementMode : ControlMode
                 return;
 
             int x = (int)tile.worldX, y = (int)tile.worldZ;
-            preview.transform.position = new Vector3(x, tile.height, y);
+            preview.transform.position = new Vector3(x, tile.height - floorClipthrough, y);
 
             // Location is valid if tile is both flatland and empty of other Entities of the same BuildingLayer.
             bool flatArea = gameManager.world.IsAreaFlat(new Vector2Int(x, y), Building.dimensions);

@@ -82,12 +82,14 @@ public class World : MonoBehaviour_Singleton
     {
         base.Start();
 
-        // initialize the mask texture
+        #region initialize mask texture
         terrainMaskTexture = new Texture2D(worldSize, worldSize);
         Color[] whitePixels = Enumerable.Repeat(Color.white, worldSize * worldSize).ToArray();
         terrainMaskTexture.SetPixels(whitePixels);
         terrainMaskTexture.Apply();
         terrainMaskTexture.wrapMode = TextureWrapMode.Clamp;
+        terrainMaskTexture.filterMode = FilterMode.Point;
+        #endregion
 
         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
         sw.Start();
@@ -414,7 +416,8 @@ public class World : MonoBehaviour_Singleton
 
         foreach (Chunk c in chunks)
         {
-            c.GetComponent<Renderer>().material.SetTexture("_mask", terrainMaskTexture);
+            if (c!= null)
+                c.GetComponent<Renderer>().material.SetTexture("_mask", terrainMaskTexture);
         }
     }
 
