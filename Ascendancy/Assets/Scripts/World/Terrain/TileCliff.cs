@@ -17,6 +17,18 @@ public class TileCliff : Tile
         rightCliff = null;
         botCliff = null;
         leftCliff = null;
+
+        this.face.topLeft = baseTile.face.topLeft;
+        this.face.topRight = baseTile.face.topRight;
+        this.face.botLeft = baseTile.face.botLeft;
+        this.face.botRight = baseTile.face.botRight;
+
+        this.height = baseTile.height;    //the idealized height of this tile
+
+        this.worldX = baseTile.worldX;
+        this.worldZ = baseTile.worldZ;
+
+        this.terrainType = baseTile.terrainType;
     }
 
     public override bool FlatLand()
