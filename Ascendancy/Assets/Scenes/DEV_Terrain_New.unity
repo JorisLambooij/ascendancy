@@ -730,35 +730,65 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558202, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558202, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558202, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
         type: 3}
       propertyPath: terrainColors.Array.data[0].rgba
-      value: 4281894820
+      value: 4292215039
       objectReference: {fileID: 0}
     - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
         type: 3}
       propertyPath: terrainColors.Array.data[1].rgba
-      value: 4282171392
+      value: 4280182558
       objectReference: {fileID: 0}
     - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
         type: 3}
       propertyPath: terrainColors.Array.data[2].rgba
-      value: 4286677634
-      objectReference: {fileID: 0}
-    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
-        type: 3}
-      propertyPath: terrainColors.Array.data[3].rgba
-      value: 4278798744
-      objectReference: {fileID: 0}
-    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
-        type: 3}
-      propertyPath: terrainColors.Array.data[4].rgba
-      value: 4278437602
+      value: 4283650899
       objectReference: {fileID: 0}
     - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
         type: 3}
       propertyPath: terrainColors.Array.data[5].rgba
-      value: 4293138943
+      value: 4281302665
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[3].rgba
+      value: 4281298302
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: terrainColors.Array.data[4].rgba
+      value: 4280396977
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: worldSize
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: numberOfChunks
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013592521898558203, guid: 81ff75b4e357e8344a5a43139fca663d,
+        type: 3}
+      propertyPath: tileSize
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4013592521898558204, guid: 81ff75b4e357e8344a5a43139fca663d,
         type: 3}
