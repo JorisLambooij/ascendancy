@@ -78,6 +78,16 @@ public class World : MonoBehaviour_Singleton
     /// </summary>
     private Texture2D terrainMaskTexture;
 
+    /// <summary>
+    /// Texture that functions as terrain alpha.
+    /// </summary>
+    private Material terrainMaterial;
+
+    /// <summary>
+    /// Used to control FOW.
+    /// </summary>
+    public FogOfWarHandler fowHandler;
+
     public void Awake()
     {
         base.Start();
@@ -89,6 +99,9 @@ public class World : MonoBehaviour_Singleton
         terrainMaskTexture.Apply();
         terrainMaskTexture.wrapMode = TextureWrapMode.Clamp;
         terrainMaskTexture.filterMode = FilterMode.Point;
+
+        //grab free texture for water alpha on the cheap
+        Texture2D waterAlpha = terrainMaskTexture;
         #endregion
 
         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
@@ -97,17 +110,32 @@ public class World : MonoBehaviour_Singleton
         sw.Stop();
         Debug.Log("CreateWorld() finished in " + sw.ElapsedMilliseconds + " ms.");
 
-        // the following can be used to test the texture mask
-        //for (int ix = 0; ix < 32; ix++)
-        //{
-        //    for (int iy = 0; iy < 32; iy++)
-        //    {
-        //        SetTileVisible(ix, iy, false);
-        //    }
-        //}
+
+        Material waterMat = waterPlane.GetComponent<Renderer>().material;
+        terrainMaterial = chunks[0, 0].GetComponent<Renderer>().sharedMaterial;
+        fowHandler = new FogOfWarHandler(worldSize, worldSize, terrainMaterial, waterMat);
+
+        #region Generate Water Alpha
+
+        for (int x = 0; x < map.GetLength(0); x++)
+            for (int y = 0; y < map.GetLength(1); y++)
+            {
+                if (map[x,y].height > waterLevel)
+                {
+                    waterAlpha.SetPixel(x,y,Color.black);
+                }
+            }
+        waterAlpha.Apply();
+
+        waterMat.SetTexture("_terrainMask", terrainMaskTexture);
 
 
+        #endregion
+
+        fowHandler.UpdateMaterial();
     }
+
+    
 
     public void CreateWorld()
     {
@@ -399,10 +427,7 @@ public class World : MonoBehaviour_Singleton
             gridfloat = 0;
         }
 
-        foreach (Chunk c in chunks)
-        {
-            c.GetComponent<Renderer>().material.SetFloat("_grid", gridfloat);
-        }
+        terrainMaterial.SetFloat("_grid", gridfloat);
     }
 
     public void SetTileVisible(int x, int y, bool visible)
@@ -414,11 +439,8 @@ public class World : MonoBehaviour_Singleton
 
         terrainMaskTexture.Apply();
 
-        foreach (Chunk c in chunks)
-        {
-            if (c!= null)
-                c.GetComponent<Renderer>().material.SetTexture("_mask", terrainMaskTexture);
-        }
+        terrainMaterial.SetTexture("_mask", terrainMaskTexture);
+    
     }
 
     public void SetTileVisible(Vector3 pos, bool visible)

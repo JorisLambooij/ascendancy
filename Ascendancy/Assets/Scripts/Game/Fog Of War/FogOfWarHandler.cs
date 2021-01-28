@@ -1,28 +1,60 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class FogOfWarHandler : MonoBehaviour
+public class FogOfWarHandler
 {
-    public MeshFilter terrainMeshFilter;
-    public MeshFilter fogMeshFilter;
+    private Texture2D unseenTexture;
+    private Material terrainMaterial;
+    private Material waterMaterial;
 
-    // Start is called before the first frame update
-    void Start()
+    public FogOfWarHandler(int xSize, int ySize, Material terrainMaterial, Material waterMaterial)
     {
-        if (terrainMeshFilter == null)
-            Debug.LogError("No terrain Mesh found. Fog of War will be disabled.");
+        #region initialize unseen texture
+        unseenTexture = new Texture2D(xSize, ySize);
+        Color[] blackPixels = Enumerable.Repeat(Color.black, xSize * ySize).ToArray();
 
-        if (terrainMeshFilter == null)
-            Debug.LogError("Fog of War MeshFilter not linked. Fog of War will be disabled.");
+        //// the following can be used to test the texture mask
+        //for (int ix = 0; ix < 32; ix++)
+        //{
+        //    for (int iy = 0; iy < 32; iy++)
+        //    {
+        //        blackPixels[ix * iy] = Color.white;
+        //    }
+        //}
 
-        fogMeshFilter.mesh = terrainMeshFilter.mesh;
-        fogMeshFilter.transform.position += new Vector3(0, 5, 0);
+        unseenTexture.SetPixels(blackPixels);
+        unseenTexture.Apply();
+        unseenTexture.wrapMode = TextureWrapMode.Clamp;
+        unseenTexture.filterMode = FilterMode.Point;
+        #endregion
+
+        this.terrainMaterial = terrainMaterial;
+        this.waterMaterial = waterMaterial;
+
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public Texture2D GetUnseenTexture()
     {
+        return unseenTexture;
+    }
 
+    public void UpdateMaterial()
+    {
+        unseenTexture.Apply();
+        terrainMaterial.SetTexture("_unseenMask", unseenTexture);
+        waterMaterial.SetTexture("_fowMask", unseenTexture);
+    }
+
+    public void DiscoverTerrain(int x, int y, int rad)
+    {
+        float rSquared = rad * rad;
+
+        for (int u = x - rad; u < x + rad + 1; u++)
+            for (int v = y - rad; v < y + rad + 1; v++)
+                if ((x - u) * (x - u) + (y - v) * (y - v) < rSquared)
+                    unseenTexture.SetPixel(u, v, Color.white);
     }
 }
