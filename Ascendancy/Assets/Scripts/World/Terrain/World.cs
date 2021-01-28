@@ -92,7 +92,8 @@ public class World : MonoBehaviour_Singleton
     {
         base.Start();
 
-        #region initialize mask texture
+        #region initialize mask textures
+        //terrainMask
         terrainMaskTexture = new Texture2D(worldSize, worldSize);
         Color[] whitePixels = Enumerable.Repeat(Color.white, worldSize * worldSize).ToArray();
         terrainMaskTexture.SetPixels(whitePixels);
@@ -100,8 +101,12 @@ public class World : MonoBehaviour_Singleton
         terrainMaskTexture.wrapMode = TextureWrapMode.Clamp;
         terrainMaskTexture.filterMode = FilterMode.Point;
 
-        //grab free texture for water alpha on the cheap
-        Texture2D waterAlpha = terrainMaskTexture;
+        //waterAlpha
+        Texture2D waterAlpha = new Texture2D(worldSize, worldSize);
+        waterAlpha.SetPixels(whitePixels);
+        waterAlpha.Apply();
+        waterAlpha.wrapMode = TextureWrapMode.Clamp;
+        waterAlpha.filterMode = FilterMode.Point;
         #endregion
 
         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
@@ -127,7 +132,7 @@ public class World : MonoBehaviour_Singleton
             }
         waterAlpha.Apply();
 
-        waterMat.SetTexture("_terrainMask", terrainMaskTexture);
+        waterMat.SetTexture("_terrainMask", waterAlpha);
 
 
         #endregion
