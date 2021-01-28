@@ -44,8 +44,8 @@ public class FogOfWarHandler
     public void UpdateMaterial()
     {
         unseenTexture.Apply();
-        terrainMaterial.SetTexture("_unseenMask", unseenTexture);
-        waterMaterial.SetTexture("_fowMask", unseenTexture);
+        terrainMaterial.SetTexture("_unseenMask", TextureBlur.Blur(unseenTexture, 1, 3));
+        waterMaterial.SetTexture("_fowMask", TextureBlur.Blur(unseenTexture, 1, 3));
     }
 
     public void DiscoverTerrain(int x, int y, int rad)
