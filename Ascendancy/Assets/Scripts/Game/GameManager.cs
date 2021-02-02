@@ -70,5 +70,10 @@ public class GameManager : MonoBehaviour
         get { return playerManager.GetPlayer(playerNo); }
     }
 
+    public Player[] GetPlayers
+    {
+        get { return playerManager.GetComponentsInChildren<Player>(); }
+    }
+
     public UI_Manager Ui_Manager { get => ui_Manager; }
 }

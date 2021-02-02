@@ -174,4 +174,26 @@ public class Player : NetworkBehaviour
         GetComponentInParent<MP_Lobby>().LoadGame();
     }
     #endregion
+
+    public void SpawnStartUnit(Vector2Int startPos)
+    {
+        //Load ESV
+        EntityInfo esv = Resources.Load("ScriptableObjects/Buildings/Command/ESV") as EntityInfo;
+
+        if (esv != null)
+            Debug.Log("Successfully loaded " + esv.name + " for player " + playerName + " (Player " + playerNo + ")");
+        else
+            Debug.LogError("Could not load starting unit for player " + playerName + " (Player " + playerNo + ")");
+
+
+        float tileSize = (World.Instance as World).tileSize;
+
+        Vector2 position = new Vector3(startPos.x * tileSize + (tileSize / 2), startPos.y * tileSize + (tileSize / 2));
+
+        float height = (World.Instance as World).GetHeight(position);
+
+        Debug.Log(position);
+
+        GameObject newUnit = esv.CreateInstance(this, new Vector3(position.x, position.y, height));
+    }
 }

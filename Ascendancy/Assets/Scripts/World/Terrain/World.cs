@@ -81,10 +81,20 @@ public class World : MonoBehaviour_Singleton
         CreateWorld();
         sw.Stop();
         Debug.Log("CreateWorld() finished in " + sw.ElapsedMilliseconds + " ms.");
+
+
+        foreach(Player player in (GameManager.Instance as GameManager).GetPlayers)
+        {
+            player.SpawnStartUnit(new Vector2Int(20, 20));
+        }
     }
 
     public void CreateWorld()
     {
+        //First, delete old world
+        DestroyWorld();
+
+
         //TODO: Fix it so that chunks can be larger than 64
         numberOfChunks = Mathf.CeilToInt(worldSize / 64);
         Chunk.chunkSize = 64;
@@ -311,7 +321,7 @@ public class World : MonoBehaviour_Singleton
         return chunks[0, 0].GetComponent<MeshCollider>();
     }
 
-    public float GetHeight(Vector3 pos)
+    public float GetHeight(Vector2 pos)
     {
         Vector2Int v = IntVector(pos);
         return map[v.x, v.y].height;
