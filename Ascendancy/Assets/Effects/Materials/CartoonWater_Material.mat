@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: CartoonWater_Material
-  m_Shader: {fileID: -6465566751694194690, guid: 03a4b1cae4f6e8348afb22c3f226b212,
+  m_Shader: {fileID: -6465566751694194690, guid: c5f086a90a2a3fb4a8565eded3c77b8c,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4

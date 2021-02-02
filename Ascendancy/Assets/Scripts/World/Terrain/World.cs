@@ -163,6 +163,7 @@ public class World : MonoBehaviour_Singleton
             for (int z = 0; z < chunks.GetLength(1); z++)
             {
                 chunks[x, z] = GenerateChunk(x, z);
+                chunks[x, z].GetComponent<Renderer>().material.SetTexture("_mask", terrainMaskTexture);
             }
 
         //chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("Texture2D_AA075013", terrainTexture);
@@ -170,6 +171,7 @@ public class World : MonoBehaviour_Singleton
         waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, waterLevel, worldSize * tileSize / 2);
         float size = worldSize / 9.86f;
         waterPlane.transform.localScale = new Vector3(size * tileSize, 1, size * tileSize);
+
 
         try
         {
