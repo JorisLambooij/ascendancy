@@ -105,20 +105,20 @@ public class EntityInfo : ScriptableObject
 
     public virtual GameObject CreateInstance(Player owner, Vector3 position)
     {
-        GameObject prefab;
+        GameObject entityPrefab;
         Transform targetParent;
         if (construction_Method == ConstructionMethod.Building)
         {
             targetParent = owner.BuildingsGO.transform;
-            prefab = Resources.Load("Prefabs/Entities/Building Prefab") as GameObject;
+            entityPrefab = Resources.Load("Prefabs/Entities/Building Prefab") as GameObject;
         }
         else
         {
             targetParent = owner.UnitsGO.transform;
-            prefab = Resources.Load("Prefabs/Entities/Unit Prefab") as GameObject;
+            entityPrefab = Resources.Load("Prefabs/Entities/Unit Prefab") as GameObject;
         }
 
-        GameObject go = Instantiate(prefab, targetParent);
+        GameObject go = Instantiate(entityPrefab, targetParent);
         go.transform.position = position;
 
         Debug.Assert(prefab != null, "No Prefab selected for EntityInfo " + name);

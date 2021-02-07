@@ -52,7 +52,7 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
         foreach (KeyValuePair<int, Technology> kvp in TechTree.techDictionary)
         {
             Vector2 screenPosition = TechTree.techPosition[kvp.Key];
-            screenPosition *= 3f;
+            screenPosition *= 2f;
             screenPosition.y *= -1;
             InstantiateTechField(kvp.Value, screenPosition);
         }
@@ -84,6 +84,13 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
         techField.SetTechnology(tech);
         techField.transform.localPosition = screenPosition;
         techFieldsDict.Add(tech.id, techField);
+
+        RectTransform totalRectTransform = techFieldsParent.GetComponent<RectTransform>();
+        RectTransform fieldRectTransform = techField.GetComponent<RectTransform>();
+        float totalX = Mathf.Max(totalRectTransform.sizeDelta.x, fieldRectTransform.localPosition.x + fieldRectTransform.sizeDelta.x * fieldRectTransform.localScale.x);
+        float totalY = Mathf.Max(totalRectTransform.sizeDelta.y, fieldRectTransform.localPosition.y + fieldRectTransform.sizeDelta.y * fieldRectTransform.localScale.y);
+        totalRectTransform.sizeDelta = new Vector2(totalX, totalY);
+        Debug.Log(totalRectTransform.sizeDelta);
     }
 
     /// <summary>

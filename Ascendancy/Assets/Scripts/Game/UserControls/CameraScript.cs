@@ -48,6 +48,8 @@ public class CameraScript : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         Vector3 point2 = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, cam.nearClipPlane));
 
-        return new Ray(transform.position, point2 - transform.position);
+        Ray r = new Ray(transform.position, point2 - transform.position);
+        Debug.DrawRay(r.origin, r.direction * 50, Color.red);
+        return r;
     }
 }

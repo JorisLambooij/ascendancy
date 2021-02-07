@@ -9,6 +9,8 @@ public class BuildingPlacementMode : ControlMode
 
     private GameObject ghostBuilding;
     private EntityInfo buildingInfo;
+    private float floorClipthrough = 0.01f;
+
     public GameObject preview;
 
     public EntityInfo Building
@@ -43,17 +45,19 @@ public class BuildingPlacementMode : ControlMode
 
         Ray ray = gameManager.camScript.MouseCursorRay();
         RaycastHit hit;
-        
+
         int layerMask = 1 << LayerMask.NameToLayer("Ground");
         if (Physics.Raycast(ray, out hit, 100, layerMask))
         {
             Tile tile = gameManager.world.GetTile(hit.point);
+            if (tile == null)
+                return;
 
             int x = (int)tile.worldX, y = (int)tile.worldZ;
-            preview.transform.position = new Vector3(x, tile.height, y);
+            preview.transform.position = new Vector3(x, tile.height - floorClipthrough, y);
 
             // Location is valid if tile is both flatland and empty of other Entities of the same BuildingLayer.
-            bool flatArea = gameManager.world.IsAreaFlat(preview.transform.position, Building.dimensions);
+            bool flatArea = gameManager.world.IsAreaFlat(new Vector2Int(x, y), Building.dimensions);
             bool freeSpace = gameManager.occupationMap.AreTilesFree(preview.transform.position, Building.dimensions);
             bool validLocation = flatArea && freeSpace;
 

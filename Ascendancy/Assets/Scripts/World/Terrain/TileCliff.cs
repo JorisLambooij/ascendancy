@@ -10,18 +10,13 @@ public class TileCliff : Tile
     public Face leftCliff;
     #endregion
 
-    #region Terrain Data
-
-    #endregion
-
     //basic constructor
-    public TileCliff(Tile baseTile) : base()
+    public TileCliff(Tile baseTile) : base(baseTile.worldX, baseTile.worldZ)
     {
         topCliff = null;
         rightCliff = null;
         botCliff = null;
         leftCliff = null;
-
 
         this.face.topLeft = baseTile.face.topLeft;
         this.face.topRight = baseTile.face.topRight;
@@ -33,10 +28,13 @@ public class TileCliff : Tile
         this.worldX = baseTile.worldX;
         this.worldZ = baseTile.worldZ;
 
-        this.flatLand = baseTile.FlatLand;
         this.terrainType = baseTile.terrainType;
     }
 
+    public override bool FlatLand()
+    {
+        return false;
+    }
     public new Face[] GetFaces()
     {
         List<Face> faceList = new List<Face>();

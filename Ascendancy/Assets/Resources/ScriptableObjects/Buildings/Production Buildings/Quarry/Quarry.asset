@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Produces stone.
   maxHealth: 1000
   armor: 500
-  dimensions: {x: 2, y: 2}
+  dimensions: {x: 3, y: 3}
   model: {fileID: -927199367670048503, guid: e7cc914d92b773d48ab1015048fd4c53, type: 3}
   thumbnail: {fileID: 21300000, guid: e2d2cca8fcbbcc044b83532add896308, type: 3}
   minimapMarker: {fileID: 0}
@@ -30,3 +30,4 @@ MonoBehaviour:
   resourceAmount: []
   entityFeatures:
   - {fileID: 11400000, guid: 8a7f364dc84cc26499d61f3351cecee0, type: 2}
+  - {fileID: 11400000, guid: 4341987a579294046a5bb48bfb4a3b35, type: 2}

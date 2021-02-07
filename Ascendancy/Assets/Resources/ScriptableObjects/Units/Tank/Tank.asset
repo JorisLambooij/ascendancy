@@ -21,7 +21,7 @@ MonoBehaviour:
   thumbnail: {fileID: 21300000, guid: e9841421b82fbaf4c98515529b08832e, type: 3}
   minimapMarker: {fileID: 0}
   mass: 10
-  viewDistance: 0
+  viewDistance: 5
   contextMenuOptions: 0
   construction_Method: 0
   category: {fileID: 0}

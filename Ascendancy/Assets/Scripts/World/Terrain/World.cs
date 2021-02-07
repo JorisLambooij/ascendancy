@@ -7,9 +7,12 @@ using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
+using System.Linq;
 
-public class World : MonoBehaviour_Singleton
+public class World : MonoBehaviour
 {
+    public static World Instance;
+
     // Different debug display modes.
     public enum DisplayMode { Height, Color, Gradient, Monochrome, Water };
     public DisplayMode displayMode = DisplayMode.Color;
@@ -72,9 +75,26 @@ public class World : MonoBehaviour_Singleton
     /// </summary>
     private Chunk[,] chunks;
 
+    /// <summary>
+    /// Texture that functions as terrain alpha.
+    /// </summary>
+    private Texture2D terrainMaskTexture;
+
     public void Awake()
     {
-        base.Start();
+        Instance = this;
+        Chunk[] existingChunks = ChunkCollector.GetComponentsInChildren<Chunk>();
+        foreach (Chunk c in existingChunks)
+            Destroy(c.gameObject, 0.1f);
+
+        #region initialize mask texture
+        terrainMaskTexture = new Texture2D(worldSize, worldSize);
+        Color[] whitePixels = Enumerable.Repeat(Color.white, worldSize * worldSize).ToArray();
+        terrainMaskTexture.SetPixels(whitePixels);
+        terrainMaskTexture.Apply();
+        terrainMaskTexture.wrapMode = TextureWrapMode.Clamp;
+        terrainMaskTexture.filterMode = FilterMode.Point;
+        #endregion
 
         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
         sw.Start();
@@ -147,6 +167,7 @@ public class World : MonoBehaviour_Singleton
             for (int z = 0; z < chunks.GetLength(1); z++)
             {
                 chunks[x, z] = GenerateChunk(x, z);
+                chunks[x, z].GetComponent<Renderer>().material.SetTexture("_mask", terrainMaskTexture);
             }
 
         //chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("Texture2D_AA075013", terrainTexture);
@@ -154,6 +175,7 @@ public class World : MonoBehaviour_Singleton
         waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, waterLevel, worldSize * tileSize / 2);
         float size = worldSize / 9.86f;
         waterPlane.transform.localScale = new Vector3(size * tileSize, 1, size * tileSize);
+
 
         try
         {
@@ -203,7 +225,7 @@ public class World : MonoBehaviour_Singleton
         TerrainType tileType;
 
 
-        switch ((int)map[x, y].height)
+        switch (Mathf.RoundToInt(map[x, y].height))
         {
             case int n when (n < -1):
                 tileType = TerrainType.WATER;
@@ -281,7 +303,7 @@ public class World : MonoBehaviour_Singleton
                 heightmap[dx, dy] = y;
 
 
-                map[dx, dy] = new Tile();
+                map[dx, dy] = new Tile(dx, dy);
                 map[dx, dy].face = new Face
                 {
                     topLeft = new Vector3(dx - 0.5f, y, dy + 0.5f), //top left
@@ -324,19 +346,15 @@ public class World : MonoBehaviour_Singleton
     public float GetHeight(Vector2 pos)
     {
         Vector2Int v = IntVector(pos);
+
+        Debug.Assert(v.x >= 0 && v.x < map.GetLength(0), "World.GetHeight: Tile Index out of range (X=" + v.x + ")");
+        Debug.Assert(v.y >= 0 && v.y < map.GetLength(1), "World.GetHeight: Tile Index out of range (Y=" + v.y + ")");
+
         return map[v.x, v.y].height;
     }
 
-    public bool IsFlat(Vector3 pos)
+    public bool IsAreaFlat(Vector2Int pos, Vector2Int dimensions)
     {
-        Vector2Int v = IntVector(pos);
-        return map[v.x, v.y].FlatLand;
-    }
-
-    public bool IsAreaFlat(Vector3 pos, Vector2Int dimensions)
-    {
-        Vector2Int v = IntVector(pos);
-
         int halfX = dimensions.x / 2;
         int halfY = dimensions.y / 2;
 
@@ -344,11 +362,11 @@ public class World : MonoBehaviour_Singleton
         for (int x = 0; x < dimensions.x; x++)
             for (int y = 0; y < dimensions.y; y++)
             {
-                int finalX = v.x + x - halfX, finalY = v.y + y - halfY;
+                int finalX = pos.x + x - halfX, finalY = pos.y + y - halfY;
 
                 if (finalX < 0 || finalX >= map.GetLength(0) || finalY < 0 || finalY >= map.GetLength(1))
                     return false;
-                if (!map[finalX, finalY].FlatLand)
+                if (!map[finalX, finalY].FlatLand())
                     return false;
             }
         return true;
@@ -357,6 +375,9 @@ public class World : MonoBehaviour_Singleton
     public Tile GetTile(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);
+        if (v.x < 0 || v.x >= map.GetLength(0) || v.x < 0 ||  v.x >= map.GetLength(1))
+            return null;
+
         return map[v.x, v.y];
     }
 
@@ -365,8 +386,8 @@ public class World : MonoBehaviour_Singleton
         float x = v.x / tileSize;
         float y = v.z / tileSize;
 
-        int x_int = Mathf.FloorToInt(x);
-        int y_int = Mathf.FloorToInt(y);
+        int x_int = Mathf.RoundToInt(x);
+        int y_int = Mathf.RoundToInt(y);
 
         return new Vector2Int(x_int, y_int);
     }
@@ -384,7 +405,32 @@ public class World : MonoBehaviour_Singleton
             gridfloat = 0;
         }
 
-        chunks[0, 0].GetComponent<Renderer>().material.SetFloat("_grid", gridfloat);
+        foreach (Chunk c in chunks)
+        {
+            c.GetComponent<Renderer>().material.SetFloat("_grid", gridfloat);
+        }
     }
-    #endregion
-}
+
+    public void SetTileVisible(int x, int y, bool visible)
+    {
+        if (visible)
+            terrainMaskTexture.SetPixel(x, y, Color.white);
+        else
+            terrainMaskTexture.SetPixel(x, y, Color.black);
+
+        terrainMaskTexture.Apply();
+
+        foreach (Chunk c in chunks)
+        {
+            if (c!= null)
+                c.GetComponent<Renderer>().material.SetTexture("_mask", terrainMaskTexture);
+        }
+    }
+
+    public void SetTileVisible(Vector3 pos, bool visible)
+    {
+        Vector2Int v = IntVector(pos);
+        SetTileVisible(v.x, v.y, visible);
+    }
+        #endregion
+    }
