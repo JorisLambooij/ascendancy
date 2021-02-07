@@ -9,8 +9,10 @@ using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using System.Linq;
 
-public class World : MonoBehaviour_Singleton
+public class World : MonoBehaviour
 {
+    public static World Instance;
+
     // Different debug display modes.
     public enum DisplayMode { Height, Color, Gradient, Monochrome, Water };
     public DisplayMode displayMode = DisplayMode.Color;
@@ -80,7 +82,10 @@ public class World : MonoBehaviour_Singleton
 
     public void Awake()
     {
-        base.Start();
+        Instance = this;
+        Chunk[] existingChunks = ChunkCollector.GetComponentsInChildren<Chunk>();
+        foreach (Chunk c in existingChunks)
+            Destroy(c.gameObject, 0.1f);
 
         #region initialize mask texture
         terrainMaskTexture = new Texture2D(worldSize, worldSize);

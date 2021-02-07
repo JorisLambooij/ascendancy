@@ -23,7 +23,7 @@ public class TerrainCutoutFeature : EntityFeature
 
         Vector3 pos = entity.transform.position;
 
-        Vector2Int tilePos = (World.Instance as World).IntVector(pos);
+        Vector2Int tilePos = World.Instance.IntVector(pos);
 
         if (!useCustomDimensions)
         {
@@ -32,7 +32,7 @@ public class TerrainCutoutFeature : EntityFeature
             for (int x = 0; x < dimensions.x; x++)
                 for (int y = 0; y < dimensions.y; y++)
                 {
-                    (World.Instance as World).SetTileVisible(tilePos.x - x, tilePos.y - y, false);
+                    World.Instance.SetTileVisible(tilePos.x - x, tilePos.y - y, false);
                     holes.Add(new Vector2Int(tilePos.x - x, tilePos.y - y));
                 }
         }
@@ -43,7 +43,7 @@ public class TerrainCutoutFeature : EntityFeature
             for (int x = 0; x < dimensions.x; x++)
                 for (int y = 0; y < dimensions.y; y++)
                 {
-                    (World.Instance as World).SetTileVisible(tilePos.x - x + customXOffset, tilePos.y - y + customYOffset, false);
+                    World.Instance.SetTileVisible(tilePos.x - x + customXOffset, tilePos.y - y + customYOffset, false);
                     holes.Add(new Vector2Int(tilePos.x - x, tilePos.y - y));
                 }
         }
@@ -53,6 +53,6 @@ public class TerrainCutoutFeature : EntityFeature
     {
         //onDestroy, make tiles visible again
         foreach (Vector2Int holePos in holes)
-            (World.Instance as World).SetTileVisible(holePos.x, holePos.y, true);
+            World.Instance.SetTileVisible(holePos.x, holePos.y, true);
     }
 }

@@ -134,7 +134,7 @@ public class HeightMapGenerator : MonoBehaviour
                         color = terrainHeightGradient.Evaluate(intensity);
                         break;
                     case World.DisplayMode.Water:
-                        float c = -Mathf.Min(0, noiseMap[x, y] - ((World)World.Instance).waterLevel);
+                        float c = -Mathf.Min(0, noiseMap[x, y] - World.Instance.waterLevel);
                         color = new Color(1-c, 0, c);
                         texture.SetPixel(x, y, color);
                         break;
@@ -156,7 +156,7 @@ public class HeightMapGenerator : MonoBehaviour
     {
         Texture2D texture = new Texture2D(mapWidth, mapHeight);
         float deepestPoint = 0;
-        float waterLevel = ((World)World.Instance).waterLevel;
+        float waterLevel = World.Instance.waterLevel;
         for (int x = 0; x < mapWidth; x++)
             for (int y = 0; y < mapHeight; y++)
             {
@@ -172,7 +172,7 @@ public class HeightMapGenerator : MonoBehaviour
                     for (int dx = Mathf.Max(0, x - 1); dx < Mathf.Min(mapWidth, x + 2); dx++)
                         for (int dy = Mathf.Max(0, y - 1); dy < Mathf.Min(mapHeight, y + 2) && !coast; dy++)
                         {
-                            float neighborIntensity = (-noiseMap[dx, dy] + ((World)World.Instance).waterLevel);
+                            float neighborIntensity = (-noiseMap[dx, dy] + World.Instance.waterLevel);
                             if (neighborIntensity <= 0)
                                 coast = true;
                         }
