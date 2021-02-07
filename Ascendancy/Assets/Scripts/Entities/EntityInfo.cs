@@ -41,7 +41,7 @@ public class EntityInfo : ScriptableObject
     /// <summary>
     /// The Prefab used to instantiate this entity.
     /// </summary>
-    public GameObject model;
+    public GameObject prefab;
 
     /// <summary>
     /// entity Thumbnail.
@@ -121,9 +121,9 @@ public class EntityInfo : ScriptableObject
         GameObject go = Instantiate(prefab, targetParent);
         go.transform.position = position;
 
-        Debug.Assert(model != null, "No Model selected for EntityInfo " + name);
+        Debug.Assert(prefab != null, "No Prefab selected for EntityInfo " + name);
 
-        GameObject e_model = Instantiate(model, go.transform);
+        GameObject e_model = Instantiate(prefab, go.transform);
         foreach (MeshRenderer mr in e_model.GetComponentsInChildren<MeshRenderer>())
         {
             foreach (Material mat in mr.materials)

@@ -18,7 +18,7 @@ public class BuildingPlacementMode : ControlMode
         {
             buildingInfo = value;
             GameObject.Destroy(ghostBuilding);
-            ghostBuilding = GameObject.Instantiate(buildingInfo.model, preview.transform);
+            ghostBuilding = GameObject.Instantiate(buildingInfo.prefab, preview.transform);
         }
     }
 
@@ -59,7 +59,7 @@ public class BuildingPlacementMode : ControlMode
 
             //bool canAffordResources = EnoughResources();
 
-            preview.GetComponent<BuildingPreview>().Valid = validLocation;
+            preview.GetComponentInChildren<BuildingPreview>().Valid = validLocation;
 
             if (Input.GetMouseButtonDown(0))
                 if (validLocation)
