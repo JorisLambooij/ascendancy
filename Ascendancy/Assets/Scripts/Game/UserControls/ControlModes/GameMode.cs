@@ -24,8 +24,6 @@ public class GameMode : ControlMode
     private LineRenderer formationLine;
     private Image selectionBox;
     private Camera cam;
-    //private Canvas contextMenuCanvas;
-    private ContextMenuHandler conMenuHandler;
 
     //private Vector3[] conMenuButtonPos;
 
@@ -36,9 +34,6 @@ public class GameMode : ControlMode
         selectionBox = GameObject.Find("SelectionRect").GetComponent<Image>();
         selectionBox.enabled = false;
 
-        //contextMenuCanvas = GameObject.Find("Canvas_ConMenu").GetComponent<Canvas>();
-        conMenuHandler = GameObject.Find("Context Menu").GetComponent<ContextMenuHandler>();
-
         formationLine = GameObject.Find("FormationLine").GetComponent<LineRenderer>();
 
         if (selectionBox == null)
@@ -48,12 +43,6 @@ public class GameMode : ControlMode
             Debug.LogError("FormationLine not found");
         else
             formationLine.enabled = false;
-        if (conMenuHandler == null)
-            Debug.LogError("ConMenuHandler not found");
-        else
-        {
-            //conMenuHandler.Hide();
-        }
     }
 
     public override void HandleInput()
@@ -80,10 +69,6 @@ public class GameMode : ControlMode
 
     private void Mouse1()
     {
-        // context menu out or pointer over UI element;
-        if (conMenuHandler.IsVisible())
-            return;
-
         bool append = Input.GetKey(KeyCode.LeftControl);
             
 
@@ -191,32 +176,14 @@ public class GameMode : ControlMode
     /// </summary>
     private void Mouse2()
     {
-        if (!conMenuHandler.IsVisible())
-        {
-            if (selectedUnits.Count > 0)
-                Mouse2_UnitOrder();
-            else
-                Mouse2_NoUnitsSelected();
-
-        }
-        else //if context menu is open
-        {
-            if (Input.GetMouseButtonUp(1))
-            {
-                conMenuHandler.Hide();
-            }
-        }
+        if (selectedUnits.Count > 0)
+            Mouse2_UnitOrder();
+        else
+            Mouse2_NoUnitsSelected();
     }
 
     private void Mouse2_UnitOrder()
     {
-        if (conMenuHandler.IsVisible())
-        {
-            //if context menu is open
-            if (Input.GetMouseButtonUp(1))
-                conMenuHandler.Hide();
-            return;
-        }
         if (Input.GetMouseButtonDown(1))
         {
             dragStartPosM2 = MouseRaycast().point;
@@ -345,44 +312,34 @@ public class GameMode : ControlMode
     /// </summary>
     private void Mouse3()
     {
-        if (!conMenuHandler.IsVisible())
+        if (Input.GetMouseButtonUp(2))
         {
-            if (Input.GetMouseButtonUp(2))
+            Ray ray = gameManager.camScript.MouseCursorRay();
+            RaycastHit hit;
+
+            DeselectAll();
+
+            //we only open the context menu on valid targets:
+            if (Physics.Raycast(ray, out hit) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
             {
-                Ray ray = gameManager.camScript.MouseCursorRay();
-                RaycastHit hit;
-
-                DeselectAll();
-
-                //we only open the context menu on valid targets:
-                if (Physics.Raycast(ray, out hit) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
+                EntitySelector e = hit.transform.GetComponent<EntitySelector>();
+                DeselectAll(); int thismanybuttons = 0;
+                //zero button as default                                     
+                if (e == null)
                 {
-                    EntitySelector e = hit.transform.GetComponent<EntitySelector>();
-                    DeselectAll(); int thismanybuttons = 0;
-                    //zero button as default                                     
-                    if (e == null)
-                    {
-                        Debug.LogError("Entity Selector is NULL! (FAIL)Name is " + hit.transform.name);
-                    }
-                    else if (e.GetComponentInParent<Entity>().GetType() == typeof(Unit))
-                    {
-                        EntityInfo uInfo = e.GetComponentInParent<Unit>().entityInfo;
-                        thismanybuttons = uInfo.contextMenuOptions;
-                    }
-                    else if (e.GetComponentInParent<Entity>().GetType() == typeof(Building))
-                    {
-                        BuildingInfo bInfo = e.GetComponentInParent<Building>().buildingInfo;
-                        thismanybuttons = bInfo.contextMenuOptions;
-                    }
-
-                    if (thismanybuttons > 0 && thismanybuttons < 9)
-                        //open menu only if options are available  
-                        if (e.GetComponentInParent<Entity>().Owner.playerNo == gameManager.playerNo)
-                            //here we open the context menu    
-                            conMenuHandler.Show(thismanybuttons);
+                    Debug.LogError("Entity Selector is NULL! (FAIL)Name is " + hit.transform.name);
+                }
+                else if (e.GetComponentInParent<Entity>().GetType() == typeof(Unit))
+                {
+                    EntityInfo uInfo = e.GetComponentInParent<Unit>().entityInfo;
+                }
+                else if (e.GetComponentInParent<Entity>().GetType() == typeof(Building))
+                {
+                    BuildingInfo bInfo = e.GetComponentInParent<Building>().buildingInfo;
                 }
             }
         }
+        
     }
 
     private RaycastHit MouseRaycast()

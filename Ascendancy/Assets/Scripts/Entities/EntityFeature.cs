@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -12,6 +13,8 @@ public abstract class EntityFeature : ScriptableObject
     /// The order in which the features are ranked when a click is registered. Higher values go first.
     /// </summary>
     public int clickPriority;
+
+    public Sprite contextMenuThumbnail; 
 
     public Entity entity { get; private set; }
 
@@ -26,6 +29,11 @@ public abstract class EntityFeature : ScriptableObject
     }
 
     public virtual void Update10Override()
+    {
+
+    }
+
+    public virtual void ContextMenuOption()
     {
 
     }

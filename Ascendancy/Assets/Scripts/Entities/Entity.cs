@@ -177,6 +177,12 @@ public class Entity : MonoBehaviour
     /// <param name="enqueue">Whether the order should be queued or replace the current order queue. </param>
     public void IssueOrder(UnitOrder order, bool enqueue)
     {
+        if (controller == null)
+        {
+            Debug.LogError("Issuing order to Entity without EntityOrderController. Most likely because it is a building");
+            return;
+        }
+
         if (enqueue)
             controller.orders.Enqueue(order);
         else

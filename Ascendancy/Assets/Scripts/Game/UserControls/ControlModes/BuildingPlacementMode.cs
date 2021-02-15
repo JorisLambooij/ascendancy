@@ -54,45 +54,57 @@ public class BuildingPlacementMode : ControlMode
                 return;
 
             int x = (int)tile.worldX, y = (int)tile.worldZ;
-            preview.transform.position = new Vector3(x, tile.height - floorClipthrough, y);
+            Vector3 position = new Vector3(x, tile.height - floorClipthrough, y);
+            preview.transform.position = position;
 
-            // Location is valid if tile is both flatland and empty of other Entities of the same BuildingLayer.
-            bool flatArea = gameManager.world.IsAreaFlat(new Vector2Int(x, y), Building.dimensions);
-            bool freeSpace = gameManager.occupationMap.AreTilesFree(preview.transform.position, Building.dimensions);
-            bool validLocation = flatArea && freeSpace;
-
-            //bool canAffordResources = EnoughResources();
-
+            bool validLocation = CheckPlacementValid(buildingInfo, position);
             preview.GetComponentInChildren<BuildingPreview>().Valid = validLocation;
-
-            if (Input.GetMouseButtonDown(0))
-                if (validLocation)
-                {
-                    if (cheatMode || EnoughResources())
-                    {
-                        if (!cheatMode)
-                            foreach (Resource_Amount res_amount in buildingInfo.resourceAmount)
-                                gameManager.GetPlayer.PlayerEconomy.RemoveResourceAmount(res_amount);
-
-                        // valid spot, place building
-                        GameObject newBuildingGO = Building.CreateInstance(gameManager.GetPlayer, preview.transform.position);
-                        Entity b = newBuildingGO.GetComponent<Entity>();
-
-                        // Mark all the spots that this building occupies as occupied in the world map.
-                        gameManager.occupationMap.NewOccupation(preview.transform.position, b, TileOccupation.OccupationLayer.Building);
-                    }
-                }
-                else
-                {
-                    // invalid spot, do NOT place building
-                    if (!flatArea)
-                        Debug.Log("Area not flat");
-                    if (!freeSpace)
-                        Debug.Log("Other building here");
-                }
+            
+            if(Input.GetMouseButtonDown(0))
+                AttemptPlaceBuilding(Building, position, cheatMode);
         }
         
     }
+
+    public bool AttemptPlaceBuilding(EntityInfo buildingInfo, Vector3 position, bool cheat = false)
+    {
+        bool validLocation = CheckPlacementValid(buildingInfo, position);
+        if (validLocation)
+        {
+            if (cheat || EnoughResources())
+            {
+                if (!cheat)
+                    foreach (Resource_Amount res_amount in buildingInfo.resourceAmount)
+                        gameManager.GetPlayer.PlayerEconomy.RemoveResourceAmount(res_amount);
+
+                // valid spot, place building
+                GameObject newBuildingGO = Building.CreateInstance(gameManager.GetPlayer, position);
+                Entity b = newBuildingGO.GetComponent<Entity>();
+
+                // Mark all the spots that this building occupies as occupied in the world map.
+                gameManager.occupationMap.NewOccupation(position, b, TileOccupation.OccupationLayer.Building);
+                return true;
+            }
+        }
+        else
+            // invalid spot, do NOT place building
+            Debug.Log("Area not flat or other building here");
+
+        return false;
+    }
+
+
+
+    public bool CheckPlacementValid(EntityInfo buildingInfo, Vector3 position)
+    {
+        Vector2Int intPosition = new Vector2Int((int)position.x, (int)position.z);
+        // Location is valid if tile is both flatland and empty of other Entities of the same BuildingLayer.
+        bool flatArea = gameManager.world.IsAreaFlat(intPosition, Building.dimensions);
+        bool freeSpace = gameManager.occupationMap.AreTilesFree(position, Building.dimensions);
+
+        return flatArea && freeSpace;
+    }
+
     private bool EnoughResources()
     {
         foreach (Resource_Amount resource_Amount in buildingInfo.resourceAmount)
