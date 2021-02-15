@@ -195,7 +195,5 @@ public class Player : NetworkBehaviour
         Debug.Log(position);
 
         GameObject newUnit = esv.CreateInstance(this, new Vector3(position.x,  height, position.y));
-
-        newUnit.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
     }
 }

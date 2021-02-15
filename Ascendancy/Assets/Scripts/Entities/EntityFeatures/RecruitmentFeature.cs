@@ -114,7 +114,8 @@ public class RecruitmentFeature : EntityFeature
         Transform parent = entity.Owner.UnitsGO.transform;
         GameObject newUnit = unit.CreateInstance(entity.Owner, entity.transform.position);
 
-        Entity newEntity = newUnit.GetComponent<Entity>();
+        //if (newUnit != null)
+        //    Entity newEntity = newUnit.GetComponent<Entity>();
 
         //if (newEntity.Controller == null)
         //    newUnit.AddComponent<EntityOrderController>();

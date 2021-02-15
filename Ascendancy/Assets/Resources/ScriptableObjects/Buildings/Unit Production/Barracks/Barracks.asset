@@ -17,11 +17,11 @@ MonoBehaviour:
   maxHealth: 200
   armor: 20
   dimensions: {x: 2, y: 2}
-  model: {fileID: -927199367670048503, guid: 960a3ebace202d94a9ae45e35069229e, type: 3}
+  prefab: {fileID: 14196014742864894, guid: 73e4d123ac6f3c54f8f5cffdb6ff4497, type: 3}
   thumbnail: {fileID: 21300000, guid: 830cb6da3451d734d91592a8db1e8276, type: 3}
   minimapMarker: {fileID: 0}
   mass: 100
-  viewDistance: 0
+  viewDistance: 5
   contextMenuOptions: 0
   construction_Method: 1
   category: {fileID: 11400000, guid: 271b300bc5c02194f8aecdc6edd5affa, type: 2}
