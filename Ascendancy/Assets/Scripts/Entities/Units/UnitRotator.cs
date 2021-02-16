@@ -16,6 +16,6 @@ public class UnitRotator : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * maxAngularSpeed);
 
-        GetComponent<Unit>().Controller.NavAgent.isStopped = Vector3.Angle(transform.forward, direction) < allowedAngleForMovement;
+        GetComponent<Entity>().Controller.NavAgent.isStopped = Vector3.Angle(transform.forward, direction) < allowedAngleForMovement;
     }
 }

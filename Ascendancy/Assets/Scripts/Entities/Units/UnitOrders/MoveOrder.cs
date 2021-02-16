@@ -39,7 +39,12 @@ public class MoveOrder : UnitOrder
 
     public override bool Fulfilled
     {
-        get { return entity.Controller.NavAgent.remainingDistance <= MAX_REMAINING_DISTANCE; }
+        get 
+        {
+            if (entity.Controller.NavAgent.pathPending)
+                return false;
+            return entity.Controller.NavAgent.remainingDistance <= MAX_REMAINING_DISTANCE;
+        }
     }
 
 }

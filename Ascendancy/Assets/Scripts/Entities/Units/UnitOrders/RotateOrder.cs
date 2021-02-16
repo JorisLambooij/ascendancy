@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class RotateOrder : UnitOrder
 {
@@ -18,11 +19,18 @@ public class RotateOrder : UnitOrder
 
     public override bool Fulfilled
     {
-        get { return Vector3.Angle(entity.transform.forward, orientation) < 6; }
+        get { return Vector3.Angle(entity.transform.forward, orientation) < 1; }
     }
     
     public override void Update()
     {
+        float angle = Vector3.Angle(orientation, entity.transform.forward);
+
+        Quaternion lookRotation = Quaternion.LookRotation(orientation);
+        NavMeshAgent agent = entity.GetComponent<NavMeshAgent>();
+        float lerpFactor = Time.deltaTime * agent.angularSpeed / angle;
+        entity.transform.rotation = Quaternion.Slerp(entity.transform.rotation, lookRotation, lerpFactor);
+
         //entity.transform.GetComponent<UnitRotator>().RotateTowards(orientation);
     }
 

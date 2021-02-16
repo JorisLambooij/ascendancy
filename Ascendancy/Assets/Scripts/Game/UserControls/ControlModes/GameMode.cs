@@ -267,7 +267,7 @@ public class GameMode : ControlMode
                     // Issue an order to the nearest unit to move there
                     Entity nearestUnit = kvp.Value;
                     bool enqueue = Input.GetKey(KeyCode.LeftShift);
-                    nearestUnit.IssueOrder(new MoveOrder(nearestUnit, lerpedPos), false);
+                    nearestUnit.IssueOrder(new MoveOrder(nearestUnit, lerpedPos), enqueue);
                     nearestUnit.IssueOrder(new RotateOrder(nearestUnit, orientation), true);
                 }
             }
