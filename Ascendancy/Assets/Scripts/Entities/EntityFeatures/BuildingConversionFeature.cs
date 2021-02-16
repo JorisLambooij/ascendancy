@@ -14,11 +14,32 @@ public class BuildingConversionFeature : EntityFeature
 
     public override void ContextMenuOption()
     {
-//TODO: align y rotation of entity slowly to 0 before conversion (better: to nearest cardinal direction);
+        //TODO: align y rotation of entity slowly to 0 before conversion (better: to nearest cardinal direction);
+        RotateOrder rotOrder;
+
+        rotOrder = new RotateOrder(entity, new Vector3(0, 0, 1));
+        
+
+        entity.IssueOrder(rotOrder, false);
+
+        entity.StartCoroutine(WaitForRotation(rotOrder));
+
+        //TODO: wait for current animation to finish animating
 
 
-//TODO: wait for current animation to finish animating
 
+    }
+
+    IEnumerator WaitForRotation(UnitOrder order)
+    {
+        while (!order.Fulfilled)
+        {
+            //wait
+            yield return new WaitForSeconds(0.2f);
+            //Debug.Log("Order " + order.CurrentDestination + " is fullfilled = " + order.Fulfilled);
+            //Debug.Log("Current order: " + entity.Controller.currentOrder.GetType().Name);
+            
+        }
 
         //play animation first if not null
         if (conversionAnimation.Count > 0)
@@ -31,7 +52,7 @@ public class BuildingConversionFeature : EntityFeature
             DoAfterAnimation();
     }
 
-        IEnumerator Animate(List<string> animationQueue)
+    IEnumerator Animate(List<string> animationQueue)
     {
         if (animationQueue.Count > 0)
         {
