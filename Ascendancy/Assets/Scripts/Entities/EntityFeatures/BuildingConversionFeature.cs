@@ -7,47 +7,60 @@ using UnityEngine;
 public class BuildingConversionFeature : EntityFeature
 {
     public EntityInfo convertedEntity;
-    public string conversionAnimation;
+    public List<string> conversionAnimation;
     public float conversionDelay = 0f;
+
+    private Animator animator;
 
     public override void ContextMenuOption()
     {
-        float delay = 0f;
-        //play animation first if not null
-        if (conversionAnimation != "")
-        {
-            Animator animator = entity.GetComponentInChildren<Animator>();
+//TODO: align y rotation of entity slowly to 0 before conversion (better: to nearest cardinal direction);
 
-            animator.Play(conversionAnimation);
+
+//TODO: wait for current animation to finish animating
+
+
+        //play animation first if not null
+        if (conversionAnimation.Count > 0)
+        {
+            animator = entity.GetComponentInChildren<Animator>();
+
+            entity.StartCoroutine(Animate(conversionAnimation));
+        }
+        else
+            DoAfterAnimation();
+    }
+
+        IEnumerator Animate(List<string> animationQueue)
+    {
+        if (animationQueue.Count > 0)
+        {
             foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
             {
-                if (clip.name == conversionAnimation)
+                if (clip.name == animationQueue[0])
                 {
-                    delay = clip.length;
+                    animator.Play(animationQueue[0]);
+                    //wait a bit, so we can get the correct animator state
+                    yield return new WaitForSeconds(0.1f);
+                    Debug.Log(animationQueue[0] + ": waiting " + clip.length + "/" + animator.GetCurrentAnimatorStateInfo(0).speed + " seconds");
+                    yield return new WaitForSeconds(clip.length / animator.GetCurrentAnimatorStateInfo(0).speed);
+                    break;
                 }
             }
+            animationQueue.RemoveAt(0);
+            entity.StartCoroutine(Animate(animationQueue));
 
-            if (delay == 0f)
-            {
-                Debug.LogError("ERROR: Animation '" + conversionAnimation + "' not found or has length 0!");
-            }
-        }
-
-        delay += conversionDelay;
-
-        if (delay > 0f)
-        {
-            entity.StartCoroutine(DoAfterAnimation(delay));
         }
         else
         {
-            DoAfterAnimation(0f);
+            yield return new WaitForSeconds(conversionDelay);
+            DoAfterAnimation();
         }
     }
 
-    IEnumerator DoAfterAnimation(float delay)
+    void DoAfterAnimation()
     {
-        yield return new WaitForSeconds(delay);
+        
 
         //GameManager.Instance.SwitchToMode(ControlModeEnum.buildingMode);
         BuildingPlacementMode buildingMode = GameManager.Instance.controlModeDict[ControlModeEnum.buildingMode] as BuildingPlacementMode;

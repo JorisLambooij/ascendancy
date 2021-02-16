@@ -16,5 +16,7 @@ MonoBehaviour:
   contextMenuThumbnail: {fileID: 21300000, guid: 80542a713c3825d4fb7cbda09ff71660,
     type: 3}
   convertedEntity: {fileID: 11400000, guid: 52f0193296a04f54b835da3fa256e108, type: 2}
-  conversionAnimation: ESV_land
+  conversionAnimation:
+  - ESV_land
+  - ESV_hatch_open
   conversionDelay: 3
