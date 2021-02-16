@@ -10,19 +10,43 @@ public class CameraScript : MonoBehaviour
 {
     public float cameraSpeed;
     public float cameraRotationSpeed;
+    public float zoomSpeed;
+    public float targetHeight;
+
 
     private Camera cam;
     private Transform center;
+    private float distanceFromCenter;
+
+    [Range(5, 120)]
+    public float currentZoom;
     
     void Start()
     {
         cam = GetComponent<Camera>();
         center = transform.parent;
+        distanceFromCenter = (transform.position - center.position).magnitude;
     }
 
     void Update()
     {
         WASD();
+        ZoomLevel();
+    }
+
+    private void ZoomLevel()
+    {
+        float scroll = Input.mouseScrollDelta.y * zoomSpeed;
+        currentZoom = Mathf.Clamp(currentZoom - scroll, 5, 120);
+        float inRads = Mathf.Deg2Rad * Mathf.Clamp(currentZoom, 10, 80);
+        float height = inRads;
+        float distance = Mathf.Sin(inRads);
+
+        Vector3 d = Vector3.ProjectOnPlane((transform.position - center.position), Vector3.up).normalized;
+        Vector3 h = Vector3.up;
+
+        transform.position = center.position + (distance * d + h * height) * (currentZoom / 5f);
+        cam.transform.LookAt(center);
     }
 
     private void WASD()
@@ -34,6 +58,11 @@ public class CameraScript : MonoBehaviour
         Vector3 pos = center.position;
         Vector3 movement = Vector3.ProjectOnPlane(transform.right, Vector3.up) * horizontal + Vector3.ProjectOnPlane(transform.forward, Vector3.up) * vertical;
         pos += movement * Time.deltaTime * cameraSpeed;
+
+        float tileHeight = World.Instance.GetTile(pos).height;
+        float desiredY = (targetHeight + tileHeight) * 0.5f;
+
+        pos.y = Mathf.Lerp(pos.y, desiredY, 10 * Time.deltaTime);
 
         center.position = pos;
 
