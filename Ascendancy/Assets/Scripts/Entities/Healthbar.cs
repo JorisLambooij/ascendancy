@@ -31,21 +31,25 @@ public class Healthbar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int maxHealth = entity.entityInfo.maxHealth;
-        float currentHealth = entity.Health;
-        bool visible = maxHealth > currentHealth || activeOverride;
-
-        if (visible)
+        if (entity != null)
         {
-            if (float.IsNaN(currentHealth))
-                Debug.LogError("Current Health is NaN");
-            float percentage = Mathf.Clamp((float)currentHealth / maxHealth, 0, 1);
-            UpdateSize(percentage);
-            //UpdateColor(percentage);
-        }
+            int maxHealth = entity.entityInfo.maxHealth;
+            float currentHealth = entity.Health;
+            bool visible = maxHealth > currentHealth || activeOverride;
 
-        barBack.enabled = visible;
-        barFront.enabled = visible;
+
+            if (visible)
+            {
+                if (float.IsNaN(currentHealth))
+                    Debug.LogError("Current Health is NaN");
+                float percentage = Mathf.Clamp((float)currentHealth / maxHealth, 0, 1);
+                UpdateSize(percentage);
+                //UpdateColor(percentage);
+            }
+
+            barBack.enabled = visible;
+            barFront.enabled = visible;
+        }
     }
 
     void UpdateSize(float percentage)
@@ -60,5 +64,10 @@ public class Healthbar : MonoBehaviour
     void UpdateColor(float percentage)
     {
         barFront.color = new Color(1 - percentage, percentage, 0);
+    }
+
+    public void SetEntity(Entity entity)
+    {
+        this.entity = entity;
     }
 }
