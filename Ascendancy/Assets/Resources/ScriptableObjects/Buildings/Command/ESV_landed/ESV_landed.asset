@@ -18,7 +18,7 @@ MonoBehaviour:
   armor: 100
   dimensions: {x: 2, y: 2}
   prefab: {fileID: 4909156420730243876, guid: e3fb2cafb00b6924b9036742a4ff540d, type: 3}
-  thumbnail: {fileID: 21300000, guid: 130b16588cfe14d45a579520b0c96c33, type: 3}
+  thumbnail: {fileID: 21300000, guid: 1e72abb8d4f72b443abec3479e259e49, type: 3}
   minimapMarker: {fileID: 0}
   mass: 1000
   viewDistance: 20
