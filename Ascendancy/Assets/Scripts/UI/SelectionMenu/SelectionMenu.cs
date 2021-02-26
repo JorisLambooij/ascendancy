@@ -41,11 +41,11 @@ public class SelectionMenu : MonoBehaviour, ListSubscriber<EntitySelector>
         {
             foreach (EntitySelector ent in newList)
             {
-                if (typeList.Contains(ent.ParentEntity.name))
+                if (typeList.Contains(ent.ParentEntity.entityInfo.name))
                 {
                     foreach (List<Entity> stack in stacks)
                     {
-                        if (stack[0].name == ent.ParentEntity.name)
+                        if (stack[0].name == ent.ParentEntity.entityInfo.name)
                         {
                             stack.Add(ent.ParentEntity);
                                 break;
@@ -54,7 +54,7 @@ public class SelectionMenu : MonoBehaviour, ListSubscriber<EntitySelector>
                 }
                 else
                 {
-                    typeList.Add(ent.ParentEntity.name);
+                    typeList.Add(ent.ParentEntity.entityInfo.name);
 
                     List<Entity> entList = new List<Entity>
                     {
