@@ -2139,6 +2139,7 @@ GameObject:
   - component: {fileID: 1916473245418981346}
   - component: {fileID: 1916473245418981372}
   - component: {fileID: 1916473245418981347}
+  - component: {fileID: 6319432967535784483}
   m_Layer: 5
   m_Name: Minimap Raw Image
   m_TagString: Untagged
@@ -2191,13 +2192,26 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 8400000, guid: 999e41ce99aa9b94f9d8b092a59447b7, type: 2}
+  m_Texture: {fileID: 0}
   m_UVRect:
     serializedVersion: 2
     x: 0
     y: 0
     width: 1
     height: 1
+--- !u!114 &6319432967535784483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1916473245418981345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b47aaf0c4734f0949a56718f1d5d2c56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 1916473245418981347}
 --- !u!1 &1916473245624067880
 GameObject:
   m_ObjectHideFlags: 0

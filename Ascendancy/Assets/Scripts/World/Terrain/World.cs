@@ -88,6 +88,11 @@ public class World : MonoBehaviour_Singleton
     /// </summary>
     public FogOfWarHandler fowHandler;
 
+    /// <summary>
+    /// Terrain Color Texture mainly used for minimap
+    /// </summary>
+    public Texture2D TerrainColorTexture;
+
     public void Awake()
     {
         base.Start();
@@ -214,6 +219,19 @@ public class World : MonoBehaviour_Singleton
                 throw e;
         }
         Debug.Log("World Generated: ");
+
+        int xMax = colormap.GetLength(0);
+        int yMax = colormap.GetLength(1);
+
+        TerrainColorTexture = new Texture2D(xMax, yMax);
+
+        for (int x = 0; x < xMax; x++)
+            for (int y = 0; y < yMax; y++)
+            {
+                TerrainColorTexture.SetPixel(x, y, colormap[x, y]);
+            }
+
+        TerrainColorTexture.Apply();
     }
 
     Chunk GenerateChunk(int startX, int startZ)
