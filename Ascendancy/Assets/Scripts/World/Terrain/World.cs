@@ -93,6 +93,7 @@ public class World : MonoBehaviour_Singleton
     /// </summary>
     public Texture2D TerrainColorTexture;
 
+
     public void Awake()
     {
         base.Start();
@@ -125,27 +126,36 @@ public class World : MonoBehaviour_Singleton
         terrainMaterial = chunks[0, 0].GetComponent<Renderer>().sharedMaterial;
         fowHandler = new FogOfWarHandler(worldSize, worldSize, terrainMaterial, waterMat);
 
+        terrainMaterial.SetTexture("_mask", terrainMaskTexture);
+
         #region Generate Water Alpha
 
         for (int x = 0; x < map.GetLength(0); x++)
             for (int y = 0; y < map.GetLength(1); y++)
             {
-                if (map[x,y].height > waterLevel)
+                if (map[x, y].height > waterLevel)
                 {
-                    waterAlpha.SetPixel(x,y,Color.black);
+                    waterAlpha.SetPixel(x, y, Color.black);                    
+                }
+                else //we want to draw water on the minimap
+                {
+                    TerrainColorTexture.SetPixel(x, y, Color.blue);
                 }
             }
         waterAlpha.Apply();
+        TerrainColorTexture.Apply();
 
-        waterMat.SetTexture("_terrainMask", waterAlpha);
+        waterMat.SetTexture("_terrainMask", waterAlpha);        
 
 
         #endregion
 
         fowHandler.UpdateMaterial();
+
+       
     }
 
-    
+
 
     public void CreateWorld()
     {
@@ -231,7 +241,6 @@ public class World : MonoBehaviour_Singleton
                 TerrainColorTexture.SetPixel(x, y, colormap[x, y]);
             }
 
-        TerrainColorTexture.Apply();
     }
 
     Chunk GenerateChunk(int startX, int startZ)
@@ -241,7 +250,7 @@ public class World : MonoBehaviour_Singleton
         //chunkGO.transform.position = new Vector3(startX, 0, startZ) * 64 * tileSize;
         Chunk chunk = chunkGO.GetComponent<Chunk>();
         chunk.chunkIndex = new Vector2Int(startX, startZ);
-        
+
         Tile[,] chunkTilemap = new Tile[chunkSize, chunkSize];
         Color32[,] chunkColormap = new Color32[chunkSize + 2, chunkSize + 2];
 
@@ -420,7 +429,7 @@ public class World : MonoBehaviour_Singleton
     public Tile GetTile(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);
-        if (v.x < 0 || v.x >= map.GetLength(0) || v.x < 0 ||  v.x >= map.GetLength(1))
+        if (v.x < 0 || v.x >= map.GetLength(0) || v.x < 0 || v.x >= map.GetLength(1))
             return null;
 
         return map[v.x, v.y];
@@ -463,7 +472,7 @@ public class World : MonoBehaviour_Singleton
         terrainMaskTexture.Apply();
 
         terrainMaterial.SetTexture("_mask", terrainMaskTexture);
-    
+
     }
 
     public void SetTileVisible(Vector3 pos, bool visible)
@@ -471,5 +480,5 @@ public class World : MonoBehaviour_Singleton
         Vector2Int v = IntVector(pos);
         SetTileVisible(v.x, v.y, visible);
     }
-        #endregion
-    }
+    #endregion
+}
