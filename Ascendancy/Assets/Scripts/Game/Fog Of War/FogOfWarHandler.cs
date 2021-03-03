@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class FogOfWarHandler
 {
-    private Texture2D unseenTexture;
+    public Texture2D unseenTexture;
     private Material terrainMaterial;
     private Material waterMaterial;
 

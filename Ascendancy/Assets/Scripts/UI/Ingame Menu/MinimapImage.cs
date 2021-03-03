@@ -7,7 +7,8 @@ public class MinimapImage : MonoBehaviour
 {
     private World world;
 
-    public RawImage image; 
+    public RawImage terrainImage;
+    public RawImage maskImage;
 
     // Start is called before the first frame update
     void Start()
@@ -22,12 +23,12 @@ public class MinimapImage : MonoBehaviour
 
         }
 
-        image.texture = world.TerrainColorTexture;
+        terrainImage.texture = world.TerrainColorTexture;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        maskImage.texture = world.fowHandler.unseenTexture;
     }
 }
