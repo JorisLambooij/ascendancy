@@ -7,24 +7,36 @@ public class Projectile : MonoBehaviour
     public ProjectileInfo info;
 
     private Entity launcher;
-    private Transform target;
+    private Transform entityTarget;
+    private Vector3 groundTarget;
     private Vector3 launchPos;
     private Vector3 predictedTargetLocation;
     private float remainingPiercingPower;
 
     // Each Entity can only be hit once by a projectile. This is to keep track of that.
     private HashSet<Entity> entitiesPierced;
-    
+
+    public void Launch(RangedAttackFeature rangedFeature, Vector3 target)
+    {
+        this.groundTarget = target;
+        this.entityTarget = null;
+        Debug.Log(groundTarget);
+        LaunchProjectile(rangedFeature, target);
+    }
     public void Launch(RangedAttackFeature rangedFeature, Transform target)
     {
+        this.entityTarget = target;
+
+        LaunchProjectile(rangedFeature, target.position);
+    }
+
+    private void LaunchProjectile(RangedAttackFeature rangedFeature, Vector3 currentTargetPosition)
+    {
         this.info = rangedFeature.projectileInfo;
-        this.target = target;
         this.transform.position = rangedFeature.entity.transform.position;
         this.launchPos = transform.position;
-        
-        // Get the location we want this Projectile to aim for.
-        predictedTargetLocation = target.position;
-        Vector3 distance = predictedTargetLocation - transform.position;
+
+        Vector3 distance = currentTargetPosition - transform.position;
 
         // Add some inaccuracy
         float relativeRange = Mathf.InverseLerp(rangedFeature.minRange, rangedFeature.maxRange, distance.magnitude);
@@ -33,16 +45,6 @@ public class Projectile : MonoBehaviour
 
         // Launch the Projectile.
         transform.LookAt(predictedTargetLocation, Vector3.up);
-
-        /*
-        Vector3 targetDir = (predictedTargetLocation - transform.position).normalized;
-
-        // Make the Projectile travel in a parabolic arc.
-        Vector3 arcing = new Vector3(0, Mathf.Sqrt(-Physics.gravity.y * info.arcHeight), 0);
-        //Debug.Log(targetDir.y);
-        RB.useGravity = arcing.y > 0;
-        RB.velocity = targetDir * info.launchVelocity + arcing;
-        */
 
         // Do not hit the launcher itself
         remainingPiercingPower = info.piercingPower;
@@ -54,7 +56,6 @@ public class Projectile : MonoBehaviour
         Destroy(this.gameObject, info.lifeTime);
     }
     
-
     void Update()
     {
         PredictTargetLocation();
@@ -83,10 +84,13 @@ public class Projectile : MonoBehaviour
     // TODO: Properly predict the target's location based on its current velocity
     private void PredictTargetLocation()
     {
-        if (target == null)
+        if (entityTarget == null)
+        {
+            predictedTargetLocation = groundTarget;
             return;
+        }
 
-        predictedTargetLocation = Vector3.MoveTowards(predictedTargetLocation, target.position, info.targetSeekingCoefficient * Time.deltaTime);
+        predictedTargetLocation = Vector3.MoveTowards(predictedTargetLocation, entityTarget.position, info.targetSeekingCoefficient * Time.deltaTime);
     }
 
     /// <summary>
@@ -95,31 +99,36 @@ public class Projectile : MonoBehaviour
     /// <param name="collider">The Collider that the Projectile hit.</param>
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.tag == "Unit" || collider.tag == "Building" || collider.tag == "Entity")
+        switch (collider.tag)
         {
-            Entity hitEntity = collider.GetComponentInParent<Entity>();
-            if (!entitiesPierced.Contains(hitEntity))
-            {
-                // Calculate the damage based
-                // If this Projectile has pierced Entities before, reduce its damage
-                float piercingFactor = remainingPiercingPower / info.piercingPower;
-                piercingFactor = Mathf.Lerp(0.2f, 1, piercingFactor);
-                DamageComposition attStr = info.rangedDamage.MultiplyDamage(piercingFactor);
-                //Debug.Log(attStr.damageComposition[0].APAmount);
+            case "Unit":
+            case "Building":
+            case "Entity":
+                Entity hitEntity = collider.GetComponentInParent<Entity>();
+                if (!entitiesPierced.Contains(hitEntity))
+                {
+                    // Calculate the damage based
+                    // If this Projectile has pierced Entities before, reduce its damage
+                    float piercingFactor = remainingPiercingPower / info.piercingPower;
+                    piercingFactor = Mathf.Lerp(0.2f, 1, piercingFactor);
+                    DamageComposition attStr = info.rangedDamage.MultiplyDamage(piercingFactor);
+                    //Debug.Log(attStr.damageComposition[0].APAmount);
 
-                hitEntity.TakeDamage(attStr);
+                    hitEntity.TakeDamage(attStr);
 
-                // Prevent the Entity from taking damage from the same Projectile twice.
-                entitiesPierced.Add(hitEntity);
+                    // Prevent the Entity from taking damage from the same Projectile twice.
+                    entitiesPierced.Add(hitEntity);
 
-                // See if we pierce through the Entity
-                Pierce(hitEntity);
-            }
-        }
-        else
-        {
-            Debug.Log("Hit something else: " + collider.tag);
-            DestroyProjectile();
+                    // See if we pierce through the Entity
+                    Pierce(hitEntity);
+                }
+                return;
+            case "Ground":
+                DestroyProjectile();
+                return;
+            default:
+                Debug.Log("Hit something else: " + collider.tag);
+                return;
         }
     }
 
@@ -166,7 +175,7 @@ public class Projectile : MonoBehaviour
             }
         }
 
-        Destroy(this.gameObject);
+        Destroy(this.gameObject, 0);
     }
 
     /// <summary>

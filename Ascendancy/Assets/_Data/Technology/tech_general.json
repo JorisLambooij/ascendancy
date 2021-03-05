@@ -41,7 +41,7 @@
             "cost": 500,
             "startTech": false,
             "unitsUnlocked": [
-                "ScriptableObjects/Buildings/Defense/Wooden/Tower/Wooden Tower.asset"
+                "ScriptableObjects/Buildings/Military/Wooden/Tower/Wooden Tower.asset"
             ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
@@ -129,6 +129,24 @@
             "unitsUnlocked": [],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
+        },
+        {
+            "name": "Debug Tech",
+            "id": 9,
+            "iconPath": "1_Metalworking.png",
+            "dependencies": [
+                0
+            ],
+            "cost": 10,
+            "startTech": false,
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Military/Missile Silo/NuclearSilo.asset",
+                "ScriptableObjects/Units/Mortar/Mortar.asset"
+            ],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": [
+                "ScriptableObjects/Resource/Iron.asset"
+            ]
         }
     ]
 }

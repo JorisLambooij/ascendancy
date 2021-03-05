@@ -15,8 +15,12 @@ public class FlightFeature : EntityFeature
         base.UpdateOverride();
     }
 
-    public override bool ClickOrder(RaycastHit hit, bool enqueue = false)
+    public override bool ClickOrder(RaycastHit hit, bool enqueue = false, bool ctrl = false)
     {
+        // ctrl means special order, so no movement
+        if (ctrl)
+            return false;
+
         if (hit.collider == null)
         {
             Debug.LogError("No hit.collider!");

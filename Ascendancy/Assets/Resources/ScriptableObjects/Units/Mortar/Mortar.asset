@@ -17,17 +17,19 @@ MonoBehaviour:
   maxHealth: 100
   armor: 10
   dimensions: {x: 1, y: 1}
-  model: {fileID: -927199367670048503, guid: b7f4013f1c0df954f870aab033a54cfb, type: 3}
+  prefab: {fileID: -927199367670048503, guid: b7f4013f1c0df954f870aab033a54cfb, type: 3}
   thumbnail: {fileID: 21300000, guid: 6feb382f38fc35d45b4d88f2469aca13, type: 3}
   minimapMarker: {fileID: 0}
   mass: 10
-  viewDistance: 0
+  viewDistance: 5
   contextMenuOptions: 0
   construction_Method: 0
   category: {fileID: 0}
   selectionPriority: 2
   buildTime: 0
-  resourceAmount: []
+  resourceAmount:
+  - resource: {fileID: 11400000, guid: a01bdeeab68f31f488705611ebf4a82b, type: 2}
+    amount: 10
   entityFeatures:
   - {fileID: 11400000, guid: cb865466538c3e0448d4c829a78a9c57, type: 2}
   - {fileID: 11400000, guid: 8952a5a88f9264149a98d8c038124b7c, type: 2}

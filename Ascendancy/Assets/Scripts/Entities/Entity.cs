@@ -41,12 +41,12 @@ public class Entity : MonoBehaviour
     /// <summary>
     /// Receive an order
     /// </summary>
-    public virtual void ClickOrder(RaycastHit hit, bool enqueue)
+    public virtual void ClickOrder(RaycastHit hit, bool enqueue = false, bool ctrl = false)
     {
         bool success = false;
         int i = 0;
         while (!success && i < features.Count)
-            success = features[i++].ClickOrder(hit, enqueue);
+            success = features[i++].ClickOrder(hit, enqueue, ctrl);
         
     }
 

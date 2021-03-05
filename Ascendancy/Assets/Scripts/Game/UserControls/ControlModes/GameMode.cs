@@ -285,7 +285,8 @@ public class GameMode : ControlMode
                             continue;
 
                         bool enqueue = Input.GetKey(KeyCode.LeftShift);
-                        es.ParentEntity.ClickOrder(hit, enqueue);
+                        bool ctrl = Input.GetKey(KeyCode.LeftControl);
+                        es.ParentEntity.ClickOrder(hit, enqueue, ctrl);
                         //u.GetComponentInParent<Entity>().ClickOrder(hit, enqueue);
                     }
                 else

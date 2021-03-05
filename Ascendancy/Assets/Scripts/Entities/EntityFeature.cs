@@ -45,7 +45,7 @@ public abstract class EntityFeature : ScriptableObject
     /// <param name="hit"></param>
     /// <param name="enqueue"></param>
     /// <returns>True if order was successfull, false otherwise.</returns>
-    public virtual bool ClickOrder(RaycastHit hit, bool enqueue = false)
+    public virtual bool ClickOrder(RaycastHit hit, bool enqueue = false, bool ctrl = false)
     {
         return true;
     }

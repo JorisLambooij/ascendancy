@@ -26,7 +26,7 @@ public class RangedAttackFeature : EntityFeature
     [Tooltip("Properties of the projectiles")]
     public ProjectileInfo projectileInfo;
 
-    public override bool ClickOrder(RaycastHit hit, bool enqueue = false)
+    public override bool ClickOrder(RaycastHit hit, bool enqueue = false, bool ctrl = false)
     {
         if (hit.collider == null)
         {
@@ -44,8 +44,16 @@ public class RangedAttackFeature : EntityFeature
                 entity.IssueOrder(attackOrder, enqueue);
                 return true;
             case ("Ground"):
-                MoveOrder moveOrder = new MoveOrder(entity, hit.point);
-                entity.IssueOrder(moveOrder, enqueue);
+                /*
+                MovementFeature moveFeature = entity.FindFeature<MovementFeature>();
+                if (moveFeature != null)
+                {
+                    MoveOrder moveOrder = new MoveOrder(entity, hit.point);
+                    entity.IssueOrder(moveOrder, enqueue);
+                    return true;
+                }*/
+                BombardmentOrder bombardmentOrder = new BombardmentOrder(entity, hit.point);
+                entity.IssueOrder(bombardmentOrder, enqueue);
                 return true;
             default:
                 //Unknown tag
@@ -56,5 +64,6 @@ public class RangedAttackFeature : EntityFeature
                 return false;
         }
     }
+
     
 }

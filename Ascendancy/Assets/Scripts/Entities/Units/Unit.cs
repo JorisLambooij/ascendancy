@@ -36,7 +36,7 @@ public class Unit : Entity
     /// </summary>
     /// <param name="hit">The RayCastHit from the Camera.</param>
     /// <param name="enqueue">Whether or not the order should be placed in the queue (true), or replace the current order queue entirely (false).</param>
-    public override void ClickOrder(RaycastHit hit, bool enqueue)
+    public override void ClickOrder(RaycastHit hit, bool enqueue, bool ctrl = false)
     {
         if (hit.collider == null)
         {

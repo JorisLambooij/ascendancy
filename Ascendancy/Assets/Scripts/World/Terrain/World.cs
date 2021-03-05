@@ -375,7 +375,7 @@ public class World : MonoBehaviour
     public Tile GetTile(Vector3 pos)
     {
         Vector2Int v = IntVector(pos);
-        if (v.x < 0 || v.x >= map.GetLength(0) || v.x < 0 ||  v.x >= map.GetLength(1))
+        if (v.x < 0 || v.x >= map.GetLength(0) || v.y < 0 ||  v.y >= map.GetLength(1))
             return null;
 
         return map[v.x, v.y];

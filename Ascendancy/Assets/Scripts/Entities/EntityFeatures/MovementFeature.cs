@@ -23,8 +23,13 @@ public class MovementFeature : EntityFeature
         base.UpdateOverride();
     }
 
-    public override bool ClickOrder(RaycastHit hit, bool enqueue = false)
+    public override bool ClickOrder(RaycastHit hit, bool enqueue = false, bool ctrl = false)
     {
+        Debug.Log("moveclick");
+        // ctrl means special order, so don't move
+        if (ctrl)
+            return false;
+
         if (hit.collider == null)
         {
             Debug.LogError("No hit.collider!");
