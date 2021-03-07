@@ -9,6 +9,10 @@ public class Explosion : MonoBehaviour
     public void Explode(ExplodingProjectileInfo info, Entity launcher = null)
     {
         StartCoroutine(PlayParticles());
+        AudioSource sound = GetComponent<AudioSource>();
+        if (sound != null)
+            sound.Play();
+
         // Get all colliders in explosion radius
         Collider[] collidersInRange = Physics.OverlapSphere(transform.position, info.explosionRadius);
         foreach (Collider coll in collidersInRange)

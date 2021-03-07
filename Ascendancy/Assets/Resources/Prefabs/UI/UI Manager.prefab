@@ -2751,6 +2751,23 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5776272848830993168, guid: aa128f96655c7c64c9228c52197ba8c4,
+        type: 3}
+      propertyPath: content
+      value: 
+      objectReference: {fileID: 7901850186532964455}
+    - target: {fileID: 5776272848830993168, guid: aa128f96655c7c64c9228c52197ba8c4,
+        type: 3}
+      propertyPath: selectionStackPrefab
+      value: 
+      objectReference: {fileID: 7731802091122137966, guid: 234fbaa0ae0af474caf3d831a9fd82d2,
+        type: 3}
+    - target: {fileID: 5776272848830993168, guid: aa128f96655c7c64c9228c52197ba8c4,
+        type: 3}
+      propertyPath: stackElementPrefab
+      value: 
+      objectReference: {fileID: 1692467678661538979, guid: 616c5993e6520e64bb0e1693457140b3,
+        type: 3}
     - target: {fileID: 5801544425231733781, guid: aa128f96655c7c64c9228c52197ba8c4,
         type: 3}
       propertyPath: m_Name
@@ -2857,6 +2874,12 @@ PrefabInstance:
 --- !u!224 &2749486384222273718 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8798642247375240554, guid: aa128f96655c7c64c9228c52197ba8c4,
+    type: 3}
+  m_PrefabInstance: {fileID: 6643704234646453724}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7901850186532964455 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3574221128056108475, guid: aa128f96655c7c64c9228c52197ba8c4,
     type: 3}
   m_PrefabInstance: {fileID: 6643704234646453724}
   m_PrefabAsset: {fileID: 0}

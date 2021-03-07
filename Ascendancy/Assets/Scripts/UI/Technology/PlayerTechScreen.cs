@@ -90,7 +90,6 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
         float totalX = Mathf.Max(totalRectTransform.sizeDelta.x, fieldRectTransform.localPosition.x + fieldRectTransform.sizeDelta.x * fieldRectTransform.localScale.x);
         float totalY = Mathf.Max(totalRectTransform.sizeDelta.y, fieldRectTransform.localPosition.y + fieldRectTransform.sizeDelta.y * fieldRectTransform.localScale.y);
         totalRectTransform.sizeDelta = new Vector2(totalX, totalY);
-        Debug.Log(totalRectTransform.sizeDelta);
     }
 
     /// <summary>

@@ -24,7 +24,7 @@ MonoBehaviour:
   viewDistance: 5
   contextMenuOptions: 0
   construction_Method: 0
-  category: {fileID: 0}
+  category: {fileID: 11400000, guid: 6fe0e98981fc13e4faed488ec8100060, type: 2}
   selectionPriority: 2
   buildTime: 0
   resourceAmount:

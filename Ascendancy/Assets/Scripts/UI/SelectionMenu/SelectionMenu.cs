@@ -20,7 +20,6 @@ public class SelectionMenu : MonoBehaviour, ListSubscriber<EntitySelector>
 
     public void Clear()
     {
-
         stacks.Clear();
         //entities.Clear();
 
