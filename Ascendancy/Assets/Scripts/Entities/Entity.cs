@@ -5,7 +5,7 @@ using System.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Entity : MonoBehaviour
+public class Entity : MonoBehaviour, OccupationType
 {
     public const float UPDATE_FREQ = 3; 
 
@@ -36,6 +36,11 @@ public class Entity : MonoBehaviour
     public float Health
     {
         get { return currentHealth; }
+    }
+
+    public EntityInfo GetEntityInfo()
+    {
+        return entityInfo;
     }
 
     /// <summary>

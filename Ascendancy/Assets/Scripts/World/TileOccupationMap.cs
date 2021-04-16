@@ -48,10 +48,10 @@ public class TileOccupationMap : MonoBehaviour
         return true;
     }
 
-    public void NewOccupation(Vector3 pos, Entity occupyingEntity, TileOccupation.OccupationLayer layer = TileOccupation.OccupationLayer.Building)
+    public void NewOccupation(Vector3 pos, OccupationType occupyingEntity, TileOccupation.OccupationLayer layer = TileOccupation.OccupationLayer.Building)
     {
         Vector2Int v = world.IntVector(pos);
-        Vector2Int dimensions = occupyingEntity.entityInfo.dimensions;
+        Vector2Int dimensions = occupyingEntity.GetEntityInfo().dimensions;
 
         int halfX = dimensions.x / 2;
         int halfY = dimensions.y / 2;
@@ -60,8 +60,24 @@ public class TileOccupationMap : MonoBehaviour
         for (int x = 0; x < dimensions.x; x++)
             for (int y = 0; y < dimensions.y; y++)
             {
-                Debug.Assert(occupationMap[v.x + x - halfX, v.y + y - halfY].occupation[layer] == null, "Tile " + v.x + ":" + v.y + " already Occupied, please check.");
+                Debug.Assert(occupationMap[v.x + x - halfX, v.y + y - halfY].occupation[layer] == null, "Tile " + v.x + ":" + v.y + " already occupied, please check.");
                 occupationMap[v.x + x - halfX, v.y + y - halfY].occupation[layer] = occupyingEntity;
+            }
+    }
+
+    public void ClearOccupation(Vector3 pos, Vector2Int dimensions, TileOccupation.OccupationLayer layer = TileOccupation.OccupationLayer.Building)
+    {
+        Vector2Int v = world.IntVector(pos);
+
+        int halfX = dimensions.x / 2;
+        int halfY = dimensions.y / 2;
+
+        // Mark all tiles as occupied.
+        for (int x = 0; x < dimensions.x; x++)
+            for (int y = 0; y < dimensions.y; y++)
+            {
+                //Debug.Assert(occupationMap[v.x + x - halfX, v.y + y - halfY].occupation[layer] == null, "Tile " + v.x + ":" + v.y + " already Occupied, please check.");
+                occupationMap[v.x + x - halfX, v.y + y - halfY].occupation[layer] = null;
             }
     }
 }

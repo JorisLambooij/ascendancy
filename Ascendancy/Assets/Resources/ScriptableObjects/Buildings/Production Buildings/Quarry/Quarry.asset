@@ -26,7 +26,7 @@ MonoBehaviour:
   construction_Method: 1
   category: {fileID: 11400000, guid: 9bda4db0562bdd54182206091826f134, type: 2}
   selectionPriority: 1
-  buildTime: 0
+  buildTime: 2
   resourceAmount: []
   entityFeatures:
   - {fileID: 11400000, guid: 8a7f364dc84cc26499d61f3351cecee0, type: 2}

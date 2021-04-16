@@ -10,6 +10,7 @@ public class BuildingPlacementMode : ControlMode
     private GameObject ghostBuilding;
     private EntityInfo buildingInfo;
     private float floorClipthrough = 0.01f;
+    private GameObject constructionSitePrefab;
 
     public GameObject preview;
 
@@ -26,6 +27,7 @@ public class BuildingPlacementMode : ControlMode
 
     public BuildingPlacementMode()
     {
+        constructionSitePrefab = Resources.Load("Prefabs/Entities/Construction Site") as GameObject;
         preview = GameObject.Find("Building Preview");
         if (preview == null)
             Debug.Log("BuildingPreview not found!");
@@ -77,12 +79,17 @@ public class BuildingPlacementMode : ControlMode
                     foreach (Resource_Amount res_amount in buildingInfo.resourceAmount)
                         gameManager.GetPlayer.PlayerEconomy.RemoveResourceAmount(res_amount);
 
-                // valid spot, place building
-                GameObject newBuildingGO = Building.CreateInstance(gameManager.GetPlayer, position);
-                Entity b = newBuildingGO.GetComponent<Entity>();
+                // valid spot, place construction site for building
+                ConstructionSite constructionSite = GameObject.Instantiate(constructionSitePrefab, gameManager.GetPlayer.transform).GetComponent<ConstructionSite>();
+                constructionSite.transform.position = position;
+                constructionSite.buildingInfo = buildingInfo;
+
+                // (old) direct building placement
+                //GameObject newBuildingGO = Building.CreateInstance(gameManager.GetPlayer, position);
+                //Entity b = newBuildingGO.GetComponent<Entity>();
 
                 // Mark all the spots that this building occupies as occupied in the world map.
-                gameManager.occupationMap.NewOccupation(position, b, TileOccupation.OccupationLayer.Building);
+                gameManager.occupationMap.NewOccupation(position, constructionSite, TileOccupation.OccupationLayer.Building);
                 return true;
             }
         }
