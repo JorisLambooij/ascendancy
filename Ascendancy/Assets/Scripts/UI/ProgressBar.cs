@@ -16,7 +16,7 @@ public class ProgressBar : MonoBehaviour
     protected SpriteRenderer barBack, barFront;
 
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
         cam = Camera.main;
 
@@ -26,6 +26,7 @@ public class ProgressBar : MonoBehaviour
         barBack.color = backgroundColor;
         barFront.color = fillColor;
     }
+
 
     // Update is called once per frame
     public virtual void Update()

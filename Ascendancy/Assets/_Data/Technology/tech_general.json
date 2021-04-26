@@ -41,7 +41,8 @@
             "cost": 500,
             "startTech": false,
             "unitsUnlocked": [
-                "ScriptableObjects/Buildings/Military/Wooden/Tower/Wooden Tower.asset"
+                "ScriptableObjects/Buildings/Military/Wooden/Tower/Wooden Tower.asset",
+                "ScriptableObjects/Buildings/Military/Wooden/Wall/WoodenWall.asset"
             ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []

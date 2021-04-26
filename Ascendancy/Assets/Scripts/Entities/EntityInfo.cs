@@ -135,7 +135,9 @@ public class EntityInfo : ScriptableObject
                     mat.SetColor("_BaseColor", owner.playerColor);
         }
         //go.GetComponentInChildren<MeshFilter>().mesh = Mesh;
-        go.GetComponent<Entity>().entityInfo = this;
+        Entity entity = go.GetComponent<Entity>();
+        entity.entityInfo = this;
+        entity.modelParent = e_model.transform;
 
         go.name = name;
 

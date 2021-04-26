@@ -10,8 +10,9 @@ public class Healthbar : ProgressBar
     private Entity entity;
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
+        base.Start();
         entity = transform.GetComponentInParent<Entity>();
     }
 

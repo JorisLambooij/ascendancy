@@ -19,6 +19,11 @@ public class TileOccupationMap : MonoBehaviour
                 occupationMap[x, y] = new TileOccupation();
     }
 
+    public OccupationType CheckTile(Vector2Int intPos, TileOccupation.OccupationLayer layer = TileOccupation.OccupationLayer.Building)
+    {
+        return occupationMap[intPos.x, intPos.y].occupation[layer];
+    }
+
     public bool IsTileFree(int tileX, int tileY, TileOccupation.OccupationLayer layer = TileOccupation.OccupationLayer.Building)
     {
         if (tileX < 0 || tileX >= occupationMap.GetLength(0) || tileY < 0 || tileY >= occupationMap.GetLength(1))

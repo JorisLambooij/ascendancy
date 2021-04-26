@@ -14,6 +14,9 @@ public class Entity : MonoBehaviour, OccupationType
     /// </summary>
     public EntityInfo entityInfo;
 
+    [HideInInspector]
+    public Transform modelParent;
+
     protected List<EntityFeature> features;
 
     protected EntityOrderController controller;
