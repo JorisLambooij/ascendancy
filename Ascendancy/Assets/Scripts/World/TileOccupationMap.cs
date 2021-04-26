@@ -21,6 +21,9 @@ public class TileOccupationMap : MonoBehaviour
 
     public OccupationType CheckTile(Vector2Int intPos, TileOccupation.OccupationLayer layer = TileOccupation.OccupationLayer.Building)
     {
+        if (intPos.x < 0 || intPos.x >= occupationMap.GetLength(0) || intPos.y < 0 || intPos.y >= occupationMap.GetLength(1))
+            return null;
+
         return occupationMap[intPos.x, intPos.y].occupation[layer];
     }
 

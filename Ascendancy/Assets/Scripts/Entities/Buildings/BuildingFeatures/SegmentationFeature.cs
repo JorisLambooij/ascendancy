@@ -7,7 +7,8 @@ public class SegmentationFeature : EntityFeature
 {
     Vector2Int worldCoordinates;
 
-    public GameObject segmentPrefab;
+    public GameObject cardinalSegmentPrefab;
+    public GameObject diagonalSegmentPrefab;
     protected Transform segmentsParent;
 
     protected Dictionary<string, Entity> neighbors;
@@ -89,9 +90,10 @@ public class SegmentationFeature : EntityFeature
         }
     }
 
-    public override void Update10Override()
+    public override void UpdateOverride()
     {
-        base.Update10Override();
+        base.UpdateOverride();
+        //IsStraightWall();
     }
 
     public void SetNeighborSegment(string direction, bool activate)
@@ -139,19 +141,71 @@ public class SegmentationFeature : EntityFeature
                 nbSegment.UpdateSegments(limit+1);
             //nbSegment.SetNeighborSegment(compassOpposite[kvp.Key], segments[kvp.Key].activeSelf);
         }
+
+        IsStraightWall();
     }
 
+    protected void IsStraightWall()
+    {
+        string firstDirection = "-";
+        string secondDirection = "-";
+        foreach (KeyValuePair<string, GameObject> kvp in segments)
+        {
+            // a segment is active
+            if (kvp.Value.activeInHierarchy)
+            {
+                if (firstDirection == "-")
+                    // The segment is the first one found that is active.
+                    firstDirection = kvp.Key;
+                else if (secondDirection == "-")
+                    // The segment is the second one found that is active.
+                    secondDirection = kvp.Key;
+                else
+                {
+                    // The segment is the third one found that is active.
+                    entity.modelParent.gameObject.SetActive(true);
+                    return;
+                }
+            }
+        }
+        
+        if (firstDirection == "-" || secondDirection == "-")
+        {
+            // Less than two segment have been found.
+            entity.modelParent.gameObject.SetActive(true);
+            return;
+        }
+
+        // Exactly two segments have been found. Now check if the two are directly opposite.
+        entity.modelParent.gameObject.SetActive(compassOpposite[firstDirection] != secondDirection);
+    }
 
     protected GameObject InitializeSegment(Vector2Int direction)
     {
         float angle = Vector2.SignedAngle(direction, Vector2.left);
 
-        GameObject segment = Instantiate(segmentPrefab, segmentsParent);
+
+        GameObject segment = InstantiateSegmentGO(direction);
+        Debug.Assert(segment != null, "No segment instantiated. Faulty direction: " + direction);
+        
         segment.transform.position = entity.transform.position;
         segment.transform.rotation = Quaternion.Euler(-90, 0, angle);
         segment.SetActive(false);
 
         return segment;
+    }
+
+    protected GameObject InstantiateSegmentGO(Vector2Int direction)
+    {
+        // cardinal direction
+        if (compassCardinal.ContainsValue(direction))
+            return Instantiate(cardinalSegmentPrefab, segmentsParent);
+
+        // ordinal (diagonal) direction
+        if (compassOrdinal.ContainsValue(direction))
+            return Instantiate(diagonalSegmentPrefab, segmentsParent);
+
+        return null;
     }
 
     protected Entity EntityAt(Vector2Int pos)
