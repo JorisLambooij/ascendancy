@@ -9,8 +9,9 @@ public class SegmentationFeature : EntityFeature
 
     public GameObject cardinalSegmentPrefab;
     public GameObject diagonalSegmentPrefab;
-    protected Transform segmentsParent;
+    public List<EntityInfo> allowedConnections;
 
+    protected Transform segmentsParent;
     protected Dictionary<string, Entity> neighbors;
     protected Dictionary<string, GameObject> segments;
 
@@ -21,7 +22,6 @@ public class SegmentationFeature : EntityFeature
         { "S", Vector2Int.down },
         { "W", Vector2Int.left }
     };
-
     protected Dictionary<string, Vector2Int> compassOrdinal = new Dictionary<string, Vector2Int>()
     {
         { "NE", new Vector2Int(1, 1) },
@@ -29,7 +29,6 @@ public class SegmentationFeature : EntityFeature
         { "SW", new Vector2Int(-1, -1) },
         { "NW", new Vector2Int(-1, 1) }
     };
-
     protected Dictionary<string, string> compassOpposite = new Dictionary<string, string>()
     {
         { "N", "S" },
@@ -69,7 +68,6 @@ public class SegmentationFeature : EntityFeature
             neighbors.Add(kvp.Key, null);
             segments.Add(kvp.Key, InitializeSegment(kvp.Value));
         }
-
         UpdateSegments();
     }
 
@@ -90,10 +88,11 @@ public class SegmentationFeature : EntityFeature
         }
     }
 
-    public override void UpdateOverride()
+    public override void LocalUpdate()
     {
-        base.UpdateOverride();
-        //IsStraightWall();
+        base.LocalUpdate();
+        UpdateSegments();
+        Debug.Log("local update received");
     }
 
     public void SetNeighborSegment(string direction, bool activate)
@@ -115,7 +114,7 @@ public class SegmentationFeature : EntityFeature
         foreach (KeyValuePair<string, Entity> kvp in neighbors)
         {
             // see if corresponding neighbor's active state corresponds to this segment's
-            bool nbPresent = kvp.Value != null;
+            bool nbPresent = kvp.Value != null && (kvp.Value.entityInfo == entity.entityInfo || allowedConnections.Contains(kvp.Value.entityInfo));
 
             // if the neighbor is diagonal, check adjacent straight directions first
             if (compassOrdinal.ContainsKey(kvp.Key))
@@ -127,24 +126,28 @@ public class SegmentationFeature : EntityFeature
                     nbPresent = false;
             }
 
+            // Enable/disable the segment, depending on the neighbor
             segments[kvp.Key].SetActive(nbPresent);
 
-            if (!nbPresent)
+            if (kvp.Value == null)
                 continue;
 
+            // Try to update the neighbor, if it exists
             SegmentationFeature nbSegment = kvp.Value.FindFeature<SegmentationFeature>();
 
-            Debug.Log("Difference");
-            Debug.Assert(nbSegment != null, "No SegmentationFeature on adjacent Entity. This Error should be impossible.");
+            if (nbSegment == null)
+                continue;
 
-            if (limit < 1)
+            if (limit < 0)
                 nbSegment.UpdateSegments(limit+1);
-            //nbSegment.SetNeighborSegment(compassOpposite[kvp.Key], segments[kvp.Key].activeSelf);
         }
 
         IsStraightWall();
     }
 
+    /// <summary>
+    /// Disables the core segment if this wall is part of a straight line.
+    /// </summary>
     protected void IsStraightWall()
     {
         string firstDirection = "-";

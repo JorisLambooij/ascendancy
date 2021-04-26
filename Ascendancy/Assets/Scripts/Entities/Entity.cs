@@ -46,6 +46,13 @@ public class Entity : MonoBehaviour, OccupationType
         return entityInfo;
     }
 
+    public void LocalUpdate()
+    {
+        if (features != null)
+            foreach (EntityFeature feature in features)
+                feature.LocalUpdate();
+    }
+
     /// <summary>
     /// Receive an order
     /// </summary>
@@ -169,6 +176,9 @@ public class Entity : MonoBehaviour, OccupationType
 
     public T FindFeature<T>() where T : EntityFeature
     {
+        if (features == null)
+            return default(T);
+
         foreach(EntityFeature feature in features)
         {
             if (feature.GetType() == typeof(T))

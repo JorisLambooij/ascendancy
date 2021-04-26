@@ -28,6 +28,11 @@ public abstract class EntityFeature : ScriptableObject
 
     }
 
+    public virtual void LocalUpdate()
+    {
+
+    }
+
     public virtual void Update10Override()
     {
 

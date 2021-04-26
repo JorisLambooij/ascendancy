@@ -8,10 +8,12 @@ public class ConstructionSite : MonoBehaviour, OccupationType
     private ProgressBar progressbar;
 
     float constructionProgress;
+    bool failsafe;
 
     void Start()
     {
         progressbar = GetComponentInChildren<ProgressBar>();
+        failsafe = false;
     }
 
     public EntityInfo GetEntityInfo()
@@ -27,9 +29,10 @@ public class ConstructionSite : MonoBehaviour, OccupationType
         float percentage = Mathf.Clamp01(constructionProgress / buildingInfo.buildTime);
         progressbar.percentage = percentage;
 
-        if (constructionProgress >= buildingInfo.buildTime)
+        if (constructionProgress >= buildingInfo.buildTime && !failsafe)
         {
             Debug.Log("Construction Completed!!");
+            failsafe = true;
 
             GameObject newBuildingGO = buildingInfo.CreateInstance(GameManager.Instance.GetPlayer, transform.position);
             Entity b = newBuildingGO.GetComponent<Entity>();

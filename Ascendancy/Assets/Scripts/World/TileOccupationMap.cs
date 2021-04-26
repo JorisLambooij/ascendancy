@@ -21,7 +21,7 @@ public class TileOccupationMap : MonoBehaviour
 
     public OccupationType CheckTile(Vector2Int intPos, TileOccupation.OccupationLayer layer = TileOccupation.OccupationLayer.Building)
     {
-        if (intPos.x < 0 || intPos.x >= occupationMap.GetLength(0) || intPos.y < 0 || intPos.y >= occupationMap.GetLength(1))
+        if (!InBounds(intPos))
             return null;
 
         return occupationMap[intPos.x, intPos.y].occupation[layer];
@@ -29,10 +29,9 @@ public class TileOccupationMap : MonoBehaviour
 
     public bool IsTileFree(int tileX, int tileY, TileOccupation.OccupationLayer layer = TileOccupation.OccupationLayer.Building)
     {
-        if (tileX < 0 || tileX >= occupationMap.GetLength(0) || tileY < 0 || tileY >= occupationMap.GetLength(1))
+        if (!InBounds(tileX, tileY))
             return false;
-        //Debug.Assert(tileX >= 0 && tileX < occupationMap.GetLength(0), "Out of bounds of TileOccupationMap. X: " + tileX);
-        //Debug.Assert(tileY >= 0 && tileY < occupationMap.GetLength(1), "Out of bounds of TileOccupationMap. Y: " + tileY);
+
         return occupationMap[tileX, tileY].occupation[layer] == null;
     }
     
@@ -56,6 +55,12 @@ public class TileOccupationMap : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Places an occupying object at the specified position.
+    /// </summary>
+    /// <param name="pos">The root position of the object.</param>
+    /// <param name="occupyingEntity">Can be either an Entity or a Construction Site (for now).</param>
+    /// <param name="layer">Which Layer are we operating on?</param>
     public void NewOccupation(Vector3 pos, OccupationType occupyingEntity, TileOccupation.OccupationLayer layer = TileOccupation.OccupationLayer.Building)
     {
         Vector2Int v = world.IntVector(pos);
@@ -64,13 +69,45 @@ public class TileOccupationMap : MonoBehaviour
         int halfX = dimensions.x / 2;
         int halfY = dimensions.y / 2;
 
+        // TODO: check that all tiles are within the world bounds (not < 0, etc.)
+        Debug.Assert(v.x - halfX >= 0, "X position too small!");
+        Debug.Assert(v.y - halfY >= 0, "Y position too small!");
+        Debug.Assert(v.x + halfX >= 0, "X position too big!");
+        Debug.Assert(v.y + halfY >= 0, "Y position too big!");
+
         // Mark all tiles as occupied.
         for (int x = 0; x < dimensions.x; x++)
             for (int y = 0; y < dimensions.y; y++)
             {
                 Debug.Assert(occupationMap[v.x + x - halfX, v.y + y - halfY].occupation[layer] == null, "Tile " + v.x + ":" + v.y + " already occupied, please check.");
+
                 occupationMap[v.x + x - halfX, v.y + y - halfY].occupation[layer] = occupyingEntity;
             }
+
+        SendUpdates(v);
+    }
+
+    /// <summary>
+    /// Sends LocalUpdates() to occupying Entities adjecent to the specified position.
+    /// </summary>
+    /// <param name="pos">The origin of the Update signal.</param>
+    /// <param name="layer">Which Layer to send the update to</param>
+    protected void SendUpdates(Vector2Int pos, TileOccupation.OccupationLayer layer = TileOccupation.OccupationLayer.Building)
+    {
+        for(int x = -1; x <= 1; x++)
+            for(int y = -1; y <= 1; y++)
+            {
+                Vector2Int target = pos + new Vector2Int(x, y);
+                if (InBounds(target))
+                {
+                    Entity e = occupationMap[target.x, target.y].occupation[layer] as Entity;
+                    if (e == null)
+                        continue;
+
+                    e.LocalUpdate();
+                }
+            }
+
     }
 
     public void ClearOccupation(Vector3 pos, Vector2Int dimensions, TileOccupation.OccupationLayer layer = TileOccupation.OccupationLayer.Building)
@@ -87,5 +124,15 @@ public class TileOccupationMap : MonoBehaviour
                 //Debug.Assert(occupationMap[v.x + x - halfX, v.y + y - halfY].occupation[layer] == null, "Tile " + v.x + ":" + v.y + " already Occupied, please check.");
                 occupationMap[v.x + x - halfX, v.y + y - halfY].occupation[layer] = null;
             }
+    }
+
+    protected bool InBounds(Vector2Int v)
+    {
+        return InBounds(v.x, v.y);
+    }
+
+    protected bool InBounds(int x, int y)
+    {
+        return x >= 0 && x < occupationMap.GetLength(0) && y >= 0 && y < occupationMap.GetLength(1);
     }
 }
