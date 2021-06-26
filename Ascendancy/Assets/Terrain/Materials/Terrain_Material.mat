@@ -116,10 +116,11 @@ Material:
     - Vector1_46842222: 0.123
     - Vector1_ACCEAFF0: 0.749
     - Vector1_B77E4A80: 0.64
+    - Vector1_C19CD29D: 0.2
     - Vector1_D6C5C416: -0.775
     - Vector1_E5DB5A6F: 0.974
     - Vector1_F0A85FEC: 0.08
-    - Vector1_F552CD6: 0.01
+    - Vector1_F552CD6: -3
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
