@@ -156,17 +156,21 @@ public class GameMode : ControlMode
                     DeselectAll();
 
                 int layerMask = 1 << LayerMask.NameToLayer("Entities");
-                if (Physics.Raycast(ray, out hit, 100, layerMask) && (hit.collider.tag == "Unit" || hit.collider.tag == "Building"))
+                if (Physics.Raycast(ray, out hit, 100, layerMask))
                 {
-                    Entity e = hit.transform.GetComponentInParent<Entity>();
-                    EntitySelector es = e.GetComponentInChildren<EntitySelector>();
-
-                    if (e.Owner.playerNo == gameManager.playerNo)
+                    if((hit.collider.transform.parent.tag == "Unit" || hit.collider.transform.parent.tag == "Building"))
                     {
-                        es.Selected = true;
-                        selectedEntities.Add(es);
+                        Entity e = hit.transform.GetComponentInParent<Entity>();
+                        EntitySelector es = e.GetComponentInChildren<EntitySelector>();
+
+                        if (e.Owner.playerNo == gameManager.playerNo)
+                        {
+                            es.Selected = true;
+                            selectedEntities.Add(es);
+                        }
                     }
                 }
+                    
             }
         }
     }
@@ -221,7 +225,8 @@ public class GameMode : ControlMode
                 foreach (EntitySelector e in selectedEntities.AsList)
                     selectedUnits.Add(e.ParentEntity);
 
-                Formation formation = new FormationLine(dragStartPosM2, dragStopPosM2);
+                Formation formation = new FormationSquare(dragStartPosM2, dragStopPosM2);
+                //Formation formation = new FormationLine(dragStartPosM2, dragStopPosM2);
                 formation.AssignPositions(selectedUnits);
 
                 foreach (Entity u in selectedUnits)

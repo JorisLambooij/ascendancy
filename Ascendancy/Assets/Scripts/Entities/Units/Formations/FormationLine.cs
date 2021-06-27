@@ -25,35 +25,11 @@ public class FormationLine : Formation
         Vector3 dragLineDirection = (startPosition - endPosition);
 
         // orientation of the line (perpendicular to the line)
-        Vector3 orientation = Vector3.Cross(dragLineDirection, Vector3.up).normalized;
+        Vector3 orientation = Vector3.Cross(Vector3.up, dragLineDirection).normalized;
 
         // list of the units, sorted along the line
-        SortedDictionary<float, Entity> unitsSorted = new SortedDictionary<float, Entity>();
+        SortedDictionary<float, Entity> unitsSorted = SortUnitsOnLine(units, startPosition, dragLineDirection);
 
-        // sort units, then issue commands according to units' relative position towards the goal line
-        foreach (Entity u in units)
-        {
-            // Entity might have been destroyed, so check if it still exists
-            if (u == null)
-                continue;
-
-            // Project the Unit's position onto the drag line
-            Vector3 startToUnitPos = u.transform.position - startPosition;
-            Vector3 projectedVector = Vector3.Project(startToUnitPos, dragLineDirection);
-            float projectedDistance = projectedVector.magnitude;
-
-            // if, by some chance, two units happen to have the same projected dictance, just move the second one slightly further down.
-            while (unitsSorted.ContainsKey(projectedDistance))
-                projectedDistance += 0.0001f;
-
-            // sort by length of the projected vector
-            unitsSorted.Add(projectedDistance, u);
-        }
-
-        // Make sure nothing has gone horribly wrong (no units missing or counted twice)
-        // This will throw an error when a Unit is destroyed while it was selected.
-        // TODO: Properly remove these destroyed Units from the list
-        Debug.Assert(unitsSorted.Count == count, ".Count mismatch:" + "UnitsSorted.Count: " + unitsSorted.Count + "; SelectedUnits.Count: " + count);
 
         // assign a position to each unit
         int i = 0;

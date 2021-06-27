@@ -16,6 +16,9 @@ public class EntitySelector : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
+        EntityInfo info = transform.parent.GetComponent<Entity>().entityInfo;
+        transform.localScale = new Vector3(info.dimensions.x * 0.75f, info.dimensions.y * 0.75f, 1);
+
         Selected = false;
     }
 
