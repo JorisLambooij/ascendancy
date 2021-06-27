@@ -16,7 +16,7 @@ public class RecruitmentMenu : MonoBehaviour, ListSubscriber<EntitySelector>
         pool = GetComponent<GOPool>();
         // Find the Gama Manager and subscribe to the list of selected Entities.
         GameManager gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
-        (gameManager.controlModeDict[ControlModeEnum.gameMode] as GameMode).selectedUnits.Subscribe(this);
+        (gameManager.controlModeDict[ControlModeEnum.gameMode] as GameMode).selectedEntities.Subscribe(this);
         categories = new List<RecruitmentMenuCategory>();
     }
 

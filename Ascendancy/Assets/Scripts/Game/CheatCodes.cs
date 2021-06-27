@@ -33,7 +33,15 @@ public class CheatCodes : MonoBehaviour
             
             if (Input.GetKeyDown(KeyCode.R))
                 InfiniteResources();
+
+            if (Input.GetKeyDown(KeyCode.F))
+                UncoverFogOfWar();
         }
+    }
+
+    private void UncoverFogOfWar()
+    {
+        GameObject.Find("FOW Camera").GetComponent<Camera>().backgroundColor = Color.white;
     }
 
     private void InfiniteResources()

@@ -10,7 +10,6 @@ public class ContextMenu : MonoBehaviour, ListSubscriber<EntitySelector>
     public void NewElementCallback(EntitySelector updatedValue)
     {
         //throw new System.NotImplementedException();
-        Debug.Log("New element");
     }
 
     public void NewListCallback(List<EntitySelector> newList)
@@ -33,7 +32,7 @@ public class ContextMenu : MonoBehaviour, ListSubscriber<EntitySelector>
     // Start is called before the first frame update
     public void Start()
     {
-        (GameManager.Instance.controlModeDict[ControlModeEnum.gameMode] as GameMode).selectedUnits.Subscribe(this);
+        (GameManager.Instance.controlModeDict[ControlModeEnum.gameMode] as GameMode).selectedEntities.Subscribe(this);
         GetComponentInChildren<Button>().onClick.AddListener(OnClick);
         entities = new List<Entity>();
     }

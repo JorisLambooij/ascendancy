@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class GameMode : ControlMode
 {
-    public SubscribableList<EntitySelector> selectedUnits { get; protected set; }
+    public SubscribableList<EntitySelector> selectedEntities { get; protected set; }
 
     private Vector3 dragStartPosM1, dragStopPosM1;
     private bool startDragM1, draggingM1;
@@ -29,7 +29,7 @@ public class GameMode : ControlMode
 
     public GameMode() : base()
     {
-        selectedUnits = new SubscribableList<EntitySelector>();
+        selectedEntities = new SubscribableList<EntitySelector>();
         cam = gameManager.camScript.transform.GetComponent<Camera>();
         selectionBox = GameObject.Find("SelectionRect").GetComponent<Image>();
         selectionBox.enabled = false;
@@ -130,7 +130,7 @@ public class GameMode : ControlMode
                 foreach (EntitySelector e in player.GetComponentsInChildren<EntitySelector>())
                     if (PositionInSelection(e.transform.position))
                     {
-                        selectedUnits.Add(e);
+                        selectedEntities.Add(e);
 
                         Entity entity = e.GetComponentInParent<Entity>();
 
@@ -139,10 +139,10 @@ public class GameMode : ControlMode
                     }
 
                 // Keep only those Entities with the highest Priority
-                List<EntitySelector> filteredList = selectedUnits.AsList.Where(e => e.GetComponentInParent<Entity>().entityInfo.selectionPriority == highestPriority).ToList();
+                List<EntitySelector> filteredList = selectedEntities.AsList.Where(e => e.GetComponentInParent<Entity>().entityInfo.selectionPriority == highestPriority).ToList();
                 foreach (EntitySelector e in filteredList)
                     e.Selected = true;
-                selectedUnits.FromList(filteredList);
+                selectedEntities.FromList(filteredList);
             }
             else if (!EventSystem.current.IsPointerOverGameObject())
             {
@@ -164,7 +164,7 @@ public class GameMode : ControlMode
                     if (e.Owner.playerNo == gameManager.playerNo)
                     {
                         es.Selected = true;
-                        selectedUnits.Add(es);
+                        selectedEntities.Add(es);
                     }
                 }
             }
@@ -176,7 +176,7 @@ public class GameMode : ControlMode
     /// </summary>
     private void Mouse2()
     {
-        if (selectedUnits.Count > 0)
+        if (selectedEntities.Count > 0)
             Mouse2_UnitOrder();
         else
             Mouse2_NoUnitsSelected();
@@ -214,61 +214,22 @@ public class GameMode : ControlMode
             {
                 draggingM2 = false;
 
-                int count = selectedUnits.Count;
-                Vector3 dragLineDirection = (dragStopPosM2 - dragStartPosM2);
-                Vector3 orientation = Vector3.Cross(dragLineDirection, Vector3.up).normalized;
+                // right now the formations are Unit-exclusive
+                // TODO: handle Buildings
+                List<Entity> selectedUnits = new List<Entity>();
 
-                SortedDictionary<float, Entity> unitsSorted = new SortedDictionary<float, Entity>();
+                foreach (EntitySelector e in selectedEntities.AsList)
+                    selectedUnits.Add(e.ParentEntity);
 
-                // sort units, then issue commands according to units' relative position towards the goal line
-                foreach (EntitySelector es in selectedUnits.AsList)
+                Formation formation = new FormationLine(dragStartPosM2, dragStopPosM2);
+                formation.AssignPositions(selectedUnits);
+
+                foreach (Entity u in selectedUnits)
                 {
-                    // Entity might have been destroyed, so check if it still exists
-                    if (es == null)
-                        continue;
-                    // EntitySelector might have a faulty reference, so double-check this as well
-                    Entity e = es.ParentEntity as Entity;
-                    if (e == null)
-                        continue;
-
-                    // Project the Unit's position onto the drag line
-                    Vector3 startToUnitPos = e.transform.position - dragStartPosM2;
-                    Vector3 projectedVector = Vector3.Project(startToUnitPos, dragLineDirection);
-                    float projectedDistance = projectedVector.magnitude;
-
-                    // if, by some chance, two units happen to have the same projected dictance, just move the second one slightly further down.
-                    while (unitsSorted.ContainsKey(projectedDistance))
-                        projectedDistance += 0.0001f;
-                    // sort by length of the projected vector
-                    unitsSorted.Add(projectedDistance, e);
-                }
-
-
-
-                // Make sure nothing has gone horribly wrong (no units missing or counted twice)
-                // This will throw an error when a Unit is destroyed while it was selected.
-                // TODO: Properly remove these destroyed Units from the list
-                Debug.Assert(unitsSorted.Count == count);
-                if (unitsSorted.Count != count)
-                    Debug.Log("UnitsSorted.Count: " + unitsSorted.Count + "; SelectedUnits.Count: " + count);
-
-                int i = 0;
-                foreach (KeyValuePair<float, Entity> kvp in unitsSorted)
-                {
-                    // Determine the lerped position on the drag line
-                    float lerpFactor;
-                    if (count > 1)
-                        lerpFactor = (float)i / (count - 1);
-                    else
-                        lerpFactor = 0.5f;
-                    i++;
-                    Vector3 lerpedPos = Vector3.Lerp(dragStartPosM2, dragStopPosM2, lerpFactor);
-
                     // Issue an order to the nearest unit to move there
-                    Entity nearestUnit = kvp.Value;
                     bool enqueue = Input.GetKey(KeyCode.LeftShift);
-                    nearestUnit.IssueOrder(new MoveOrder(nearestUnit, lerpedPos), enqueue);
-                    nearestUnit.IssueOrder(new RotateOrder(nearestUnit, orientation), true);
+                    u.IssueOrder(new MoveOrder(u, formation.assignedPositions[u]), enqueue);
+                    u.IssueOrder(new RotateOrder(u, formation.assignedOrientations[u]), true);
                 }
             }
 
@@ -278,7 +239,7 @@ public class GameMode : ControlMode
                 RaycastHit hit = MouseRaycast();
 
                 if (hit.collider != null)
-                    foreach (EntitySelector es in selectedUnits.AsList)
+                    foreach (EntitySelector es in selectedEntities.AsList)
                     {
                         // Entity might have been destroyed, so check if it still exists
                         if (es == null)
@@ -359,10 +320,10 @@ public class GameMode : ControlMode
 
     private void DeselectAll()
     {
-        foreach (EntitySelector unitSelector in selectedUnits.AsList)
+        foreach (EntitySelector unitSelector in selectedEntities.AsList)
             unitSelector.Selected = false;
 
-        selectedUnits.Clear();
+        selectedEntities.Clear();
     }
 
     /// <summary>

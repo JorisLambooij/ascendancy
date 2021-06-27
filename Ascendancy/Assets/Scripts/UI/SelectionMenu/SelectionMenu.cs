@@ -15,7 +15,7 @@ public class SelectionMenu : MonoBehaviour, ListSubscriber<EntitySelector>
     public void NewElementCallback(EntitySelector updatedValue)
     {
         //throw new System.NotImplementedException();
-        Debug.Log("New element");
+        //Debug.Log("New element");
     }
 
     public void Clear()
@@ -124,7 +124,7 @@ public class SelectionMenu : MonoBehaviour, ListSubscriber<EntitySelector>
 
     public void Start()
     {
-        (GameManager.Instance.controlModeDict[ControlModeEnum.gameMode] as GameMode).selectedUnits.Subscribe(this);
+        (GameManager.Instance.controlModeDict[ControlModeEnum.gameMode] as GameMode).selectedEntities.Subscribe(this);
         //entities = new List<Entity>();
         stacks = new List<List<Entity>>();
     }
