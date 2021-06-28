@@ -7,6 +7,8 @@ namespace Mirror
 {
     public class MPMenu_NetworkRoomManager : NetworkRoomManager
     {
+        private Dictionary<int, Player> playerDict;
+
         public override void OnRoomServerPlayersReady()
         {
             Debug.Log("Players Ready!");
@@ -19,8 +21,13 @@ namespace Mirror
             base.OnServerSceneChanged(sceneName);
         }
 
+        public void InitPlayerDict(Dictionary<int, Player> dictNew)
+        {
+            playerDict = dictNew;
+        }
+
         public override void OnServerDisconnect(NetworkConnection conn)
-        {       
+        {
             switch (SceneManager.GetActiveScene().name)
             {
                 case "Lobby":

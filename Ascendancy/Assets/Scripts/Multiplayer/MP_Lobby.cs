@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MP_Lobby : MonoBehaviour
+public class MP_Lobby : NetworkBehaviour
 {
     public int maxPlayers;
     public List<Color> playerColors;
@@ -55,7 +55,7 @@ public class MP_Lobby : MonoBehaviour
 
         Button buttonReadyStart = GameObject.Find("StartGameButton").GetComponent<Button>();
 
-        MPMenu_NetworkRoomManager roomMngr = GameObject.Find("NetworkManager").GetComponent<MPMenu_NetworkRoomManager>();
+        roomMngr = GameObject.Find("NetworkManager").GetComponent<MPMenu_NetworkRoomManager>();
         if (roomMngr.mode == NetworkManagerMode.Host)
         {
             isServer = true;
@@ -70,7 +70,7 @@ public class MP_Lobby : MonoBehaviour
         Debug.Log("I am " + roomMngr.mode.ToString());
 
 
-
+        roomMngr.InitPlayerDict(playerDict);
         Player.OnMessage += OnPlayerMessage;
     }
 
@@ -373,5 +373,43 @@ public class MP_Lobby : MonoBehaviour
     {
         Debug.Log("Trying to kick " + player.playerName);
         player.GetComponent<NetworkRoomPlayer>().connectionToClient.Disconnect();
+    }
+
+    [Command]
+    public void CmdSpawnStartUnit(Vector2Int startPos, int playernumber)
+    {
+        //Load ESV
+        EntityInfo esv = Resources.Load("ScriptableObjects/Buildings/Command/ESV") as EntityInfo;
+
+        string ownerName = playerDict[playernumber].playerName;
+
+        if (esv != null)
+            Debug.Log("Successfully loaded " + esv.name + " for player " + ownerName + " (Player " + playernumber + ")");
+        else
+            Debug.LogError("Could not load starting unit for player " + ownerName + " (Player " + playernumber + ")");
+
+
+        float tileSize = (World.Instance as World).tileSize;
+
+        Vector2 position = new Vector3(startPos.x * tileSize + (tileSize / 2), startPos.y * tileSize + (tileSize / 2));
+
+        float height = (World.Instance as World).GetHeight(position);
+
+        Debug.Log(position);
+
+        GameObject newUnit = esv.CreateInstance(playerDict[playernumber], new Vector3(position.x, height, position.y));
+
+        //spawn the actual GO
+
+        NetworkServer.Spawn(newUnit, playerDict[playernumber].connectionToClient);
+
+    }
+
+    public void DEVSpawnStartUnitsForAll()
+    {
+        foreach (Player player in playerDict.Values)
+        {
+            CmdSpawnStartUnit(new Vector2Int(20, 20), player.playerNo);
+        }
     }
 }

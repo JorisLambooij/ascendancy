@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -156,7 +156,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.000091552734}
+  m_AnchoredPosition: {x: 0, y: 0.000030517578}
   m_SizeDelta: {x: 1170, y: 820}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &15843542
@@ -402,7 +402,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 470103137}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.5000002
+  m_Size: 1
   m_NumberOfSteps: 1
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1719,7 +1719,10 @@ MonoBehaviour:
     type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 2021816003209581207, guid: 035922f511e8d284ea8edbbca2ff3b05, type: 3}
+  - {fileID: 7551204154752481065, guid: 204dd92974604ec4bb53de31b1bfaa9b, type: 3}
+  - {fileID: 266166608861487646, guid: 291f580cc8a2ee94e89cc623ca0985f0, type: 3}
   showRoomGUI: 0
   minPlayers: 1
   roomPlayerPrefab: {fileID: 5409059187741451284, guid: 408072e69fc331e498cb2b7117bf2044,

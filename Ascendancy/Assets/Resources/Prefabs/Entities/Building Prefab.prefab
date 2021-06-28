@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2021816003209581206}
   - component: {fileID: -8187520399354841546}
   - component: {fileID: -6713137878091992769}
+  - component: {fileID: 8586784857552336928}
   m_Layer: 12
   m_Name: Building Prefab
   m_TagString: Building
@@ -63,6 +64,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd01b7e6b7014d742836575fa594bb27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8586784857552336928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2021816003209581207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 
 --- !u!1 &5265040817593841182
 GameObject:
   m_ObjectHideFlags: 0

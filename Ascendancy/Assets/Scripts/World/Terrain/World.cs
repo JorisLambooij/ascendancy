@@ -1,13 +1,8 @@
 ﻿//there is only ever one of this script, and it holds ALL the world data. Actuall meshes are drawn by chunks, of which there could be several
 
-using UnityEngine;
-using UnityEngine.AI;
-using NavMeshBuilder = UnityEngine.AI.NavMeshBuilder;
-using System.Drawing;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Tilemaps;
 using System.Linq;
+using UnityEngine;
 
 public class World : MonoBehaviour
 {
@@ -102,11 +97,11 @@ public class World : MonoBehaviour
         sw.Stop();
         Debug.Log("CreateWorld() finished in " + sw.ElapsedMilliseconds + " ms.");
 
-        // TODO: Move the spawning process to a more appropriate script
-        foreach(Player player in (GameManager.Instance as GameManager).GetPlayers)
-        {
-            player.SpawnStartUnit(new Vector2Int(Random.Range(20, worldSize-20), Random.Range(20, worldSize-20)));
-        }
+        //// TODO: Move the spawning process to a more appropriate script
+        //foreach(Player player in (GameManager.Instance as GameManager).GetPlayers)
+        //{
+        //    player.SpawnStartUnit(new Vector2Int(Random.Range(20, worldSize-20), Random.Range(20, worldSize-20)));
+        //}
     }
 
     public void CreateWorld()
