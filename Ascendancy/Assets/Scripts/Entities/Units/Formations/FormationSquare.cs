@@ -57,12 +57,13 @@ public class FormationSquare : Formation
         {
             SortedDictionary<float, Entity> rowSorted = SortUnitsOnLine(row, center, dragLineDirection);
 
-            Vector3 startPosition = center - size * orientation * y - size * dragLineDirection;
-            Vector3 endPosition = center - size * orientation * y + size * dragLineDirection;
+            Vector3 startPosition = center - size * orientation * y + size * dragLineDirection;
+            Vector3 endPosition = center - size * orientation * y - size * dragLineDirection;
             y++;
             int x = 0;
-            foreach (Entity e in row)
+            foreach (KeyValuePair<float, Entity> kvp in rowSorted)
             {
+
                 // Determine the lerped position within the row
                 float lerpFactor;
                 if (row.Count > 1)
@@ -74,8 +75,8 @@ public class FormationSquare : Formation
 
                 Vector3 lerpedPos = Vector3.Lerp(startPosition, endPosition, lerpFactor);
 
-                assignedPositions.Add(e, lerpedPos);
-                assignedOrientations.Add(e, orientation);
+                assignedPositions.Add(kvp.Value, lerpedPos);
+                assignedOrientations.Add(kvp.Value, orientation);
             }
         }
 

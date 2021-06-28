@@ -23,12 +23,15 @@ public abstract class Formation
 
             // Project the Unit's position onto the drag line
             Vector3 startToUnitPos = referencePoint - u.transform.position;
-            Vector3 projectedVector = Vector3.Project(startToUnitPos, direction);
-            float projectedDistance = projectedVector.magnitude;
+            Vector3 projectedVector = Vector3.Project(startToUnitPos, direction.normalized);
+            float projectedDistance = Vector3.Dot(projectedVector, direction);
 
-            // if, by some chance, two units happen to have the same projected dictance, just move the second one slightly further down.
+            // if, by chance, two units happen to have the same projected dictance, just move the second one slightly further down.
             while (unitsSorted.ContainsKey(projectedDistance))
+            {
                 projectedDistance += 0.0001f;
+                Debug.Log("Double distance");
+            }
 
             // sort by length of the projected vector
             unitsSorted.Add(projectedDistance, u);
