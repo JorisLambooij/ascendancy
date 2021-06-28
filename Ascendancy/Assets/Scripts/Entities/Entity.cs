@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.AI;
 
 public class Entity : MonoBehaviour, OccupationType
 {
@@ -187,6 +188,15 @@ public class Entity : MonoBehaviour, OccupationType
         return default(T);
     }
 
+    public void ForceMove(Vector3 position)
+    {
+        NavMeshAgent agent = GetComponent<NavMeshAgent>();
+        if (agent != null)
+            agent.enabled = false;
+        transform.position = position;
+        if (agent != null)
+            agent.enabled = true;
+    }
 
     /// <summary>
     /// Relay an order to this Entity.

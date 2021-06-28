@@ -13,18 +13,21 @@ public class CameraScript : MonoBehaviour
     public float zoomSpeed;
     public float targetHeight;
 
-
-    private Camera cam;
+    [HideInInspector]
+    public Camera cam;
     private Transform center;
     private float distanceFromCenter;
     private float lastTileHeight;
 
     [Range(5, 120)]
     public float currentZoom;
-    
+
+    public static CameraScript instance;
+
     void Start()
     {
         cam = GetComponent<Camera>();
+        instance = this;
         center = transform.parent;
         distanceFromCenter = (transform.position - center.position).magnitude;
     }
@@ -33,6 +36,21 @@ public class CameraScript : MonoBehaviour
     {
         WASD();
         ZoomLevel();
+    }
+
+    public void MoveCam(Vector3 pos, bool lerp = true)
+    {
+        Tile t = World.Instance.GetTile(pos);
+        if (t != null)
+        {
+            lastTileHeight = t.height;
+        }
+        float tileHeight = lastTileHeight;
+        float desiredY = (targetHeight + tileHeight) * 0.5f;
+
+        pos.y = Mathf.Lerp(pos.y, desiredY, 10 * Time.deltaTime);
+
+        center.position = pos;
     }
 
     private void ZoomLevel()
@@ -60,17 +78,7 @@ public class CameraScript : MonoBehaviour
         Vector3 movement = Vector3.ProjectOnPlane(transform.right, Vector3.up) * horizontal + Vector3.ProjectOnPlane(transform.forward, Vector3.up) * vertical;
         pos += movement * Time.deltaTime * cameraSpeed;
 
-        Tile t = World.Instance.GetTile(pos);
-        if (t != null)
-        {
-            lastTileHeight = t.height;
-        }
-        float tileHeight = lastTileHeight;
-        float desiredY = (targetHeight + tileHeight) * 0.5f;
-
-        pos.y = Mathf.Lerp(pos.y, desiredY, 10 * Time.deltaTime);
-
-        center.position = pos;
+        MoveCam(pos);
 
         //Vector3 r = transform.rotation.eulerAngles;
         //r.x += rotational * Time.deltaTime * cameraRotationSpeed;

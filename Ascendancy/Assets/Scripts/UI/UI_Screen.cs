@@ -7,6 +7,13 @@ public class UI_Screen : MonoBehaviour
 {
     public UnityEvent Initialize;
 
+    public static Canvas canvas;
+
+    private void Start()
+    {
+        canvas = GetComponent<Canvas>();
+    }
+
     /// <summary>
     /// Toggle the state of this ui element.
     /// </summary>

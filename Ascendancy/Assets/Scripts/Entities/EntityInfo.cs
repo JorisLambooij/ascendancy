@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// Is this a unit that needs to be recruited, or a building that can be built directly?
@@ -119,7 +120,6 @@ public class EntityInfo : ScriptableObject
         }
 
         GameObject go = Instantiate(entityPrefab, targetParent);
-        go.transform.position = position;
 
         if (prefab == null)
         {
@@ -138,6 +138,7 @@ public class EntityInfo : ScriptableObject
         Entity entity = go.GetComponent<Entity>();
         entity.entityInfo = this;
         entity.modelParent = e_model.transform;
+        entity.ForceMove(position);
 
         go.name = name;
 

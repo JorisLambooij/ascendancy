@@ -9,7 +9,7 @@ public class FOW_Revealer : MonoBehaviour
         Entity e = GetComponentInParent<Entity>();
         if (e != null)
         {
-            float s = 1+ 2 * e.entityInfo.viewDistance;
+            float s = 1 + 3f * e.entityInfo.viewDistance;
             transform.localScale = new Vector3(s, s, s);
         }
     }

@@ -102,10 +102,10 @@ public class World : MonoBehaviour
         sw.Stop();
         Debug.Log("CreateWorld() finished in " + sw.ElapsedMilliseconds + " ms.");
 
-
+        // TODO: Move the spawning process to a more appropriate script
         foreach(Player player in (GameManager.Instance as GameManager).GetPlayers)
         {
-            player.SpawnStartUnit(new Vector2Int(20, 20));
+            player.SpawnStartUnit(new Vector2Int(Random.Range(20, worldSize-20), Random.Range(20, worldSize-20)));
         }
     }
 

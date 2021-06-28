@@ -34,9 +34,7 @@ public class Player : NetworkBehaviour
     public UnityEvent colorChangeEvent = new UnityEvent();
     public UnityEvent setReadyEvent = new UnityEvent();
 
-
     private MP_Lobby lobby;
-
 
     // When the NetworkManager creates this Player, do this
     private void Awake()
