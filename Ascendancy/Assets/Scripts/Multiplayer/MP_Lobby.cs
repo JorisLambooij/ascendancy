@@ -232,7 +232,7 @@ public class MP_Lobby : NetworkBehaviour
             {
                 //SetReady(localPlayer, true);
                 localPlayer.SetReady(true);
-            }            
+            }
         }
     }
 
@@ -347,7 +347,7 @@ public class MP_Lobby : NetworkBehaviour
         {
             bool allReady = true;
 
-            foreach(Player p in playerDict.Values)
+            foreach (Player p in playerDict.Values)
             {
                 if (p.isReady() == false)
                     allReady = false;
@@ -369,7 +369,7 @@ public class MP_Lobby : NetworkBehaviour
         SetReady(player, player.isReady());
     }
 
-        private void KickPlayerButtonListener(Player player)
+    private void KickPlayerButtonListener(Player player)
     {
         Debug.Log("Trying to kick " + player.playerName);
         player.GetComponent<NetworkRoomPlayer>().connectionToClient.Disconnect();
@@ -407,9 +407,10 @@ public class MP_Lobby : NetworkBehaviour
 
     public void DEVSpawnStartUnitsForAll()
     {
-        foreach (Player player in playerDict.Values)
-        {
-            CmdSpawnStartUnit(new Vector2Int(20, 20), player.playerNo);
-        }
+        if (!isServer)
+            foreach (Player player in playerDict.Values)
+            {
+                CmdSpawnStartUnit(new Vector2Int(20, 20), player.playerNo);
+            }
     }
 }
