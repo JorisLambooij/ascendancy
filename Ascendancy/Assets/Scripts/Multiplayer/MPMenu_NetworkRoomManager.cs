@@ -7,7 +7,14 @@ namespace Mirror
 {
     public class MPMenu_NetworkRoomManager : NetworkRoomManager
     {
+        public GameObject playermanagerPrefab;
         private Dictionary<int, Player> playerDict;
+
+        public override void OnRoomStartServer()
+        {
+            base.OnRoomStartServer();
+
+        }
 
         public override void OnRoomServerPlayersReady()
         {
@@ -19,6 +26,14 @@ namespace Mirror
         public override void OnServerSceneChanged(string sceneName)
         {
             base.OnServerSceneChanged(sceneName);
+
+            Debug.Log("Scene: " + sceneName);
+            if (sceneName == "Assets/Scenes/Multiplayer/Lobby.unity")
+            {
+                GameObject playerManager = Instantiate(playermanagerPrefab);
+                //playerManager.name = "PlayerManager";
+                NetworkServer.Spawn(playerManager);
+            }
         }
 
         public void InitPlayerDict(Dictionary<int, Player> dictNew)

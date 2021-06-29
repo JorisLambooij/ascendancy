@@ -47,12 +47,12 @@ public class Player : NetworkBehaviour
         PlayerEconomy = GetComponent<Economy>();
         TechLevel = GetComponent<TechnologyLevel>();
 
-        Transform playerManager = GameObject.Find("PlayerManager").transform;
+        Transform playerManager = FindObjectOfType<MP_Lobby>().transform;//GameObject.Find("PlayerManager").transform;
         transform.SetParent(playerManager);
         playerManager.GetComponent<MP_Lobby>().AddPlayer(this);
 
 
-        lobby = GameObject.Find("PlayerManager").GetComponent<MP_Lobby>();
+        lobby = FindObjectOfType<MP_Lobby>();
     }
 
     public void Initialize()
@@ -86,6 +86,7 @@ public class Player : NetworkBehaviour
     {
         Debug.Log("Name Changed by Server: " + newName);
         nameChangeEvent.Invoke();
+        gameObject.name = "Player (" + newName + ")";
     }
 
     public void InvokeCmdNameChange()

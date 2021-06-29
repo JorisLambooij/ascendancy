@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -156,7 +156,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.000030517578}
+  m_AnchoredPosition: {x: 0, y: -0.000030517578}
   m_SizeDelta: {x: 1170, y: 820}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &15843542
@@ -1723,6 +1723,8 @@ MonoBehaviour:
   - {fileID: 2021816003209581207, guid: 035922f511e8d284ea8edbbca2ff3b05, type: 3}
   - {fileID: 7551204154752481065, guid: 204dd92974604ec4bb53de31b1bfaa9b, type: 3}
   - {fileID: 266166608861487646, guid: 291f580cc8a2ee94e89cc623ca0985f0, type: 3}
+  - {fileID: 7794026143633133344, guid: 8d6527d46a80b5c4f92bde663d87d85c, type: 3}
+  - {fileID: 3457088166798531356, guid: 3f6eed198e7f3f04eb29ed22a7749416, type: 3}
   showRoomGUI: 0
   minPlayers: 1
   roomPlayerPrefab: {fileID: 5409059187741451284, guid: 408072e69fc331e498cb2b7117bf2044,
@@ -1731,6 +1733,8 @@ MonoBehaviour:
   GameplayScene: Assets/Scenes/DEV_Terrain_New.unity
   allPlayersReady: 0
   roomSlots: []
+  playermanagerPrefab: {fileID: 3457088166798531356, guid: 3f6eed198e7f3f04eb29ed22a7749416,
+    type: 3}
 --- !u!4 &1149987860
 Transform:
   m_ObjectHideFlags: 0

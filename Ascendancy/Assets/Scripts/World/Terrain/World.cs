@@ -97,12 +97,14 @@ public class World : MonoBehaviour
         sw.Stop();
         Debug.Log("CreateWorld() finished in " + sw.ElapsedMilliseconds + " ms.");
 
+        /*
         // TODO: Move the spawning process to a more appropriate script
         MP_Lobby lobby = GameObject.Find("PlayerManager").GetComponent<MP_Lobby>();
         foreach (Player player in (GameManager.Instance as GameManager).GetPlayers)
         {
             lobby.DEVSpawnStartUnitsForAll();
         }
+        */
     }
 
     public void CreateWorld()
@@ -172,16 +174,6 @@ public class World : MonoBehaviour
         float size = worldSize / 9.86f;
         waterPlane.transform.localScale = new Vector3(size * tileSize, 1, size * tileSize);
 
-
-        try
-        {
-            navMeshBuilder.UpdateNavMesh(false);
-        }
-        catch (System.Exception e)
-        {
-            if (Application.IsPlaying(this))
-                throw e;
-        }
         Debug.Log("World Generated: ");
     }
 

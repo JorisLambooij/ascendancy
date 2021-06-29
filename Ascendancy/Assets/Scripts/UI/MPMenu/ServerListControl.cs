@@ -131,7 +131,7 @@ public class ServerListControl : MonoBehaviour
         selectedServerId = servId;
     }
 
-        public void StartSelectedServer()
+    public void StartSelectedServer()
     {
         try
         {

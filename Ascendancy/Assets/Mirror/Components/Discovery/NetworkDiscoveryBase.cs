@@ -296,7 +296,12 @@ namespace Mirror.Discovery
             if (clientUdpClient == null)
                 return;
 
-            IPEndPoint endPoint = new IPEndPoint(IPAddress.Broadcast, serverBroadcastListenPort);
+            // TODO: Fix the IP problem
+            // different ISPs will handle IPs differently, so the default 255.255.255.255 might not work universally
+            // 127.0.0.1 will work locally only, so a different solution is required.
+
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), serverBroadcastListenPort);
+            //IPEndPoint endPoint = new IPEndPoint(IPAddress.Broadcast, serverBroadcastListenPort);
 
             using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
             {

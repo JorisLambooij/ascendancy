@@ -30,3 +30,4 @@ MonoBehaviour:
   resourceAmount: []
   entityFeatures:
   - {fileID: 11400000, guid: 5b77b558a897c2545bed0648838aaa69, type: 2}
+  - {fileID: 11400000, guid: 23419dca235ed014690d809e27a86c11, type: 2}

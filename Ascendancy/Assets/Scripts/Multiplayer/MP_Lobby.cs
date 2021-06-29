@@ -72,6 +72,8 @@ public class MP_Lobby : NetworkBehaviour
 
         roomMngr.InitPlayerDict(playerDict);
         Player.OnMessage += OnPlayerMessage;
+
+        messageWindow = FindObjectOfType<MessageWindow>();
     }
 
     // Update is called once per frame
@@ -287,6 +289,8 @@ public class MP_Lobby : NetworkBehaviour
     {
         foreach (Player player in playerDict.Values)
             player.Initialize();
+
+        DEVSpawnStartUnitsForAll();
     }
 
     public Player GetPlayer(int id)
@@ -375,8 +379,19 @@ public class MP_Lobby : NetworkBehaviour
         player.GetComponent<NetworkRoomPlayer>().connectionToClient.Disconnect();
     }
 
+    /// <summary>
+    /// Tells all clients to spawn their start unit
+    /// </summary>
+    /// <param name="startPos"></param>
+    /// <param name="playernumber"></param>
     [Command]
     public void CmdSpawnStartUnit(Vector2Int startPos, int playernumber)
+    {
+        TargetSpawnStartUnit(startPos, playernumber);
+    }
+
+    [TargetRpc]
+    public void TargetSpawnStartUnit(Vector2Int startPos, int playernumber)
     {
         //Load ESV
         EntityInfo esv = Resources.Load("ScriptableObjects/Buildings/Command/ESV") as EntityInfo;
@@ -388,29 +403,26 @@ public class MP_Lobby : NetworkBehaviour
         else
             Debug.LogError("Could not load starting unit for player " + ownerName + " (Player " + playernumber + ")");
 
-
-        float tileSize = (World.Instance as World).tileSize;
+        float tileSize = (World.Instance as World)?.tileSize ?? 1;
 
         Vector2 position = new Vector3(startPos.x * tileSize + (tileSize / 2), startPos.y * tileSize + (tileSize / 2));
 
-        float height = (World.Instance as World).GetHeight(position);
+        float height = (World.Instance as World)?.GetHeight(position) ?? 1;
 
         Debug.Log(position);
 
         GameObject newUnit = esv.CreateInstance(playerDict[playernumber], new Vector3(position.x, height, position.y));
 
         //spawn the actual GO
-
         NetworkServer.Spawn(newUnit, playerDict[playernumber].connectionToClient);
-
     }
 
     public void DEVSpawnStartUnitsForAll()
     {
-        if (!isServer)
+        if (isServer)
+        {
             foreach (Player player in playerDict.Values)
-            {
-                CmdSpawnStartUnit(new Vector2Int(20, 20), player.playerNo);
-            }
+                CmdSpawnStartUnit(new Vector2Int(15, 15), player.playerNo);
+        }
     }
 }

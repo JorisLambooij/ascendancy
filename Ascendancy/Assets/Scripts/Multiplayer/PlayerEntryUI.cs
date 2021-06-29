@@ -19,7 +19,7 @@ public class PlayerEntryUI : NetworkBehaviour
     void Awake()
     {
         colorDropdown = GetComponentInChildren<Dropdown>();
-        lobby = GameObject.Find("PlayerManager").GetComponent<MP_Lobby>();
+        lobby = FindObjectOfType<MP_Lobby>();
     }
     void Update()
     {
