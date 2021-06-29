@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
 
-        playerManager = GameObject.Find("PlayerManager").GetComponent<MP_Lobby>();
+        playerManager = FindObjectOfType<MP_Lobby>();
 
         Player[] allPlayers = playerManager.GetComponentsInChildren<Player>();
         foreach(Player player in allPlayers)

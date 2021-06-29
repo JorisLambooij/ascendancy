@@ -31,7 +31,15 @@ public class Entity : MonoBehaviour, OccupationType
     /// </summary>
     public Player Owner
     {
-        get { return transform.parent.GetComponentInParent<Player>(); }
+        get
+        {
+            if (transform.parent == null)
+            {
+                Debug.LogError("Entity (" + gameObject.name + ") has no parent!");
+                return null;
+            }
+            return transform.parent.GetComponentInParent<Player>();
+        }
     }
 
     /// <summary>

@@ -58,6 +58,8 @@ MonoBehaviour:
   - {r: 0.627451, g: 0.3529412, b: 0, a: 1}
   playerEntryPrefab: {fileID: 7794026143633133344, guid: 8d6527d46a80b5c4f92bde663d87d85c,
     type: 3}
+  testPrefab: {fileID: 6449016807667545191, guid: c142a8224daff2f4eb731e5bd943c082,
+    type: 3}
   isServer: 0
   messageWindow: {fileID: 0}
 --- !u!114 &3457088166798531345

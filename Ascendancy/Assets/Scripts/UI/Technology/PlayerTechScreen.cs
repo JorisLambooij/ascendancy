@@ -46,6 +46,11 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
     private void SetUpTechScreen()
     {
         techFieldsDict = new Dictionary<int, TechField>();
+        if (TechTree.techProgress == null)
+        {
+            Debug.LogError("Tech Screen setup failed: No TechTree.progress found");
+            return;
+        }
         TechTree.techProgress.Subscribe(this);
         
         // Make a TechField for each Technology

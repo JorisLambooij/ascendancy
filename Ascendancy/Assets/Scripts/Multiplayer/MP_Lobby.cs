@@ -10,6 +10,7 @@ public class MP_Lobby : NetworkBehaviour
     public int maxPlayers;
     public List<Color> playerColors;
     public GameObject playerEntryPrefab;
+    public GameObject testPrefab;
 
     public List<PlayerInfo> PlayersInLobby { get => playersInLobby; }
     public bool isServer = false;
@@ -64,7 +65,7 @@ public class MP_Lobby : NetworkBehaviour
         }
         else
         {
-            buttonReadyStart.GetComponentInChildren<Text>().text = "Ready";
+            buttonReadyStart.interactable = false;
         }
 
         Debug.Log("I am " + roomMngr.mode.ToString());
@@ -147,7 +148,7 @@ public class MP_Lobby : NetworkBehaviour
 
         player.setReadyEvent.AddListener(() => SetReadyEventListener(player));
 
-
+        
         if (isServer && playerDict.Count > 1)
         {
             //Host player is ready if enough players are currently connected
@@ -165,6 +166,7 @@ public class MP_Lobby : NetworkBehaviour
             //host should be ready, so lets manually switch host indicator to ready
             SetReady(playerDict[1], true);
         }
+        
     }
 
     public void RemovePlayer(Player player)
@@ -213,28 +215,17 @@ public class MP_Lobby : NetworkBehaviour
 
     public void ButtonReadyStartClick()
     {
-        if (isServer)
+        //Button Ready
+        //NetworkRoomPlayer nwrPlayer = localPlayer.GetComponent<NetworkRoomPlayer>();
+        if (localPlayer.isReady())
         {
-            //Button Start
-            foreach (Player client in playerDict.Values)
-            {
-                client.RpcStartGame();
-            }
+            //SetReady(localPlayer, false);
+            localPlayer.SetReady(false);
         }
         else
         {
-            //Button Ready
-            //NetworkRoomPlayer nwrPlayer = localPlayer.GetComponent<NetworkRoomPlayer>();
-            if (localPlayer.isReady())
-            {
-                //SetReady(localPlayer, false);
-                localPlayer.SetReady(false);
-            }
-            else
-            {
-                //SetReady(localPlayer, true);
-                localPlayer.SetReady(true);
-            }
+            //SetReady(localPlayer, true);
+            localPlayer.SetReady(true);
         }
     }
 
@@ -250,11 +241,18 @@ public class MP_Lobby : NetworkBehaviour
         foreach (PlayerEntryUI entry in entries)
             playersInLobby.Add(entry.InfoFromEntry);
 
-        NextSceneStatic.sceneName = "DEV_Terrain_New";
-        SceneManager.LoadScene("LoadScreen");
+
+        RpcLoadGame();
         InitializePlayers();
     }
 
+    [ClientRpc]
+    public void RpcLoadGame()
+    {
+        Debug.Log("Loading game...");
+        NextSceneStatic.sceneName = "DEV_Terrain_New";
+        SceneManager.LoadScene("LoadScreen");
+    }
 
     #region chat
     public void SendChatMessage(ChatMessage message)
@@ -285,12 +283,17 @@ public class MP_Lobby : NetworkBehaviour
 
     #endregion
 
+    //[ServerCallback]
     public void InitializePlayers()
     {
         foreach (Player player in playerDict.Values)
             player.Initialize();
 
+        Debug.Log("initilizing players " + isServer);
         DEVSpawnStartUnitsForAll();
+
+        GameObject testUnit = Instantiate(testPrefab, transform);
+        NetworkServer.Spawn(testUnit);
     }
 
     public Player GetPlayer(int id)
@@ -370,6 +373,7 @@ public class MP_Lobby : NetworkBehaviour
 
     private void SetReadyEventListener(Player player)
     {
+        Debug.Log("Ready player " + player.name);
         SetReady(player, player.isReady());
     }
 
@@ -390,7 +394,7 @@ public class MP_Lobby : NetworkBehaviour
         TargetSpawnStartUnit(startPos, playernumber);
     }
 
-    [TargetRpc]
+    //[TargetRpc]
     public void TargetSpawnStartUnit(Vector2Int startPos, int playernumber)
     {
         //Load ESV
@@ -404,25 +408,27 @@ public class MP_Lobby : NetworkBehaviour
             Debug.LogError("Could not load starting unit for player " + ownerName + " (Player " + playernumber + ")");
 
         float tileSize = (World.Instance as World)?.tileSize ?? 1;
-
         Vector2 position = new Vector3(startPos.x * tileSize + (tileSize / 2), startPos.y * tileSize + (tileSize / 2));
-
         float height = (World.Instance as World)?.GetHeight(position) ?? 1;
 
-        Debug.Log(position);
+        //Debug.Log(position);
 
         GameObject newUnit = esv.CreateInstance(playerDict[playernumber], new Vector3(position.x, height, position.y));
 
+        //ClientScene.RegisterPrefab(testPrefab);
+
         //spawn the actual GO
-        NetworkServer.Spawn(newUnit, playerDict[playernumber].connectionToClient);
+        NetworkServer.Spawn(newUnit);
     }
 
     public void DEVSpawnStartUnitsForAll()
     {
+        Debug.Log("spawning esvs");
         if (isServer)
         {
-            foreach (Player player in playerDict.Values)
-                CmdSpawnStartUnit(new Vector2Int(15, 15), player.playerNo);
+            foreach (Player p in playerDict.Values)
+                TargetSpawnStartUnit(new Vector2Int(15 + 5 * p.playerNo, 15), p.playerNo);
+            //TargetSpawnStartUnit(new Vector2Int(20, 15), 1);
         }
     }
 }
