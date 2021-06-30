@@ -241,7 +241,7 @@ public class MP_Lobby : NetworkBehaviour
         foreach (PlayerEntryUI entry in entries)
             playersInLobby.Add(entry.InfoFromEntry);
 
-
+        ClientScene.RegisterPrefab(testPrefab);
         RpcLoadGame();
         InitializePlayers();
     }
@@ -283,17 +283,22 @@ public class MP_Lobby : NetworkBehaviour
 
     #endregion
 
-    //[ServerCallback]
+    [ServerCallback]
     public void InitializePlayers()
     {
         foreach (Player player in playerDict.Values)
             player.Initialize();
 
-        Debug.Log("initilizing players " + isServer);
+        Debug.Log("Initializing Players");
         DEVSpawnStartUnitsForAll();
 
         GameObject testUnit = Instantiate(testPrefab, transform);
+        //NetworkServer.Spawn(testUnit, playerDict[1].connectionToClient);
+        //NetworkServer.Spawn(testUnit, playerDict[2].connectionToClient);
         NetworkServer.Spawn(testUnit);
+
+        Debug.Log(connectionToClient);
+        Debug.Log(playerDict[2].name + " : " + playerDict[2].connectionToClient.isReady);
     }
 
     public Player GetPlayer(int id)
