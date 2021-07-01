@@ -26,7 +26,7 @@ public class MP_Lobby : NetworkBehaviour
 
     private MPMenu_NetworkRoomManager roomMngr;
 
-    private PlayerRoomScript localPlayer = null;
+    public PlayerRoomScript localPlayer = null;
 
     // Start is called before the first frame update
     void Awake()
@@ -72,8 +72,7 @@ public class MP_Lobby : NetworkBehaviour
 
 
         roomMngr.InitPlayerDict(playerDict);
-        // WIP
-        //Player.OnMessage += OnPlayerMessage;
+        PlayerRoomScript.OnMessage += OnPlayerMessage;
 
         messageWindow = FindObjectOfType<MessageWindow>();
     }
@@ -299,7 +298,35 @@ public class MP_Lobby : NetworkBehaviour
         }
     }
 
-    
+    #region chat
+    public void SendChatMessage(ChatMessage message)
+    {
+        PlayerRoomScript player = NetworkClient.connection.identity.GetComponent<PlayerRoomScript>();
+
+        // send a message
+        player.CmdSend(message);
+    }
+
+    public void SendChatMessage(string text)
+    {
+        PlayerRoomScript player = NetworkClient.connection.identity.GetComponent<PlayerRoomScript>();
+
+        // send a message
+        player.CmdSend(new ChatMessage(player.playerName, text, player.PlayerColor));
+    }
+
+    public void PrintChatMessage(ChatMessage message)
+    {
+        messageWindow.PrintMessage(message);
+    }
+
+    public void OnPlayerMessage(PlayerRoomScript player, ChatMessage message)
+    {
+        PrintChatMessage(message);
+    }
+
+    #endregion
+
     private void SetReadyEventListener(PlayerRoomScript player)
     {
         Debug.Log("Ready player " + player.name);
