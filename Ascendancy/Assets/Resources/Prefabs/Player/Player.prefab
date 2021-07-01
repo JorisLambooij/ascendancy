@@ -206,6 +206,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  playerID: -1
   roomPlayer: {fileID: 0}
 --- !u!114 &6118261737210275379
 MonoBehaviour:

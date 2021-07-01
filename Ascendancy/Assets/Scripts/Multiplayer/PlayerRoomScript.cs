@@ -10,8 +10,7 @@ public class PlayerRoomScript : NetworkRoomPlayer
     [Header("Player Info")]
     [SyncVar(hook = nameof(OnNameChange))]
     public string playerName;
-    [SyncVar]
-    public int playerNumber;
+
     [SyncVar(hook = nameof(HookColorChange))]
     public int playerColorIndex;
 

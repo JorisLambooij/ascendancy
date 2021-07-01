@@ -8,7 +8,10 @@ using UnityEngine.Events;
 
 public class Player : NetworkBehaviour
 {
-    public PlayerRoomScript roomPlayer;
+    [SyncVar(hook = nameof(PlayerIDHook))]
+    public int playerID = -1;
+
+    private PlayerRoomScript roomPlayer;
 
     private Economy economy;
     private TechnologyLevel techLevel;
@@ -23,16 +26,35 @@ public class Player : NetworkBehaviour
     public string PlayerName { get; protected set; }
     public int PlayerNumber { get; protected set; }
     public Color PlayerColor { get; protected set; }
+    public PlayerRoomScript RoomPlayer { 
+        get => roomPlayer;
+        set
+        {
+            roomPlayer = value;
+            gameObject.name = roomPlayer.playerName;
+        }
+    }
 
     private MP_Lobby lobby;
 
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+        //Debug.Log("Starting client! " + gameObject.name);
+        //Setup();
+    }
+
+    // TODO: this should ideally be moved into OnStartServer and then synced across clients (like a proper server-authoritative model)
     public override void OnStartClient()
     {
         base.OnStartClient();
+
         Debug.Log("Starting client! " + gameObject.name);
+        Setup();
     }
-    // When the NetworkManager creates this Player, do this
-    private void Awake()
+
+    private void Setup()
     {
         PlayerEconomy = GetComponent<Economy>();
         TechLevel = GetComponent<TechnologyLevel>();
@@ -42,38 +64,39 @@ public class Player : NetworkBehaviour
         PlayerEconomy = GetComponent<Economy>();
         TechLevel = GetComponent<TechnologyLevel>();
 
-        Transform playerManager = FindObjectOfType<MP_Lobby>().transform;//GameObject.Find("PlayerManager").transform;
+        lobby = FindObjectOfType<MP_Lobby>();
+        lobby.AddPlayer(this);
+        Transform playerManager = lobby.transform;
         transform.SetParent(playerManager);
-        playerManager.GetComponent<MP_Lobby>().AddPlayer(this);
 
-        if (hasAuthority)
-        {
-            Debug.Log("Awoken player " + gameObject.name);
-            lobby = FindObjectOfType<MP_Lobby>();
-            roomPlayer = lobby.localPlayer;
+        if (isLocalPlayer)
             Initialize();
-        }
     }
 
     public void Initialize()
     {
+        Debug.Log("local init");
+        RoomPlayer = lobby.localPlayer;
+        playerID = RoomPlayer.index;
+
         PlayerEconomy.Initialize();
         TechLevel.Initialize();
+        FindObjectOfType<GameManager>().Initialize();
         GetComponent<CheatCodes>().Initialize();
 
-        SpawnStartUnit(new Vector2(10 + 5 * roomPlayer.playerNumber, 10));
+        SpawnStartUnit(new Vector2(10 + 5 * RoomPlayer.index, 10));
     }
 
     private void SpawnStartUnit(Vector2 startPosition)
     {
         EntityInfo esv = Resources.Load("ScriptableObjects/Buildings/Command/ESV") as EntityInfo;
 
-        string ownerName = roomPlayer.playerName;
+        string ownerName = RoomPlayer.playerName;
 
         if (esv != null)
-            Debug.Log("Successfully loaded " + esv.name + " for player " + ownerName + " (Player " + roomPlayer.playerNumber + ")");
+            Debug.Log("Successfully loaded " + esv.name + " for player " + ownerName + " (Player " + RoomPlayer.index + ")");
         else
-            Debug.LogError("Could not load starting unit for player " + ownerName + " (Player " + roomPlayer.playerNumber + ")");
+            Debug.LogError("Could not load starting unit for player " + ownerName + " (Player " + RoomPlayer.index + ")");
 
         float tileSize = (World.Instance as World)?.tileSize ?? 1;
         Vector2 position = new Vector3(startPosition.x * tileSize + (tileSize / 2), startPosition.y * tileSize + (tileSize / 2));
@@ -90,10 +113,20 @@ public class Player : NetworkBehaviour
         Debug.Log("Cmd Spawning unit for " + this.name);
         EntityInfo entityInfo = Resources.Load(assetPath) as EntityInfo;
         GameObject newUnit = entityInfo.CreateInstance(this, position);
-        GameObject testSphere = Instantiate(lobby.testPrefab, position, Quaternion.identity);
         //spawn the GO across the network
         NetworkServer.Spawn(newUnit);
-        NetworkServer.Spawn(testSphere);
     }
+
+    public void PlayerIDHook(int oldValue, int newValue)
+    {
+        playerID = newValue;
+        //lobby?.playerDict.TryGetValue(newValue, out roomPlayer);
+
+        PlayerRoomScript[] playerRoomScripts = FindObjectsOfType<PlayerRoomScript>();
+        foreach (PlayerRoomScript p in playerRoomScripts)
+            if (p.index == newValue)
+                RoomPlayer = p;
+    }
+
 
 }

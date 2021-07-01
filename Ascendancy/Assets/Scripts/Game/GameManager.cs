@@ -23,8 +23,7 @@ public class GameManager : MonoBehaviour
 
     private MP_Lobby playerManager;
 
-    // Start is called before the first frame update
-    void Awake()
+    public void Initialize()
     {
         instance = this;
 
@@ -53,7 +52,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        controlMode.HandleInput();
+        controlMode?.HandleInput();
     }
 
     public void SwitchToMode(ControlModeEnum mode)

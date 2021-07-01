@@ -22,7 +22,7 @@ public class NetworkSphereTest : NetworkBehaviour
 
     private void Update()
     {
-        if (isServer)
+        if (isLocalPlayer)
             if (Input.GetKeyDown(KeyCode.Space))
                 testValue++;
     }

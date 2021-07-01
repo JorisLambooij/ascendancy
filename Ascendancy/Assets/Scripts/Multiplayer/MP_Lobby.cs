@@ -20,7 +20,7 @@ public class MP_Lobby : NetworkBehaviour
     private Transform playerList;
     private List<PlayerInfo> playersInLobby;
     private int playerCount;
-    private Dictionary<int, PlayerRoomScript> playerDict;
+    public Dictionary<int, PlayerRoomScript> playerDict;
 
     public static MP_Lobby singleton { get; private set; }
 
@@ -136,9 +136,9 @@ public class MP_Lobby : NetworkBehaviour
         entryUI.PlayerNo = (++playerCount);
         entryUI.playerNameText.text = player.playerName;
 
-        player.playerNumber = entryUI.PlayerNo;
+        player.index = entryUI.PlayerNo;
 
-        playerDict.Add(player.playerNumber, player);
+        playerDict.Add(player.index, player);
 
         player.setReadyEvent.AddListener(() => SetReadyEventListener(player));
 
