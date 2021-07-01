@@ -7,7 +7,7 @@ using Mirror;
 public class PlayerEntryUI : NetworkBehaviour
 {
     public Text playerNameText;
-    public Player player;
+    public PlayerRoomScript player;
 
     [SyncVar]
     private int playerNo;
@@ -24,7 +24,7 @@ public class PlayerEntryUI : NetworkBehaviour
     void Update()
     {
         playerNameText.text = player.playerName;
-        playerNameText.color = player.playerColor;
+        playerNameText.color = player.PlayerColor;
         this.PlayerColorIndex = player.playerColorIndex;
     }
 

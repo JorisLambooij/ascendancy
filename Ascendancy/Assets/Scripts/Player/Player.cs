@@ -8,14 +8,7 @@ using UnityEngine.Events;
 
 public class Player : NetworkBehaviour
 {
-    [SyncVar]
-    public int playerNo;
-    [SyncVar(hook = nameof(OnNameChange))]
-    public string playerName;
-    [SyncVar]
-    public Color playerColor;
-    [SyncVar(hook = nameof(HookColorChange))]
-    public int playerColorIndex;
+    public PlayerRoomScript roomPlayer;
 
     private Economy economy;
     private TechnologyLevel techLevel;
@@ -27,15 +20,17 @@ public class Player : NetworkBehaviour
     public Transform BuildingsGO { get => buildingsGO; set => buildingsGO = value; }
     public Transform UnitsGO { get => unitsGO; set => unitsGO = value; }
 
-    public static event Action<Player, ChatMessage> OnMessage;
-
-    //Events
-    public UnityEvent nameChangeEvent = new UnityEvent();
-    public UnityEvent colorChangeEvent = new UnityEvent();
-    public UnityEvent setReadyEvent = new UnityEvent();
+    public string PlayerName { get; protected set; }
+    public int PlayerNumber { get; protected set; }
+    public Color PlayerColor { get; protected set; }
 
     private MP_Lobby lobby;
 
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        Debug.Log("Starting client! " + gameObject.name);
+    }
     // When the NetworkManager creates this Player, do this
     private void Awake()
     {
@@ -51,8 +46,13 @@ public class Player : NetworkBehaviour
         transform.SetParent(playerManager);
         playerManager.GetComponent<MP_Lobby>().AddPlayer(this);
 
-
-        lobby = FindObjectOfType<MP_Lobby>();
+        if (hasAuthority)
+        {
+            Debug.Log("Awoken player " + gameObject.name);
+            lobby = FindObjectOfType<MP_Lobby>();
+            roomPlayer = lobby.localPlayer;
+            Initialize();
+        }
     }
 
     public void Initialize()
@@ -60,112 +60,40 @@ public class Player : NetworkBehaviour
         PlayerEconomy.Initialize();
         TechLevel.Initialize();
         GetComponent<CheatCodes>().Initialize();
+
+        SpawnStartUnit(new Vector2(10 + 5 * roomPlayer.playerNumber, 10));
     }
 
-    #region playerColor
-
-    [Command]
-    public void CmdColorChange(int newColorindex)
+    private void SpawnStartUnit(Vector2 startPosition)
     {
-        this.playerColorIndex = newColorindex;
-        //colorChangeEvent.Invoke();
-        Debug.Log("Player " + playerName + " changes color to " + newColorindex);
-    }
+        EntityInfo esv = Resources.Load("ScriptableObjects/Buildings/Command/ESV") as EntityInfo;
 
-    public void HookColorChange(int oldColorIndex, int newColorIndex)
-    {
-        this.playerColor = lobby.playerColors[newColorIndex];
-        Debug.Log("HOOK: Player " + playerName + " color changed from " + oldColorIndex + " to " + newColorIndex);
-    }
+        string ownerName = roomPlayer.playerName;
 
-    #endregion
+        if (esv != null)
+            Debug.Log("Successfully loaded " + esv.name + " for player " + ownerName + " (Player " + roomPlayer.playerNumber + ")");
+        else
+            Debug.LogError("Could not load starting unit for player " + ownerName + " (Player " + roomPlayer.playerNumber + ")");
 
-    #region playerName
+        float tileSize = (World.Instance as World)?.tileSize ?? 1;
+        Vector2 position = new Vector3(startPosition.x * tileSize + (tileSize / 2), startPosition.y * tileSize + (tileSize / 2));
+        float height = (World.Instance as World)?.GetHeight(position) ?? 1;
 
-    private void OnNameChange(string oldName, string newName)
-    {
-        Debug.Log("Name Changed by Server: " + newName);
-        nameChangeEvent.Invoke();
-        gameObject.name = "Player (" + newName + ")";
-    }
+        //Debug.Log(position);
 
-    public void InvokeCmdNameChange()
-    {
-        Debug.Log("InvokeCmdNameChange");
-        if (hasAuthority)
-            CmdNameChange(playerName);
+        CmdSpawnUnit("ScriptableObjects/Buildings/Command/ESV", new Vector3(position.x, height, position.y));
     }
 
     [Command]
-    public void CmdNameChange(string newName)
+    public void CmdSpawnUnit(string assetPath, Vector3 position)
     {
-        Debug.Log("Client changes name to " + newName);
-        playerName = newName;
-        if (hasAuthority)
-            CmdNameChange(newName);
+        Debug.Log("Cmd Spawning unit for " + this.name);
+        EntityInfo entityInfo = Resources.Load(assetPath) as EntityInfo;
+        GameObject newUnit = entityInfo.CreateInstance(this, position);
+        GameObject testSphere = Instantiate(lobby.testPrefab, position, Quaternion.identity);
+        //spawn the GO across the network
+        NetworkServer.Spawn(newUnit);
+        NetworkServer.Spawn(testSphere);
     }
 
-    [ClientRpc]
-    public void RpcLookupName()
-    {
-        PrefManager prefManager = GameObject.Find("PlayerPrefManager").GetComponent<PrefManager>();
-        playerName = prefManager.GetPlayerName();
-        Debug.Log("playername is now " + playerName);
-        if (hasAuthority)
-            CmdNameChange(playerName);
-    }
-
-    #endregion
-
-    #region Chat
-
-    [Command]
-    public void CmdSend(ChatMessage message)
-    {
-        if (message.message.Trim() != "")
-            RpcReceive(message);
-    }
-
-    [ClientRpc]
-    public void RpcReceive(ChatMessage message)
-    {
-        OnMessage?.Invoke(this, message);
-    }
-
-    public override void OnStartClient()
-    {
-        GetComponentInParent<MP_Lobby>().NetworkPlayerInitialization(this);
-        base.OnStartClient();
-    }
-
-    #endregion
-
-    #region Lobby
-
-    public void SetReady(bool ready)
-    {
-        NetworkRoomPlayer nwrPlayer = GetComponent<NetworkRoomPlayer>();
-        nwrPlayer.readyToBegin = ready;
-        setReadyEvent.Invoke();
-        CmdSetReady(ready);
-    }
-
-    [Command]
-    private void CmdSetReady(bool ready)
-    {
-        NetworkRoomPlayer nwrPlayer = GetComponent<NetworkRoomPlayer>();
-        nwrPlayer.readyToBegin = ready;
-
-        setReadyEvent.Invoke();
-        Debug.Log("Player " + playerName + " is ready? " + ready);
-    }
-
-
-    public bool isReady()
-    {
-        return GetComponent<NetworkRoomPlayer>().readyToBegin;
-    }
-    #endregion
-
-    
 }

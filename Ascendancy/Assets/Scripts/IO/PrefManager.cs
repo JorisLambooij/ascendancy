@@ -5,14 +5,14 @@ using UnityEngine.Events;
 
 public class PrefManager : MonoBehaviour
 {
-    Player player;
+    PlayerRoomScript player;
 
     public void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
     }
 
-    public void RegisterPlayer(Player player)
+    public void RegisterPlayer(PlayerRoomScript player)
     {
         this.player = player;
         player.nameChangeEvent.AddListener(OnNameChange);

@@ -8,7 +8,7 @@ namespace Mirror
     public class MPMenu_NetworkRoomManager : NetworkRoomManager
     {
         public GameObject playermanagerPrefab;
-        private Dictionary<int, Player> playerDict;
+        private Dictionary<int, PlayerRoomScript> playerDict;
 
         public override void OnRoomStartServer()
         {
@@ -19,9 +19,9 @@ namespace Mirror
         public override void OnRoomServerPlayersReady()
         {
             Debug.Log("Players Ready!");
+            base.OnRoomServerPlayersReady();
             FindObjectOfType<MP_Lobby>().ToggleStartButton(true);
             //GameObject.Find("PlayerManager").GetComponent<MP_Lobby>().InitializePlayers();
-            base.OnRoomServerPlayersReady();
         }
 
         public override void OnServerSceneChanged(string sceneName)
@@ -37,7 +37,7 @@ namespace Mirror
             }
         }
 
-        public void InitPlayerDict(Dictionary<int, Player> dictNew)
+        public void InitPlayerDict(Dictionary<int, PlayerRoomScript> dictNew)
         {
             playerDict = dictNew;
         }
@@ -49,7 +49,8 @@ namespace Mirror
                 case "Lobby":
                     Debug.Log("Client [" + conn.address + "] disconnected from the server!");
                     MP_Lobby lobby = GameObject.Find("PlayerManager").GetComponent<MP_Lobby>();
-                    lobby.PlayerDisconnected(conn.identity);
+                    // WIP
+                    //lobby.PlayerDisconnected(conn.identity);
 
                     break;
                 default:

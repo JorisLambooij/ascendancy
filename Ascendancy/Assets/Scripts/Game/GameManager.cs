@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance { get => instance; }
 
-    public int playerNo;
+    public int playerNumber;
     public Player playerScript;
 
     public CameraScript camScript;
@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 
         Player[] allPlayers = playerManager.GetComponentsInChildren<Player>();
         foreach(Player player in allPlayers)
-            if (player.playerNo == playerNo)
+            if (player.PlayerNumber == playerNumber)
                 playerScript = player;   //.GetComponent<PlayerLoader>().LoadPlayersIntoScene(playerNo);
 
         Debug.Log("Found Player: " + playerScript);
@@ -67,7 +67,11 @@ public class GameManager : MonoBehaviour
 
     public Player GetPlayer
     {
-        get { return playerManager.GetPlayer(playerNo); }
+        get 
+        {
+            return playerScript;
+            //return playerManager.GetPlayer(playerNumber);
+        }
     }
 
     public Player[] GetPlayers

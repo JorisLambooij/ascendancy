@@ -132,7 +132,7 @@ public class EntityInfo : ScriptableObject
         {
             foreach (Material mat in mr.materials)
                 if (mat.name.ToLower().Contains("playercolor"))
-                    mat.SetColor("_BaseColor", owner.playerColor);
+                    mat.SetColor("_BaseColor", owner.PlayerColor);
         }
         //go.GetComponentInChildren<MeshFilter>().mesh = Mesh;
         Entity entity = go.GetComponent<Entity>();

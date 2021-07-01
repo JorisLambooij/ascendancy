@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1726,9 +1726,9 @@ MonoBehaviour:
   - {fileID: 7794026143633133344, guid: 8d6527d46a80b5c4f92bde663d87d85c, type: 3}
   - {fileID: 3457088166798531356, guid: 3f6eed198e7f3f04eb29ed22a7749416, type: 3}
   - {fileID: 6449016807667545191, guid: c142a8224daff2f4eb731e5bd943c082, type: 3}
-  showRoomGUI: 0
+  showRoomGUI: 1
   minPlayers: 1
-  roomPlayerPrefab: {fileID: 5409059187741451284, guid: 408072e69fc331e498cb2b7117bf2044,
+  roomPlayerPrefab: {fileID: 3628385829824345408, guid: e378a3946e3d3564793b7cbc737f6a91,
     type: 3}
   RoomScene: Assets/Scenes/Multiplayer/Lobby.unity
   GameplayScene: Assets/Scenes/DEV_Terrain_New.unity

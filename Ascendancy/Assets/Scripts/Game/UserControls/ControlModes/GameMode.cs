@@ -121,7 +121,7 @@ public class GameMode : ControlMode
                 Matrix4x4 selectionMatrix = selectionBox.rectTransform.worldToLocalMatrix;
                 Player player = gameManager.playerScript;
                 if (player == null)
-                    throw new System.Exception("Invalid Player Number (" + gameManager.playerNo + ")");
+                    throw new System.Exception("Invalid Player Number (" + gameManager.playerNumber + ")");
 
                 if (!append)
                     DeselectAll();
@@ -163,7 +163,7 @@ public class GameMode : ControlMode
                         Entity e = hit.transform.GetComponentInParent<Entity>();
                         EntitySelector es = e.GetComponentInChildren<EntitySelector>();
 
-                        if (e.Owner.playerNo == gameManager.playerNo)
+                        if (e.Owner.PlayerNumber == gameManager.playerNumber)
                         {
                             es.Selected = true;
                             selectedEntities.Add(es);
@@ -320,7 +320,7 @@ public class GameMode : ControlMode
 
     private bool IsHostileUnit(Unit unit)
     {
-        return unit.Owner.playerNo != gameManager.playerNo;
+        return unit.Owner.PlayerNumber != gameManager.playerNumber;
     }
 
     private void DeselectAll()
