@@ -126,7 +126,7 @@ public class EntityInfo : ScriptableObject
             Debug.LogError("No Prefab selected for EntityInfo " + name);
             return null;
         }
-
+        /*
         GameObject e_model = Instantiate(prefab, go.transform);
         foreach (MeshRenderer mr in e_model.GetComponentsInChildren<MeshRenderer>())
         {
@@ -134,11 +134,14 @@ public class EntityInfo : ScriptableObject
                 if (mat.name.ToLower().Contains("playercolor"))
                     mat.SetColor("_BaseColor", owner.PlayerColor);
         }
+        */
         //go.GetComponentInChildren<MeshFilter>().mesh = Mesh;
         Entity entity = go.GetComponent<Entity>();
         entity.entityInfo = this;
-        entity.modelParent = e_model.transform;
         entity.ForceMove(position);
+        entity.ownerID = owner.playerID;
+
+        entity.entityInfoString = name; 
 
         go.name = name;
 

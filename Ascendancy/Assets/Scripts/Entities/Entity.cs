@@ -5,10 +5,18 @@ using System.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.AI;
+using Mirror;
+using System;
 
-public class Entity : MonoBehaviour, OccupationType
+public class Entity : NetworkBehaviour, OccupationType
 {
-    public const float UPDATE_FREQ = 3; 
+    public const float UPDATE_FREQ = 3;
+
+    [SyncVar]
+    public int ownerID;
+
+    [SyncVar]
+    public string entityInfoString;
 
     /// <summary>
     /// Holds all the stats for this Entity.
@@ -26,6 +34,42 @@ public class Entity : MonoBehaviour, OccupationType
 
     public UnityEvent OnDestroyCallbacks;
 
+    [ClientRpc]
+    public void RpcSetOwner(Transform owner)
+    {
+        Debug.Log("set owner: " + owner.name);
+        transform.SetParent(transform);
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        Debug.Log("Creating model for " + entityInfo.name);
+
+        try
+        {
+            Debug.Log(ResourceLoader.instance.entityInfoData);
+            GameObject e_model = Instantiate(ResourceLoader.instance.entityInfoData[entityInfoString].prefab, transform);
+            foreach (MeshRenderer mr in e_model.GetComponentsInChildren<MeshRenderer>())
+            {
+                foreach (Material mat in mr.materials)
+                    if (mat.name.ToLower().Contains("playercolor"))
+                        mat.SetColor("_BaseColor", Owner.PlayerColor);
+            }
+            modelParent = e_model.transform;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error when loading model for " + gameObject.name + "| " + e.Message);
+        }
+    }
+
+    [ClientRpc]
+    public void RpcCreateModel()
+    {
+        //Debug.Log("Creating model for " + entityInfo.name);
+    }
+
     /// <summary>
     /// The player who owns this Entity.
     /// </summary>
@@ -35,8 +79,21 @@ public class Entity : MonoBehaviour, OccupationType
         {
             if (transform.parent == null)
             {
-                Debug.LogError("Entity (" + gameObject.name + ") has no parent!");
-                return null;
+                Player[] players = FindObjectsOfType<Player>();
+                foreach (Player p in players)
+                    if (p.playerID == ownerID)
+                    {
+                        if (entityInfo.construction_Method == ConstructionMethod.Unit)
+                            transform.SetParent(p.UnitsGO);
+                        else
+                            transform.SetParent(p.BuildingsGO);
+                    }
+
+                if (transform.parent == null)
+                {
+                    Debug.LogError("Entity (" + gameObject.name + ") has no parent!");
+                    return null;
+                }
             }
             return transform.parent.GetComponentInParent<Player>();
         }

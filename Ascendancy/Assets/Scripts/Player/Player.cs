@@ -26,7 +26,8 @@ public class Player : NetworkBehaviour
     public string PlayerName { get; protected set; }
     public int PlayerNumber { get; protected set; }
     public Color PlayerColor { get; protected set; }
-    public PlayerRoomScript RoomPlayer { 
+    public PlayerRoomScript RoomPlayer
+    {
         get => roomPlayer;
         set
         {
@@ -41,16 +42,16 @@ public class Player : NetworkBehaviour
     {
         base.OnStartServer();
 
-        //Debug.Log("Starting client! " + gameObject.name);
+        //Debug.Log("Starting server! " + gameObject.name);
         //Setup();
+        //RpcLocalInitialize();
     }
 
     // TODO: this should ideally be moved into OnStartServer and then synced across clients (like a proper server-authoritative model)
     public override void OnStartClient()
     {
         base.OnStartClient();
-
-        Debug.Log("Starting client! " + gameObject.name);
+        //Debug.Log("Starting client! " + gameObject.name);
         Setup();
     }
 
@@ -70,14 +71,16 @@ public class Player : NetworkBehaviour
         transform.SetParent(playerManager);
 
         if (isLocalPlayer)
-            Initialize();
+            RpcLocalInitialize();
     }
 
-    public void Initialize()
+    public void RpcLocalInitialize()
     {
         Debug.Log("local init");
+        lobby = FindObjectOfType<MP_Lobby>();
         RoomPlayer = lobby.localPlayer;
         playerID = RoomPlayer.index;
+        CmdChangeID(playerID);
 
         PlayerEconomy.Initialize();
         TechLevel.Initialize();
@@ -113,12 +116,27 @@ public class Player : NetworkBehaviour
         Debug.Log("Cmd Spawning unit for " + this.name);
         EntityInfo entityInfo = Resources.Load(assetPath) as EntityInfo;
         GameObject newUnit = entityInfo.CreateInstance(this, position);
+
         //spawn the GO across the network
         NetworkServer.Spawn(newUnit);
+        //newUnit.GetComponent<Entity>().RpcSetOwner(transform);
+
+        //GameObject testUnit = Instantiate(lobby.testPrefab);
+        //testUnit.name = "Test Sphere";
+        //testUnit.GetComponent<NetworkSphereTest>().testValue = 2;
+        //NetworkServer.Spawn(testUnit);
+
+    }
+
+    [Command]
+    public void CmdChangeID(int newID)
+    {
+        playerID = newID;
     }
 
     public void PlayerIDHook(int oldValue, int newValue)
     {
+        Debug.Log("okayer id hook: " + newValue);
         playerID = newValue;
         //lobby?.playerDict.TryGetValue(newValue, out roomPlayer);
 
