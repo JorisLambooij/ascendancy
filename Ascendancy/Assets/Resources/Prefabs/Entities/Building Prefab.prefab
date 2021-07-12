@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -8187520399354841546}
   - component: {fileID: -6713137878091992769}
   - component: {fileID: 8586784857552336928}
+  - component: {fileID: 3128160049804666932}
   m_Layer: 12
   m_Name: Building Prefab
   m_TagString: Building
@@ -47,6 +48,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6485168cc732b0409a012a610f896cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  ownerID: 0
+  entityInfoString: 
   entityInfo: {fileID: 0}
   modelParent: {fileID: 0}
   OnDestroyCallbacks:
@@ -79,6 +84,24 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   m_AssetId: 
+--- !u!114 &3128160049804666932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2021816003209581207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 1
+  localPositionSensitivity: 0.01
+  localRotationSensitivity: 0.01
+  localScaleSensitivity: 0.01
 --- !u!1 &5265040817593841182
 GameObject:
   m_ObjectHideFlags: 0

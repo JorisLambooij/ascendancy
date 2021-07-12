@@ -6,6 +6,7 @@ public class ResourceLoader : MonoBehaviour
 {
     public static ResourceLoader instance;
     public Dictionary<string, EntityInfo> entityInfoData;
+    public GameObject constructionSitePrefab;
 
     private void Awake()
     {

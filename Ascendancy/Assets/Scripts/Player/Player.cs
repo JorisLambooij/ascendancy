@@ -107,14 +107,14 @@ public class Player : NetworkBehaviour
 
         //Debug.Log(position);
 
-        CmdSpawnUnit("ScriptableObjects/Buildings/Command/ESV", new Vector3(position.x, height, position.y));
+        CmdSpawnUnit("E.S.V.", new Vector3(position.x, height, position.y));
     }
 
     [Command]
-    public void CmdSpawnUnit(string assetPath, Vector3 position)
+    public void CmdSpawnUnit(string entityName, Vector3 position)
     {
         Debug.Log("Cmd Spawning unit for " + this.name + " " + this.connectionToClient);
-        EntityInfo entityInfo = Resources.Load(assetPath) as EntityInfo;
+        EntityInfo entityInfo = ResourceLoader.instance.entityInfoData[entityName];
         GameObject newUnit = entityInfo.CreateInstance(this, position);
 
         //spawn the GO across the network
@@ -126,6 +126,31 @@ public class Player : NetworkBehaviour
         //testUnit.GetComponent<NetworkSphereTest>().testValue = 2;
         //NetworkServer.Spawn(testUnit);
 
+    }
+
+    [Command]
+    public void CmdSpawnConstructionSite(string entityName, Vector3 position)
+    {
+        GameObject constructionSite = Instantiate(ResourceLoader.instance.constructionSitePrefab);
+        constructionSite.transform.position = position;
+        constructionSite.GetComponent<ConstructionSite>().buildingName = entityName;
+
+        NetworkServer.Spawn(constructionSite, this.connectionToClient);
+    }
+
+    [Command]
+    public void CmdSpawnBuilding(string entityName, Vector3 position)
+    {
+        Debug.Log("spawning building: " + entityName);
+        EntityInfo entityInfo = ResourceLoader.instance.entityInfoData[entityName];
+        GameObject newUnit = entityInfo.CreateInstance(this, position);
+        //spawn the GO across the network
+        NetworkServer.Spawn(newUnit, this.connectionToClient);
+
+        Entity b = newUnit.GetComponent<Entity>();
+
+        GameManager.Instance.occupationMap.ClearOccupation(transform.position, entityInfo.dimensions, TileOccupation.OccupationLayer.Building);
+        GameManager.Instance.occupationMap.NewOccupation(transform.position, b, TileOccupation.OccupationLayer.Building);
     }
 
     [Command]

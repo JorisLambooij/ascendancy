@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4353357801916648020}
   - component: {fileID: -7850391579944479743}
+  - component: {fileID: 2451382984350383625}
   m_Layer: 0
   m_Name: Construction Site
   m_TagString: Untagged
@@ -45,8 +46,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b2e2d829f82e3479fa6def0c500040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  progressbar: {fileID: 3158040843867272504}
+  syncMode: 0
+  syncInterval: 0.1
   buildingInfo: {fileID: 0}
+--- !u!114 &2451382984350383625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3083382378717104310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 
 --- !u!1001 &2790364924178171012
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -122,18 +139,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2790364924178171012}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3158040843867272504 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 966799986156876220, guid: efa271314f5f2fe419b1ec6698b79579,
-    type: 3}
-  m_PrefabInstance: {fileID: 2790364924178171012}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cba575934131dc84590882c2086d8f29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &5955449653844574683
 PrefabInstance:
   m_ObjectHideFlags: 0

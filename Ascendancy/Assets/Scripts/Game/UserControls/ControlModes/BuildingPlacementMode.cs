@@ -79,17 +79,20 @@ public class BuildingPlacementMode : ControlMode
                     foreach (Resource_Amount res_amount in buildingInfo.resourceAmount)
                         gameManager.GetPlayer.PlayerEconomy.RemoveResourceAmount(res_amount);
 
+                GameManager.Instance.GetPlayer.CmdSpawnConstructionSite(buildingInfo.name, position);
+
                 // valid spot, place construction site for building
-                ConstructionSite constructionSite = GameObject.Instantiate(constructionSitePrefab, gameManager.GetPlayer.transform).GetComponent<ConstructionSite>();
-                constructionSite.transform.position = position;
-                constructionSite.buildingInfo = buildingInfo;
+                //ConstructionSite constructionSite = GameObject.Instantiate(constructionSitePrefab, gameManager.GetPlayer.transform).GetComponent<ConstructionSite>();
+                //constructionSite.transform.position = position;
+                //constructionSite.buildingInfo = buildingInfo;
 
                 // (old) direct building placement
                 //GameObject newBuildingGO = Building.CreateInstance(gameManager.GetPlayer, position);
                 //Entity b = newBuildingGO.GetComponent<Entity>();
 
+
                 // Mark all the spots that this building occupies as occupied in the world map.
-                gameManager.occupationMap.NewOccupation(position, constructionSite, TileOccupation.OccupationLayer.Building);
+                //gameManager.occupationMap.NewOccupation(position, constructionSite, TileOccupation.OccupationLayer.Building);
                 return true;
             }
         }

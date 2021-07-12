@@ -1,19 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class ConstructionSite : MonoBehaviour, OccupationType
+public class ConstructionSite : NetworkBehaviour, OccupationType
 {
+    [SyncVar]
+    public string buildingName;
     public EntityInfo buildingInfo;
     private ProgressBar progressbar;
 
     float constructionProgress;
-    bool failsafe;
+    bool constructed;
 
     void Start()
     {
         progressbar = GetComponentInChildren<ProgressBar>();
-        failsafe = false;
+        constructed = false;
+
     }
 
     public EntityInfo GetEntityInfo()
@@ -24,23 +28,40 @@ public class ConstructionSite : MonoBehaviour, OccupationType
     // Update is called once per frame
     protected void Update()
     {
+        if (buildingInfo == null)
+        {
+            if (ResourceLoader.instance.entityInfoData.ContainsKey(buildingName))
+                buildingInfo = ResourceLoader.instance.entityInfoData[buildingName];
+            else
+            {
+                Debug.LogError("ConstructionSite has no building assigned!");
+            }    
+
+            if (buildingInfo == null)
+            {
+                Debug.LogError("ConstructionSite has no BuildingInfo!");
+                return;
+            }
+        }
         constructionProgress += Time.deltaTime;
 
         float percentage = Mathf.Clamp01(constructionProgress / buildingInfo.buildTime);
         progressbar.percentage = percentage;
 
-        if (constructionProgress >= buildingInfo.buildTime && !failsafe)
+        if (constructionProgress >= buildingInfo.buildTime && !constructed)
         {
             Debug.Log("Construction Completed!!");
-            failsafe = true;
+            constructed = true;
 
-            GameObject newBuildingGO = buildingInfo.CreateInstance(GameManager.Instance.GetPlayer, transform.position);
-            Entity b = newBuildingGO.GetComponent<Entity>();
-
-            GameManager.Instance.occupationMap.ClearOccupation(transform.position, b.entityInfo.dimensions, TileOccupation.OccupationLayer.Building);
-            GameManager.Instance.occupationMap.NewOccupation(transform.position, b, TileOccupation.OccupationLayer.Building);
+            GameManager.Instance.GetPlayer.CmdSpawnBuilding(buildingName, transform.position);
+            // old, non-networked version
+            //GameObject newBuildingGO = buildingInfo.CreateInstance(GameManager.Instance.GetPlayer, transform.position);
+            //Entity b = newBuildingGO.GetComponent<Entity>();
+            //GameManager.Instance.occupationMap.ClearOccupation(transform.position, buildingInfo.dimensions, TileOccupation.OccupationLayer.Building);
+            //GameManager.Instance.occupationMap.NewOccupation(transform.position, b, TileOccupation.OccupationLayer.Building);
 
             Destroy(this.gameObject);
         }
     }
+
 }
