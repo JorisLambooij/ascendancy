@@ -12,16 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53812a508e45da8409e1937447f40206, type: 3}
   m_Name: Portal
   m_EditorClassIdentifier: 
-  name: 
-  Description: 
-  MaxHealth: 0
-  Armor: 0
-  Prefab: {fileID: 0}
-  Thumbnail: {fileID: 0}
-  MinimapMarker: {fileID: 0}
-  ViewDistance: 0
-  ContextMenuOptions: 0
+  name: DEV_Portal
+  description: 
+  maxHealth: 0
+  armor: 0
+  dimensions: {x: 0, y: 0}
+  prefab: {fileID: 0}
+  thumbnail: {fileID: 0}
+  minimapMarker: {fileID: 0}
+  mass: 0
+  viewDistance: 0
+  contextMenuOptions: 0
+  construction_Method: 0
+  category: {fileID: 0}
   selectionPriority: 0
-  ResourceAmount: []
-  BuildTime: 0
-  EntityFeatures: []
+  buildTime: 0
+  resourceAmount: []
+  entityFeatures: []
