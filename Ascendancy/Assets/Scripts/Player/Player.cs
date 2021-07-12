@@ -113,12 +113,12 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdSpawnUnit(string assetPath, Vector3 position)
     {
-        Debug.Log("Cmd Spawning unit for " + this.name);
+        Debug.Log("Cmd Spawning unit for " + this.name + " " + this.connectionToClient);
         EntityInfo entityInfo = Resources.Load(assetPath) as EntityInfo;
         GameObject newUnit = entityInfo.CreateInstance(this, position);
 
         //spawn the GO across the network
-        NetworkServer.Spawn(newUnit);
+        NetworkServer.Spawn(newUnit, this.connectionToClient);
         //newUnit.GetComponent<Entity>().RpcSetOwner(transform);
 
         //GameObject testUnit = Instantiate(lobby.testPrefab);
@@ -136,7 +136,7 @@ public class Player : NetworkBehaviour
 
     public void PlayerIDHook(int oldValue, int newValue)
     {
-        Debug.Log("okayer id hook: " + newValue);
+        Debug.Log("player id hook: " + newValue);
         playerID = newValue;
         //lobby?.playerDict.TryGetValue(newValue, out roomPlayer);
 
