@@ -44,6 +44,10 @@ public class Entity : NetworkBehaviour, OccupationType
     public override void OnStartClient()
     {
         base.OnStartClient();
+
+        if (entityInfo == null)
+            entityInfo = ResourceLoader.GetEntityInfo(entityInfoString);
+
         Debug.Log("Creating model for " + entityInfo.name);
 
         try

@@ -112,7 +112,7 @@ public class TileOccupationMap : MonoBehaviour
 
     public void ClearOccupation(Vector3 pos, Vector2Int dimensions, TileOccupation.OccupationLayer layer = TileOccupation.OccupationLayer.Building)
     {
-        Vector2Int v = world.IntVector(pos);
+        Vector2Int p = world.IntVector(pos);
 
         int halfX = dimensions.x / 2;
         int halfY = dimensions.y / 2;
@@ -121,8 +121,12 @@ public class TileOccupationMap : MonoBehaviour
         for (int x = 0; x < dimensions.x; x++)
             for (int y = 0; y < dimensions.y; y++)
             {
+                int u = p.x + x - halfX;
+                int v = p.y + y - halfY;
+                Debug.Assert(0 <= u && u < occupationMap.GetLength(0), "OccupationMap: X out of bounds (" + u + ") " + dimensions);
+                Debug.Assert(0 <= v && v < occupationMap.GetLength(1), "OccupationMap: Y out of bounds (" + v + ") " + p);
                 //Debug.Assert(occupationMap[v.x + x - halfX, v.y + y - halfY].occupation[layer] == null, "Tile " + v.x + ":" + v.y + " already Occupied, please check.");
-                occupationMap[v.x + x - halfX, v.y + y - halfY].occupation[layer] = null;
+                occupationMap[u, y].occupation[layer] = null;
             }
     }
 

@@ -149,8 +149,8 @@ public class Player : NetworkBehaviour
 
         Entity b = newUnit.GetComponent<Entity>();
 
-        GameManager.Instance.occupationMap.ClearOccupation(transform.position, entityInfo.dimensions, TileOccupation.OccupationLayer.Building);
-        GameManager.Instance.occupationMap.NewOccupation(transform.position, b, TileOccupation.OccupationLayer.Building);
+        GameManager.Instance.occupationMap.ClearOccupation(newUnit.transform.position, entityInfo.dimensions, TileOccupation.OccupationLayer.Building);
+        GameManager.Instance.occupationMap.NewOccupation(newUnit.transform.position, b, TileOccupation.OccupationLayer.Building);
     }
 
     [Command]

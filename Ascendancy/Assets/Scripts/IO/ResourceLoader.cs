@@ -30,4 +30,15 @@ public class ResourceLoader : MonoBehaviour
                 entityInfoData.Add(info.name, info);
             }
     }
+
+    public static EntityInfo GetEntityInfo(string entityName)
+    {
+        if (!instance.entityInfoData.ContainsKey(entityName))
+        {
+            Debug.LogError(entityName + " not present in ResourceLoader.EntityInfoData");
+            return null;
+        }
+
+        return instance.entityInfoData[entityName];
+    }
 }

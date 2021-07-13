@@ -19,6 +19,9 @@ public class ProductionFeature : EntityFeature
 
     private bool Produce(Player owner)
     {
+        if (owner.PlayerEconomy == null || owner.PlayerEconomy.availableResources == null)
+            Debug.LogError("Player Economy not initialized");
+
         if (consumedResource != null && !owner.PlayerEconomy.availableResources.Contains(consumedResource))
         // Consumed Resource has not been unlocked yet
         {
