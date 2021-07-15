@@ -46,8 +46,8 @@ public class CheatCodes : MonoBehaviour
 
     private void InfiniteResources()
     {
-        foreach (Resource r in player.PlayerEconomy.availableResources.AsList)
-            player.PlayerEconomy.SetResourceAmount(r, 1000000);
+        foreach (string r in player.PlayerEconomy.availableResources)
+            player.PlayerEconomy.AddResourceAmount(ResourceLoader.instance.resourceData[r], 1000);
     }
 
     private void UnlockAllResearch()

@@ -22,13 +22,13 @@ public class ProductionFeature : EntityFeature
         if (owner.PlayerEconomy == null || owner.PlayerEconomy.availableResources == null)
             Debug.LogError("Player Economy not initialized");
 
-        if (consumedResource != null && !owner.PlayerEconomy.availableResources.Contains(consumedResource))
+        if (consumedResource != null && !owner.PlayerEconomy.IsResourceAvailable(consumedResource))
         // Consumed Resource has not been unlocked yet
         {
             Debug.Log("Resource " + consumedResource.name + " not unlocked.");
             return false;
         }
-        if (producedResource != null && !owner.PlayerEconomy.availableResources.Contains(producedResource))
+        if (producedResource != null && !owner.PlayerEconomy.IsResourceAvailable(producedResource))
         // Produced Resource has not been unlocked yet
         {
             // Debug.Log("Resource " + producedResource.resourceName + " not unlocked.");

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 public enum ControlModeEnum { gameMode, menuMode, buildingMode };
 
@@ -21,20 +22,15 @@ public class GameManager : MonoBehaviour
     // Might need refactoring
     public Dictionary<ControlModeEnum, ControlMode> controlModeDict { get; protected set; }
 
-    private MP_Lobby playerManager;
+    private MPMenu_NetworkRoomManager playerManager;
 
-    public void Initialize()
+    public void Initialize(int playerID)
     {
         instance = this;
-
-        playerManager = FindObjectOfType<MP_Lobby>();
-
-        Player[] allPlayers = playerManager.GetComponentsInChildren<Player>();
-        foreach(Player player in allPlayers)
-            if (player.PlayerNumber == playerNumber)
-                playerScript = player;   //.GetComponent<PlayerLoader>().LoadPlayersIntoScene(playerNo);
-
-        Debug.Log("Found local Player: " + playerScript);
+        this.playerNumber = playerID;
+        playerManager = FindObjectOfType<MPMenu_NetworkRoomManager>();
+        
+        playerScript = playerManager.GetPlayerByID(playerNumber);
 
         // Create a new UI Manager
         ui_Manager = Instantiate(Resources.Load<GameObject>("Prefabs/UI/UI Manager")).GetComponent<UI_Manager>();
@@ -71,11 +67,6 @@ public class GameManager : MonoBehaviour
             return playerScript;
             //return playerManager.GetPlayer(playerNumber);
         }
-    }
-
-    public Player[] GetPlayers
-    {
-        get { return playerManager.GetComponentsInChildren<Player>(); }
     }
 
     public UI_Manager Ui_Manager { get => ui_Manager; }

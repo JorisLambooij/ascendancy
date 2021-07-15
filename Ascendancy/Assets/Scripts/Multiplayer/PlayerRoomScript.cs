@@ -138,7 +138,9 @@ public class PlayerRoomScript : NetworkRoomPlayer
     public override void OnStartClient()
     {
         base.OnStartClient();
-        FindObjectOfType<MP_Lobby>().NetworkPlayerInitialization(this);
+        MP_Lobby lobby = FindObjectOfType<MP_Lobby>();
+        lobby.NetworkPlayerInitialization(this);
+        transform.SetParent(lobby.transform);//FindObjectOfType<MPMenu_NetworkRoomManager>().transform);
     }
 
     #endregion

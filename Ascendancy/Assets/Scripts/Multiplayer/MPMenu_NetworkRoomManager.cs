@@ -16,6 +16,19 @@ namespace Mirror
             ServerListen();
         }
 
+        public Player GetPlayerByID(int id)
+        {
+            Player[] allPlayers = GetComponentsInChildren<Player>();
+            foreach (Player player in allPlayers)
+            {
+                if (player.playerID == id)
+                    return player;
+            }
+
+            Debug.LogError("No Player with ID " + id + " found!");
+            return null;
+        }
+
         public override void OnRoomServerPlayersReady()
         {
             Debug.Log("Players Ready!");

@@ -58,7 +58,7 @@ public class BuildMenu : MonoBehaviour, ListSubscriber<EntityInfo>
 
     public void NewElementCallback(EntityInfo updatedValue)
     {
-        Debug.Log("New Building: " + updatedValue);
+        //Debug.Log("New Building: " + updatedValue);
         AddNewBuildingOption(updatedValue);
     }
 
