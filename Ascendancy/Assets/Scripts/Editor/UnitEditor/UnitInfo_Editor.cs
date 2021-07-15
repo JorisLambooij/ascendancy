@@ -89,8 +89,6 @@ public class EntityInfoEditor : EditorWindow
 
         for (int i = 0; i < loadedEIs.Length; i++)
         {
-            Debug.Log("cm: " + loadedEIs[i].FindProperty("construction_Method").enumValueIndex);
-
             if (
                 loadedEIs[i].FindProperty("construction_Method").enumValueIndex == 0 && (typeIndex == 0 || typeIndex == 1)  //unit
                 ||
