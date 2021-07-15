@@ -129,7 +129,6 @@ public class World : MonoBehaviour
         chunks = new Chunk[numberOfChunks, numberOfChunks];
 
         //generate the terrain!
-        Debug.Log("Building Terrain");
         GenerateTerrain();
 
         AdditiveSmoothing additiveSmoothing = new AdditiveSmoothing();
@@ -173,8 +172,6 @@ public class World : MonoBehaviour
         waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, waterLevel, worldSize * tileSize / 2);
         float size = worldSize / 9.86f;
         waterPlane.transform.localScale = new Vector3(size * tileSize, 1, size * tileSize);
-
-        Debug.Log("World Generated: ");
     }
 
     Chunk GenerateChunk(int startX, int startZ)

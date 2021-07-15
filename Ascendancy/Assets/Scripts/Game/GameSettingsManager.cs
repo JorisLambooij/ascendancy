@@ -11,7 +11,7 @@ public class GameSettingsManager : MonoBehaviour
     /// <summary>
     /// Resource amount at game start.
     /// </summary>
-    public List<Resource_Amount> startResources = new List<Resource_Amount>();
+    public List<ResourceAmount> startResources = new List<ResourceAmount>();
     #endregion
 
     private void Start()

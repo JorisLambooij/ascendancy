@@ -6,7 +6,7 @@ using UnityEngine.Events;
 namespace Mirror.Discovery
 {
     [Serializable]
-    public class ServerFoundUnityEvent : UnityEvent<ServerResponse> { };
+    public class ServerFoundUnityEvent : UnityEvent<ServerResponse> {};
 
     [DisallowMultipleComponent]
     [AddComponentMenu("Network/NetworkDiscovery")]
@@ -42,7 +42,7 @@ namespace Mirror.Discovery
         /// Override if you wish to provide more information to the clients
         /// such as the name of the host player
         /// </remarks>
-        /// <param name="request">Request comming from client</param>
+        /// <param name="request">Request coming from client</param>
         /// <param name="endpoint">Address of the client that sent the request</param>
         /// <returns>The message to be sent back to the client or null</returns>
         protected override ServerResponse ProcessRequest(ServerRequest request, IPEndPoint endpoint)
@@ -80,11 +80,7 @@ namespace Mirror.Discovery
         /// Override if you wish to include additional data in the discovery message
         /// such as desired game mode, language, difficulty, etc... </remarks>
         /// <returns>An instance of ServerRequest with data to be broadcasted</returns>
-        protected override ServerRequest GetRequest()
-        {
-            Debug.Log("Get Request");
-            return new ServerRequest();
-        }
+        protected override ServerRequest GetRequest() => new ServerRequest();
 
         /// <summary>
         /// Process the answer from a server

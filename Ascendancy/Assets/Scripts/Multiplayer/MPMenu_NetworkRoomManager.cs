@@ -28,7 +28,7 @@ namespace Mirror
         {
             base.OnServerSceneChanged(sceneName);
 
-            Debug.Log("Scene: " + sceneName);
+            //Debug.Log("Scene: " + sceneName);
             if (sceneName == "Assets/Scenes/Multiplayer/Lobby.unity")
             {
                 GameObject playerManager = Instantiate(playermanagerPrefab);
@@ -62,17 +62,11 @@ namespace Mirror
         public void ServerListen()
         {
             NetworkServer.RegisterHandler<ReadyMessage>(OnClientReady);
-            NetworkServer.RegisterHandler<ConnectMessage>(OnServerConnect);
-
         }
         void OnClientReady(NetworkConnection conn, ReadyMessage msg)
         {
             Debug.Log("Client is ready to start: " + conn);
             NetworkServer.SetClientReady(conn);
-        }
-        void OnServerConnect(NetworkConnection conn, ConnectMessage msg)
-        {
-            Debug.Log("New client connected: " + conn);
         }
 
     }

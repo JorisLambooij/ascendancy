@@ -21,7 +21,7 @@ public class ContextMenu : MonoBehaviour, ListSubscriber<EntitySelector>
                 return;
             GetComponentInChildren<Button>().GetComponentInChildren<Image>().sprite = f.contextMenuThumbnail;
             entities = new List<Entity>() { newList[0].ParentEntity };
-            Debug.Log("New list");
+            //Debug.Log("New list");
         }
         else
         {

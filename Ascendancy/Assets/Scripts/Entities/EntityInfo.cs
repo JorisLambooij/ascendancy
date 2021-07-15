@@ -96,7 +96,7 @@ public class EntityInfo : ScriptableObject
     /// Base cost of the entity.
     /// </summary>
     [SerializeField]
-    public List<Resource_Amount> resourceAmount;
+    public List<ResourceAmount> resourceAmount;
 
     [Header("Features")]
     /// <summary>

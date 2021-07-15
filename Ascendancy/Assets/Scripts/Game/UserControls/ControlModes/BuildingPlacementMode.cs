@@ -76,7 +76,7 @@ public class BuildingPlacementMode : ControlMode
             if (cheat || EnoughResources())
             {
                 if (!cheat)
-                    foreach (Resource_Amount res_amount in buildingInfo.resourceAmount)
+                    foreach (ResourceAmount res_amount in buildingInfo.resourceAmount)
                         gameManager.GetPlayer.PlayerEconomy.RemoveResourceAmount(res_amount);
 
                 GameManager.Instance.GetPlayer.CmdSpawnConstructionSite(buildingInfo.name, position);
@@ -117,9 +117,9 @@ public class BuildingPlacementMode : ControlMode
 
     private bool EnoughResources()
     {
-        foreach (Resource_Amount resource_Amount in buildingInfo.resourceAmount)
+        foreach (ResourceAmount resource_Amount in buildingInfo.resourceAmount)
         {
-            if (!gameManager.GetPlayer.PlayerEconomy.CheckResourceAmount(resource_Amount))
+            if (!gameManager.GetPlayer.PlayerEconomy.IsRecourceAmountAvailable(resource_Amount))
             {
                 Debug.Log("Not enough resources to build! (" + resource_Amount.amount + " " + resource_Amount.resource.name + ")");
                 return false;

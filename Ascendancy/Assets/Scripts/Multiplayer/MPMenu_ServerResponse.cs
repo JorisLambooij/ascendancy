@@ -3,7 +3,7 @@ using System;
 using System.Net;
 using UnityEngine;
 
-public class MPMenu_ServerResponse : MessageBase
+public class MPMenu_ServerResponse : NetworkMessage
 {
     // The server that sent this
     // this is a property so that it is not serialized,  but the

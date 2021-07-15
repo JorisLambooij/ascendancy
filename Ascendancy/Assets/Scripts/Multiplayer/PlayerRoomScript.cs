@@ -81,8 +81,8 @@ public class PlayerRoomScript : NetworkRoomPlayer
     {
         Debug.Log("Client changes name to " + newName);
         playerName = newName;
-        if (hasAuthority)
-            CmdNameChange(newName);
+        //if (hasAuthority)
+        //    CmdNameChange(newName);
     }
 
     [ClientRpc]

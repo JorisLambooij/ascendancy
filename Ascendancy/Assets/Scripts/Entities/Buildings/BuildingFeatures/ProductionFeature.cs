@@ -37,16 +37,15 @@ public class ProductionFeature : EntityFeature
 
         if (consumedResource != null)
         {
-            float inStorage = owner.PlayerEconomy.resourceStorage.GetValue(consumedResource);
+            float inStorage = owner.PlayerEconomy.GetResourceAmount(consumedResource);
             if (inStorage > consumedAmount)
-                owner.PlayerEconomy.resourceStorage.SetValue(consumedResource, inStorage - consumedAmount);
+                owner.PlayerEconomy.RemoveResourceAmount(new ResourceAmount(consumedResource, consumedAmount));
             else
                 // not enough of the needed Resource, so don't produce anything
                 return false;
         }
-        
-        float producedInStorage = owner.PlayerEconomy.resourceStorage.GetValue(producedResource);
-        owner.PlayerEconomy.resourceStorage.SetValue(producedResource, producedInStorage + producedAmount);
+        float producedInStorage = owner.PlayerEconomy.GetResourceAmount(producedResource);
+        owner.PlayerEconomy.AddResourceAmount(new ResourceAmount(producedResource, producedAmount));
         return true;
     }
     

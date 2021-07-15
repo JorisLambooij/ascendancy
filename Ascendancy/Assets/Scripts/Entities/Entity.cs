@@ -48,11 +48,11 @@ public class Entity : NetworkBehaviour, OccupationType
         if (entityInfo == null)
             entityInfo = ResourceLoader.GetEntityInfo(entityInfoString);
 
-        Debug.Log("Creating model for " + entityInfo.name);
+        //Debug.Log("Creating model for " + entityInfo.name);
 
         try
         {
-            Debug.Log(ResourceLoader.instance.entityInfoData);
+            //Debug.Log(ResourceLoader.instance.entityInfoData);
             GameObject e_model = Instantiate(ResourceLoader.instance.entityInfoData[entityInfoString].prefab, transform);
             foreach (MeshRenderer mr in e_model.GetComponentsInChildren<MeshRenderer>())
             {

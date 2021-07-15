@@ -38,7 +38,7 @@ public class BuildMenu : MonoBehaviour, ListSubscriber<EntityInfo>
 
     private void AddNewBuildingOption(EntityInfo info)
     {
-        Debug.Log("New Building " + info.name + " in " + info.category.name);
+        //Debug.Log("New Building " + info.name + " in " + info.category.name);
         if (categories.ContainsKey(info.category))
             categories[info.category].AddBuildOption(info);
         else

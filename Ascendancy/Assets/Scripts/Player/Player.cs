@@ -76,7 +76,7 @@ public class Player : NetworkBehaviour
 
     public void RpcLocalInitialize()
     {
-        Debug.Log("local init");
+        Debug.Log("Local initialization");
         lobby = FindObjectOfType<MP_Lobby>();
         RoomPlayer = lobby.localPlayer;
         playerID = RoomPlayer.index;
@@ -113,7 +113,7 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdSpawnUnit(string entityName, Vector3 position)
     {
-        Debug.Log("Cmd Spawning unit for " + this.name + " " + this.connectionToClient);
+        //Debug.Log("Cmd Spawning unit for " + this.name + " " + this.connectionToClient);
         EntityInfo entityInfo = ResourceLoader.instance.entityInfoData[entityName];
         GameObject newUnit = entityInfo.CreateInstance(this, position);
 
@@ -141,7 +141,7 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdSpawnBuilding(string entityName, Vector3 position)
     {
-        Debug.Log("spawning building: " + entityName);
+        //Debug.Log("Spawning building: " + entityName);
         EntityInfo entityInfo = ResourceLoader.instance.entityInfoData[entityName];
         GameObject newUnit = entityInfo.CreateInstance(this, position);
         //spawn the GO across the network
@@ -161,7 +161,7 @@ public class Player : NetworkBehaviour
 
     public void PlayerIDHook(int oldValue, int newValue)
     {
-        Debug.Log("player id hook: " + newValue);
+        //Debug.Log("player id hook: " + newValue);
         playerID = newValue;
         //lobby?.playerDict.TryGetValue(newValue, out roomPlayer);
 

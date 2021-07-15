@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
             if (player.PlayerNumber == playerNumber)
                 playerScript = player;   //.GetComponent<PlayerLoader>().LoadPlayersIntoScene(playerNo);
 
-        Debug.Log("Found Player: " + playerScript);
+        Debug.Log("Found local Player: " + playerScript);
 
         // Create a new UI Manager
         ui_Manager = Instantiate(Resources.Load<GameObject>("Prefabs/UI/UI Manager")).GetComponent<UI_Manager>();

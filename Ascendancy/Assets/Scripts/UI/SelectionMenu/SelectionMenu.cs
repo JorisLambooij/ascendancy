@@ -106,13 +106,10 @@ public class SelectionMenu : MonoBehaviour, ListSubscriber<EntitySelector>
             }
 
             string selection = "|";
-
             foreach (List<Entity> stack in stacks)
-            {
                 selection += stack[0].name + " x " + stack.Count;
-            }
-
-                Debug.Log("Selected " + selection);
+            
+            //Debug.Log("Selected " + selection);
         }
         else
         {
