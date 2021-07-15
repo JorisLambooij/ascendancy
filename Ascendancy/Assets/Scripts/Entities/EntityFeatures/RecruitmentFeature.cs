@@ -61,28 +61,28 @@ public class RecruitmentFeature : EntityFeature
         }
 
         //check resource amount
-        List<Resource_Amount> unitRecruitmentCosts = unit.resourceAmount;
+        List<ResourceAmount> unitRecruitmentCosts = unit.resourceAmount;
 
         bool enough = true;
-        List<Resource_Amount> missingResources = new List<Resource_Amount>();
+        List<ResourceAmount> missingResources = new List<ResourceAmount>();
 
-        foreach (Resource_Amount amount in unitRecruitmentCosts)
+        foreach (ResourceAmount amount in unitRecruitmentCosts)
         {
-            float availableResource = entity.Owner.PlayerEconomy.resourceStorage.GetValue(amount.resource);
+            float availableResource = entity.Owner.PlayerEconomy.GetResourceAmount(amount.resource);
             
             if (availableResource < amount.amount)
             {
-                missingResources.Add(new Resource_Amount(amount.resource, amount.amount - availableResource));
+                missingResources.Add(new ResourceAmount(amount.resource, amount.amount - availableResource));
                 enough = false;
             }
         }
 
         if (enough == true)
         {
-            foreach (Resource_Amount amount in unitRecruitmentCosts)
+            foreach (ResourceAmount amount in unitRecruitmentCosts)
             {
-                float newAmount = entity.Owner.PlayerEconomy.resourceStorage.GetValue(amount.resource) - amount.amount; ;
-                entity.Owner.PlayerEconomy.resourceStorage.SetValue(amount.resource, newAmount);
+                float newAmount = entity.Owner.PlayerEconomy.GetResourceAmount(amount.resource) - amount.amount; ;
+                entity.Owner.PlayerEconomy.RemoveResourceAmount(amount);
             }
 
             if (queue.Count == 0)
@@ -98,7 +98,7 @@ public class RecruitmentFeature : EntityFeature
         {
             // alert the player
             string message = "Not enough resources for " + unit.name + "!";
-            foreach (Resource_Amount amount in missingResources)
+            foreach (ResourceAmount amount in missingResources)
                 message += "\n" + amount.amount + " " + amount.resource;
             Debug.Log(message);
 
@@ -111,10 +111,13 @@ public class RecruitmentFeature : EntityFeature
 
     private void Recruit(EntityInfo unit)
     {
-        Transform parent = entity.Owner.UnitsGO.transform;
-        GameObject newUnit = unit.CreateInstance(entity.Owner, entity.transform.position);
+        //Transform parent = entity.Owner.UnitsGO.transform;
 
-        Entity newEntity = newUnit.GetComponent<Entity>();
+        entity.Owner.CmdSpawnUnit(unit.name, entity.transform.position);
+        //GameObject newUnit = unit.CreateInstance(entity.Owner, entity.transform.position);
+
+        //if (newUnit != null)
+        //    Entity newEntity = newUnit.GetComponent<Entity>();
 
         //if (newEntity.Controller == null)
         //    newUnit.AddComponent<EntityOrderController>();

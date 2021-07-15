@@ -6,9 +6,9 @@ using UnityEngine;
 public class QueueObject
 {
     public EntityInfo BaseUnit { get; }
-    public List<Resource_Amount> PaidCost { get; }
+    public List<ResourceAmount> PaidCost { get; }
 
-    public QueueObject( EntityInfo baseUnit, List<Resource_Amount> paidCost)
+    public QueueObject( EntityInfo baseUnit, List<ResourceAmount> paidCost)
     {
         BaseUnit = baseUnit;
         PaidCost = paidCost;

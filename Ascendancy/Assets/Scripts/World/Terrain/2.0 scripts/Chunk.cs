@@ -44,6 +44,7 @@ public class Chunk : MonoBehaviour
 
         UpdateMesh();
         GetComponent<MeshFilter>().sharedMesh = mesh;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
     public void UpdateMesh()
@@ -126,8 +127,8 @@ public class Chunk : MonoBehaviour
 
     private Vector2 UVProjection(Vector3 point)
     {
-        int numberOfChunks = ((World)World.Instance).numberOfChunks;
-        Vector3 UV_projectionInChunk = Vector3.ProjectOnPlane(point, Vector3.up) / (chunkSize * ((World)World.Instance).tileSize * numberOfChunks);
+        int numberOfChunks = World.Instance.numberOfChunks;
+        Vector3 UV_projectionInChunk = Vector3.ProjectOnPlane(point, Vector3.up) / (chunkSize * World.Instance.tileSize * numberOfChunks);
 
         float x = UV_projectionInChunk.x;
         float y = UV_projectionInChunk.z;

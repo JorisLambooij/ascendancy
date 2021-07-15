@@ -8,14 +8,10 @@ using UnityEngine.Events;
 
 public class Player : NetworkBehaviour
 {
-    [SyncVar]
-    public int playerNo;
-    [SyncVar(hook = nameof(OnNameChange))]
-    public string playerName;
-    [SyncVar]
-    public Color playerColor;
-    [SyncVar(hook = nameof(HookColorChange))]
-    public int playerColorIndex;
+    [SyncVar(hook = nameof(PlayerIDHook))]
+    public int playerID = -1;
+
+    private PlayerRoomScript roomPlayer;
 
     private Economy economy;
     private TechnologyLevel techLevel;
@@ -27,19 +23,39 @@ public class Player : NetworkBehaviour
     public Transform BuildingsGO { get => buildingsGO; set => buildingsGO = value; }
     public Transform UnitsGO { get => unitsGO; set => unitsGO = value; }
 
-    public static event Action<Player, ChatMessage> OnMessage;
-
-    //Events
-    public UnityEvent nameChangeEvent = new UnityEvent();
-    public UnityEvent colorChangeEvent = new UnityEvent();
-    public UnityEvent setReadyEvent = new UnityEvent();
-
+    public string PlayerName { get; protected set; }
+    public int PlayerNumber { get; protected set; }
+    public Color PlayerColor { get; protected set; }
+    public PlayerRoomScript RoomPlayer
+    {
+        get => roomPlayer;
+        set
+        {
+            roomPlayer = value;
+            gameObject.name = roomPlayer.playerName;
+        }
+    }
 
     private MP_Lobby lobby;
 
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
 
-    // When the NetworkManager creates this Player, do this
-    private void Awake()
+        //Debug.Log("Starting server! " + gameObject.name);
+        //Setup();
+        //RpcLocalInitialize();
+    }
+
+    // TODO: this should ideally be moved into OnStartServer and then synced across clients (like a proper server-authoritative model)
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        //Debug.Log("Starting client! " + gameObject.name);
+        Setup();
+    }
+
+    private void Setup()
     {
         PlayerEconomy = GetComponent<Economy>();
         TechLevel = GetComponent<TechnologyLevel>();
@@ -49,129 +65,111 @@ public class Player : NetworkBehaviour
         PlayerEconomy = GetComponent<Economy>();
         TechLevel = GetComponent<TechnologyLevel>();
 
-        Transform playerManager = GameObject.Find("PlayerManager").transform;
+        lobby = FindObjectOfType<MP_Lobby>();
+        lobby.AddPlayer(this);
+        Transform playerManager = lobby.transform;
         transform.SetParent(playerManager);
-        playerManager.GetComponent<MP_Lobby>().AddPlayer(this);
 
-
-        lobby = GameObject.Find("PlayerManager").GetComponent<MP_Lobby>();
+        if (isLocalPlayer)
+            RpcLocalInitialize();
     }
 
-    public void Initialize()
+    public void RpcLocalInitialize()
     {
+        Debug.Log("Local initialization");
+        lobby = FindObjectOfType<MP_Lobby>();
+        RoomPlayer = lobby.localPlayer;
+        playerID = RoomPlayer.index;
+        CmdChangeID(playerID);
+
         PlayerEconomy.Initialize();
         TechLevel.Initialize();
+        FindObjectOfType<GameManager>().Initialize();
         GetComponent<CheatCodes>().Initialize();
+
+        SpawnStartUnit(new Vector2(10 + 5 * RoomPlayer.index, 10));
     }
 
-    #region playerColor
-
-    [Command]
-    public void CmdColorChange(int newColorindex)
+    private void SpawnStartUnit(Vector2 startPosition)
     {
-        this.playerColorIndex = newColorindex;
-        //colorChangeEvent.Invoke();
-        Debug.Log("Player " + playerName +" changes color to " + newColorindex);
-    }
+        EntityInfo esv = Resources.Load("ScriptableObjects/Buildings/Command/ESV") as EntityInfo;
 
-    public void HookColorChange(int oldColorIndex, int newColorIndex)
-    {
-        this.playerColor = lobby.playerColors[newColorIndex];
-        Debug.Log("HOOK: Player " + playerName + " color changed from " + oldColorIndex + " to " + newColorIndex);
-    }
+        string ownerName = RoomPlayer.playerName;
 
-    #endregion
+        if (esv != null)
+            Debug.Log("Successfully loaded " + esv.name + " for player " + ownerName + " (Player " + RoomPlayer.index + ")");
+        else
+            Debug.LogError("Could not load starting unit for player " + ownerName + " (Player " + RoomPlayer.index + ")");
 
-    #region playerName
+        float tileSize = (World.Instance as World)?.tileSize ?? 1;
+        Vector2 position = new Vector3(startPosition.x * tileSize + (tileSize / 2), startPosition.y * tileSize + (tileSize / 2));
+        float height = (World.Instance as World)?.GetHeight(position) ?? 1;
 
-    private void OnNameChange(string oldName, string newName)
-    {
-        Debug.Log("Name Changed by Server: " + newName);
-        nameChangeEvent.Invoke();
-    }
+        //Debug.Log(position);
 
-    public void InvokeCmdNameChange()
-    {
-        Debug.Log("InvokeCmdNameChange");
-        if (hasAuthority)
-            CmdNameChange(playerName);
+        CmdSpawnUnit("E.S.V.", new Vector3(position.x, height, position.y));
     }
 
     [Command]
-    public void CmdNameChange(string newName)
+    public void CmdSpawnUnit(string entityName, Vector3 position)
     {
-        Debug.Log("Client changes name to " + newName);
-        playerName = newName;
-        if (hasAuthority)
-            CmdNameChange(newName);
-    }
+        //Debug.Log("Cmd Spawning unit for " + this.name + " " + this.connectionToClient);
+        EntityInfo entityInfo = ResourceLoader.instance.entityInfoData[entityName];
+        GameObject newUnit = entityInfo.CreateInstance(this, position);
 
-    [ClientRpc]
-    public void RpcLookupName()
-    {
-        PrefManager prefManager = GameObject.Find("PlayerPrefManager").GetComponent<PrefManager>();
-        playerName = prefManager.GetPlayerName();
-        Debug.Log("playername is now " + playerName);
-        if (hasAuthority)
-            CmdNameChange(playerName);
-    }
+        //spawn the GO across the network
+        NetworkServer.Spawn(newUnit, this.connectionToClient);
+        //newUnit.GetComponent<Entity>().RpcSetOwner(transform);
 
-    #endregion
+        //GameObject testUnit = Instantiate(lobby.testPrefab);
+        //testUnit.name = "Test Sphere";
+        //testUnit.GetComponent<NetworkSphereTest>().testValue = 2;
+        //NetworkServer.Spawn(testUnit);
 
-    #region Chat
-
-    [Command]
-    public void CmdSend(ChatMessage message)
-    {
-        if (message.message.Trim() != "")
-            RpcReceive(message);
-    }
-
-    [ClientRpc]
-    public void RpcReceive(ChatMessage message)
-    {
-        OnMessage?.Invoke(this, message);
-    }
-
-    public override void OnStartClient()
-    {
-        GetComponentInParent<MP_Lobby>().NetworkPlayerInitialization(this);
-        base.OnStartClient();
-    }
-
-    #endregion
-
-    #region Lobby
-
-    public void SetReady(bool ready)
-    {
-        NetworkRoomPlayer nwrPlayer = GetComponent<NetworkRoomPlayer>();
-        nwrPlayer.readyToBegin = ready;
-        setReadyEvent.Invoke();
-        CmdSetReady(ready);
     }
 
     [Command]
-    private void CmdSetReady(bool ready)
+    public void CmdSpawnConstructionSite(string entityName, Vector3 position)
     {
-        NetworkRoomPlayer nwrPlayer = GetComponent<NetworkRoomPlayer>();
-        nwrPlayer.readyToBegin = ready;
+        GameObject constructionSite = Instantiate(ResourceLoader.instance.constructionSitePrefab);
+        constructionSite.transform.position = position;
+        constructionSite.GetComponent<ConstructionSite>().buildingName = entityName;
 
-        setReadyEvent.Invoke();
-        Debug.Log("Player " + playerName + " is ready? " + ready);
+        NetworkServer.Spawn(constructionSite, this.connectionToClient);
+    }
+
+    [Command]
+    public void CmdSpawnBuilding(string entityName, Vector3 position)
+    {
+        //Debug.Log("Spawning building: " + entityName);
+        EntityInfo entityInfo = ResourceLoader.instance.entityInfoData[entityName];
+        GameObject newUnit = entityInfo.CreateInstance(this, position);
+        //spawn the GO across the network
+        NetworkServer.Spawn(newUnit, this.connectionToClient);
+
+        Entity b = newUnit.GetComponent<Entity>();
+
+        GameManager.Instance.occupationMap.ClearOccupation(newUnit.transform.position, entityInfo.dimensions, TileOccupation.OccupationLayer.Building);
+        GameManager.Instance.occupationMap.NewOccupation(newUnit.transform.position, b, TileOccupation.OccupationLayer.Building);
+    }
+
+    [Command]
+    public void CmdChangeID(int newID)
+    {
+        playerID = newID;
+    }
+
+    public void PlayerIDHook(int oldValue, int newValue)
+    {
+        //Debug.Log("player id hook: " + newValue);
+        playerID = newValue;
+        //lobby?.playerDict.TryGetValue(newValue, out roomPlayer);
+
+        PlayerRoomScript[] playerRoomScripts = FindObjectsOfType<PlayerRoomScript>();
+        foreach (PlayerRoomScript p in playerRoomScripts)
+            if (p.index == newValue)
+                RoomPlayer = p;
     }
 
 
-    public bool isReady()
-    {
-        return GetComponent<NetworkRoomPlayer>().readyToBegin;
-    }
-
-    [ClientRpc]
-    public void RpcStartGame()
-    {
-        Debug.Log("Starting game for client " + playerName);
-        GetComponentInParent<MP_Lobby>().LoadGame();
-    }
-    #endregion
 }

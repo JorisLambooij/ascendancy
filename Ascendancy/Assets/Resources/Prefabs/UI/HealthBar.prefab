@@ -45,7 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce2dedca9114e8e4a81b75616645195e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeOverride: 1
+  percentage: 0
+  fillColor: {r: 0.0364863, g: 0.4811321, b: 0, a: 1}
+  backgroundColor: {r: 0.3490566, g: 0, b: 0, a: 1}
+  alwaysVisible: 0
   margin: 0.05
 --- !u!212 &648215708810046371
 SpriteRenderer:
@@ -61,6 +64,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -141,6 +145,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

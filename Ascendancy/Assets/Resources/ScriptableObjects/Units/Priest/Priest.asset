@@ -16,8 +16,8 @@ MonoBehaviour:
   description: A holy warrior
   maxHealth: 50
   armor: 10
-  dimensions: {x: 0, y: 0}
-  model: {fileID: -927199367670048503, guid: a9caf272762f9d94eb99054a3468f22f, type: 3}
+  dimensions: {x: 1, y: 1}
+  prefab: {fileID: 6183680411837010828, guid: 25a56fc1cc1fb894d806f60e9c4a2361, type: 3}
   thumbnail: {fileID: 21300000, guid: 425aa1389e096cc47aec644e33da79c0, type: 3}
   minimapMarker: {fileID: 0}
   mass: 1

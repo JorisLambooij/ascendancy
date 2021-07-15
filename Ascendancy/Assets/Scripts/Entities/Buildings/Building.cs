@@ -6,9 +6,12 @@ public class Building : Entity
 {
     public BuildingInfo buildingInfo;
     
-    public override void ClickOrder(RaycastHit hit, bool enqueue)
+    public override void ClickOrder(RaycastHit hit, bool enqueue, bool ctrl = false)
     {
-        throw new System.NotImplementedException();
+        bool success = false;
+        int i = 0;
+        while (!success && i < features.Count)
+            success = features[i++].ClickOrder(hit, enqueue, ctrl);
     }
 
     // Start is called before the first frame update

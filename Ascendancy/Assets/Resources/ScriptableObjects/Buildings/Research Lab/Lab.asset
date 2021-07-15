@@ -17,18 +17,18 @@ MonoBehaviour:
   maxHealth: 50
   armor: 0
   dimensions: {x: 1, y: 1}
-  model: {fileID: -927199367670048503, guid: 730908c984ca2674facf817c4b82131b, type: 3}
+  prefab: {fileID: 2678685071334957310, guid: 8534b3af2903556489e4a4b3fa33280f, type: 3}
   thumbnail: {fileID: 21300000, guid: 17ed54445f1961a46911f2f9a737ecbb, type: 3}
   minimapMarker: {fileID: 0}
   mass: 0
-  viewDistance: 0
+  viewDistance: 2
   contextMenuOptions: 0
   construction_Method: 1
   category: {fileID: 11400000, guid: eae2dede5d2272543ae5a83f42986218, type: 2}
   selectionPriority: 1
-  buildTime: 1
+  buildTime: 2
   resourceAmount:
-  - resource: {fileID: 11400000, guid: 12d5eb5b328016a40993a98535cbbd84, type: 2}
-    amount: 50
+  - resource: {fileID: 11400000, guid: 73d299aab683abc428b8e867394aa0ce, type: 2}
+    amount: 200
   entityFeatures:
   - {fileID: 11400000, guid: 1567fcc3fd0c89948a0ca71c1b9a81dc, type: 2}

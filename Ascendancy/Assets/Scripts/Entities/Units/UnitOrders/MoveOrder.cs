@@ -33,13 +33,24 @@ public class MoveOrder : UnitOrder
     
     public override void Execute()
     {
+        if (entity.Controller.NavAgent == null)
+        {
+            Debug.LogError("MoveOrder issued to Entity without a NavMeshAgent");
+            return;
+        }
+
         entity.Controller.NavAgent.SetDestination(CurrentDestination);
         entity.Controller.NavAgent.isStopped = false;
     }
 
     public override bool Fulfilled
     {
-        get { return entity.Controller.NavAgent.remainingDistance <= MAX_REMAINING_DISTANCE; }
+        get 
+        {
+            if (entity.Controller.NavAgent.pathPending)
+                return false;
+            return entity.Controller.NavAgent.remainingDistance <= MAX_REMAINING_DISTANCE;
+        }
     }
 
 }

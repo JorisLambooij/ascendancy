@@ -39,6 +39,9 @@ public struct TechnologyTree
         if (progress < 0)
             return 0;
 
+        if (techProgress == null)
+            Debug.LogError("Technology not initialized");
+
         // if more points are added than necessary, keep the additional points.
         float newProgress = techProgress.GetValue(techID) + progress;
         float overflow = 0;

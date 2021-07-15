@@ -17,24 +17,22 @@ public class Tile
     public float worldX, worldZ;
     #endregion
 
-    #region Terrain Data
-
-    protected bool flatLand;
-
-
-    #endregion
-    public bool FlatLand { get => flatLand; set => flatLand = value; }
-
     //basic constructor
-    public Tile()
+    public Tile(float worldX, float worldZ)
     {
         face = new Face();
+        this.worldX = worldX;
+        this.worldZ = worldZ;
+    }
+
+    public virtual bool FlatLand()
+    {
+        return face.botLeft.y == face.botRight.y && face.botRight.y == face.topRight.y && face.topRight.y == face.topLeft.y;
     }
 
     public Face[] GetFaces()
     {
-        Face[] faces = new Face[1];
-        faces[0] = face;
+        Face[] faces = new Face[1] { face };
         return faces;
     }
 

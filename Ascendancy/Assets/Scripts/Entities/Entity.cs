@@ -4,15 +4,27 @@ using System.Collections.Generic;
 using System.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.AI;
+using Mirror;
+using System;
 
-public class Entity : MonoBehaviour
+public class Entity : NetworkBehaviour, OccupationType
 {
-    public const float UPDATE_FREQ = 3; 
+    public const float UPDATE_FREQ = 3;
+
+    [SyncVar]
+    public int ownerID;
+
+    [SyncVar]
+    public string entityInfoString;
 
     /// <summary>
     /// Holds all the stats for this Entity.
     /// </summary>
     public EntityInfo entityInfo;
+
+    [HideInInspector]
+    public Transform modelParent;
 
     protected List<EntityFeature> features;
 
@@ -22,12 +34,73 @@ public class Entity : MonoBehaviour
 
     public UnityEvent OnDestroyCallbacks;
 
+    [ClientRpc]
+    public void RpcSetOwner(Transform owner)
+    {
+        Debug.Log("set owner: " + owner.name);
+        transform.SetParent(transform);
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        if (entityInfo == null)
+            entityInfo = ResourceLoader.GetEntityInfo(entityInfoString);
+
+        //Debug.Log("Creating model for " + entityInfo.name);
+
+        try
+        {
+            //Debug.Log(ResourceLoader.instance.entityInfoData);
+            GameObject e_model = Instantiate(ResourceLoader.instance.entityInfoData[entityInfoString].prefab, transform);
+            foreach (MeshRenderer mr in e_model.GetComponentsInChildren<MeshRenderer>())
+            {
+                foreach (Material mat in mr.materials)
+                    if (mat.name.ToLower().Contains("playercolor"))
+                        mat.SetColor("_BaseColor", Owner.PlayerColor);
+            }
+            modelParent = e_model.transform;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error when loading model for " + gameObject.name + "| " + e.Message);
+        }
+    }
+
+    [ClientRpc]
+    public void RpcCreateModel()
+    {
+        //Debug.Log("Creating model for " + entityInfo.name);
+    }
+
     /// <summary>
     /// The player who owns this Entity.
     /// </summary>
     public Player Owner
     {
-        get { return transform.parent.GetComponentInParent<Player>(); }
+        get
+        {
+            if (transform.parent == null)
+            {
+                Player[] players = FindObjectsOfType<Player>();
+                foreach (Player p in players)
+                    if (p.playerID == ownerID)
+                    {
+                        if (entityInfo.construction_Method == ConstructionMethod.Unit)
+                            transform.SetParent(p.UnitsGO);
+                        else
+                            transform.SetParent(p.BuildingsGO);
+                    }
+
+                if (transform.parent == null)
+                {
+                    Debug.LogError("Entity (" + gameObject.name + ") has no parent!");
+                    return null;
+                }
+            }
+            return transform.parent.GetComponentInParent<Player>();
+        }
     }
 
     /// <summary>
@@ -38,15 +111,27 @@ public class Entity : MonoBehaviour
         get { return currentHealth; }
     }
 
+    public EntityInfo GetEntityInfo()
+    {
+        return entityInfo;
+    }
+
+    public void LocalUpdate()
+    {
+        if (features != null)
+            foreach (EntityFeature feature in features)
+                feature.LocalUpdate();
+    }
+
     /// <summary>
     /// Receive an order
     /// </summary>
-    public virtual void ClickOrder(RaycastHit hit, bool enqueue)
+    public virtual void ClickOrder(RaycastHit hit, bool enqueue = false, bool ctrl = false)
     {
         bool success = false;
         int i = 0;
         while (!success && i < features.Count)
-            success = features[i++].ClickOrder(hit, enqueue);
+            success = features[i++].ClickOrder(hit, enqueue, ctrl);
         
     }
 
@@ -161,6 +246,9 @@ public class Entity : MonoBehaviour
 
     public T FindFeature<T>() where T : EntityFeature
     {
+        if (features == null)
+            return default(T);
+
         foreach(EntityFeature feature in features)
         {
             if (feature.GetType() == typeof(T))
@@ -169,6 +257,15 @@ public class Entity : MonoBehaviour
         return default(T);
     }
 
+    public void ForceMove(Vector3 position)
+    {
+        NavMeshAgent agent = GetComponent<NavMeshAgent>();
+        if (agent != null)
+            agent.enabled = false;
+        transform.position = position;
+        if (agent != null)
+            agent.enabled = true;
+    }
 
     /// <summary>
     /// Relay an order to this Entity.
@@ -177,6 +274,12 @@ public class Entity : MonoBehaviour
     /// <param name="enqueue">Whether the order should be queued or replace the current order queue. </param>
     public void IssueOrder(UnitOrder order, bool enqueue)
     {
+        if (controller == null)
+        {
+            Debug.LogError("Issuing order to Entity without EntityOrderController. Most likely because it is a building");
+            return;
+        }
+
         if (enqueue)
             controller.orders.Enqueue(order);
         else

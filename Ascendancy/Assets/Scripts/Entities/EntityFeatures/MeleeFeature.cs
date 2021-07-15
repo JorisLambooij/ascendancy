@@ -25,7 +25,7 @@ public class MeleeFeature : EntityFeature
     /// </summary>
     //public List<>
 
-    public override bool ClickOrder(RaycastHit hit, bool enqueue = false)
+    public override bool ClickOrder(RaycastHit hit, bool enqueue = false, bool ctrl = false)
     {
         if (hit.collider == null)
         {

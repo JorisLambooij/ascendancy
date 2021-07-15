@@ -26,7 +26,7 @@ public class MarkerMaterialHandler : MonoBehaviour
         if (!markerColor.Equals(Color.magenta))
             c = markerColor;
         else if (hasOwner)
-            c = e.Owner.playerColor;
+            c = e.Owner.PlayerColor;
         else
         {
             Debug.LogError("No color information for " + this.transform.parent.name + "'s minimap marker");

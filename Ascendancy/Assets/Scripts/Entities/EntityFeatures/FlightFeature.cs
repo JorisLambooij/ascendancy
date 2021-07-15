@@ -7,7 +7,6 @@ using UnityEngine;
 public class FlightFeature : EntityFeature
 {
     public float flyingSpeed;
-
     public float angularFlyingSpeed;
 
     public override void UpdateOverride()
@@ -15,8 +14,12 @@ public class FlightFeature : EntityFeature
         base.UpdateOverride();
     }
 
-    public override bool ClickOrder(RaycastHit hit, bool enqueue = false)
+    public override bool ClickOrder(RaycastHit hit, bool enqueue = false, bool ctrl = false)
     {
+        // ctrl means special order, so no movement
+        if (ctrl)
+            return false;
+
         if (hit.collider == null)
         {
             Debug.LogError("No hit.collider!");
@@ -28,11 +31,11 @@ public class FlightFeature : EntityFeature
         {
             case ("Unit"):
             case ("Building"):
-                moveOrder = new MoveOrder(entity, hit.collider.transform.position);
+                moveOrder = new FlightOrder(entity, hit.collider.transform.position);
                 entity.IssueOrder(moveOrder, enqueue);
                 return true;
             case ("Ground"):
-                moveOrder = new MoveOrder(entity, hit.point);
+                moveOrder = new FlightOrder(entity, hit.point);
                 entity.IssueOrder(moveOrder, enqueue);
                 return true;
 

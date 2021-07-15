@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a5cb45a69425e749b9857bb2290f361, type: 3}
+  m_Name: NuclearMissile
+  m_EditorClassIdentifier: 
+  horizontalVelocity: 4
+  arcHeight: 10
+  targetSeekingCoefficient: 0.5
+  lifeTime: 10
+  rangedDamage:
+    dmgComp: []
+  interceptable: 1
+  piercingPower: 0
+  projectilePrefab: {fileID: 5276842915712408972, guid: e03e69f1c83c2dd48a07f57fb1749def,
+    type: 3}
+  explosionDamage:
+    dmgComp:
+    - type: 0
+      APAmount: 1000
+      nonAPAmount: 1000
+  explosionRadius: 10
+  damageFalloff: 0.5
+  explosionEffect: {fileID: 5073886738320377436, guid: ff72eb07a5cabc34bacbfab4bc0706b0,
+    type: 3}

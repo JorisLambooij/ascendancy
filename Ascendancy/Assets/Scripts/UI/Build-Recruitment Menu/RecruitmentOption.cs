@@ -36,7 +36,13 @@ public class RecruitmentOption : MonoBehaviour
         
         RecruitmentFeature recruitmentF = Category.SelectedRecruiter.FindFeature<RecruitmentFeature>();
         Debug.Assert(recruitmentF != null, "Selected Entity cannot recruit!");
-        recruitmentF.AddToQueue(Unit);
+
+        bool shift = Input.GetKey(KeyCode.LeftShift), ctrl = Input.GetKey(KeyCode.LeftControl);
+
+        int amount = !shift && !ctrl ? 1 : ctrl ? 5 : 10;
+
+        for (int i = 0; i < amount; i++)
+            recruitmentF.AddToQueue(Unit);
     }
 
     protected void UpdateThumbnail()

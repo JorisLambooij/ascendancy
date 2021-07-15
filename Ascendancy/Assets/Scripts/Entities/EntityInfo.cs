@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// Is this a unit that needs to be recruited, or a building that can be built directly?
@@ -41,7 +42,7 @@ public class EntityInfo : ScriptableObject
     /// <summary>
     /// The Prefab used to instantiate this entity.
     /// </summary>
-    public GameObject model;
+    public GameObject prefab;
 
     /// <summary>
     /// entity Thumbnail.
@@ -95,7 +96,7 @@ public class EntityInfo : ScriptableObject
     /// Base cost of the entity.
     /// </summary>
     [SerializeField]
-    public List<Resource_Amount> resourceAmount;
+    public List<ResourceAmount> resourceAmount;
 
     [Header("Features")]
     /// <summary>
@@ -105,33 +106,42 @@ public class EntityInfo : ScriptableObject
 
     public virtual GameObject CreateInstance(Player owner, Vector3 position)
     {
-        GameObject prefab;
+        GameObject entityPrefab;
         Transform targetParent;
         if (construction_Method == ConstructionMethod.Building)
         {
             targetParent = owner.BuildingsGO.transform;
-            prefab = Resources.Load("Prefabs/Entities/Building Prefab") as GameObject;
+            entityPrefab = Resources.Load("Prefabs/Entities/Building Prefab") as GameObject;
         }
         else
         {
             targetParent = owner.UnitsGO.transform;
-            prefab = Resources.Load("Prefabs/Entities/Unit Prefab") as GameObject;
+            entityPrefab = Resources.Load("Prefabs/Entities/Unit Prefab") as GameObject;
         }
 
-        GameObject go = Instantiate(prefab, targetParent);
-        go.transform.position = position;
+        GameObject go = Instantiate(entityPrefab, targetParent);
 
-        Debug.Assert(model != null, "No Model selected for EntityInfo " + name);
-
-        GameObject e_model = Instantiate(model, go.transform);
+        if (prefab == null)
+        {
+            Debug.LogError("No Prefab selected for EntityInfo " + name);
+            return null;
+        }
+        /*
+        GameObject e_model = Instantiate(prefab, go.transform);
         foreach (MeshRenderer mr in e_model.GetComponentsInChildren<MeshRenderer>())
         {
             foreach (Material mat in mr.materials)
                 if (mat.name.ToLower().Contains("playercolor"))
-                    mat.SetColor("_BaseColor", owner.playerColor);
+                    mat.SetColor("_BaseColor", owner.PlayerColor);
         }
+        */
         //go.GetComponentInChildren<MeshFilter>().mesh = Mesh;
-        go.GetComponent<Entity>().entityInfo = this;
+        Entity entity = go.GetComponent<Entity>();
+        entity.entityInfo = this;
+        entity.ForceMove(position);
+        entity.ownerID = owner.playerID;
+
+        entity.entityInfoString = name; 
 
         go.name = name;
 

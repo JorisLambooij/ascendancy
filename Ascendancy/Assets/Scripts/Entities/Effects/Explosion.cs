@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
+    public float duration;
+
     public void Explode(ExplodingProjectileInfo info, Entity launcher = null)
     {
-        float duration = GetComponent<ParticleSystem>().main.duration;
-        duration -= 0.05f;
-        if (duration <= 0)
-        {
-            Debug.LogError("Explosion Duration too short!");
-            duration = 0.05f;
-        }
-        Destroy(this.gameObject, duration);
+        StartCoroutine(PlayParticles());
+        AudioSource sound = GetComponent<AudioSource>();
+        if (sound != null)
+            sound.Play();
 
         // Get all colliders in explosion radius
         Collider[] collidersInRange = Physics.OverlapSphere(transform.position, info.explosionRadius);
@@ -30,5 +28,13 @@ public class Explosion : MonoBehaviour
             }
         }
 
+    }
+
+    IEnumerator PlayParticles()
+    {
+        ParticleSystem pSystem = GetComponent<ParticleSystem>();
+        pSystem.Play();
+        yield return new WaitForSeconds(duration);
+        Destroy(this.gameObject);
     }
 }

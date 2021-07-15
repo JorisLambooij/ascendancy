@@ -17,7 +17,7 @@ MonoBehaviour:
   maxHealth: 100
   armor: 10
   dimensions: {x: 1, y: 1}
-  model: {fileID: -927199367670048503, guid: c78abd7c0f809074280dd8e2a515bba3, type: 3}
+  prefab: {fileID: 8182925271203486112, guid: 3cdd5e0d1c06ef84292e14f3d64e5f8a, type: 3}
   thumbnail: {fileID: 21300000, guid: db3a20636b22b064084246b82e675968, type: 3}
   minimapMarker: {fileID: 0}
   mass: 10

@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance { get => instance; }
 
-    public int playerNo;
+    public int playerNumber;
     public Player playerScript;
 
     public CameraScript camScript;
@@ -23,19 +23,18 @@ public class GameManager : MonoBehaviour
 
     private MP_Lobby playerManager;
 
-    // Start is called before the first frame update
-    void Awake()
+    public void Initialize()
     {
         instance = this;
 
-        playerManager = GameObject.Find("PlayerManager").GetComponent<MP_Lobby>();
+        playerManager = FindObjectOfType<MP_Lobby>();
 
         Player[] allPlayers = playerManager.GetComponentsInChildren<Player>();
         foreach(Player player in allPlayers)
-            if (player.playerNo == playerNo)
+            if (player.PlayerNumber == playerNumber)
                 playerScript = player;   //.GetComponent<PlayerLoader>().LoadPlayersIntoScene(playerNo);
 
-        Debug.Log("Found Player: " + playerScript);
+        Debug.Log("Found local Player: " + playerScript);
 
         // Create a new UI Manager
         ui_Manager = Instantiate(Resources.Load<GameObject>("Prefabs/UI/UI Manager")).GetComponent<UI_Manager>();
@@ -53,7 +52,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        controlMode.HandleInput();
+        controlMode?.HandleInput();
     }
 
     public void SwitchToMode(ControlModeEnum mode)
@@ -67,7 +66,16 @@ public class GameManager : MonoBehaviour
 
     public Player GetPlayer
     {
-        get { return playerManager.GetPlayer(playerNo); }
+        get 
+        {
+            return playerScript;
+            //return playerManager.GetPlayer(playerNumber);
+        }
+    }
+
+    public Player[] GetPlayers
+    {
+        get { return playerManager.GetComponentsInChildren<Player>(); }
     }
 
     public UI_Manager Ui_Manager { get => ui_Manager; }

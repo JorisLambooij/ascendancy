@@ -115,7 +115,7 @@ using Mirror;
             // we received a message from the remote endpoint
             response.EndPoint = endpoint;
             
-            Debug.Log("Sending new Request out");
+            Debug.Log("Received Response");
             // although we got a supposedly valid url, we may not be able to resolve
             // the provided host
             // However we know the real ip address of the server because we just
