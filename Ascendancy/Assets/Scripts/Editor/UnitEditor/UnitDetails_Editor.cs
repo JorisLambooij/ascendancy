@@ -11,12 +11,10 @@ public class UnitDetails_Editor : EditorWindow
     private static void OpenWindow()
     {
         UnitDetails_Editor window = GetWindow<UnitDetails_Editor>();
-        window.minSize = new Vector2(600f, 600f);
-        window.maxSize = new Vector2(600, 600f);        
     }
 
     private void OnEnable()
-    {     
+    {
 
     }
 
@@ -24,10 +22,9 @@ public class UnitDetails_Editor : EditorWindow
     {
         #region button row
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Save", GUILayout.Width(60)))
+        if (GUILayout.Button("Test", GUILayout.Width(60)))
         {
-            Debug.Log("Saving");
-            //SaveEntityInfo(info);
+            Debug.Log("Test");
         }
         GUILayout.EndHorizontal();
         #endregion
@@ -37,11 +34,30 @@ public class UnitDetails_Editor : EditorWindow
         if (info != null)
         {
             info.Update();
-            EditorGUILayout.LabelField("name:");
-            EditorGUILayout.PropertyField(info.FindProperty("name"), GUILayout.Width(400));
-            info.ApplyModifiedProperties();
+            //EditorGUILayout.LabelField("name:");
+            //EditorGUILayout.PropertyField(info.FindProperty("name"), GUILayout.Width(400));
+
+            var sp = info.GetIterator();
+
+            while (sp.NextVisible(true))
+            {
+                //if (sp.propertyType == SerializedPropertyType.ObjectReference)
+
+                if (sp != null)
+                    if (sp.name == "m_Script")
+                    {
+                    }
+                    else
+                    {
+                        EditorGUILayout.PropertyField(sp, true);
+                        Debug.Log(sp.name);
+                    }
+            }
+
+            //info.ApplyModifiedProperties();
         }
 
+        info.ApplyModifiedProperties();
         GUILayout.EndVertical();
 
         EditorGUIUtility.ExitGUI();
@@ -52,7 +68,7 @@ public class UnitDetails_Editor : EditorWindow
         this.info = info;
         UnitDetails_Editor window = GetWindow<UnitDetails_Editor>();
         window.titleContent = new GUIContent(info.FindProperty("name").stringValue);
-        window.maxSize = new Vector2(600f, 600f);
+        window.maxSize = new Vector2(800f, 800f);
         window.minSize = window.maxSize;
     }
 }
