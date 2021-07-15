@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
 
 #if (UNITY_EDITOR)
 public class EntityInfoEditor : EditorWindow
@@ -13,12 +11,21 @@ public class EntityInfoEditor : EditorWindow
     private int selectedIndex;
     private Vector2 scrollPos;
 
+    UnitDetails_Editor detailsWindow;
+
+    #region Filters
+    private string[] typeOptions = new string[3] { "Any", "Unit", "Building"};
+    private int typeIndex = 0;
+    private string[] tierOptions = new string[4] { "Any", "Tier 1", "Tier 2", "Tier 3" };
+    private int tierIndex = 0;
+    #endregion
+
     [MenuItem("Window/Entity Editor")]
     private static void OpenWindow()
     {
         EntityInfoEditor window = GetWindow<EntityInfoEditor>();
-        window.minSize = new Vector2(180f, 256f);
-        window.maxSize = new Vector2(200f, 512f);
+        window.minSize = new Vector2(250f, 600f);
+        window.maxSize = new Vector2(250f, 600f);
         window.titleContent = new GUIContent("Entity Editor");
     }
 
@@ -31,7 +38,7 @@ public class EntityInfoEditor : EditorWindow
         for (int i = 0; i < entityInfoClasses.Length; i++)
         {
             loadedEIs[i] = new SerializedObject(entityInfoClasses[i]);
-            fileNames[i] = System.IO.Path.GetFileName(AssetDatabase.GetAssetPath(entityInfoClasses[i]));
+            fileNames[i] = System.IO.Path.GetFileName(AssetDatabase.GetAssetPath(entityInfoClasses[i])).Replace(".asset", "");
         }
         Debug.Log("Loaded " + loadedEIs.Length + " Entities");
 
@@ -40,7 +47,10 @@ public class EntityInfoEditor : EditorWindow
     
     void OnGUI()
     {
-        //string name = selectedEntityInfo != null ? selectedEntityInfo.name : "-";        
+        
+
+        //string name = selectedEntityInfo != null ? selectedEntityInfo.name : "-";
+        #region button row 1
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("New", GUILayout.Width(60)))
         {
@@ -61,28 +71,60 @@ public class EntityInfoEditor : EditorWindow
             //SaveEntityInfo(info);
         }
         GUILayout.EndHorizontal();
+        #endregion
 
-        GUILayout.BeginVertical(GUILayout.Width(70));
-        scrollPos = GUILayout.BeginScrollView(scrollPos, false, true, GUILayout.ExpandHeight(true));    //this one is bullying me! -.-
+        #region button row 2
+        GUILayout.BeginHorizontal();
+
+        EditorGUI.BeginChangeCheck();
+        typeIndex = EditorGUILayout.Popup("Type:", typeIndex, typeOptions);
+        if (EditorGUI.EndChangeCheck())
+        {
+            Debug.Log("Selected: " + typeOptions[typeIndex]);
+        }
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        EditorGUI.BeginChangeCheck();
+        tierIndex = EditorGUILayout.Popup("Tier:", tierIndex, tierOptions);
+        if (EditorGUI.EndChangeCheck())
+        {
+            Debug.Log("Selected: " + tierOptions[tierIndex]);
+        }
+
+        GUILayout.EndHorizontal();
+        #endregion
+
+
+        scrollPos = GUILayout.BeginScrollView(scrollPos, true, true, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));    //this one is bullying me! -.-
+        GUILayout.BeginVertical();        
 
         for (int i = 0; i < loadedEIs.Length; i++)
         {
             GUI.backgroundColor = (selectedIndex == i) ? Color.blue : Color.white;
 
-
-            EditorGUILayout.PropertyField(loadedEIs[i].FindProperty("name"));
-            
-
-            Rect lastRect = GUILayoutUtility.GetLastRect();
-            //if (GUI.Button(lastRect, loadedEIs[i].FindProperty("name").stringValue))  this uses "name" property
-            if (GUI.Button(lastRect, fileNames[i]))
+            if (GUILayout.Button(fileNames[i], GUILayout.Width(220), GUILayout.Height(50)))
             {
-                selectedIndex = i;
+                selectedIndex = i;                
+                Debug.Log("Button " + fileNames[i] + " clicked!");
+                detailsWindow = (UnitDetails_Editor)EditorWindow.GetWindow(typeof(UnitDetails_Editor), false, "Details of " + fileNames[i]);
+                detailsWindow.Initialize(loadedEIs[i]);
             }
+
+
+            //EditorGUILayout.PropertyField(loadedEIs[i].FindProperty("name"), GUILayout.Width(220));
+
+
+            // Rect lastRect = GUILayoutUtility.GetLastRect();
+            // //if (GUI.Button(lastRect, loadedEIs[i].FindProperty("name").stringValue))  this uses "name" property
+            // if (GUI.Button(lastRect, fileNames[i]))
+            // {
+            //     selectedIndex = i;
+            // }
         }
 
         GUILayout.EndVertical();
-
+        GUILayout.EndScrollView();
         EditorGUIUtility.ExitGUI();
     }
 
