@@ -14,10 +14,8 @@ public class EntityInfoEditor : EditorWindow
     UnitDetails_Editor detailsWindow;
 
     #region Filters
-    private string[] typeOptions = new string[3] { "Any", "Unit", "Building"};
+    private string[] typeOptions = new string[3] { "Any", "Unit", "Building" };
     private int typeIndex = 0;
-    private string[] tierOptions = new string[4] { "Any", "Tier 1", "Tier 2", "Tier 3" };
-    private int tierIndex = 0;
     #endregion
 
     [MenuItem("Window/Entity Editor")]
@@ -44,10 +42,10 @@ public class EntityInfoEditor : EditorWindow
 
         RefreshWindow();
     }
-    
+
     void OnGUI()
     {
-        
+
 
         //string name = selectedEntityInfo != null ? selectedEntityInfo.name : "-";
         #region button row 1
@@ -60,7 +58,7 @@ public class EntityInfoEditor : EditorWindow
             selectedEntityInfo = info;
 
         }
-        if(GUILayout.Button("Load", GUILayout.Width(60)))
+        if (GUILayout.Button("Load", GUILayout.Width(60)))
         {
             Debug.Log("Loading");
             LoadEntityInfo();
@@ -83,44 +81,33 @@ public class EntityInfoEditor : EditorWindow
             Debug.Log("Selected: " + typeOptions[typeIndex]);
         }
         GUILayout.EndHorizontal();
-
-        GUILayout.BeginHorizontal();
-        EditorGUI.BeginChangeCheck();
-        tierIndex = EditorGUILayout.Popup("Tier:", tierIndex, tierOptions);
-        if (EditorGUI.EndChangeCheck())
-        {
-            Debug.Log("Selected: " + tierOptions[tierIndex]);
-        }
-
-        GUILayout.EndHorizontal();
         #endregion
 
 
         scrollPos = GUILayout.BeginScrollView(scrollPos, true, true, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));    //this one is bullying me! -.-
-        GUILayout.BeginVertical();        
+        GUILayout.BeginVertical();
 
         for (int i = 0; i < loadedEIs.Length; i++)
         {
-            GUI.backgroundColor = (selectedIndex == i) ? Color.blue : Color.white;
+            Debug.Log("cm: " + loadedEIs[i].FindProperty("construction_Method").enumValueIndex);
 
-            if (GUILayout.Button(fileNames[i], GUILayout.Width(220), GUILayout.Height(50)))
+            if (
+                loadedEIs[i].FindProperty("construction_Method").enumValueIndex == 0 && (typeIndex == 0 || typeIndex == 1)  //unit
+                ||
+                loadedEIs[i].FindProperty("construction_Method").enumValueIndex == 1 && (typeIndex == 0 || typeIndex == 2)  //building
+                )
             {
-                selectedIndex = i;                
-                Debug.Log("Button " + fileNames[i] + " clicked!");
-                detailsWindow = (UnitDetails_Editor)EditorWindow.GetWindow(typeof(UnitDetails_Editor), false, "Details of " + fileNames[i]);
-                detailsWindow.Initialize(loadedEIs[i]);
+                GUI.backgroundColor = (selectedIndex == i) ? Color.blue : Color.white;
+
+                if (GUILayout.Button(fileNames[i], GUILayout.Width(220), GUILayout.Height(50)))
+                {
+                    selectedIndex = i;
+                    Debug.Log("Button " + fileNames[i] + " clicked!");
+                    detailsWindow = (UnitDetails_Editor)EditorWindow.GetWindow(typeof(UnitDetails_Editor), false, "Details of " + fileNames[i]);
+                    detailsWindow.Initialize(loadedEIs[i]);
+                }
             }
 
-
-            //EditorGUILayout.PropertyField(loadedEIs[i].FindProperty("name"), GUILayout.Width(220));
-
-
-            // Rect lastRect = GUILayoutUtility.GetLastRect();
-            // //if (GUI.Button(lastRect, loadedEIs[i].FindProperty("name").stringValue))  this uses "name" property
-            // if (GUI.Button(lastRect, fileNames[i]))
-            // {
-            //     selectedIndex = i;
-            // }
         }
 
         GUILayout.EndVertical();
@@ -130,7 +117,7 @@ public class EntityInfoEditor : EditorWindow
 
     void RefreshWindow()
     {
-        
+
     }
 
     private EntityInfo LoadEntityInfo()
@@ -162,7 +149,7 @@ public class EntityInfoEditor : EditorWindow
 
         //this line is throws an exception because it crashes the gui stack. Exit gui first if you need it.
         string path = EditorUtility.SaveFilePanel("Save Entity", infoPath, selectedEntityInfo.name, "asset");
-        
+
         int index = path.IndexOf(infoPath);
         path = path.Substring(index);
 
