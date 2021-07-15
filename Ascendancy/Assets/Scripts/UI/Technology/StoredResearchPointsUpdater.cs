@@ -8,13 +8,17 @@ public class StoredResearchPointsUpdater : MonoBehaviour, PropertySubscriber<flo
 {
     private Text textField;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         textField = GetComponent<Text>();
         GetComponentInParent<PlayerTechScreen>().playerTechLevel.storedResearch.Subscribe(this);
     }
     
+    void OnEnable()
+    {
+        textField.text = GetComponentInParent<PlayerTechScreen>().playerTechLevel.storedResearch.Value.ToString();
+    }
+
     void PropertySubscriber<float>.Callback(float updatedValue)
     {
         textField.text = updatedValue.ToString();
