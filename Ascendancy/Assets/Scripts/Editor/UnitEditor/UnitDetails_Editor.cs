@@ -57,12 +57,13 @@ public class UnitDetails_Editor : EditorWindow
                         GUILayout.BeginHorizontal();
 
                         EditorGUI.BeginChangeCheck();
-                        EditorGUILayout.PropertyField(sp, true, GUILayout.Width(550f));
+                        //EditorGUILayout.PropertyField(sp, true, GUILayout.Width(550f));
+                        sp.objectReferenceValue = EditorGUILayout.ObjectField("Prefab", sp.objectReferenceValue, typeof(GameObject), false);
                         if (EditorGUI.EndChangeCheck())
                         {
                             refreshPreview = true;
                         }
-                        
+
 
                         if (gameObjectEditor == null)
                         {
@@ -77,9 +78,9 @@ public class UnitDetails_Editor : EditorWindow
                         }
 
                         if (gameObject != null)
-                            gameObjectEditor.OnPreviewGUI(GUILayoutUtility.GetRect(50, 50), EditorStyles.whiteLabel);
+                            gameObjectEditor.OnPreviewGUI(GUILayoutUtility.GetRect(200, 200), EditorStyles.whiteLabel);
                         else
-                        { 
+                        {
                         }
                         GUILayout.EndHorizontal();
                         //}
