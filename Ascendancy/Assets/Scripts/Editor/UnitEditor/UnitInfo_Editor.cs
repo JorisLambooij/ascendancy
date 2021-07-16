@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,6 +13,9 @@ public class EntityInfoEditor : EditorWindow
     private string infoPath = "ScriptableObjects/";
     private int selectedIndex;
     private Vector2 scrollPos;
+
+    private string searchAndOpen = "";
+    private string nameChange = "";
 
     UnitDetails_Editor detailsWindow;
 
@@ -60,12 +64,12 @@ public class EntityInfoEditor : EditorWindow
         if (GUILayout.Button("New Unit", GUILayout.Width(100)))
         {
             Debug.Log("New Unit...");
-
+            createNewEntity(true);
         }
         if (GUILayout.Button("New Building", GUILayout.Width(100)))
         {
             Debug.Log("New Building...");
-
+            createNewEntity(false);
         }
         GUILayout.EndHorizontal();
         #endregion
@@ -169,6 +173,30 @@ public class EntityInfoEditor : EditorWindow
 
         }
 
+        if (searchAndOpen != "")
+        {
+            for (int i = 0; i<fileNames.Length; i++)
+            {
+                if(fileNames[i] == searchAndOpen)
+                {
+                    selectedIndex = i;
+                    Debug.Log("Found " + fileNames[i] + "!");
+
+                    if (nameChange != "")
+                    {
+                        loadedEIs[i].FindProperty("name").stringValue = nameChange;
+                        loadedEIs[i].ApplyModifiedProperties();
+                    }
+
+                    detailsWindow = (UnitDetails_Editor)EditorWindow.GetWindow(typeof(UnitDetails_Editor), false, "Details of " + fileNames[i]);
+                    detailsWindow.Initialize(loadedEIs[i]);
+                    break;
+                }
+            }
+
+            searchAndOpen = "";
+        }
+
         GUILayout.EndVertical();
         GUILayout.EndScrollView();
         EditorGUIUtility.ExitGUI();
@@ -176,7 +204,68 @@ public class EntityInfoEditor : EditorWindow
 
     void RefreshWindow()
     {
+        
+    }
 
+    private void createNewEntity(bool isUnit)
+    {
+        string assetPath;
+        string type;
+
+        if (isUnit)
+        {
+            assetPath = "Assets/Resources/ScriptableObjects/TemplateUnit.asset";
+            type = "unit";
+        }
+        else
+        {
+            assetPath = "Assets/Resources/ScriptableObjects/TemplateBuilding.asset";
+            type = "building";
+        }
+
+        string newPath;
+
+        newPath = EditorUtility.SaveFilePanel(
+            "Create new" + type,
+            "Assets/Resources/ScriptableObjects/" + type + "s/",
+            "new_" + type + ".asset",
+            "asset");
+
+        if (newPath == "")
+        {
+            Debug.Log("aborted new " + type);
+            return;
+        };
+
+        if (newPath.StartsWith(Application.dataPath))
+        {
+            newPath = "Assets" + newPath.Substring(Application.dataPath.Length);
+        }
+        else
+        {
+            throw new System.ArgumentException("Full path does not contain the current project's Assets folder: |" + newPath + "|", "newPath");
+        }
+
+        if (!AssetDatabase.CopyAsset(assetPath, newPath))
+            Debug.LogWarning("Failed to save at " + newPath);
+        else
+        {
+            string name = Path.GetFileName(newPath).Replace(".asset", "");
+
+
+            Debug.Log("bad path: " + newPath);
+            //change name
+            nameChange = name;
+
+            //select new asset
+            typeIndex = 0;
+            catIndex = 0;
+
+            OnEnable(); //refresh
+            
+            searchAndOpen = name;
+            Debug.Log("searching for new asset " + searchAndOpen);
+        }
     }
 
     //private EntityInfo LoadEntityInfo()
