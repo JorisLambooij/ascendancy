@@ -214,12 +214,12 @@ public class EntityInfoEditor : EditorWindow
 
         if (isUnit)
         {
-            assetPath = "Assets/Resources/ScriptableObjects/TemplateUnit.asset";
+            assetPath = "Assets/Scripts/Editor/UnitEditor/TemplateUnit.asset";
             type = "unit";
         }
         else
         {
-            assetPath = "Assets/Resources/ScriptableObjects/TemplateBuilding.asset";
+            assetPath = "Assets/Scripts/Editor/UnitEditor/TemplateBuilding.asset";
             type = "building";
         }
 
