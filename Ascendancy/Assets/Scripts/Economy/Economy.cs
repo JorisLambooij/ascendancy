@@ -13,17 +13,6 @@ public class Economy : NetworkBehaviour
 
     //private List<ResourceAmount> startResources;
 
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
-    }
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        resourceSyncDictionary.Callback += OnResourceChange;
-    }
-
     public void Initialize()
     {
         //adding start resources
@@ -31,10 +20,6 @@ public class Economy : NetworkBehaviour
 
         //resourceStorage = new SubscribableDictionary<Resource, float>();
         //availableResources = new SubscribableList<Resource>();
-    }
-    void OnResourceChange(SyncDictionary<string, float>.Operation op, string resource, float amount)
-    {
-        //Debug.Log(op + " - " + resource + " " + amount);
     }
 
     private void Update()
@@ -56,13 +41,11 @@ public class Economy : NetworkBehaviour
             if (resAm.resource.Equals(resource))
                 AddResourceAmount(resAm);
         }
-
     }
 
     [Command]
     public void CmdNewAvailableResource(string resource)
     {
-        Debug.Log("www");
         if (!availableResources.Contains(resource))
             availableResources.Add(resource);
 
@@ -100,7 +83,11 @@ public class Economy : NetworkBehaviour
 
         //resourceSyncDictionary[resource.name] = amount;
         //resourceStorage.SetValue(resource, amount);
-        CmdSetResourceAmount(resource.name, amount);
+
+        if (isServer)
+            resourceSyncDictionary[resource.name] = amount;
+        else
+            CmdSetResourceAmount(resource.name, amount);
     }
 
     public bool IsResourceAvailable(Resource resource)
@@ -109,9 +96,8 @@ public class Economy : NetworkBehaviour
     }
 
     [Command]
-    protected void CmdSetResourceAmount(string resource, float amount)
+    public void CmdSetResourceAmount(string resource, float amount)
     {
-        Debug.Log(resource + amount);
         resourceSyncDictionary[resource] = amount;
     }
 
