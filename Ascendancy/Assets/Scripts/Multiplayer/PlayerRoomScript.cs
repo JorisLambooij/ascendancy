@@ -8,16 +8,15 @@ using System;
 public class PlayerRoomScript : NetworkRoomPlayer
 {
     [Header("Player Info")]
-    [SyncVar(hook = nameof(OnNameChange))]
+    [SyncVar]
     public string playerName;
 
-    [SyncVar(hook = nameof(HookColorChange))]
+    [SyncVar]
     public int playerColorIndex;
 
     [HideInInspector]
-    public UnityEvent nameChangeEvent = new UnityEvent();
-    [HideInInspector]
-    public UnityEvent setReadyEvent = new UnityEvent();
+    public UnityEvent OnColorChangeEvent;
+
     [HideInInspector]
     public static event Action<PlayerRoomScript, ChatMessage> OnMessage;
 
@@ -29,19 +28,12 @@ public class PlayerRoomScript : NetworkRoomPlayer
         }
     }
 
-    private void Update()
+    public override void OnClientEnterRoom()
     {
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            CmdSpawnTest();
-        }
-    }
-
-    [Command]
-    public void CmdSpawnTest()
-    {
-        GameObject test = Instantiate(FindObjectOfType<MP_Lobby>().testPrefab, new Vector3(10, 2, 10), Quaternion.identity);
-        NetworkServer.Spawn(test);
+        base.OnClientEnterRoom();
+        //gameObject.name = "Player - " + playerName + "";
+        CmdBroadcastName(playerName);
+        CmdColorChange(playerColorIndex);
     }
 
     #region playerColor
@@ -49,59 +41,37 @@ public class PlayerRoomScript : NetworkRoomPlayer
     public void CmdColorChange(int newColorindex)
     {
         this.playerColorIndex = newColorindex;
-        //colorChangeEvent.Invoke();
         Debug.Log("Player " + playerName + " changes color to " + newColorindex);
+        RpcColorChange(newColorindex);
     }
 
-    public void HookColorChange(int oldColorIndex, int newColorIndex)
+    [ClientRpc]
+    public void RpcColorChange(int newColorIndex)
     {
         this.playerColorIndex = newColorIndex;
-        Debug.Log("HOOK: Player " + playerName + " color changed from " + oldColorIndex + " to " + newColorIndex);
+        OnColorChangeEvent.Invoke();
+        Debug.Log("HOOK: Player " + playerName + " color changed to " + newColorIndex);
     }
     #endregion
 
     #region playerName
-
-    private void OnNameChange(string oldName, string newName)
-    {
-        Debug.Log("Name Changed by Server: " + newName);
-        nameChangeEvent.Invoke();
-        gameObject.name = "Player (" + newName + ")";
-    }
-
-    public void InvokeCmdNameChange()
-    {
-        Debug.Log("InvokeCmdNameChange");
-        if (hasAuthority)
-            CmdNameChange(playerName);
-    }
-
     [Command]
-    public void CmdNameChange(string newName)
+    public void CmdBroadcastName(string pname)
     {
-        Debug.Log("Client changes name to " + newName);
-        playerName = newName;
-        //if (hasAuthority)
-        //    CmdNameChange(newName);
+        RpcChangeClientName(pname);
     }
-
     [ClientRpc]
-    public void RpcLookupName()
+    public void RpcChangeClientName(string pname)
     {
-        PrefManager prefManager = GameObject.Find("PlayerPrefManager").GetComponent<PrefManager>();
-        playerName = prefManager.GetPlayerName();
-        Debug.Log("playername is now " + playerName);
-        if (hasAuthority)
-            CmdNameChange(playerName);
+        gameObject.name = "Player - " + pname;
+        this.playerName = pname;
     }
-
     #endregion
 
     #region Lobby
     public void SetReady(bool ready)
     {
         readyToBegin = ready;
-        setReadyEvent.Invoke();
         CmdSetReady(ready);
     }
 
@@ -109,9 +79,6 @@ public class PlayerRoomScript : NetworkRoomPlayer
     private void CmdSetReady(bool ready)
     {
         readyToBegin = ready;
-
-        setReadyEvent.Invoke();
-        Debug.Log("Player " + playerName + " is ready? " + ready);
     }
 
     public bool GetReadyState()

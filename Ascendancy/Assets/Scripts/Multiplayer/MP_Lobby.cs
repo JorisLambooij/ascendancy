@@ -125,24 +125,29 @@ public class MP_Lobby : NetworkBehaviour
             //you should only be able to change your own color
             entryUI.GetComponentInChildren<Dropdown>().interactable = false;
 
-            if (isServer)
-                player.RpcLookupName();
+            //if (isServer)
+            //    player.RpcLookupName();
 
             Debug.Log("Remote player connected"); //we do not have the correct playername at this time
         }
 
+
         entryUI.player = player;
+
+        player.playerColorIndex = playerCount;
         entryUI.PlayerColorIndex = playerCount;
+
         entryUI.PlayerNo = (++playerCount);
         entryUI.playerNameText.text = player.playerName;
+        player.OnColorChangeEvent.AddListener(entryUI.OnColorChange);
 
         player.index = entryUI.PlayerNo;
 
         playerDict.Add(player.index, player);
 
-        player.setReadyEvent.AddListener(() => SetReadyEventListener(player));
+        //player.setReadyEvent.AddListener(() => SetReadyEventListener(player));
 
-        
+        /*
         if (isServer && playerDict.Count > 1)
         {
             //Host player is ready if enough players are currently connected
@@ -153,31 +158,22 @@ public class MP_Lobby : NetworkBehaviour
             //nwrPlayer.readyToBegin = true;
             //riReadyState.color = Color.green;
 
-            localPlayer.SetReady(true);
+            //localPlayer.SetReady(true);
         }
         else if (playerDict.Count > 1)
         {
             //host should be ready, so lets manually switch host indicator to ready
             SetReady(playerDict[1], true);
         }
-        
+        */
     }
     
 
     public void ButtonReadyStartClick()
     {
-        //Button Ready
-        //NetworkRoomPlayer nwrPlayer = localPlayer.GetComponent<NetworkRoomPlayer>();
-        if (localPlayer.GetReadyState())
-        {
-            //SetReady(localPlayer, false);
-            localPlayer.SetReady(false);
-        }
-        else
-        {
-            //SetReady(localPlayer, true);
-            localPlayer.SetReady(true);
-        }
+        bool ready = !localPlayer.GetReadyState();
+        localPlayer.CmdChangeReadyState(ready);
+        localPlayer.SetReady(ready);
     }
 
     public void ToggleStartButton(bool on)
