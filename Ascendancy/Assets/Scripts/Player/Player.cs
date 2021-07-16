@@ -24,7 +24,8 @@ public class Player : NetworkBehaviour
     public Transform UnitsGO { get => unitsGO; set => unitsGO = value; }
 
     public string PlayerName { get; protected set; }
-    public Color PlayerColor { get; protected set; }
+    public Color PlayerColor { get { return roomPlayer.PlayerColor; } }
+
     public PlayerRoomScript RoomPlayer
     {
         get => roomPlayer;
