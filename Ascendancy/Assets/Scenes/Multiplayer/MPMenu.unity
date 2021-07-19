@@ -407,7 +407,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 470103137}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999999
+  m_Size: 0.49999988
   m_NumberOfSteps: 1
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1756,6 +1756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 003e09e778875644680b4a5f0dc9b5d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useLocalHost: 1
   secretHandshake: -586547379470987052
   serverBroadcastListenPort: 47777
   enableActiveDiscovery: 1
