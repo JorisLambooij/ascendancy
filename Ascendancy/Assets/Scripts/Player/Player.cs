@@ -94,6 +94,7 @@ public class Player : NetworkBehaviour
         float tileSize = (World.Instance as World)?.tileSize ?? 1;
         Vector2 position = new Vector3(startPosition.x * tileSize + (tileSize / 2), startPosition.y * tileSize + (tileSize / 2));
         float height = (World.Instance as World)?.GetHeight(position) ?? 1;
+        height -= 0.05f;
 
         CmdSpawnUnit("E.S.V.", new Vector3(position.x, height, position.y));
     }
