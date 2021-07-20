@@ -17,6 +17,8 @@ public class BuildingConversionFeature : EntityFeature
 
     public override void ContextMenuOption()
     {
+        abort = false;
+
         buildingMode = GameManager.Instance.controlModeDict[ControlModeEnum.buildingMode] as BuildingPlacementMode;
         buildingMode.Building = convertedEntity;
 
