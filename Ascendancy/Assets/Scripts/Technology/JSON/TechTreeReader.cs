@@ -5,8 +5,8 @@ using System.IO;
 
 public class TechTreeReader : MonoBehaviour
 {
-    public static string techPath = Application.dataPath + "/StreamingAssets/Data/Technology/tech_general.json";
-    public static string nodePath = Application.dataPath + "/StreamingAssets/Data/Technology/tech_general_nodeData.json";
+    public static string techPath = "Assets/_Data/Technology/tech_general.json";
+    public static string nodePath = "Assets/_Data/Technology/tech_general_nodeData.json";
 
     private static TechTreeReader instance;
     public static TechTreeReader Instance

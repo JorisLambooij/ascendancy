@@ -20,10 +20,7 @@ namespace Mirror.Discovery
     public abstract class NetworkDiscoveryBase<Request, Response> : MonoBehaviour
         where Request : NetworkMessage
         where Response : NetworkMessage
-
     {
-        public bool useLocalHost = false;
-
         public static bool SupportedOnThisPlatform { get { return Application.platform != RuntimePlatform.WebGLPlayer; } }
 
         // each game should have a random unique handshake,  this way you can tell if this is the same game or not
@@ -322,11 +319,7 @@ namespace Mirror.Discovery
                 return;
             }
 
-            // TODO: different ISPs handle IPs differently, so sometimes we might need something else than 255.255.255.255
-            //IPAddress address = IPAddress.Parse("127.0.0.1");
-            IPAddress address = useLocalHost ? IPAddress.Parse("127.0.0.1") : IPAddress.Broadcast;
-
-            IPEndPoint endPoint = new IPEndPoint(address, serverBroadcastListenPort);
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Broadcast, serverBroadcastListenPort);
 
             using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
             {
