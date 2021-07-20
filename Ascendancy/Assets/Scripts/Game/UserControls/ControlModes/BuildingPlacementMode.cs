@@ -7,6 +7,9 @@ public class BuildingPlacementMode : ControlMode
 {
     public static bool cheatMode = false;
 
+    private static bool orderMode = false;
+    public static BuildingConversionFeature sender;
+
     private GameObject ghostBuilding;
     private EntityInfo buildingInfo;
     private float floorClipthrough = 0.01f;
@@ -63,7 +66,17 @@ public class BuildingPlacementMode : ControlMode
             preview.GetComponentInChildren<BuildingPreview>().Valid = validLocation;
             
             if(Input.GetMouseButtonDown(0))
-                AttemptPlaceBuilding(Building, position, cheatMode);
+                if(!orderMode)
+                    AttemptPlaceBuilding(Building, position, cheatMode);
+                else
+                {
+                    orderMode = false;
+
+                    sender.BuildAt(position);
+
+                    sender = null;
+                    gameManager.SwitchToMode(ControlModeEnum.gameMode);
+                }
         }
         
     }
@@ -136,5 +149,11 @@ public class BuildingPlacementMode : ControlMode
     public override void Stop()
     {
         preview.SetActive(false);
+    }
+
+    public void StartOrderMode(BuildingConversionFeature sender)
+    {
+        orderMode = true;
+        BuildingPlacementMode.sender = sender;
     }
 }
