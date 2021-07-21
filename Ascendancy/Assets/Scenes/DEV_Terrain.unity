@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -372,7 +372,7 @@ RectTransform:
   - {fileID: 1558714841}
   - {fileID: 1168132024}
   - {fileID: 1594942034}
-  - {fileID: 569751316}
+  - {fileID: 8488499084099579773}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -504,6 +504,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d37627fd4e48c547954dafcddba1ea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
 --- !u!114 &146253972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -516,13 +518,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdface0f48c757a4292b473232ae77f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   playerNo: 1
   playerName: Alice
   playerColor: {r: 0, g: 0.754717, b: 0.030186852, a: 0}
-  economy: {fileID: 0}
-  techLevel: {fileID: 0}
-  buildingsGO: {fileID: 1575672257}
-  unitsGO: {fileID: 1994850259}
+  playerColorIndex: 0
+  nameChangeEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  colorChangeEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  setReadyEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &146253973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,8 +545,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94e8c9b71a478444198b935a28ed1757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   currentFocus: 0
-  storedResearch: 0
 --- !u!1 &314621897
 GameObject:
   m_ObjectHideFlags: 0
@@ -1066,6 +1077,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityInfo: {fileID: 11400000, guid: d2af5a655d69fec458b37bc3b15b5a75, type: 2}
+  OnDestroyCallbacks:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &409285947 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7551204154752481067, guid: 204dd92974604ec4bb53de31b1bfaa9b,
@@ -1173,12 +1187,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a39f7f9df6374034c874765c46dd3be4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useDebugHeightmap: 0
+  debugHeightmap: {fileID: 0}
   perlinOffset: {x: 1, y: 0}
   octaves: 4
   lucanarity: 2
   persistance: 0.5
-  mapWidth: 64
-  mapHeight: 64
+  heightOffset: 1
   cliffIntensity: 1
   terrainHeightGradient:
     serializedVersion: 2
@@ -1282,12 +1297,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 542766201}
   m_CullTransparentMesh: 0
---- !u!4 &569751316 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 404656679587483268, guid: 0a2960eba42395947b91de896fd53a4f,
-    type: 3}
-  m_PrefabInstance: {fileID: 8488499084099579772}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &595733495
 GameObject:
   m_ObjectHideFlags: 0
@@ -2165,7 +2174,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &799973952
 GameObject:
@@ -2671,6 +2680,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6965d74baaf0ce48bbcc01df400f1f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Initialize:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &980182820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3492,7 +3504,6 @@ MonoBehaviour:
   camScript: {fileID: 858608293}
   world: {fileID: 1439411476}
   occupationMap: {fileID: 0}
-  UICanvas: {fileID: 0}
 --- !u!4 &1338234486
 Transform:
   m_ObjectHideFlags: 0
@@ -4004,7 +4015,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &1557713339
 GameObject:
@@ -4544,7 +4555,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af47ec6c1fa411468214bbc9ef90549, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  valid: 0
+  material: {fileID: 0}
   validColor: {r: 0, g: 1, b: 0, a: 0.48235294}
   invalidColor: {r: 1, g: 0, b: 0, a: 0.45490196}
 --- !u!136 &1619810661
@@ -4620,7 +4631,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1680929755
 GameObject:
@@ -4669,6 +4680,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d37627fd4e48c547954dafcddba1ea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
 --- !u!114 &1680929758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4681,13 +4694,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdface0f48c757a4292b473232ae77f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   playerNo: 2
   playerName: Bob
   playerColor: {r: 1, g: 0.5254831, b: 0, a: 0}
-  economy: {fileID: 0}
-  techLevel: {fileID: 0}
-  buildingsGO: {fileID: 1689609845}
-  unitsGO: {fileID: 1000030815}
+  playerColorIndex: 0
+  nameChangeEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  colorChangeEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  setReadyEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1680929759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4700,8 +4721,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94e8c9b71a478444198b935a28ed1757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   currentFocus: 0
-  storedResearch: 0
 --- !u!1 &1689609845
 GameObject:
   m_ObjectHideFlags: 0
@@ -5269,112 +5291,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1929590637}
   m_CullTransparentMesh: 0
---- !u!1 &1934676497
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1934676500}
-  - component: {fileID: 1934676499}
-  - component: {fileID: 1934676498}
-  m_Layer: 0
-  m_Name: Minimap Camera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1934676498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1934676497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_RenderShadows: 0
-  m_RequiresDepthTextureOption: 0
-  m_RequiresOpaqueTextureOption: 0
-  m_CameraType: 0
-  m_CameraOutput: 0
-  m_Cameras: []
-  m_RendererIndex: -1
-  m_VolumeLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  m_VolumeTrigger: {fileID: 0}
-  m_RenderPostProcessing: 0
-  m_Antialiasing: 0
-  m_AntialiasingQuality: 2
-  m_StopNaN: 0
-  m_Dithering: 0
-  m_RequiresDepthTexture: 0
-  m_RequiresColorTexture: 0
-  m_Version: 2
---- !u!20 &1934676499
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1934676497}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.29730332, g: 0.36759079, b: 0.4811321, a: 1}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 1
-  orthographic size: 128
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 1536
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 999e41ce99aa9b94f9d8b092a59447b7, type: 2}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 0
-  m_AllowMSAA: 0
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
---- !u!4 &1934676500
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1934676497}
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 128, y: 100, z: 128}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &1994057725
 GameObject:
   m_ObjectHideFlags: 0
@@ -5466,7 +5382,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1994850259
 GameObject:
@@ -5767,7 +5683,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2095085781
 GameObject:
@@ -6054,3 +5970,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a2960eba42395947b91de896fd53a4f, type: 3}
+--- !u!4 &8488499084099579773 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 8488499084099579772}
+  m_PrefabAsset: {fileID: 0}

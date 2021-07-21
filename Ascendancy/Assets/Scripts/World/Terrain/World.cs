@@ -75,6 +75,22 @@ public class World : MonoBehaviour
     /// </summary>
     private Texture2D terrainMaskTexture;
 
+    /// <summary>
+    /// Texture that functions as terrain alpha.
+    /// </summary>
+    private Material terrainMaterial;
+
+    /// <summary>
+    /// Used to control FOW.
+    /// </summary>
+    public FogOfWarHandler fowHandler;
+
+    /// <summary>
+    /// Terrain Color Texture mainly used for minimap
+    /// </summary>
+    public Texture2D TerrainColorTexture;
+
+
     public void Awake()
     {
         Instance = this;
@@ -82,13 +98,21 @@ public class World : MonoBehaviour
         foreach (Chunk c in existingChunks)
             Destroy(c.gameObject, 0.1f);
 
-        #region initialize mask texture
+        #region initialize mask textures
+        //terrainMask
         terrainMaskTexture = new Texture2D(worldSize, worldSize);
         Color[] whitePixels = Enumerable.Repeat(Color.white, worldSize * worldSize).ToArray();
         terrainMaskTexture.SetPixels(whitePixels);
         terrainMaskTexture.Apply();
         terrainMaskTexture.wrapMode = TextureWrapMode.Clamp;
         terrainMaskTexture.filterMode = FilterMode.Point;
+
+        //waterAlpha
+        Texture2D waterAlpha = new Texture2D(worldSize, worldSize);
+        waterAlpha.SetPixels(whitePixels);
+        waterAlpha.Apply();
+        waterAlpha.wrapMode = TextureWrapMode.Clamp;
+        waterAlpha.filterMode = FilterMode.Point;
         #endregion
 
         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
@@ -106,6 +130,8 @@ public class World : MonoBehaviour
         }
         */
     }
+
+
 
     public void CreateWorld()
     {
@@ -181,7 +207,7 @@ public class World : MonoBehaviour
         //chunkGO.transform.position = new Vector3(startX, 0, startZ) * 64 * tileSize;
         Chunk chunk = chunkGO.GetComponent<Chunk>();
         chunk.chunkIndex = new Vector2Int(startX, startZ);
-        
+
         Tile[,] chunkTilemap = new Tile[chunkSize, chunkSize];
         Color32[,] chunkColormap = new Color32[chunkSize + 2, chunkSize + 2];
 
@@ -390,10 +416,7 @@ public class World : MonoBehaviour
             gridfloat = 0;
         }
 
-        foreach (Chunk c in chunks)
-        {
-            c.GetComponent<Renderer>().material.SetFloat("_grid", gridfloat);
-        }
+        terrainMaterial.SetFloat("_grid", gridfloat);
     }
 
     public void SetTileVisible(int x, int y, bool visible)
@@ -405,11 +428,8 @@ public class World : MonoBehaviour
 
         terrainMaskTexture.Apply();
 
-        foreach (Chunk c in chunks)
-        {
-            if (c!= null)
-                c.GetComponent<Renderer>().material.SetTexture("_mask", terrainMaskTexture);
-        }
+        terrainMaterial.SetTexture("_mask", terrainMaskTexture);
+
     }
 
     public void SetTileVisible(Vector3 pos, bool visible)
@@ -417,5 +437,5 @@ public class World : MonoBehaviour
         Vector2Int v = IntVector(pos);
         SetTileVisible(v.x, v.y, visible);
     }
-        #endregion
-    }
+    #endregion
+}

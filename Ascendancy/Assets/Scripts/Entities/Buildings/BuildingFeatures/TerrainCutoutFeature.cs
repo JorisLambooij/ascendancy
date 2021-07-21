@@ -55,4 +55,5 @@ public class TerrainCutoutFeature : EntityFeature
         foreach (Vector2Int holePos in holes)
             World.Instance.SetTileVisible(holePos.x, holePos.y, true);
     }
+
 }
