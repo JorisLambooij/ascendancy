@@ -14,20 +14,19 @@ public class DiscoverContinuously : EntityFeature
     {
         base.Initialize(entity);
 
-        tilePos = (World.Instance as World).IntVector(entity.transform.position);
+        //tilePos = (World.Instance as World).IntVector(entity.transform.position);
 
-        fowHandler = (World.Instance as World).fowHandler;
-        fowHandler.DiscoverTerrain(tilePos.x, tilePos.y, radius);
-        fowHandler.UpdateMaterial();
+        //fowHandler = (World.Instance as World).fowHandler;
+        //fowHandler.DiscoverTerrain(tilePos.x, tilePos.y, radius);
+        //fowHandler.UpdateMaterial();
     }
 
     public override void UpdateOverride()
     {
+        //tilePos = (World.Instance as World).IntVector(entity.transform.position);
 
-        tilePos = (World.Instance as World).IntVector(entity.transform.position);
-
-        fowHandler.DiscoverTerrain(tilePos.x, tilePos.y, radius);
-        fowHandler.UpdateMaterial();
+        //fowHandler.DiscoverTerrain(tilePos.x, tilePos.y, radius);
+        //fowHandler.UpdateMaterial();
     }
 }
 

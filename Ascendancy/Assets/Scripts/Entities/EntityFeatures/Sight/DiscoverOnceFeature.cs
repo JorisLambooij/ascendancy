@@ -14,8 +14,8 @@ public class DiscoverOnceFeature : EntityFeature
         Vector3 pos = entity.transform.position;
         Vector2Int tilePos = (World.Instance as World).IntVector(pos);
 
-        FogOfWarHandler fowHandler = (World.Instance as World).fowHandler;
-        fowHandler.DiscoverTerrain(tilePos.x, tilePos.y, radius);
-        fowHandler.UpdateMaterial();
+        //FogOfWarHandler fowHandler = (World.Instance as World).fowHandler;
+        //fowHandler.DiscoverTerrain(tilePos.x, tilePos.y, radius);
+        //fowHandler.UpdateMaterial();
     }
 }

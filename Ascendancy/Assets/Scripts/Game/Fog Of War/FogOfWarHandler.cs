@@ -23,7 +23,7 @@ public class FogOfWarHandler
         heightmapTexture.SetPixels(terrainHeightmap);
         heightmapTexture.Apply();
 
-        GetComponent<MeshRenderer>().material.SetTexture("Texture2D_height", heightmapTexture);
+        //GetComponent<MeshRenderer>().material.SetTexture("Texture2D_height", heightmapTexture);
     }
 
 }
