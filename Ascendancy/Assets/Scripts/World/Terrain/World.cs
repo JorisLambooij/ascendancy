@@ -198,6 +198,24 @@ public class World : MonoBehaviour
         waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, waterLevel, worldSize * tileSize / 2);
         float size = worldSize / 9.86f;
         waterPlane.transform.localScale = new Vector3(size * tileSize, 1, size * tileSize);
+
+        Color[] colors = new Color[colormap.GetLength(0) * colormap.GetLength(1)];
+
+        for (int x = 0; x < map.GetLength(0); x++)
+            for (int y = 0; y < map.GetLength(1); y++)
+            {
+                colors[x + y * map.GetLength(0)] = colormap[x, y];
+                if (map[x, y].height < -1f)
+                {
+                    colors[x + y * map.GetLength(0)] = Color.blue;
+                }
+
+                //colors[x+y* map.GetLength(0)] = Color.Lerp(Color.white, Color.red, map[x, y].height - 1f);
+            }
+
+        TerrainColorTexture = new Texture2D(colormap.GetLength(0), colormap.GetLength(1));
+        TerrainColorTexture.SetPixels(colors);
+        TerrainColorTexture.Apply();
     }
 
     Chunk GenerateChunk(int startX, int startZ)

@@ -10,7 +10,7 @@ public class MinimapImage : MonoBehaviour
     public RawImage terrainImage;
     public RawImage maskImage;
 
-    public RenderTexture maskRenderTexture;
+    public Texture maskRenderTexture;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +31,5 @@ public class MinimapImage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        maskImage.texture = maskRenderTexture;
     }
 }
