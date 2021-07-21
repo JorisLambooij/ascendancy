@@ -17,7 +17,7 @@ public class TechnologyLevel : NetworkBehaviour
     // Start is called before the first frame update
     public void Initialize()
     {
-        techTree = TechTreeReader.LoadTechTree();
+        techTree = TechTreeReader.Instance.LoadTechTree();
 
         currentFocus = -1;
         storedResearch = new SubscribableProperty<float>(0);
