@@ -50,7 +50,7 @@ public class TechField : MonoBehaviour
     #region Color Management
     public void SetRightColor()
     {
-        switch (playerTechScreen.TechTree.TechResearchability(Tech.id))
+        switch (playerTechScreen.playerTechLevel.TechResearchability(Tech.id))
         {
             case Researchability.NotResearchable:
                 SetNotResearchable();
@@ -128,7 +128,7 @@ public class TechField : MonoBehaviour
     /// <param name="newProgress">Progress of the dependency. Not relevant in this function.</param>
     public void OnDependencyProgressUpdate()
     {
-        if (playerTechScreen.TechTree.TechResearchability(Tech.id) == Researchability.Researchable)
+        if (playerTechScreen.playerTechLevel.TechResearchability(Tech.id) == Researchability.Researchable)
             SetResearchable();
     }
 
@@ -143,7 +143,7 @@ public class TechField : MonoBehaviour
     {
         progressBar.value = Mathf.Clamp01(newProgress / Tech.cost);
 
-        if (playerTechScreen.TechTree.TechResearchability(Tech.id) == Researchability.Researched)
+        if (playerTechScreen.playerTechLevel.TechResearchability(Tech.id) == Researchability.Researched)
             SetResearched();
     }
 }
