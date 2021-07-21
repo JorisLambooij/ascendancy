@@ -115,13 +115,19 @@ public class TechnologyEditor : EditorWindow, PropertySubscriber<Node>
         for (int i = 0; i < oldList.Count; i++)
         {
             T t = oldList[i];
+            if (t == null)
+            {
+                Debug.LogWarning("Element " + i + " of TechTree is null");
+                continue;
+            }
+
             string s = AssetDatabase.GetAssetPath(t);
             int index = "Assets/Resources/".Length;
             if (s.Length > index)
                 s = s.Substring(index);
             else
             {
-                Debug.LogError("Something wrong with " + s);
+                Debug.LogError("Invalid path (" + s + ") for element " + oldList[i].ToString());
                 s = "";
             }
             newArray[i] = s;
