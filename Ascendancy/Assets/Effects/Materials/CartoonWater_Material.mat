@@ -10,7 +10,7 @@ Material:
   m_Name: CartoonWater_Material
   m_Shader: {fileID: -6465566751694194690, guid: c5f086a90a2a3fb4a8565eded3c77b8c,
     type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: FOW_TOGGLE_OFF
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -21,7 +21,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_1549C204:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 07ebb9a49a8123b4cb06ca55f827914a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_3EDCBA2F:
@@ -29,7 +29,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_5D3BA0F9:
-        m_Texture: {fileID: 8400000, guid: 9a898c81ba718944a9e664c39a7bb1a3, type: 2}
+        m_Texture: {fileID: 2800000, guid: 07ebb9a49a8123b4cb06ca55f827914a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_8CB9A570_Texture:
@@ -44,8 +44,22 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - Boolean_7B328EE6: 0
+    - FOW_TOGGLE: 1
     - Vector1_151E3CC0: 6
     - Vector1_175CCE8F: 1
     - Vector1_348AB627: 0.315
@@ -79,3 +93,4 @@ Material:
     - Color_8668A8A0: {r: 0.645, g: 0.645, b: 0.645, a: 1}
     - Color_E0496EAB: {r: 1, g: 1, b: 1, a: 1}
     - Vector2_134F698: {r: 1, g: 0.5, b: 0, a: 0}
+  m_BuildTextureStacks: []
