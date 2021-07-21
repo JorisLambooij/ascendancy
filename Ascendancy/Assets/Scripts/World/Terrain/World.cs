@@ -201,13 +201,19 @@ public class World : MonoBehaviour
 
         Color[] colors = new Color[colormap.GetLength(0) * colormap.GetLength(1)];
 
+        float height = 0f;
         for (int x = 0; x < map.GetLength(0); x++)
             for (int y = 0; y < map.GetLength(1); y++)
             {
+                height = map[x, y].height;
                 colors[x + y * map.GetLength(0)] = colormap[x, y];
-                if (map[x, y].height < -1f)
+                if (height < -1f)
                 {
                     colors[x + y * map.GetLength(0)] = Color.blue;
+                }
+                else //heightmap
+                {
+                    colors[x + y * map.GetLength(0)] = Color.Lerp(colors[x + y * map.GetLength(0)], Color.white, (height + 1f) / 10f);
                 }
 
                 //colors[x+y* map.GetLength(0)] = Color.Lerp(Color.white, Color.red, map[x, y].height - 1f);
