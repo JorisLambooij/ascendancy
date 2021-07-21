@@ -75,8 +75,8 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
                 
                 line.Points = new Vector2[] { outPoint, inPoint };
 
-                techFieldsDict[dependency].outgoingLines.Add(line);
-                techFieldsDict[dependency].SetRightColor();
+                techFieldsDict[kvp.Value.id].incomingLines.Add(line);
+                techFieldsDict[kvp.Value.id].SetRightColor();
             }
     }
 

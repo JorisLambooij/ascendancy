@@ -10,7 +10,7 @@ public class TechField : MonoBehaviour
     public PlayerTechScreen playerTechScreen;
     public Transform inPoint;
     public Transform outPoint;
-    public List<UILineRenderer> outgoingLines;
+    public List<UILineRenderer> incomingLines;
     public bool isCurrentFocus = false;
 
     private Text labelName;
@@ -117,7 +117,7 @@ public class TechField : MonoBehaviour
 
     private void ColorLines(Color c)
     {
-        foreach (UILineRenderer line in outgoingLines)
+        foreach (UILineRenderer line in incomingLines)
             line.color = c;
     }
     #endregion

@@ -13,6 +13,8 @@ public class EntityOrderController : MonoBehaviour
     public Queue<UnitOrder> orders;
     public UnitOrder currentOrder;
 
+    public bool lockEntity = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +27,14 @@ public class EntityOrderController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (currentOrder == null)
+        if (currentOrder != null)
+        {
+            if (currentOrder.Fulfilled)
+                currentOrder = null;
+            else
+                currentOrder.Update();
+        }
+        else
         {
             if (orders == null)
             {
@@ -36,18 +45,19 @@ public class EntityOrderController : MonoBehaviour
                 NewOrder(orders.Dequeue());
             else
                 return;
-        }
-
-        if (currentOrder.Fulfilled)
-            currentOrder = null;
-        else
-            currentOrder.Update();
+        }        
     }
 
     public void NewOrder(UnitOrder order)
     {
+        if (lockEntity == true)
+        {
+            return; //does not take orders at the moment
+        }
+
         if (currentOrder != null)
             currentOrder.Cancel();
+
         currentOrder = order;
         order.Execute();
     }

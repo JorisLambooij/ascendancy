@@ -184,10 +184,10 @@ namespace Mirror
                 // get start position from base class
                 Transform startPos = GetStartPosition();
                 gamePlayer = startPos != null
-                    ? Instantiate(playerPrefab, startPos.position, startPos.rotation)
-                    : Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+                    ? Instantiate(playerPrefab, startPos.position, startPos.rotation, transform)
+                    : Instantiate(playerPrefab, Vector3.zero, Quaternion.identity, transform);
 
-                //Debug.Log(gamePlayer.name + " instantiated");
+                Debug.Log(gamePlayer.name + " instantiated as child of " + transform);
             }
 
             if (!OnRoomServerSceneLoadedForPlayer(conn, roomPlayer, gamePlayer))

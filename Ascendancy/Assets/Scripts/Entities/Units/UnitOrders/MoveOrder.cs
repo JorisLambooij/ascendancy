@@ -47,6 +47,12 @@ public class MoveOrder : UnitOrder
     {
         get 
         {
+            if (entity.entityInfo.construction_Method == ConstructionMethod.Building)
+            {
+                Debug.Log("Cancelling move order for building '" + entity.entityInfo.name + "'");
+                return true;
+            }
+
             if (entity.Controller.NavAgent.pathPending)
                 return false;
             return entity.Controller.NavAgent.remainingDistance <= MAX_REMAINING_DISTANCE;

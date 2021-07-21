@@ -5,7 +5,8 @@ using UnityEngine;
 public class ResourceLoader : MonoBehaviour
 {
     public static ResourceLoader instance;
-    public Dictionary<string, EntityInfo> entityInfoData;
+    public Dictionary<string, EntityInfo> entityInfoData = new Dictionary<string, EntityInfo>();
+    public Dictionary<string, Resource> resourceData = new Dictionary<string, Resource>();
     public GameObject constructionSitePrefab;
 
     private void Awake()
@@ -15,19 +16,30 @@ public class ResourceLoader : MonoBehaviour
 
         Object[] allSOs = Resources.LoadAll("ScriptableObjects");
 
-        entityInfoData = new Dictionary<string, EntityInfo>();
+        FillDict(entityInfoData, allSOs, (info => info.name));
+        FillDict(resourceData, allSOs, (info => info.name));
+
+        Debug.Log(entityInfoData.Count);
+    }
+
+    private void FillDict<T>(Dictionary<string, T> dictionary, Object[] allSOs, System.Func<T, string> getName) where T : ScriptableObject
+    {
+        //dictionary = new Dictionary<string, T>();
         foreach (Object obj in allSOs)
-            if (obj is EntityInfo)
+            if (obj is T)
             {
-                EntityInfo info = obj as EntityInfo;
-                if (info.name == "")
+                T t = obj as T;
+                string name = getName(t);
+                if (name == "")
                 {
-                    Debug.LogError(obj.name + " name is empty");
+                    Debug.LogError(name + " name is empty");
                     continue;
                 }
-                if (entityInfoData.ContainsKey(info.name))
-                    Debug.Log(info.name + " already in Dict");
-                entityInfoData.Add(info.name, info);
+
+                if (entityInfoData.ContainsKey(name))
+                    Debug.Log(name + " already in Dict " + nameof(dictionary));
+
+                dictionary.Add(name, t);
             }
     }
 

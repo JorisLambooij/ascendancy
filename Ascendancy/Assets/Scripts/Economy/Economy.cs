@@ -6,34 +6,20 @@ using Mirror;
 public class Economy : NetworkBehaviour
 {
     public readonly SyncDictionary<string, float> resourceSyncDictionary = new SyncDictionary<string, float>();
-    public SubscribableDictionary<Resource, float> resourceStorage;
-    public SubscribableList<Resource> availableResources;
+    public readonly SyncList<string> availableResources = new SyncList<string>();
 
-    private List<ResourceAmount> startResources;
+    //public SubscribableDictionary<Resource, float> resourceStorage;
+    //public SubscribableList<Resource> availableResources;
 
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
-        resourceSyncDictionary.Add("Wood", 169);
-    }
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        resourceSyncDictionary.Callback += OnResourceChange;
-    }
+    //private List<ResourceAmount> startResources;
 
     public void Initialize()
     {
         //adding start resources
-        startResources = GameSettingsManager.instance.startResources;
+        //startResources = GameSettingsManager.instance.startResources;
 
-        resourceStorage = new SubscribableDictionary<Resource, float>();
-        availableResources = new SubscribableList<Resource>();
-    }
-    void OnResourceChange(SyncDictionary<string, float>.Operation op, string resource, float amount)
-    {
-        Debug.Log(op + " - " + resource + " " + amount);
+        //resourceStorage = new SubscribableDictionary<Resource, float>();
+        //availableResources = new SubscribableList<Resource>();
     }
 
     private void Update()
@@ -45,15 +31,30 @@ public class Economy : NetworkBehaviour
     public void NewAvailableResource(Resource resource)
     {
         //Debug.Log("New Resource: " + resource.name);
-        availableResources.Add(resource);
-        resourceStorage.Add(resource, 0f);
+        availableResources.Add(resource.name);
+        resourceSyncDictionary.Add(resource.name, 0f);
 
-        foreach (ResourceAmount resAm in startResources)
+        CmdNewAvailableResource(resource.name);
+
+        foreach (ResourceAmount resAm in GameSettingsManager.instance.startResources)
         {
             if (resAm.resource.Equals(resource))
                 AddResourceAmount(resAm);
         }
+    }
 
+    [Command]
+    public void CmdNewAvailableResource(string resource)
+    {
+        if (!availableResources.Contains(resource))
+            availableResources.Add(resource);
+
+        if (!resourceSyncDictionary.ContainsKey(resource))
+            resourceSyncDictionary.Add(resource, 0);
+
+        foreach (ResourceAmount resAm in GameSettingsManager.instance.startResources)
+            if (resAm.resource.name.Equals(resource))
+                AddResourceAmount(resAm);
     }
 
     /// <summary>
@@ -69,18 +70,37 @@ public class Economy : NetworkBehaviour
     /// </summary>
     public float GetResourceAmount(Resource resource)
     {
-        Debug.Assert(availableResources.Contains(resource), "Unavailable Resource checked: " + resource.name);
-        return resourceStorage.GetValue(resource);
+        Debug.Assert(availableResources.Contains(resource.name), "Unavailable Resource checked: " + resource.name);
+        return resourceSyncDictionary[resource.name];
+        //return resourceStorage.GetValue(resource);
     }
 
     #region Resource Addition/Subtraction
     public void SetResourceAmount(Resource resource, float amount)
     {
-        Debug.Assert(availableResources.Contains(resource), "Unavailable Resource checked: " + resource.name);
-        Debug.Assert(amount > 0, "Amount must be positive: " + amount);
+        Debug.Assert(availableResources.Contains(resource.name), "Unavailable Resource checked: " + resource.name);
+        Debug.Assert(amount >= 0, "Amount must be positive: " + amount);
 
-        resourceStorage.SetValue(resource, amount);
+        //resourceSyncDictionary[resource.name] = amount;
+        //resourceStorage.SetValue(resource, amount);
+
+        if (isServer)
+            resourceSyncDictionary[resource.name] = amount;
+        else
+            CmdSetResourceAmount(resource.name, amount);
     }
+
+    public bool IsResourceAvailable(Resource resource)
+    {
+        return availableResources.Contains(resource.name);
+    }
+
+    [Command]
+    public void CmdSetResourceAmount(string resource, float amount)
+    {
+        resourceSyncDictionary[resource] = amount;
+    }
+
     public void SetResourceAmount(ResourceAmount res_amount)
     {
         SetResourceAmount(res_amount.resource, res_amount.amount);
@@ -91,7 +111,7 @@ public class Economy : NetworkBehaviour
         Debug.Assert(amount > 0, "Amount must be positive: " + amount);
 
         float newAmount = GetResourceAmount(resource) + amount;
-        resourceStorage.SetValue(resource, newAmount);
+        SetResourceAmount(resource, newAmount);
     }
     public void AddResourceAmount(ResourceAmount res_amount)
     {
@@ -104,7 +124,7 @@ public class Economy : NetworkBehaviour
         Debug.Assert(IsRecourceAmountAvailable(res_amount), "Not enough of Resource " + res_amount.resource.name + " in storage (" + res_amount.amount + ")");
 
         float newAmount = GetResourceAmount(res_amount.resource) - res_amount.amount;
-        resourceStorage.SetValue(res_amount.resource, newAmount);
+        SetResourceAmount(res_amount.resource, newAmount);
     }
     #endregion
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 
 public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>, ListSubscriber<Resource>
 {
@@ -38,6 +39,28 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
         // TODO: Reset the UI to match the new Resources.
     }
 
+    protected void OnResourceChange(SyncDictionary<string, float>.Operation op, string resourcename, float newValue)
+    {
+        Resource r = ResourceLoader.instance.resourceData[resourcename];
+        if (resourceEntries.ContainsKey(r))
+            resourceEntries[r].Count = newValue;
+        else
+            InstantiateNewField(r, newValue);
+    }
+
+    protected void OnNewResource(SyncList<string>.Operation op, int index, string oldResource, string newResource)
+    {
+        if (op != SyncList<string>.Operation.OP_ADD)
+        {
+            Debug.LogError("Unknown operation on AvailableResources SyncList: " + op.ToString());
+            return;
+        }
+
+        Resource r = ResourceLoader.instance.resourceData[newResource];
+        if (!resourceEntries.ContainsKey(r))
+            InstantiateNewField(r);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,11 +68,14 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
 
         resourceEntries = new Dictionary<Resource, Resource_UI_Entry>();
 
-        player.PlayerEconomy.resourceStorage.Subscribe(this);
-        player.PlayerEconomy.availableResources.Subscribe(this);
+        player.PlayerEconomy.resourceSyncDictionary.Callback += OnResourceChange;
+        player.PlayerEconomy.availableResources.Callback += OnNewResource;
         
-        foreach (KeyValuePair<Resource, float> kvp in player.PlayerEconomy.resourceStorage.AsDictionary)
-            InstantiateNewField(kvp.Key, kvp.Value);
+        foreach (KeyValuePair<string, float> kvp in player.PlayerEconomy.resourceSyncDictionary)
+        {
+            Resource r = ResourceLoader.instance.resourceData[kvp.Key];
+            InstantiateNewField(r, kvp.Value);
+        }
     }
 
     void InstantiateNewField(Resource resource, float amount = 0)
@@ -64,6 +90,7 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
     // Update is called once per frame
     void Update()
     {
+        /*
         foreach (KeyValuePair<Resource, float> kvp in player.PlayerEconomy.resourceStorage.AsDictionary)
         {
             // Update the count of each resource
@@ -74,5 +101,6 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
             }
             resourceEntries[kvp.Key].Count = kvp.Value;
         }
+        */
     }
 }

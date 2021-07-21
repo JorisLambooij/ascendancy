@@ -15,7 +15,6 @@ public class PrefManager : MonoBehaviour
     public void RegisterPlayer(PlayerRoomScript player)
     {
         this.player = player;
-        player.nameChangeEvent.AddListener(OnNameChange);
     }
 
     private void OnNameChange()
