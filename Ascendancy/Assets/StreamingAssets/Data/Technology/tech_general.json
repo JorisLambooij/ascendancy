@@ -1,0 +1,153 @@
+{
+    "technologies": [
+        {
+            "name": "Emergency Survival Protocols",
+            "id": 0,
+            "iconPath": "1_Emergency Survival Protocols.png",
+            "dependencies": [],
+            "cost": 0,
+            "startTech": true,
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Research Lab/Lab.asset"
+            ],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": [
+                "ScriptableObjects/Resource/Wood.asset",
+                "ScriptableObjects/Resource/Gold.asset"
+            ]
+        },
+        {
+            "name": "Woodworking",
+            "id": 1,
+            "iconPath": "1_Woodworking.png",
+            "dependencies": [
+                0
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Production Buildings/Lumbermill/Lumbermill.asset"
+            ],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
+        },
+        {
+            "name": "Defensive Structures",
+            "id": 2,
+            "iconPath": "1_Defensive Structures.png",
+            "dependencies": [
+                1
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Military/Wooden/Tower/Wooden Tower.asset",
+                "ScriptableObjects/Buildings/Military/Wooden/Wall/WoodenWall.asset"
+            ],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
+        },
+        {
+            "name": "Masonry",
+            "id": 3,
+            "iconPath": "1_Masonry.png",
+            "dependencies": [
+                1
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Production Buildings/Quarry/Quarry.asset"
+            ],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": [
+                "ScriptableObjects/Resource/Stone.asset"
+            ]
+        },
+        {
+            "name": "Primitive Weaponry",
+            "id": 4,
+            "iconPath": "1_Primitive Weaponry.png",
+            "dependencies": [
+                0
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Unit Production/Barracks/Barracks.asset"
+            ],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
+        },
+        {
+            "name": "Xenobiology",
+            "id": 5,
+            "iconPath": "1_Xenobiology.png",
+            "dependencies": [
+                0
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
+        },
+        {
+            "name": "Xeno Domestication",
+            "id": 6,
+            "iconPath": "1_Xeno Domestication.png",
+            "dependencies": [
+                5
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
+        },
+        {
+            "name": "Metalworking",
+            "id": 7,
+            "iconPath": "1_Metalworking.png",
+            "dependencies": [
+                3
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
+        },
+        {
+            "name": "Dynachlorite Analysis",
+            "id": 8,
+            "iconPath": "1_Dyna Analysis.png",
+            "dependencies": [
+                7
+            ],
+            "cost": 500,
+            "startTech": false,
+            "unitsUnlocked": [],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
+        },
+        {
+            "name": "Debug Tech",
+            "id": 9,
+            "iconPath": "1_Metalworking.png",
+            "dependencies": [
+                0
+            ],
+            "cost": 10,
+            "startTech": false,
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Military/Missile Silo/NuclearSilo.asset",
+                "ScriptableObjects/Units/Mortar/Mortar.asset"
+            ],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": [
+                "ScriptableObjects/Resource/Iron.asset"
+            ]
+        }
+    ]
+}

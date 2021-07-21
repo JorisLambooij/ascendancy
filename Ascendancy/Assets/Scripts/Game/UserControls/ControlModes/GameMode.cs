@@ -163,7 +163,7 @@ public class GameMode : ControlMode
                         Entity e = hit.transform.GetComponentInParent<Entity>();
                         EntitySelector es = e.GetComponentInChildren<EntitySelector>();
 
-                        if (e.Owner.PlayerNumber == gameManager.playerNumber)
+                        if (e.Owner.playerID == gameManager.playerNumber)
                         {
                             es.Selected = true;
                             selectedEntities.Add(es);
@@ -320,7 +320,7 @@ public class GameMode : ControlMode
 
     private bool IsHostileUnit(Unit unit)
     {
-        return unit.Owner.PlayerNumber != gameManager.playerNumber;
+        return unit.Owner.playerID != gameManager.playerNumber;
     }
 
     private void DeselectAll()

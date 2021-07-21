@@ -7,6 +7,8 @@ public class ConstructionSite : NetworkBehaviour, OccupationType
 {
     [SyncVar]
     public string buildingName;
+    [SyncVar]
+    public int ownerID;
     public EntityInfo buildingInfo;
     private ProgressBar progressbar;
 
@@ -48,19 +50,27 @@ public class ConstructionSite : NetworkBehaviour, OccupationType
         float percentage = Mathf.Clamp01(constructionProgress / buildingInfo.buildTime);
         progressbar.percentage = percentage;
 
+        
         if (constructionProgress >= buildingInfo.buildTime && !constructed)
         {
-            Debug.Log("Construction Completed!!");
+            //Debug.Log("Construction Completed!!");
             constructed = true;
 
-            GameManager.Instance.GetPlayer.CmdSpawnBuilding(buildingName, transform.position);
+            Player player = FindObjectOfType<MPMenu_NetworkRoomManager>().GetPlayerByID(ownerID);
+            //Debug.Log("completing construction for player " + player.playerID + "(" + ownerID + ")");
+
+            player.SpawnBuilding(buildingName, transform.position);
+
             // old, non-networked version
             //GameObject newBuildingGO = buildingInfo.CreateInstance(GameManager.Instance.GetPlayer, transform.position);
             //Entity b = newBuildingGO.GetComponent<Entity>();
             //GameManager.Instance.occupationMap.ClearOccupation(transform.position, buildingInfo.dimensions, TileOccupation.OccupationLayer.Building);
             //GameManager.Instance.occupationMap.NewOccupation(transform.position, b, TileOccupation.OccupationLayer.Building);
 
-            Destroy(this.gameObject);
+            if (hasAuthority)
+                Destroy(this.gameObject);
+            else
+                Destroy(this.gameObject, 0.5f);
         }
     }
 

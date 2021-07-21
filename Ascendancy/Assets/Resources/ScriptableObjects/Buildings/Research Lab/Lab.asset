@@ -32,3 +32,4 @@ MonoBehaviour:
     amount: 200
   entityFeatures:
   - {fileID: 11400000, guid: 1567fcc3fd0c89948a0ca71c1b9a81dc, type: 2}
+  - {fileID: 11400000, guid: 2cb341cd273e4c849b32cdd956586fcb, type: 2}

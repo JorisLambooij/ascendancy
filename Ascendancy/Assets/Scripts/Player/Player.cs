@@ -24,8 +24,8 @@ public class Player : NetworkBehaviour
     public Transform UnitsGO { get => unitsGO; set => unitsGO = value; }
 
     public string PlayerName { get; protected set; }
-    public int PlayerNumber { get; protected set; }
-    public Color PlayerColor { get; protected set; }
+    public Color PlayerColor { get { return roomPlayer.PlayerColor; } }
+
     public PlayerRoomScript RoomPlayer
     {
         get => roomPlayer;
@@ -67,8 +67,7 @@ public class Player : NetworkBehaviour
 
         lobby = FindObjectOfType<MP_Lobby>();
         lobby.AddPlayer(this);
-        Transform playerManager = lobby.transform;
-        transform.SetParent(playerManager);
+        transform.SetParent(FindObjectOfType<MPMenu_NetworkRoomManager>().transform);
 
         if (isLocalPlayer)
             RpcLocalInitialize();
@@ -82,9 +81,9 @@ public class Player : NetworkBehaviour
         playerID = RoomPlayer.index;
         CmdChangeID(playerID);
 
-        PlayerEconomy.Initialize();
+        //PlayerEconomy.Initialize();
         TechLevel.Initialize();
-        FindObjectOfType<GameManager>().Initialize();
+        FindObjectOfType<GameManager>().Initialize(playerID);
         GetComponent<CheatCodes>().Initialize();
 
         SpawnStartUnit(new Vector2(10 + 5 * RoomPlayer.index, 10));
@@ -92,20 +91,10 @@ public class Player : NetworkBehaviour
 
     private void SpawnStartUnit(Vector2 startPosition)
     {
-        EntityInfo esv = Resources.Load("ScriptableObjects/Buildings/Command/ESV") as EntityInfo;
-
-        string ownerName = RoomPlayer.playerName;
-
-        if (esv != null)
-            Debug.Log("Successfully loaded " + esv.name + " for player " + ownerName + " (Player " + RoomPlayer.index + ")");
-        else
-            Debug.LogError("Could not load starting unit for player " + ownerName + " (Player " + RoomPlayer.index + ")");
-
         float tileSize = (World.Instance as World)?.tileSize ?? 1;
         Vector2 position = new Vector3(startPosition.x * tileSize + (tileSize / 2), startPosition.y * tileSize + (tileSize / 2));
         float height = (World.Instance as World)?.GetHeight(position) ?? 1;
-
-        //Debug.Log(position);
+        height -= 0.05f;
 
         CmdSpawnUnit("E.S.V.", new Vector3(position.x, height, position.y));
     }
@@ -134,14 +123,21 @@ public class Player : NetworkBehaviour
         GameObject constructionSite = Instantiate(ResourceLoader.instance.constructionSitePrefab);
         constructionSite.transform.position = position;
         constructionSite.GetComponent<ConstructionSite>().buildingName = entityName;
+        constructionSite.GetComponent<ConstructionSite>().ownerID = this.playerID;
 
         NetworkServer.Spawn(constructionSite, this.connectionToClient);
+    }
+
+
+    public void SpawnBuilding(string entityName, Vector3 position)
+    {
+        CmdSpawnBuilding(entityName, position);
     }
 
     [Command]
     public void CmdSpawnBuilding(string entityName, Vector3 position)
     {
-        //Debug.Log("Spawning building: " + entityName);
+        Debug.Log("Spawning building: " + entityName);
         EntityInfo entityInfo = ResourceLoader.instance.entityInfoData[entityName];
         GameObject newUnit = entityInfo.CreateInstance(this, position);
         //spawn the GO across the network
@@ -170,6 +166,4 @@ public class Player : NetworkBehaviour
             if (p.index == newValue)
                 RoomPlayer = p;
     }
-
-
 }

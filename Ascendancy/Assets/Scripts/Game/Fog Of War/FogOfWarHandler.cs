@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class FogOfWarHandler : MonoBehaviour
+public class FogOfWarHandler
 {
     public Texture2D heightmapTexture;
 
-    // Start is called before the first frame update
-    void Start()
+    public FogOfWarHandler(int xSize, int ySize, Material terrainMaterial, Material waterMaterial)
     {
         World worldScript = World.Instance;
         Color[] terrainHeightmap = new Color[worldScript.worldSize * worldScript.worldSize];
@@ -23,7 +23,7 @@ public class FogOfWarHandler : MonoBehaviour
         heightmapTexture.SetPixels(terrainHeightmap);
         heightmapTexture.Apply();
 
-        GetComponent<MeshRenderer>().material.SetTexture("Texture2D_height", heightmapTexture);
+        //GetComponent<MeshRenderer>().material.SetTexture("Texture2D_height", heightmapTexture);
     }
 
 }

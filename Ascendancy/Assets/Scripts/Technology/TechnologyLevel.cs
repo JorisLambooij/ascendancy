@@ -82,7 +82,7 @@ public class TechnologyLevel : NetworkBehaviour
             foreach (Resource resource in tech.resourcesUnlocked)
             {
                 resourcesUnlocked.Add(resource);
-                GetComponent<Economy>().NewAvailableResource(resource);
+                GetComponent<Economy>().CmdNewAvailableResource(resource.name);
             }
 
     }

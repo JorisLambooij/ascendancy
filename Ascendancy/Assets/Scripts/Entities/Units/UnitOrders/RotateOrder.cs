@@ -19,7 +19,16 @@ public class RotateOrder : UnitOrder
 
     public override bool Fulfilled
     {
-        get { return Vector3.Angle(entity.transform.forward, orientation) < 1; }
+        get
+        {
+            if (entity.entityInfo.construction_Method == ConstructionMethod.Building)
+            {
+                Debug.Log("Cancelling rotate order for building '" + entity.entityInfo.name + "'");
+                return true;
+            }
+
+            return Vector3.Angle(entity.transform.forward, orientation) < 1;
+        }
     }
     
     public override void Update()
