@@ -118,6 +118,9 @@ public class World : MonoBehaviour
         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
         sw.Start();
         CreateWorld();
+        
+        navMeshBuilder.UpdateNavMesh();
+        
         sw.Stop();
         Debug.Log("CreateWorld() finished in " + sw.ElapsedMilliseconds + " ms.");
 

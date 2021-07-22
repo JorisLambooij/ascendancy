@@ -17,17 +17,14 @@ public class LocalNavMeshBuilder : MonoBehaviour
     AsyncOperation m_Operation;
     NavMeshDataInstance m_Instance;
     List<NavMeshBuildSource> m_Sources = new List<NavMeshBuildSource>();
-    /*
-    IEnumerator Start()
+    
+    void OnDisable()
     {
-        while (true)
-        {
-            UpdateNavMesh(true);
-            yield return m_Operation;
-        }
+        // Unload navmesh and clear handle
+        m_Instance.Remove();
     }
-    */
-    void OnEnable()
+
+    public void UpdateNavMesh(bool asyncUpdate = false)
     {
         World w = transform.GetComponentInParent<World>();
         float scale_xz = w.tileSize * w.worldSize;
@@ -42,17 +39,6 @@ public class LocalNavMeshBuilder : MonoBehaviour
         if (m_Tracked == null)
             m_Tracked = transform;
 
-        UpdateNavMesh();
-    }
-    
-    void OnDisable()
-    {
-        // Unload navmesh and clear handle
-        m_Instance.Remove();
-    }
-
-    public void UpdateNavMesh(bool asyncUpdate = false)
-    {
         NavMeshSourceTag.Collect(ref m_Sources);
         var defaultBuildSettings = NavMesh.GetSettingsByID(0);
         var bounds = QuantizedBounds();
