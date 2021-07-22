@@ -1,6 +1,7 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,16 +9,17 @@ using UnityEngine;
 public class BugTracker : EditorWindow
 {
     SerializedObject[] loadedBugs;
-    string[] fileNames;
     Vector2 scrollPos;
     int selectedIndex;
     string selectedBug;
     BugDetails detailsWindow;
     private string searchAndOpen = "";
+    bool prioritySort = false;
 
     [MenuItem("Window/Bug Tracker")]
     private static void OpenWindow()
     {
+        GetWindow<BugDetails>().Close();
         BugTracker window = GetWindow<BugTracker>();
         window.minSize = new Vector2(250f, 600f);
         window.maxSize = new Vector2(250f, 600f);
@@ -29,35 +31,70 @@ public class BugTracker : EditorWindow
         Debug.Log("Loaded " + bugInfo.Length + " bugs123");
 
         loadedBugs = new SerializedObject[bugInfo.Length];
-        fileNames = new string[bugInfo.Length];
 
         for (int i = 0; i < bugInfo.Length; i++)
         {
             loadedBugs[i] = new SerializedObject(bugInfo[i]);
-            fileNames[i] = System.IO.Path.GetFileName(AssetDatabase.GetAssetPath(bugInfo[i])).Replace(".asset", "");
         }
+
+
+        if (prioritySort)
+        {
+            string indexName = loadedBugs[selectedIndex].FindProperty("name").stringValue;
+
+
+            System.Array.Sort(loadedBugs, delegate (SerializedObject bug1, SerializedObject bug2)
+            {
+                return bug1.FindProperty("priority").intValue.CompareTo(bug2.FindProperty("priority").intValue);
+            });
+        }
+
         Debug.Log("Loaded " + loadedBugs.Length + " bugs");
 
         if (loadedBugs.Length > 100)
             Debug.LogError("Fuck, more than 100!?!?!? Time to hunt bugs!");
 
-        RefreshWindow();
+        //OnEnable(); //refresh
     }
 
     void OnGUI()
     {
         #region button row 1
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("+", GUILayout.Width(100)))
+        if (GUILayout.Button("+", GUILayout.Width(50)))
         {
             Debug.Log("New bug...");
             CreateNewBug();
         }
-        if (GUILayout.Button("-", GUILayout.Width(100)))
+        else if (GUILayout.Button("-", GUILayout.Width(50)))
         {
             Debug.Log("Kill bug...");
             DeleteBug(selectedBug);
         }
+
+        GUILayout.EndHorizontal();
+        #endregion
+
+        #region button row 2
+        GUILayout.BeginHorizontal();
+
+        if (prioritySort)
+        {
+            if (GUILayout.Button("Sort by: Index", GUILayout.Width(100)))
+            {
+                prioritySort = false;
+                OnEnable(); //refresh
+            }
+        }
+        else
+        {
+            if (GUILayout.Button("Sort by: Priority", GUILayout.Width(100)))
+            {
+                prioritySort = true;
+                OnEnable(); //refresh
+            }
+        }
+
         GUILayout.EndHorizontal();
         #endregion
 
@@ -71,30 +108,29 @@ public class BugTracker : EditorWindow
 
             GUI.backgroundColor = (selectedIndex == i) ? Color.blue : Color.white;
 
-            string buttonName = fileNames[i].Substring(fileNames[i].Length - 1) + ": " + loadedBugs[i].FindProperty("name").stringValue + " " + loadedBugs[i].FindProperty("priority").intValue + "/10";
+            string buttonName = loadedBugs[i].FindProperty("name").stringValue + " " + loadedBugs[i].FindProperty("priority").intValue + "/10";
 
             if (GUILayout.Button(buttonName, GUILayout.Width(220), GUILayout.Height(50)))
             {
                 selectedIndex = i;
-                selectedBug = fileNames[i];
+                selectedBug = loadedBugs[i].FindProperty("name").stringValue;
                 Debug.Log("Button " + buttonName + " clicked!");
-                detailsWindow = (BugDetails)EditorWindow.GetWindow(typeof(BugDetails), false, "Details of " + fileNames[i]);
+                detailsWindow = (BugDetails)EditorWindow.GetWindow(typeof(BugDetails), false, "Details of " + loadedBugs[i].FindProperty("name").stringValue);
                 detailsWindow.Initialize(loadedBugs[i]);
+                this.Close();
             }
-
-
         }
 
         if (searchAndOpen != "")
         {
-            for (int i = 0; i < fileNames.Length; i++)
+            for (int i = 0; i < loadedBugs.Length; i++)
             {
-                if (fileNames[i] == searchAndOpen)
+                if (loadedBugs[i].FindProperty("name").stringValue == searchAndOpen)
                 {
                     selectedIndex = i;
-                    Debug.Log("Found " + fileNames[i] + "!");
+                    Debug.Log("Found " + loadedBugs[i].FindProperty("name").stringValue + "!");
 
-                    detailsWindow = (BugDetails)EditorWindow.GetWindow(typeof(BugDetails), false, "Details of " + fileNames[i]);
+                    detailsWindow = (BugDetails)EditorWindow.GetWindow(typeof(BugDetails), false, "Details of " + loadedBugs[i].FindProperty("name").stringValue);
                     detailsWindow.Initialize(loadedBugs[i]);
                     break;
                 }
@@ -132,7 +168,7 @@ public class BugTracker : EditorWindow
     {
         detailsWindow.Close();
 
-        if(!AssetDatabase.DeleteAsset("Assets/Resources/Bugs/" + bugName + ".asset"))
+        if (!AssetDatabase.DeleteAsset("Assets/Resources/Bugs/" + bugName + ".asset"))
         {
             Debug.LogError("Bug " + bugName + " could not be deleted. Ironic.");
         }
@@ -141,9 +177,10 @@ public class BugTracker : EditorWindow
         selectedIndex = 0;
     }
 
-    void RefreshWindow()
+    public void RefreshWindow()
     {
-
+        OnEnable();
     }
+
 }
 #endif

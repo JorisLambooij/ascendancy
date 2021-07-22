@@ -30,12 +30,15 @@ public class BugDetails : EditorWindow
 
             var sp = info.GetIterator();
 
+            EditorGUI.BeginChangeCheck();
+
             while (sp.NextVisible(true))
             {
                 //if (sp.propertyType == SerializedPropertyType.ObjectReference)
 
+
                 if (sp != null)
-                   
+
                     if (sp.name == "description")
                     {
                         //GUILayout.Label("description"); 
@@ -48,9 +51,14 @@ public class BugDetails : EditorWindow
                         EditorGUILayout.PropertyField(sp, true);
                     }
             }
+            if (EditorGUI.EndChangeCheck())
+            {
+                GetWindow<BugTracker>().RefreshWindow();
+            }
         }
 
         info.ApplyModifiedProperties();
+
         GUILayout.EndScrollView();
         GUILayout.EndVertical();
 
@@ -66,6 +74,11 @@ public class BugDetails : EditorWindow
         window.titleContent = new GUIContent(info.FindProperty("name").stringValue);
         window.maxSize = new Vector2(800f, 800f);
         window.minSize = window.maxSize;
+    }
+
+    private void OnDestroy()
+    {
+        GetWindow<BugTracker>().RefreshWindow();
     }
 }
 #endif
