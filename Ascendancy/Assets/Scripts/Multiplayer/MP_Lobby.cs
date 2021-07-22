@@ -198,7 +198,7 @@ public class MP_Lobby : NetworkBehaviour
     public void RpcLoadGame()
     {
         Debug.Log("Loading game...");
-        NextSceneStatic.sceneName = "DEV_Terrain_New";
+        NextSceneStatic.sceneName = "GameScene";
         SceneManager.LoadScene("LoadScreen");
 
         //localPlayer.Initialize();

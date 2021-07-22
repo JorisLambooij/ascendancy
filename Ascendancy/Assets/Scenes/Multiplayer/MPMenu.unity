@@ -158,7 +158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.000030517578}
+  m_AnchoredPosition: {x: 0, y: -0.000030517578}
   m_SizeDelta: {x: 1170, y: 820}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &15843542
@@ -406,8 +406,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 470103138}
   m_HandleRect: {fileID: 470103137}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.49999988
+  m_Value: 1
+  m_Size: 0.49999994
   m_NumberOfSteps: 1
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1843,7 +1843,7 @@ MonoBehaviour:
   roomPlayerPrefab: {fileID: 3628385829824345408, guid: e378a3946e3d3564793b7cbc737f6a91,
     type: 3}
   RoomScene: Assets/Scenes/Multiplayer/Lobby.unity
-  GameplayScene: Assets/Scenes/DEV_Terrain_New.unity
+  GameplayScene: Assets/Scenes/GameScene.unity
   _allPlayersReady: 0
   roomSlots: []
   clientIndex: 0
