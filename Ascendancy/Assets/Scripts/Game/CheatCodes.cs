@@ -54,9 +54,9 @@ public class CheatCodes : MonoBehaviour
     {
         foreach (Technology tech in player.TechLevel.techTree.technologies)
         {
-            if (player.TechLevel.techTree.TechResearchability(tech.id) != Researchability.Researched)
+            if (player.TechLevel.TechResearchability(tech.id) != Researchability.Researched)
             {
-                player.TechLevel.techTree.techProgress.SetValue(tech.id, tech.cost);
+                player.TechLevel.techProgressSyncDict[tech.id] = tech.cost;
                 player.TechLevel.UnlockThingsFromTech(tech.id);
             }
         }

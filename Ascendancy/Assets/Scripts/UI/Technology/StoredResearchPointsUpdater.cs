@@ -4,22 +4,28 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Text))]
-public class StoredResearchPointsUpdater : MonoBehaviour, PropertySubscriber<float>
+public class StoredResearchPointsUpdater : MonoBehaviour
 {
     private Text textField;
 
-    void Awake()
+    void Start()
     {
         textField = GetComponent<Text>();
-        GetComponentInParent<PlayerTechScreen>().playerTechLevel.storedResearch.Subscribe(this);
+        GetComponentInParent<PlayerTechScreen>().playerTechLevel.storedResearchUpdate.AddListener(Callback);
     }
     
     void OnEnable()
     {
-        textField.text = GetComponentInParent<PlayerTechScreen>().playerTechLevel.storedResearch.Value.ToString();
+        if (textField == null)
+            textField = GetComponent<Text>();
+
+        if (GetComponentInParent<PlayerTechScreen>().playerTechLevel == null)
+            return;
+        
+        textField.text = GetComponentInParent<PlayerTechScreen>().playerTechLevel.storedResearch.ToString();
     }
 
-    void PropertySubscriber<float>.Callback(float updatedValue)
+    void Callback(float updatedValue)
     {
         textField.text = updatedValue.ToString();
     }

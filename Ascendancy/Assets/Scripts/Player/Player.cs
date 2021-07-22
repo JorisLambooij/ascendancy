@@ -82,7 +82,7 @@ public class Player : NetworkBehaviour
         CmdChangeID(playerID);
 
         //PlayerEconomy.Initialize();
-        TechLevel.Initialize();
+        //TechLevel.Initialize();
         FindObjectOfType<GameManager>().Initialize(playerID);
         GetComponent<CheatCodes>().Initialize();
 

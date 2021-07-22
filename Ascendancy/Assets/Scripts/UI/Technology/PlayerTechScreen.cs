@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 using UnityEngine.UI.Extensions;
 
 public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
@@ -24,7 +25,7 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
 
     private Dictionary<int, TechField> techFieldsDict;
 
-    void Awake()
+    void Start()
     {
         Player playerScript = GameObject.Find("Game Manager").GetComponent<GameManager>().playerScript;
         playerTechLevel = playerScript.transform.GetComponent<TechnologyLevel>();
@@ -48,13 +49,14 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
     private void SetUpTechScreen()
     {
         techFieldsDict = new Dictionary<int, TechField>();
-        if (TechTree.techProgress == null)
+        if (playerTechLevel.techProgressSyncDict == null)
         {
             Debug.LogError("Tech Screen setup failed: No TechTree.progress found");
             return;
         }
-        TechTree.techProgress.Subscribe(this);
-        
+        //TechTree.techProgress.Subscribe(this);
+        playerTechLevel.techProgressSyncDict.Callback += ProgressDictHook;
+
         // Make a TechField for each Technology
         foreach (KeyValuePair<int, Technology> kvp in TechTree.techDictionary)
         {
@@ -130,6 +132,14 @@ public class PlayerTechScreen : MonoBehaviour, DictionarySubscriber<int, float>
     public void Callback(int key, float newValue)
     {
         techFieldsDict[key].OnProgressUpdate(newValue);
+
+        foreach (int techID in TechTree.techDictionary[key].leadsToTechs)
+            techFieldsDict[techID].OnDependencyProgressUpdate();
+    }
+
+    public void ProgressDictHook(SyncDictionary<int, float>.Operation op, int key, float value)
+    {
+        techFieldsDict[key].OnProgressUpdate(value);
 
         foreach (int techID in TechTree.techDictionary[key].leadsToTechs)
             techFieldsDict[techID].OnDependencyProgressUpdate();
