@@ -30,8 +30,6 @@ public class BugDetails : EditorWindow
 
             var sp = info.GetIterator();
 
-            EditorGUI.BeginChangeCheck();
-
             while (sp.NextVisible(true))
             {
                 //if (sp.propertyType == SerializedPropertyType.ObjectReference)
@@ -50,10 +48,6 @@ public class BugDetails : EditorWindow
                     {
                         EditorGUILayout.PropertyField(sp, true);
                     }
-            }
-            if (EditorGUI.EndChangeCheck())
-            {
-                GetWindow<BugTracker>().RefreshWindow();
             }
         }
 

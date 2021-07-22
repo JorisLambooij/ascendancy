@@ -110,16 +110,24 @@ public class BugTracker : EditorWindow
 
             string buttonName = loadedBugs[i].FindProperty("name").stringValue + " " + loadedBugs[i].FindProperty("priority").intValue + "/10";
 
-            if (GUILayout.Button(buttonName, GUILayout.Width(220), GUILayout.Height(50)))
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button(buttonName, GUILayout.Width(200), GUILayout.Height(50)))
             {
                 selectedIndex = i;
                 selectedBug = loadedBugs[i].FindProperty("name").stringValue;
                 Debug.Log("Button " + buttonName + " clicked!");
+            }
+
+            if (GUILayout.Button("->", GUILayout.Width(20), GUILayout.Height(50)))
+            {
                 detailsWindow = (BugDetails)EditorWindow.GetWindow(typeof(BugDetails), false, "Details of " + loadedBugs[i].FindProperty("name").stringValue);
                 detailsWindow.Initialize(loadedBugs[i]);
                 this.Close();
             }
+            GUILayout.EndHorizontal();
         }
+        
+
 
         if (searchAndOpen != "")
         {
@@ -166,12 +174,28 @@ public class BugTracker : EditorWindow
 
     private void DeleteBug(string bugName)
     {
-        detailsWindow.Close();
+        if (detailsWindow != null)
+            detailsWindow.Close();
 
-        if (!AssetDatabase.DeleteAsset("Assets/Resources/Bugs/" + bugName + ".asset"))
+        Object[] bugInfo = Resources.LoadAll("Bugs");    //, typeof(Bug));
+        Debug.Log("Loaded " + bugInfo.Length + " bugs123");
+
+        loadedBugs = new SerializedObject[bugInfo.Length];
+
+        string fileName = "";
+
+        for (int i = 0; i < bugInfo.Length; i++)
         {
-            Debug.LogError("Bug " + bugName + " could not be deleted. Ironic.");
+            loadedBugs[i] = new SerializedObject(bugInfo[i]);
+            if (loadedBugs[i].FindProperty("name").stringValue == bugName)
+                fileName = System.IO.Path.GetFileName(AssetDatabase.GetAssetPath(bugInfo[i])).Replace(".asset", "");
         }
+
+        if (fileName != "")
+            if (!AssetDatabase.DeleteAsset("Assets/Resources/Bugs/" + fileName + ".asset"))
+            {
+                Debug.LogError("Bug " + bugName + " could not be deleted. Ironic.");
+            }
 
         OnEnable(); //refresh
         selectedIndex = 0;
