@@ -8,7 +8,7 @@
             "cost": 0,
             "startTech": true,
             "unitsUnlocked": [
-                "ScriptableObjects/Buildings/Research Lab/Lab.asset"
+                "ScriptableObjects/Buildings/Research/Research Lab/Lab.asset"
             ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": [
@@ -127,7 +127,9 @@
             ],
             "cost": 500,
             "startTech": false,
-            "unitsUnlocked": [],
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Research/Dyna Lab/Dyna_Lab.asset"
+            ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": []
         },

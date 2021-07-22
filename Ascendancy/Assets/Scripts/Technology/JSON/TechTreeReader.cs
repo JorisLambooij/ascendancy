@@ -5,8 +5,8 @@ using System.IO;
 
 public class TechTreeReader : MonoBehaviour
 {
-    public static string techPath = Application.dataPath + "/StreamingAssets/Data/Technology/tech_general.json";
-    public static string nodePath = Application.dataPath + "/StreamingAssets/Data/Technology/tech_general_nodeData.json";
+    public string techPath;
+    public string nodePath;
 
     private static TechTreeReader instance;
     public static TechTreeReader Instance
@@ -19,14 +19,20 @@ public class TechTreeReader : MonoBehaviour
         }
     }
     
-    public static TechnologyTree LoadTechTree()
+    public TechTreeReader()
+    {
+        techPath = Application.dataPath + "/StreamingAssets/Data/Technology/tech_general.json";
+        nodePath = Application.dataPath + "/StreamingAssets/Data/Technology/tech_general_nodeData.json";
+    }
+
+    public TechnologyTree LoadTechTree()
     {
         TechnologyTree techTree = LoadTechData();
         LoadNodeData(techTree);
         return techTree;
     }
 
-    private static TechnologyTree LoadTechData()
+    private TechnologyTree LoadTechData()
     {
         string dataAsJSON;
         if (!File.Exists(techPath))
@@ -48,7 +54,7 @@ public class TechTreeReader : MonoBehaviour
         return techTree;
     }
 
-    private static void LoadNodeData(TechnologyTree techTree)
+    private void LoadNodeData(TechnologyTree techTree)
     {
         if (!File.Exists(nodePath))
             Debug.LogError("Technology node file not found at: " + nodePath);

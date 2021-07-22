@@ -32,12 +32,21 @@ public class BuildMenu : MonoBehaviour, ListSubscriber<EntityInfo>
         categories = new Dictionary<EntityCategoryInfo, BuildMenuCategory>();
         foreach (EntityInfo info in player.TechLevel.entitiesUnlocked.AsList)
         {
-            AddNewBuildingOption(info);
+            if (info != null)
+                AddNewBuildingOption(info);
+            else
+                Debug.LogError("Empty EntityInfo in Dictionary! Skipping!");
         }
     }
 
     private void AddNewBuildingOption(EntityInfo info)
     {
+        if(info.category == null)
+        {
+            Debug.LogError(info.name + " has no category!");
+            return;
+        }
+
         //Debug.Log("New Building " + info.name + " in " + info.category.name);
         if (categories.ContainsKey(info.category))
             categories[info.category].AddBuildOption(info);

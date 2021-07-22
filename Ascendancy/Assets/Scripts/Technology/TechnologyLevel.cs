@@ -17,7 +17,7 @@ public class TechnologyLevel : NetworkBehaviour
     // Start is called before the first frame update
     public void Initialize()
     {
-        techTree = TechTreeReader.LoadTechTree();
+        techTree = TechTreeReader.Instance.LoadTechTree();
 
         currentFocus = -1;
         storedResearch = new SubscribableProperty<float>(0);
@@ -73,11 +73,11 @@ public class TechnologyLevel : NetworkBehaviour
         if (tech.unitsUnlocked != null)
             foreach (EntityInfo unitInfo in tech.unitsUnlocked)
                 UnlockEntity(unitInfo);
-        /*
+
         if (tech.buildingsUnlocked != null)
-            foreach (BuildingInfo buildingInfo in tech.buildingsUnlocked)
+            foreach (EntityInfo buildingInfo in tech.buildingsUnlocked)
                 UnlockEntity(buildingInfo);
-        */
+
         if (tech.resourcesUnlocked != null)
             foreach (Resource resource in tech.resourcesUnlocked)
             {

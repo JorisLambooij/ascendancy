@@ -38,6 +38,10 @@ public class World_EditorScript : Editor
         HeightMapGenerator hmGen = world.transform.GetComponent<HeightMapGenerator>();
         hmGen.perlinOffset = seed;
         world.Awake();
+
+        chunks = world.ChunkCollector.GetComponentsInChildren<Chunk>();
+        for (int i = 0; i < chunks.Length; i++)
+            chunks[i].GetComponent<MeshRenderer>().material.EnableKeyword("TOGGLEFOW_OFF");
     }
 
     private void ReGenerateTexture(World world)

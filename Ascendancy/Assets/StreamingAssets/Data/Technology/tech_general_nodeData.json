@@ -1,7 +1,7 @@
 {
     "initialOffset": {
-        "x": 300.0,
-        "y": 200.0
+        "x": 0.0,
+        "y": 400.0
     },
     "gridSnap": 100,
     "nodeDataCollection": [

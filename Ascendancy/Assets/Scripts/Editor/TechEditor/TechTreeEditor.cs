@@ -18,6 +18,7 @@ public class TechTreeEditor : EditorWindow
     private GUIStyle outPointStyle;
 
     private ConnectionPoint selectedInPoint;
+
     private ConnectionPoint selectedOutPoint;
 
     private Rect rectButtonClear;
@@ -32,8 +33,8 @@ public class TechTreeEditor : EditorWindow
 
     private float zoomFactor = 1;
 
-    private string techPath = TechTreeReader.techPath;
-    private string nodePath = TechTreeReader.nodePath;
+    private string techPath;
+    private string nodePath;
 
     private int id;
     private int nodeCount;
@@ -50,7 +51,7 @@ public class TechTreeEditor : EditorWindow
     {
         TechTreeEditor window = GetWindow<TechTreeEditor>();
         window.titleContent = new GUIContent("Tech Tree Editor");
-
+        window.minSize = new Vector2(200, 200);
         instance = window;
     }
 
@@ -61,6 +62,8 @@ public class TechTreeEditor : EditorWindow
 
     private void OnEnable()
     {
+        techPath = TechTreeReader.Instance.techPath;
+        nodePath = TechTreeReader.Instance.nodePath;
         instance = this;
         id = 0;
         nodeCount = 0;
