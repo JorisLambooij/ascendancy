@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e7cc914d92b773d48ab1015048fd4c53
+guid: ff7acb79681002d4ea1e1eb75c94d419
 ModelImporter:
   serializedVersion: 21100
   internalIDToNameTable: []
@@ -7,20 +7,30 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: LightGlass
-    second: {fileID: 2100000, guid: a67a30f3fd053f44791c4e24c13a363b, type: 2}
+      name: Bark
+    second: {fileID: 2100000, guid: c3c32648a7501934185c6f1840e04c96, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Metal
+      name: CutWood
+    second: {fileID: 2100000, guid: 9156b738848a95b4eba65b8e1c0ec97e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Door
     second: {fileID: 2100000, guid: 3f26ac7333ac4c440a194fce4281497e, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Stone
+      name: Floor
     second: {fileID: 2100000, guid: 4da5992fe8bfd7f438f755b5f5933dfe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: WoodWall
+    second: {fileID: 2100000, guid: 2983a26118c15fd4b838d1d9b4601899, type: 2}
   materials:
-    materialImportMode: 1
+    materialImportMode: 2
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -49,7 +59,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.254
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -58,7 +68,7 @@ ModelImporter:
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
-    fileIdsGeneration: 1
+    fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -100,7 +110,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.254
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
@@ -110,7 +120,7 @@ ModelImporter:
   animationType: 2
   humanoidOversampling: 1
   avatarSetup: 0
-  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
