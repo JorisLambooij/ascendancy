@@ -179,7 +179,17 @@ public class World : MonoBehaviour
             {
                 //GenerateTerrainTypes(x, y);
                 //generate texture
-                colormap[x, y] = GetColorForType(map[x, y].terrainType);
+                switch(displayMode)
+                {
+                    case DisplayMode.Color:
+                        colormap[x, y] = GetColorForType(map[x, y].terrainType);
+                        break;
+                    default:
+                        colormap[x, y] = Color32.Lerp(Color.black, Color.white, map[x, y].Height + 1 / heightResolution);
+                        break;
+
+                }    
+                
             }
 
         //apply texture

@@ -32,7 +32,7 @@ public class Tile
         this.worldX = worldX;
         this.worldZ = worldZ;
         this.Height = height;
-        this.rawHeight = height;
+        this.rawHeight = rawHeight;
         SetFace();
     }
 

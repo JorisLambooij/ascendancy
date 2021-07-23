@@ -20,32 +20,37 @@ public class Rivers : TerrainFeature
         if (!enabled)
             return;
 
-        List<Vector2Int> startPositions = RandomPositions(numberOfRivers, tilemap.GetLength(0), tilemap.GetLength(1));
-        List<Vector2Int> endPositions = RandomPositions(numberOfRivers, tilemap.GetLength(0), tilemap.GetLength(1));
-        List<Vector2> riverDirections = RandomDirections(numberOfRivers);
+        List<Vector2Int> startPositions = RandomPositions(Mathf.Max(numberOfRivers - 1, 4), tilemap.GetLength(0), tilemap.GetLength(1));
+        //List<Vector2Int> endPositions = RandomPositions(numberOfRivers, tilemap.GetLength(0), tilemap.GetLength(1));
 
         for (int i = 0; i < numberOfRivers; i++)
         {
-            CreateRiver(ref tilemap, startPositions[i], riverDirections[i]);
+            int randomI = Random.Range(0, startPositions.Count);
+            int randomJ = Random.Range(0, startPositions.Count);
+            CreateRiver(ref tilemap, startPositions[randomI], startPositions[randomJ] + Vector2Int.one);
+            //Vector2Int p = startPositions[i];
+            //Debug.Log(p);
+            //tilemap[p.x, p.y].terrainType = TerrainType.NONE;
         }
     }
 
-    private void CreateRiver(ref Tile[,] tilemap, Vector2Int startPosition, Vector2 direction)
+    private void CreateRiver(ref Tile[,] tilemap, Vector2Int startPosition, Vector2Int endPosition)
     {
         float desiredLength = Random.Range(minimumLength, maximumLength);
-        Vector2 target = startPosition + desiredLength * direction;
         float desiredWidth = Random.Range(riverWidth / 2, riverWidth);
         float startingHeight = tilemap[startPosition.x, startPosition.y].Height;
 
-        Debug.Log("Creating River at " + startPosition);
-
         Vector2 position = startPosition;
+        Vector2 direction = endPosition - startPosition;
+        direction.Normalize();
+        Vector2 initialDirection = direction;
         for (float l = 0; l < desiredLength; l += 0.2f)
         {
-            Vector2 gradient = ConvertTilesToRiver(ref tilemap, position, desiredWidth, startingHeight);
-
+            float width = Mathf.Lerp(desiredWidth / 2, desiredWidth, l / desiredLength);
+            Vector2 gradient = ConvertTilesToRiver(ref tilemap, position, width, startingHeight);
+            
             direction = Vector2.Lerp(direction, gradient, meanderingCoefficient);
-            direction = Vector2.Lerp(direction, (target - position).normalized, correctingCoefficient);
+            direction = Vector2.Lerp(direction, initialDirection, correctingCoefficient);
             position += direction;
             l += direction.magnitude;
         }
@@ -84,7 +89,7 @@ public class Rivers : TerrainFeature
                 bool inner = dSquare < innerRadius * innerRadius;
                 //if (t.Height <= startingHeight + 1)
                 //{
-                    t.terrainType = TerrainType.WATER;
+                    t.terrainType = TerrainType.SAND;
                     t.Height = inner ? -1 : Mathf.Max(-1, t.Height - 1);
                 //}
             }

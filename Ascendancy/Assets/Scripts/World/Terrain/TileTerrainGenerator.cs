@@ -5,6 +5,7 @@ using UnityEngine;
 public class TileTerrainGenerator : MonoBehaviour
 {
     public Tile[,] tilemap;
+    public float noiseScale;
 
     private World world;
     private HeightMapGenerator heightmapGen;
@@ -19,21 +20,22 @@ public class TileTerrainGenerator : MonoBehaviour
     public Tile[,] GenerateTileMap()
     {
         world = World.Instance;
+        worldSize = world.worldSize;
         heightmapGen = GetComponent<HeightMapGenerator>();
+        float[,] noisemap = heightmapGen.GenerateHeightMap(worldSize, worldSize, noiseScale);
 
         Debug.Assert(world != null, "World is null!");
         Debug.Assert(heightmapGen != null, "HeightmapGen is null!");
 
         TerrainFeature.heightMapGenerator = heightmapGen;
 
-        worldSize = world.worldSize;
 
         tilemap = new Tile[worldSize, worldSize];
 
         for (int x = 0; x < worldSize; x++)
             for (int y = 0; y < worldSize; y++)
             {
-                Tile t = new Tile(x, y, 0);
+                Tile t = new Tile(x, y, 0, noisemap[x, y]);
                 t.terrainType = TerrainType.GRASS;
                 tilemap[x, y] = t;
             }

@@ -33,13 +33,28 @@ public abstract class TerrainFeature
     protected List<Vector2Int> RandomPositions(int number, int width, int height)
     {
         List<Vector2Int> positions = new List<Vector2Int>();
+
+        int sqrt = Mathf.FloorToInt(Mathf.Sqrt(number));
+        int amountOfSectors = sqrt * sqrt;
+        int quadrantWidth = width / sqrt;
+        int quadrantHeight = height / sqrt;
         for (int i = 0; i < number; i++)
         {
-            Vector2Int position = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
+            int sector = i % amountOfSectors;
+            int sectorX = sector % sqrt;
+            int sectorY = sector / sqrt;
+
+            int minX = sectorX * quadrantWidth;
+            int maxX = (sectorX + 1) * quadrantWidth;
+            int minY = sectorY * quadrantHeight;
+            int maxY = (sectorY + 1) * quadrantHeight;
+
+            Vector2Int position = new Vector2Int(Random.Range(minX, maxX), Random.Range(minY, maxY));
             positions.Add(position);
         }
         return positions;
     }
+
 
     protected List<Vector2> RandomDirections(int number)
     {

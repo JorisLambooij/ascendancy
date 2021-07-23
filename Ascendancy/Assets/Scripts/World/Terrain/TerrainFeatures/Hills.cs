@@ -16,16 +16,16 @@ public class Hills : TerrainFeature
 
         int width = tilemap.GetLength(0);
         int height = tilemap.GetLength(1);
-        float[,] noisemap = heightMapGenerator.GenerateNoiseMap(width, height, heightMapGenerator.perlinOffset, 3, frequency, 0.7f, 10f / frequency);
+        //float[,] noisemap = heightMapGenerator.GenerateNoiseMap(width, height, heightMapGenerator.perlinOffset, 3, frequency, 0.7f, 10f / frequency);
         float heightThreshold = Mathf.Lerp(20, -3, size / 10) / 20;
 
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
             {
-                int h = Mathf.RoundToInt(noisemap[x, y] * World.Instance.heightResolution);
-                tilemap[x, y].Height = depressions ? h : Mathf.Max(h, 0);// h > heightThreshold ? h : 0;
-                tilemap[x, y] = ChangeTile(tilemap[x, y]);
-                tilemap[x, y].rawHeight = noisemap[x, y];
+                Tile t = tilemap[x, y];
+                int h = Mathf.RoundToInt(t.rawHeight * World.Instance.heightResolution);
+                t.Height = depressions ? h : Mathf.Max(h, 0);// h > heightThreshold ? h : 0;
+                t.terrainType = t.Height > 0 ? TerrainType.ROCK : TerrainType.GRASS;
             }
 
         for (int x = 0; x < width; x++)
