@@ -12,18 +12,42 @@ public class Tile
 
     public TerrainType terrainType = 0;
 
-    public float height;    //the idealized height of this tile
+    public int height;    //the idealized height of this tile
+
+    public float rawHeight;
+    public Vector2Int gradient;
 
     public float worldX, worldZ;
     #endregion
-
-    //basic constructor
-    public Tile(float worldX, float worldZ)
+    public Tile(float worldX, float worldZ, int height, float rawHeight)
     {
-        face = new Face();
         this.worldX = worldX;
         this.worldZ = worldZ;
+        this.height = height;
+        this.rawHeight = height;
+        SetFace();
     }
+
+    //basic constructor
+    public Tile(float worldX, float worldZ,  int height)
+    {
+        this.worldX = worldX;
+        this.worldZ = worldZ;
+        this.height = height;
+        SetFace();
+    }
+
+    protected void SetFace()
+    {
+        face = new Face
+        {
+            topLeft = new Vector3(worldX - 0.5f, height, worldZ + 0.5f), //top left
+            topRight = new Vector3(worldX + 0.5f, height, worldZ + 0.5f), //up right
+            botRight = new Vector3(worldX + 0.5f, height, worldZ - 0.5f), //down right
+            botLeft = new Vector3(worldX - 0.5f, height, worldZ - 0.5f) //down left
+        };
+    }
+
 
     public virtual bool FlatLand()
     {

@@ -10,7 +10,6 @@ public class World_EditorScript : Editor
     public override void OnInspectorGUI()
     {
         World world = (World)target;
-        DrawDefaultInspector();
 
         if (GUILayout.Button("Generate New World - 0 Seed"))
         {
@@ -25,6 +24,7 @@ public class World_EditorScript : Editor
         {
             ReGenerateTexture(world);
         }
+        DrawDefaultInspector();
     }
 
     private void Generate(World world, Vector2 seed)
@@ -39,9 +39,9 @@ public class World_EditorScript : Editor
         hmGen.perlinOffset = seed;
         world.Awake();
 
-        chunks = world.ChunkCollector.GetComponentsInChildren<Chunk>();
-        for (int i = 0; i < chunks.Length; i++)
-            chunks[i].GetComponent<MeshRenderer>().material.EnableKeyword("TOGGLEFOW_OFF");
+        //chunks = world.ChunkCollector.GetComponentsInChildren<Chunk>();
+        //for (int i = 0; i < chunks.Length; i++)
+        //    chunks[i].GetComponent<MeshRenderer>().material.EnableKeyword("TOGGLEFOW_OFF");
     }
 
     private void ReGenerateTexture(World world)
