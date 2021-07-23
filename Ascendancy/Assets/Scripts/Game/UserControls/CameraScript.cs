@@ -43,7 +43,7 @@ public class CameraScript : MonoBehaviour
         Tile t = World.Instance.GetTile(pos);
         if (t != null)
         {
-            lastTileHeight = t.height;
+            lastTileHeight = t.Height;
         }
         float tileHeight = lastTileHeight;
         float desiredY = (targetHeight + tileHeight) * 0.5f;

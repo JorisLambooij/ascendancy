@@ -208,7 +208,7 @@ public class World : MonoBehaviour
         for (int x = 0; x < map.GetLength(0); x++)
             for (int y = 0; y < map.GetLength(1); y++)
             {
-                float height = map[x, y].height;
+                float height = map[x, y].Height;
                 colors[x + y * map.GetLength(0)] = colormap[x, y];
                 if (height < waterLevel)
                 {
@@ -260,7 +260,7 @@ public class World : MonoBehaviour
     {
         TerrainType tileType;
 
-        switch (Mathf.RoundToInt(map[x, y].height))
+        switch (Mathf.RoundToInt(map[x, y].Height))
         {
             case int n when (n < -1):
                 tileType = TerrainType.WATER;
@@ -356,7 +356,7 @@ public class World : MonoBehaviour
         Debug.Assert(v.x >= 0 && v.x < map.GetLength(0), "World.GetHeight: Tile Index out of range (X=" + v.x + ")");
         Debug.Assert(v.y >= 0 && v.y < map.GetLength(1), "World.GetHeight: Tile Index out of range (Y=" + v.y + ")");
 
-        return map[v.x, v.y].height;
+        return map[v.x, v.y].Height;
     }
 
     public bool IsAreaFlat(Vector2Int pos, Vector2Int dimensions)
@@ -451,7 +451,7 @@ public class World : MonoBehaviour
                         continue;
 
                     Vector2 gradient = map[x, y].gradient;
-                    Vector3 arrowOrigin = new Vector3(x, map[x, y].height, y);
+                    Vector3 arrowOrigin = new Vector3(x, map[x, y].Height, y);
                     Vector3 arrowDirection = new Vector3(gradient.x, 0, gradient.y) * 0.5f;
                     DrawArrow.ForGizmo(arrowOrigin, arrowDirection, Color.white);
                 }

@@ -10,12 +10,12 @@ public class Lakes : TerrainFeature
 
     public override void AddFeature(ref Tile[,] tilemap)
     {
-        for (int i = 0; i < numberOfLakes; i++)
-        {
-            Vector2Int position = new Vector2Int(Random.Range(0, tilemap.GetLength(0)), Random.Range(0, tilemap.GetLength(1)));
-            //tilemap[position.x, position.y].terrainType = TerrainType.WATER;
+        if (!enabled)
+            return;
+
+        List<Vector2Int> positions = RandomPositions(numberOfLakes, tilemap.GetLength(0), tilemap.GetLength(1));
+        foreach(Vector2Int position in positions)
             CreateLake(ref tilemap, position);
-        }
     }
 
     private void CreateLake(ref Tile[,] tilemap, Vector2Int pos)
@@ -40,7 +40,7 @@ public class Lakes : TerrainFeature
 
         Debug.Log("Arrived at " + lowestPoint);
         // carve out the basin
-        int lakeHeight = tilemap[lowestPoint.x, lowestPoint.y].height;
+        int lakeHeight = tilemap[lowestPoint.x, lowestPoint.y].Height;
         Stack<Vector2Int> exploration = new Stack<Vector2Int>();
         Stack<Vector2Int> trackedTiles = new Stack<Vector2Int>();
         exploration.Push(lowestPoint);
@@ -65,7 +65,7 @@ public class Lakes : TerrainFeature
 
                     Vector2Int nb = new Vector2Int(u, v);
                     // if the neighboring tile should belong to the lake but doesn't yet, add it to the stack
-                    if (tilemap[u, v].height <= lakeHeight && tilemap[u, v].terrainType != TerrainType.WATER && !trackedTiles.Contains(nb) && !exploration.Contains(nb))
+                    if (tilemap[u, v].Height <= lakeHeight && tilemap[u, v].terrainType != TerrainType.WATER && !trackedTiles.Contains(nb) && !exploration.Contains(nb))
                         exploration.Push(nb);
                 }
             check++;
@@ -84,9 +84,9 @@ public class Lakes : TerrainFeature
 
     protected override Tile ChangeTile(Tile t)
     {
-        int h = t.height < 0 ? 0 : t.height;
+        int h = t.Height < 0 ? 0 : t.Height;
         Tile newT = new Tile(t.worldX, t.worldZ, h);
-        newT.terrainType = t.height < 0 ? TerrainType.WATER : t.terrainType;
+        newT.terrainType = t.Height < 0 ? TerrainType.WATER : t.terrainType;
 
         return newT;
     }

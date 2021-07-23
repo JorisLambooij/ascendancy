@@ -11,7 +11,7 @@ public class TileCliff : Tile
     #endregion
 
     //basic constructor
-    public TileCliff(Tile baseTile) : base(baseTile.worldX, baseTile.worldZ, baseTile.height)
+    public TileCliff(Tile baseTile) : base(baseTile.worldX, baseTile.worldZ, baseTile.Height)
     {
         topCliff = null;
         rightCliff = null;
@@ -23,7 +23,7 @@ public class TileCliff : Tile
         this.face.botLeft = baseTile.face.botLeft;
         this.face.botRight = baseTile.face.botRight;
 
-        this.height = baseTile.height;    //the idealized height of this tile
+        this.Height = baseTile.Height;    //the idealized height of this tile
 
         this.worldX = baseTile.worldX;
         this.worldZ = baseTile.worldZ;

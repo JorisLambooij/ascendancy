@@ -9,10 +9,18 @@ public class Tile
     #region Internal data
     public Face face;
     public bool flippedTriangles { get; private set; } = false;
+    public int Height { 
+        get => height;
+        set
+        {
+            height = value;
+            SetFace();
+        }
+    }
 
     public TerrainType terrainType = 0;
 
-    public int height;    //the idealized height of this tile
+    private int height;    //the idealized height of this tile
 
     public float rawHeight;
     public Vector2Int gradient;
@@ -23,7 +31,7 @@ public class Tile
     {
         this.worldX = worldX;
         this.worldZ = worldZ;
-        this.height = height;
+        this.Height = height;
         this.rawHeight = height;
         SetFace();
     }
@@ -33,7 +41,7 @@ public class Tile
     {
         this.worldX = worldX;
         this.worldZ = worldZ;
-        this.height = height;
+        this.Height = height;
         SetFace();
     }
 
@@ -41,10 +49,10 @@ public class Tile
     {
         face = new Face
         {
-            topLeft = new Vector3(worldX - 0.5f, height, worldZ + 0.5f), //top left
-            topRight = new Vector3(worldX + 0.5f, height, worldZ + 0.5f), //up right
-            botRight = new Vector3(worldX + 0.5f, height, worldZ - 0.5f), //down right
-            botLeft = new Vector3(worldX - 0.5f, height, worldZ - 0.5f) //down left
+            topLeft = new Vector3(worldX - 0.5f, Height, worldZ + 0.5f), //top left
+            topRight = new Vector3(worldX + 0.5f, Height, worldZ + 0.5f), //up right
+            botRight = new Vector3(worldX + 0.5f, Height, worldZ - 0.5f), //down right
+            botLeft = new Vector3(worldX - 0.5f, Height, worldZ - 0.5f) //down left
         };
     }
 

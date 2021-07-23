@@ -5,6 +5,10 @@ using UnityEngine;
 [System.Serializable]
 public class Hills : TerrainFeature
 {
+    public float frequency;
+    public float size;
+    public bool depressions;
+
     public override void AddFeature(ref Tile[,] tilemap)
     {
         if (!enabled)
@@ -19,7 +23,7 @@ public class Hills : TerrainFeature
             for (int y = 0; y < height; y++)
             {
                 int h = Mathf.RoundToInt(noisemap[x, y] * World.Instance.heightResolution);
-                tilemap[x, y].height = h;// h > heightThreshold ? h : 0;
+                tilemap[x, y].Height = depressions ? h : Mathf.Max(h, 0);// h > heightThreshold ? h : 0;
                 tilemap[x, y] = ChangeTile(tilemap[x, y]);
                 tilemap[x, y].rawHeight = noisemap[x, y];
             }
@@ -46,9 +50,9 @@ public class Hills : TerrainFeature
                 
     protected override Tile ChangeTile(Tile t)
     {
-        Tile newT = new Tile(t.worldX, t.worldZ, t.height);
+        Tile newT = new Tile(t.worldX, t.worldZ, t.Height);
         
-        newT.terrainType = t.height > 0 ? TerrainType.ROCK : TerrainType.GRASS;
+        newT.terrainType = t.Height > 0 ? TerrainType.ROCK : TerrainType.GRASS;
         return newT;
     }
 }

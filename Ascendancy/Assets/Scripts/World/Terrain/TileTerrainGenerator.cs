@@ -13,6 +13,7 @@ public class TileTerrainGenerator : MonoBehaviour
     [Header("Terrain Features")]
     public Hills hills;
     public Lakes lakes;
+    public Rivers rivers;
 
 
     public Tile[,] GenerateTileMap()
@@ -40,6 +41,7 @@ public class TileTerrainGenerator : MonoBehaviour
         // add the hills
         hills.AddFeature(ref tilemap);
         lakes.AddFeature(ref tilemap);
+        rivers.AddFeature(ref tilemap);
 
         return tilemap;
         //float[,] noisemap = heightmapGen.GenerateNoiseMap(world.worldSize, world.worldSize, world.)
