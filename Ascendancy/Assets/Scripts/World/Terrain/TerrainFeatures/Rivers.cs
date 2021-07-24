@@ -49,8 +49,8 @@ public class Rivers : TerrainFeature
             float width = Mathf.Lerp(desiredWidth / 2, desiredWidth, l / desiredLength);
             Vector2 gradient = ConvertTilesToRiver(ref tilemap, position, width, startingHeight);
             
-            direction = Vector2.Lerp(direction, gradient, meanderingCoefficient);
-            direction = Vector2.Lerp(direction, initialDirection, correctingCoefficient);
+            direction = Vector3.Slerp(direction, gradient, meanderingCoefficient);
+            direction = Vector3.Slerp(direction, initialDirection, correctingCoefficient);
             position += direction;
             l += direction.magnitude;
         }
@@ -89,9 +89,12 @@ public class Rivers : TerrainFeature
                 bool inner = dSquare < innerRadius * innerRadius;
                 //if (t.Height <= startingHeight + 1)
                 //{
-                    t.terrainType = TerrainType.SAND;
-                    t.Height = inner ? -1 : Mathf.Max(-1, t.Height - 1);
+                    //t.terrainType = TerrainType.SAND;
+                    //t.Height = inner ? -1 : Mathf.Max(-1, t.Height - 1);
                 //}
+                t.Height = Mathf.RoundToInt(Mathf.Lerp(-1, t.Height, 1 / dSquare));
+                //t.terrainType = inner ? TerrainType.SAND : t.terrainType;
+                t.terrainType = TerrainType.SAND;
             }
         return gradient / gradientNormalization;
     }

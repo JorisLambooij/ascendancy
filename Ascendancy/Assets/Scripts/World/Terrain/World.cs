@@ -53,6 +53,11 @@ public class World : MonoBehaviour
     public bool tintFlippedTiles = false;
     public bool disableFogOfWar;
 
+    public bool doAdditiveSmoothing;
+    public bool doTriangleSmoothing;
+    public bool doCliffFilling;
+    public bool doCliffDiagonals;
+
     [Tooltip("Show the gradient of the terrain.\nCaution: Performance-heavy")]
     public bool showGradient;
     public List<int> highlightedTiles;
@@ -163,15 +168,22 @@ public class World : MonoBehaviour
 
         // Smoothing methods
         AdditiveSmoothing additiveSmoothing = new AdditiveSmoothing();
-        map = additiveSmoothing.Run(map, parallelizationBatchSize);
+        if (doAdditiveSmoothing)
+            map = additiveSmoothing.Run(map, parallelizationBatchSize);
 
         FlipTriangleSmoothing triangleSmoothing = new FlipTriangleSmoothing();
-        map = triangleSmoothing.Run(map, parallelizationBatchSize);
+        if(doTriangleSmoothing)
+            map = triangleSmoothing.Run(map, parallelizationBatchSize);
 
         CliffFilling cliffFill = new CliffFilling();
-        map = cliffFill.Run(map, parallelizationBatchSize);
+        if (doCliffFilling)
+            map = cliffFill.Run(map, parallelizationBatchSize);
 
-        map = triangleSmoothing.Run(map, parallelizationBatchSize);
+        CliffDiagonals cliffDiagonals = new CliffDiagonals();
+        if (doCliffDiagonals)
+            map = cliffDiagonals.Run(map, parallelizationBatchSize);
+
+        //map = triangleSmoothing.Run(map, parallelizationBatchSize);
         
         //2nd map iteration with methods
         for (int x = 0; x < map.GetLength(0); x++)

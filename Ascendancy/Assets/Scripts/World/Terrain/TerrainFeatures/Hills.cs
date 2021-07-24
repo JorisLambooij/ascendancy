@@ -25,7 +25,7 @@ public class Hills : TerrainFeature
                 Tile t = tilemap[x, y];
                 int h = Mathf.RoundToInt(t.rawHeight * World.Instance.heightResolution);
                 t.Height = depressions ? h : Mathf.Max(h, 0);// h > heightThreshold ? h : 0;
-                t.terrainType = t.Height > 0 ? TerrainType.ROCK : TerrainType.GRASS;
+                t.terrainType = t.Height > 1 ? TerrainType.ROCK : t.Height > 0 ? TerrainType.DIRT : TerrainType.GRASS;
             }
 
         for (int x = 0; x < width; x++)
@@ -52,7 +52,7 @@ public class Hills : TerrainFeature
     {
         Tile newT = new Tile(t.worldX, t.worldZ, t.Height);
         
-        newT.terrainType = t.Height > 0 ? TerrainType.ROCK : TerrainType.GRASS;
+        newT.terrainType = t.Height > 1 ? TerrainType.ROCK : TerrainType.GRASS;
         return newT;
     }
 }

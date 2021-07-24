@@ -160,9 +160,39 @@ public class Chunk : MonoBehaviour
                 
                 int tileType = chunkTilemap[wd, hg].GetTileType();
                 // if this tile type doesn't need color correction, proceed as normal
-                if (!colorCorrectableTiles.Contains(tileType))
+                int diagonalCliff = ((chunkTilemap[wd, hg] as TileCliff)?.diagonal) ?? 0;
+                if (!colorCorrectableTiles.Contains(tileType) && diagonalCliff == 0)
+                {
                     GenerateFace(chunkTilemap[wd, hg].face, vertexColors, chunkTilemap[wd, hg].flippedTriangles);
+                }
                 // otherwise, determine the orientation and color in as necessary
+                else if (diagonalCliff != 0)
+                {
+                    GenerateFace(chunkTilemap[wd, hg].face, vertexColors, chunkTilemap[wd, hg].flippedTriangles);
+
+                    Color nbColor;
+                    switch (diagonalCliff)
+                    {
+                        case 1:
+                            nbColor = colormap[wd, hg + 1];
+                            break;
+                        case 2:
+                            nbColor = colormap[wd + 1, hg + 2];
+                            break;
+                        case 3:
+                            nbColor = colormap[wd + 2, hg + 1];
+                            break;
+                        case 4:
+                            nbColor = colormap[wd + 1, hg];
+                            break;
+                        default:
+                            nbColor = Color.black;
+                            break;
+
+                    }
+                    Color[] lowerFaceColors = new Color[] { nbColor, nbColor, nbColor, nbColor, nbColor, nbColor };
+                    GenerateFace(chunkTilemap[wd, hg].face2, lowerFaceColors, chunkTilemap[wd, hg].flippedTriangles);
+                }
                 else
                 {
                     Color nbColor = Color.red;

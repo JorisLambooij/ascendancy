@@ -76,10 +76,10 @@ public class AdditiveSmoothing : TerrainOperation
         {
             neighbor = originalTilemap[x - 1, y + 1];
 
-            if (neighbor.face.botRight.y > me.face.topLeft.y)
+            if (neighbor.face.botRight.y == me.face.topLeft.y + 1)
                 tl = true;
 
-            if (neighbor.face.botRight.y - 1 > me.face.topLeft.y)
+            if (neighbor.face.botRight.y - 1 == me.face.topLeft.y + 1)
                 tl2 = true;
         }
 
@@ -88,10 +88,10 @@ public class AdditiveSmoothing : TerrainOperation
         {
             neighbor = originalTilemap[x + 1, y + 1];
 
-            if (neighbor.face.botLeft.y > me.face.topRight.y)
+            if (neighbor.face.botLeft.y == me.face.topRight.y + 1)
                 tr = true;
 
-            if (neighbor.face.botLeft.y - 1 > me.face.topRight.y)
+            if (neighbor.face.botLeft.y - 1 == me.face.topRight.y + 1)
                 tr2 = true;
         }
 
@@ -100,10 +100,10 @@ public class AdditiveSmoothing : TerrainOperation
         {
             neighbor = originalTilemap[x + 1, y - 1];
 
-            if (neighbor.face.topLeft.y > me.face.botRight.y)
+            if (neighbor.face.topLeft.y == me.face.botRight.y + 1)
                 br = true;
 
-            if (neighbor.face.topLeft.y - 1 > me.face.botRight.y)
+            if (neighbor.face.topLeft.y - 1 == me.face.botRight.y + 1)
                 br2 = true;
         }
 
@@ -112,10 +112,10 @@ public class AdditiveSmoothing : TerrainOperation
         {
             neighbor = originalTilemap[x - 1, y - 1];
 
-            if (neighbor.face.topRight.y > me.face.botLeft.y)
+            if (neighbor.face.topRight.y == me.face.botLeft.y + 1)
                 bl = true;
 
-            if (neighbor.face.topRight.y - 1 > me.face.botLeft.y)
+            if (neighbor.face.topRight.y - 1 == me.face.botLeft.y + 1)
                 bl2 = true;
         }
 

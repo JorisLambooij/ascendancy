@@ -8,6 +8,7 @@ public class Tile
 {
     #region Internal data
     public Face face;
+    public Face face2;
     public bool flippedTriangles { get; private set; } = false;
     public int Height { 
         get => height;
