@@ -37,20 +37,31 @@ public class Rivers : TerrainFeature
     private void CreateRiver(ref Tile[,] tilemap, Vector2Int startPosition, Vector2Int endPosition)
     {
         float desiredLength = Random.Range(minimumLength, maximumLength);
-        float desiredWidth = Random.Range(riverWidth / 2, riverWidth);
+        float desiredWidth = Random.Range(riverWidth / 1.5f, riverWidth);
         float startingHeight = tilemap[startPosition.x, startPosition.y].Height;
 
-        Vector2 position = startPosition;
         Vector2 direction = endPosition - startPosition;
         direction.Normalize();
+
+        while (tilemap[startPosition.x, startPosition.y].rawHeight > 0)
+        {
+            startPosition += tilemap[startPosition.x, startPosition.y].gradient;
+            
+            if (startPosition.x < 0 || startPosition.x >= tilemap.GetLength(0))
+                return;
+
+            if (startPosition.y < 0 || startPosition.y >= tilemap.GetLength(1))
+                return;
+        }
+        Vector2 position = startPosition;
         Vector2 initialDirection = direction;
         for (float l = 0; l < desiredLength; l += 0.2f)
         {
             float width = Mathf.Lerp(desiredWidth / 2, desiredWidth, l / desiredLength);
             Vector2 gradient = ConvertTilesToRiver(ref tilemap, position, width, startingHeight);
             
-            direction = Vector3.Slerp(direction, gradient, meanderingCoefficient);
-            direction = Vector3.Slerp(direction, initialDirection, correctingCoefficient);
+            Vector2 gradientDirection = Vector3.Slerp(initialDirection, gradient, meanderingCoefficient);
+            direction = Vector3.Slerp(direction, gradientDirection, correctingCoefficient);
             position += direction;
             l += direction.magnitude;
         }
@@ -62,7 +73,7 @@ public class Rivers : TerrainFeature
     {
         Vector2 gradient = Vector2.zero;
         float gradientNormalization = 0;
-        int radiusInt = Mathf.CeilToInt(radius);
+        int radiusInt = Mathf.CeilToInt(radius) + 1;
         float innerRadius = radius * 0.7f;
         for (int dx = -radiusInt; dx <= radiusInt; dx++)
             for (int dy = -radiusInt; dy <= radiusInt; dy++)
@@ -89,10 +100,11 @@ public class Rivers : TerrainFeature
                 bool inner = dSquare < innerRadius * innerRadius;
                 //if (t.Height <= startingHeight + 1)
                 //{
-                    //t.terrainType = TerrainType.SAND;
-                    //t.Height = inner ? -1 : Mathf.Max(-1, t.Height - 1);
+                //t.terrainType = TerrainType.SAND;
+                //t.Height = inner ? -1 : Mathf.Max(-1, t.Height - 1);
                 //}
-                t.Height = Mathf.RoundToInt(Mathf.Lerp(-1, t.Height, 1 / dSquare));
+                t.Height = -1;
+                //t.Height = Mathf.RoundToInt(Mathf.Lerp(-1, t.rawHeight, 1 / Mathf.Sqrt(dSquare)));
                 //t.terrainType = inner ? TerrainType.SAND : t.terrainType;
                 t.terrainType = TerrainType.SAND;
             }

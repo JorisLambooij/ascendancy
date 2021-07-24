@@ -136,14 +136,14 @@ public class AdditiveSmoothing : TerrainOperation
             newTilemap[x, y].face.botLeft.y += 1;
         
 
-        int tileType = (originalTilemap[x, y].GetTileType());
+        int tileType = originalTilemap[x, y].GetTileType();
 
         if (tl2)
         {
             if (tileType == 1101 || tileType == 2212)
                 if (me.face.topRight.y + 1 == originalTilemap[x - 1, y + 1].face.botLeft.y || originalTilemap[x - 1, y].face.topRight.y > me.face.topLeft.y || originalTilemap[x, y + 1].face.botLeft.y > me.face.topLeft.y)
                     newTilemap[x, y].face.topLeft.y += 1;
-                
+
         }
         if (tr2)
         {
@@ -208,7 +208,8 @@ public class AdditiveSmoothing : TerrainOperation
                 break;
         }
 
-
+        if (tileType == 1111 && tl && tr && bl && br)
+            newTilemap[x, y].Height++;
     }
 
     public void RaisePointAt(int x, int y, int corner)

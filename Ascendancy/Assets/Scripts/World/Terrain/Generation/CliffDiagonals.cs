@@ -15,7 +15,7 @@ public class CliffDiagonals : TerrainOperation
         //check bottom-left
         if (x > 0 && y > 0)
         {
-            if (cliff.botCliff != null && cliff.leftCliff != null)
+            if (cliff.botCliff != null && cliff.leftCliff != null && cliff.rightCliff == null && cliff.topCliff == null)
             {
                 // make the leftCliff a diagonal wall, delete bottom wall
                 cliff.leftCliff.botRight = cliff.botCliff.botRight;
@@ -38,7 +38,7 @@ public class CliffDiagonals : TerrainOperation
         //check top-left
         if (x > 0 && y < maxY)
         {
-            if (cliff.topCliff != null && cliff.leftCliff != null)
+            if (cliff.topCliff != null && cliff.leftCliff != null && cliff.rightCliff == null && cliff.botCliff == null)
             {
                 // make the leftCliff a diagonal wall, delete top wall
                 cliff.leftCliff.topLeft = cliff.topCliff.topLeft;
@@ -61,7 +61,7 @@ public class CliffDiagonals : TerrainOperation
         //check top-right
         if (x < maxX && y < maxY)
         {
-            if (cliff.topCliff != null && cliff.rightCliff != null)
+            if (cliff.topCliff != null && cliff.rightCliff != null && cliff.leftCliff == null && cliff.botCliff == null)
             {
                 // make the rightCliff a diagonal wall, delete top wall
                 cliff.rightCliff.topRight = cliff.topCliff.topRight;
@@ -84,7 +84,7 @@ public class CliffDiagonals : TerrainOperation
         //check bottom-right
         if (x < maxX && y > 0)
         {
-            if (cliff.botCliff != null && cliff.rightCliff != null)
+            if (cliff.botCliff != null && cliff.rightCliff != null && cliff.leftCliff == null && cliff.topCliff == null)
             {
                 // make the rightCliff a diagonal wall, delete bottom wall
                 cliff.rightCliff.topLeft = cliff.botCliff.topLeft;

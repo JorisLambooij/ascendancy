@@ -55,6 +55,7 @@ public class World : MonoBehaviour
 
     public bool doAdditiveSmoothing;
     public bool doTriangleSmoothing;
+    public bool doTerrainTypeEqualization;
     public bool doCliffFilling;
     public bool doCliffDiagonals;
 
@@ -168,23 +169,22 @@ public class World : MonoBehaviour
 
         // Smoothing methods
         AdditiveSmoothing additiveSmoothing = new AdditiveSmoothing();
+        TerrainTypeEqualization terrainTypeEqualization = new TerrainTypeEqualization();
+        FlipTriangleSmoothing triangleSmoothing = new FlipTriangleSmoothing();
+        CliffFilling cliffFill = new CliffFilling();
+        CliffDiagonals cliffDiagonals = new CliffDiagonals();
+
         if (doAdditiveSmoothing)
             map = additiveSmoothing.Run(map, parallelizationBatchSize);
-
-        FlipTriangleSmoothing triangleSmoothing = new FlipTriangleSmoothing();
         if(doTriangleSmoothing)
             map = triangleSmoothing.Run(map, parallelizationBatchSize);
-
-        CliffFilling cliffFill = new CliffFilling();
+        if (doTerrainTypeEqualization)
+            map = terrainTypeEqualization.Run(map, parallelizationBatchSize);
         if (doCliffFilling)
             map = cliffFill.Run(map, parallelizationBatchSize);
-
-        CliffDiagonals cliffDiagonals = new CliffDiagonals();
         if (doCliffDiagonals)
             map = cliffDiagonals.Run(map, parallelizationBatchSize);
 
-        //map = triangleSmoothing.Run(map, parallelizationBatchSize);
-        
         //2nd map iteration with methods
         for (int x = 0; x < map.GetLength(0); x++)
             for (int y = 0; y < map.GetLength(1); y++)

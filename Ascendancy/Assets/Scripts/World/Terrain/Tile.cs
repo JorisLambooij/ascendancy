@@ -69,6 +69,11 @@ public class Tile
         return faces;
     }
 
+    public void SetHeightWithoutAffectingFace(int newHeight)
+    {
+        this.height = newHeight;
+    }
+
     /// <summary>
     /// returns a specific ID based on edge level of tile, starting from top left
     /// </summary>
