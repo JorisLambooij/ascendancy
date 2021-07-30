@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public enum TerrainType { NONE, NONE_WALL, GRASS, GRASS_WALL, ROCK, ROCK_WALL, DIRT, DIRT_WALL, SAND, SAND_WALL, WATER, WATER_WALL };
+public enum TerrainType { NONE, GRASS, ROCK, DIRT, SAND, SNOW, WATER};
 
 public class Tile
 {

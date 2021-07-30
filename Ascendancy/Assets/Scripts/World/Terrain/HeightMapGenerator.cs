@@ -16,14 +16,9 @@ public class HeightMapGenerator : MonoBehaviour
     public Texture2D debugHeightmap;
 
     public Vector2 perlinOffset;
-    
-    [Header("Hill Parameters")]
-    [Tooltip("Number of Noise functions to sample.")]
-    public int octaves = 3;
-    [Tooltip("The relative scale of each subsequent function.")]
-    public float lucanarity = 2;
-    [Tooltip("The amount of influence each subsequent function has in the grand total.")]
-    public float persistance = 0.5f;
+
+    [Header("Parameters")]
+    public HeightMapParameters parameters;
     [Tooltip("The amount that the terrain is raised by.")]
     public float heightOffset = 1f;
 
@@ -35,19 +30,17 @@ public class HeightMapGenerator : MonoBehaviour
     public Gradient terrainHeightGradient;
 
     private int mapWidth, mapHeight;
-    private float noiseScale;
 
-    public float[,] GenerateHeightMap(int width, int height, float noiseScale)
+    public float[,] GenerateHeightMap(int width, int height)
     {
         mapWidth = width;
         mapHeight = height;
-        this.noiseScale = noiseScale;
 
         if (useDebugHeightmap)
             return DebugHeightMap(width, height);
         
         noise = new float[width, height];
-        noise = GenerateNoiseMap(width, height, perlinOffset, octaves, lucanarity, persistance, noiseScale);
+        noise = GenerateNoiseMap(width, height, perlinOffset, parameters.octaves, parameters.frequency, parameters.persistance, parameters.noiseScale);
         return noise;
     }
 
@@ -68,7 +61,7 @@ public class HeightMapGenerator : MonoBehaviour
         return noise;
     }
 
-    public float[,] GenerateNoiseMap(int width, int height, Vector2 offset, int _octaves, float _lucanarity, float _persistance, float noiseScale)
+    public float[,] GenerateNoiseMap(int width, int height, Vector2 offset, int _octaves, float _frequency, float _persistance, float noiseScale)
     {
         float[,] noisemap = new float[width, height];
 
@@ -78,7 +71,7 @@ public class HeightMapGenerator : MonoBehaviour
                 float x = (float)i * noiseScale / width + offset.x;
                 float y = (float)j * noiseScale / height + offset.y;
                 
-                noisemap[i, j] = PerlinHeightAt(x, y, _octaves, _lucanarity, _persistance);
+                noisemap[i, j] = PerlinHeightAt(x, y, _octaves, _frequency, _persistance);
             }
 
         return noisemap;
@@ -172,13 +165,13 @@ public class HeightMapGenerator : MonoBehaviour
         return texture;
     }
 
-    private float PerlinHeightAt(float x, float y, int _octaves, float _lucanarity, float _persistance)
+    private float PerlinHeightAt(float x, float y, int _octaves, float _frequency, float _persistance)
     {
         float perlin = 0;
         for (int i = 0; i < _octaves; i++)
         {
-            float u = x * Mathf.Pow(_lucanarity, i) + perlinOffset.x;
-            float v = y * Mathf.Pow(_lucanarity, i) + perlinOffset.y;
+            float u = x * Mathf.Pow(_frequency, i) + perlinOffset.x;
+            float v = y * Mathf.Pow(_frequency, i) + perlinOffset.y;
 
             float noise = Mathf.PerlinNoise(u, v) * 2 - 1;
             perlin += noise * Mathf.Pow(_persistance, i);

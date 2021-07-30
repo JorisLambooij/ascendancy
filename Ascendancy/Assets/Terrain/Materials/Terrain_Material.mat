@@ -125,10 +125,12 @@ Material:
     - Boolean_38021BFA: 1
     - Boolean_5E37AC99: 0
     - Boolean_A4093A0F: 1
+    - Metallic: 0.1
+    - Smoothness: 0
     - TOGGLEFOW: 1
     - Vector1_1C40ABDE: 5.63
     - Vector1_46842222: 0.123
-    - Vector1_ACCEAFF0: 0.429
+    - Vector1_ACCEAFF0: 0
     - Vector1_B77E4A80: 0.64
     - Vector1_C19CD29D: 0.2
     - Vector1_D6C5C416: -0.775

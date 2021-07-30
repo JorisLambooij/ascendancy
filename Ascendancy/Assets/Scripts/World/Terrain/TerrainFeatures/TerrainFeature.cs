@@ -34,7 +34,7 @@ public abstract class TerrainFeature
     {
         List<Vector2Int> positions = new List<Vector2Int>();
 
-        int sqrt = Mathf.FloorToInt(Mathf.Sqrt(number));
+        int sqrt = Mathf.Max(1, Mathf.FloorToInt(Mathf.Sqrt(number)));
         int amountOfSectors = sqrt * sqrt;
         int quadrantWidth = width / sqrt;
         int quadrantHeight = height / sqrt;

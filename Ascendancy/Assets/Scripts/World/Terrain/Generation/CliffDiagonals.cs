@@ -12,6 +12,10 @@ public class CliffDiagonals : TerrainOperation
 
         int maxX = originalTilemap.GetLength(0) - 1;
         int maxY = originalTilemap.GetLength(1) - 1;
+
+        if (cliff.GetTileType() != 1111)
+            return;
+
         //check bottom-left
         if (x > 0 && y > 0)
         {

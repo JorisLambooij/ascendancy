@@ -208,8 +208,26 @@ public class AdditiveSmoothing : TerrainOperation
                 break;
         }
 
-        if (tileType == 1111 && tl && tr && bl && br)
-            newTilemap[x, y].Height++;
+        Face f = newTilemap[x, y].face;
+        // condition: if at least one corner has been lifted, resulting in all corners being the same height
+        if (tileType == 1111 && f.botLeft.y == f.topLeft.y && f.topLeft.y == f.topRight.y && f.topRight.y == f.botRight.y && (tr || br || tl || tr))
+            newTilemap[x, y].SetHeightWithoutAffectingFace((int)f.botRight.y);
+
+        if (originalTilemap[x, y] is TileCliff)
+        {
+            TileCliff cliff = originalTilemap[x, y] as TileCliff;
+
+            // the diagonal cliff has been modified so that it is not a cliff anymore
+            if ((cliff.diagonal == 1 && cliff.face2.botLeft.y  == cliff.Height + 1)
+             || (cliff.diagonal == 2 && cliff.face2.topLeft.y  == cliff.Height + 1)
+             || (cliff.diagonal == 3 && cliff.face2.topRight.y == cliff.Height + 1)
+             || (cliff.diagonal == 3 && cliff.face2.botRight.y == cliff.Height + 1))
+            {
+                Tile newTile = new Tile(x, y, newTilemap[x, y].Height + 1);
+                newTile.terrainType = newTilemap[x, y].terrainType;
+                newTilemap[x, y] = newTile;
+            }
+        }
     }
 
     public void RaisePointAt(int x, int y, int corner)

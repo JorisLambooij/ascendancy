@@ -53,6 +53,7 @@ public class World : MonoBehaviour
     public bool tintFlippedTiles = false;
     public bool disableFogOfWar;
 
+    public int smoothingIterations;
     public bool doAdditiveSmoothing;
     public bool doTriangleSmoothing;
     public bool doTerrainTypeEqualization;
@@ -174,16 +175,23 @@ public class World : MonoBehaviour
         CliffFilling cliffFill = new CliffFilling();
         CliffDiagonals cliffDiagonals = new CliffDiagonals();
 
-        if (doAdditiveSmoothing)
-            map = additiveSmoothing.Run(map, parallelizationBatchSize);
-        if(doTriangleSmoothing)
-            map = triangleSmoothing.Run(map, parallelizationBatchSize);
-        if (doTerrainTypeEqualization)
-            map = terrainTypeEqualization.Run(map, parallelizationBatchSize);
-        if (doCliffFilling)
-            map = cliffFill.Run(map, parallelizationBatchSize);
-        if (doCliffDiagonals)
-            map = cliffDiagonals.Run(map, parallelizationBatchSize);
+        for (int i = 0; i < smoothingIterations; i++)
+        {
+            if (doAdditiveSmoothing)
+                map = additiveSmoothing.Run(map, parallelizationBatchSize);
+            if (doTriangleSmoothing)
+                map = triangleSmoothing.Run(map, parallelizationBatchSize);
+            if (doTerrainTypeEqualization)
+            {
+                map = terrainTypeEqualization.Run(map, parallelizationBatchSize);
+                map = terrainTypeEqualization.Run(map, parallelizationBatchSize);
+            }
+            if (doCliffFilling)
+                map = cliffFill.Run(map, parallelizationBatchSize);
+            if (doCliffDiagonals)
+                map = cliffDiagonals.Run(map, parallelizationBatchSize);
+        }
+
 
         //2nd map iteration with methods
         for (int x = 0; x < map.GetLength(0); x++)
@@ -323,7 +331,7 @@ public class World : MonoBehaviour
         switch (t)
         {
             case TerrainType.WATER:
-                return terrainColors[5];
+                return terrainColors[6];
             case TerrainType.SAND:
                 return terrainColors[4];
             case TerrainType.GRASS:
@@ -332,6 +340,8 @@ public class World : MonoBehaviour
                 return terrainColors[3];
             case TerrainType.ROCK:
                 return terrainColors[2];
+            case TerrainType.SNOW:
+                return terrainColors[5];
             default:
                 return terrainColors[0];
         }
@@ -349,7 +359,7 @@ public class World : MonoBehaviour
     void GenerateTerrain()
     {
         HeightMapGenerator heightMapGenerator = GetComponent<HeightMapGenerator>();
-        heightmap = heightMapGenerator.GenerateHeightMap(worldSize, worldSize, noiseScale);
+        heightmap = heightMapGenerator.GenerateHeightMap(worldSize, worldSize);
 
         for (int dx = 0; dx < worldSize; dx++)
             for (int dy = 0; dy < worldSize; dy++)

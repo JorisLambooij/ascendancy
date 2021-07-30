@@ -16,6 +16,7 @@ public class TileTerrainGenerator : MonoBehaviour
     public Lakes lakes;
     public Rivers rivers;
     public MountainRanges mountains;
+    public TerrainTypeFinalization typeFinalization;
 
 
     public Tile[,] GenerateTileMap()
@@ -23,7 +24,7 @@ public class TileTerrainGenerator : MonoBehaviour
         world = World.Instance;
         worldSize = world.worldSize;
         heightmapGen = GetComponent<HeightMapGenerator>();
-        float[,] noisemap = heightmapGen.GenerateHeightMap(worldSize, worldSize, noiseScale);
+        float[,] noisemap = heightmapGen.GenerateHeightMap(worldSize, worldSize);
 
         Debug.Assert(world != null, "World is null!");
         Debug.Assert(heightmapGen != null, "HeightmapGen is null!");
@@ -42,10 +43,11 @@ public class TileTerrainGenerator : MonoBehaviour
             }
 
         // add the hills
+        mountains.AddFeature(ref tilemap);
         hills.AddFeature(ref tilemap);
         lakes.AddFeature(ref tilemap);
         rivers.AddFeature(ref tilemap);
-        mountains.AddFeature(ref tilemap);
+        typeFinalization.AddFeature(ref tilemap);
 
         return tilemap;
         //float[,] noisemap = heightmapGen.GenerateNoiseMap(world.worldSize, world.worldSize, world.)
