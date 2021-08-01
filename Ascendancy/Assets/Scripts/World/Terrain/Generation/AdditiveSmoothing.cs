@@ -218,10 +218,10 @@ public class AdditiveSmoothing : TerrainOperation
             TileCliff cliff = originalTilemap[x, y] as TileCliff;
 
             // the diagonal cliff has been modified so that it is not a cliff anymore
-            if ((cliff.diagonal == 1 && cliff.face2.botLeft.y  == cliff.Height + 1)
-             || (cliff.diagonal == 2 && cliff.face2.topLeft.y  == cliff.Height + 1)
-             || (cliff.diagonal == 3 && cliff.face2.topRight.y == cliff.Height + 1)
-             || (cliff.diagonal == 3 && cliff.face2.botRight.y == cliff.Height + 1))
+            if ((cliff.diagonal == 1 && cliff.face2.botLeft.y  >= cliff.Height + 1)
+             || (cliff.diagonal == 21 && cliff.face2.topLeft.y  >= cliff.Height + 1)
+             || (cliff.diagonal == 31 && cliff.face2.topRight.y >= cliff.Height + 1)
+             || (cliff.diagonal == 41 && cliff.face2.botRight.y >= cliff.Height + 1))
             {
                 Tile newTile = new Tile(x, y, newTilemap[x, y].Height + 1);
                 newTile.terrainType = newTilemap[x, y].terrainType;
@@ -235,16 +235,16 @@ public class AdditiveSmoothing : TerrainOperation
         switch (corner)
         {
             case 1000:
-                newTilemap[x, y].face.topLeft.y += 1;
+                newTilemap[x, y].face.topLeft = new Vector3(x - 0.5f, newTilemap[x, y].face.topLeft.y + 1, y + 0.5f);
                 break;
             case 100:
-                newTilemap[x, y].face.topRight.y += 1;
+                newTilemap[x, y].face.topRight = new Vector3(x + 0.5f, newTilemap[x, y].face.topRight.y + 1, y + 0.5f);
                 break;
             case 10:
-                newTilemap[x, y].face.botRight.y += 1;
+                newTilemap[x, y].face.botRight = new Vector3(x + 0.5f, newTilemap[x, y].face.botRight.y + 1, y - 0.5f);
                 break;
             case 1:
-                newTilemap[x, y].face.botLeft.y += 1;
+                newTilemap[x, y].face.botLeft = new Vector3(x - 0.5f, newTilemap[x, y].face.botLeft.y + 1, y - 0.5f);
                 break;
             default:
                 Debug.LogError("Call of RaisePointAt() at " + x + "," + y + " with wrong integer " + corner);

@@ -52,4 +52,5 @@ public class TileTerrainGenerator : MonoBehaviour
         return tilemap;
         //float[,] noisemap = heightmapGen.GenerateNoiseMap(world.worldSize, world.worldSize, world.)
     }
+
 }

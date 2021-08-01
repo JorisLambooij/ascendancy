@@ -6,6 +6,7 @@ using UnityEngine;
 public class Rivers : TerrainFeature
 {
     public int numberOfRivers;
+    public int padding;
     public float minimumLength;
     public float maximumLength;
     public float riverWidth;
@@ -20,13 +21,15 @@ public class Rivers : TerrainFeature
         if (!enabled)
             return;
 
-        List<Vector2Int> startPositions = RandomPositions(Mathf.Max(numberOfRivers - 1, 4), tilemap.GetLength(0), tilemap.GetLength(1));
+        List<Vector2Int> startPositions = RandomPositions(Mathf.Max(numberOfRivers - 1, 4), tilemap.GetLength(0), tilemap.GetLength(1), padding);
         //List<Vector2Int> endPositions = RandomPositions(numberOfRivers, tilemap.GetLength(0), tilemap.GetLength(1));
 
         for (int i = 0; i < numberOfRivers; i++)
         {
             int randomI = Random.Range(0, startPositions.Count);
-            int randomJ = Random.Range(0, startPositions.Count);
+            int randomJ = Random.Range(0, startPositions.Count - 1);
+            if (randomI == randomJ)
+                randomJ++;
             CreateRiver(ref tilemap, startPositions[randomI], startPositions[randomJ] + Vector2Int.one);
             //Vector2Int p = startPositions[i];
             //Debug.Log(p);

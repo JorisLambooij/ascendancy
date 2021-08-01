@@ -29,7 +29,7 @@ public class World : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public int numberOfChunks = 2;
-    private int parallelizationBatchSize = 1024;
+    private int parallelizationBatchSize;
 
     public float waterLevel = -1.2f;
     public float noiseScale = 2;
@@ -55,7 +55,6 @@ public class World : MonoBehaviour
 
     public int smoothingIterations;
     public bool doAdditiveSmoothing;
-    public bool doTriangleSmoothing;
     public bool doTerrainTypeEqualization;
     public bool doCliffFilling;
     public bool doCliffDiagonals;
@@ -108,6 +107,8 @@ public class World : MonoBehaviour
         Chunk[] existingChunks = ChunkCollector.GetComponentsInChildren<Chunk>();
         foreach (Chunk c in existingChunks)
             Destroy(c.gameObject);
+
+        parallelizationBatchSize = worldSize * worldSize;
 
         #region initialize mask textures
         //terrainMask
@@ -178,9 +179,10 @@ public class World : MonoBehaviour
         for (int i = 0; i < smoothingIterations; i++)
         {
             if (doAdditiveSmoothing)
+            {
                 map = additiveSmoothing.Run(map, parallelizationBatchSize);
-            if (doTriangleSmoothing)
                 map = triangleSmoothing.Run(map, parallelizationBatchSize);
+            }
             if (doTerrainTypeEqualization)
             {
                 map = terrainTypeEqualization.Run(map, parallelizationBatchSize);

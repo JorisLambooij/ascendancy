@@ -33,13 +33,22 @@ public class TerrainTypeEqualization : TerrainOperation
 
                 Tile nbTile = originalTilemap[u, v];
 
+                // ignore snow tiles
+                if (me.terrainType == TerrainType.SNOW && me.terrainType == TerrainType.ROCK)
+                    continue;
+                // ignore snow tiles
+                if (me.terrainType == TerrainType.ROCK && me.terrainType == TerrainType.SNOW)
+                    continue;
+
                 if (nbTile.Height == me.Height)
                     neighboringTypes[nbTile.terrainType]++;
             }
 
+        // sort the neighoring types by the amount of times they appear
         List<KeyValuePair<TerrainType, int>> myList = neighboringTypes.ToList();
         myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
 
+        // take the most frequent type, and change this tile's type if they are different
         KeyValuePair<TerrainType, int> highestKVP = myList[myList.Count - 1];
         if (highestKVP.Value > neighboringTypes[me.terrainType])
             newTilemap[x, y].terrainType = highestKVP.Key;

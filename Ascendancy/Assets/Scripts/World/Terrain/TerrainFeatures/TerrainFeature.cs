@@ -30,7 +30,7 @@ public abstract class TerrainFeature
         return RandomPositions(number, size, size);
     }
 
-    protected List<Vector2Int> RandomPositions(int number, int width, int height)
+    protected List<Vector2Int> RandomPositions(int number, int width, int height, int padding = 0)
     {
         List<Vector2Int> positions = new List<Vector2Int>();
 
@@ -50,6 +50,7 @@ public abstract class TerrainFeature
             int maxY = (sectorY + 1) * quadrantHeight;
 
             Vector2Int position = new Vector2Int(Random.Range(minX, maxX), Random.Range(minY, maxY));
+            position = new Vector2Int(Mathf.Clamp(position.x, padding, width - padding), Mathf.Clamp(position.y, padding, height - padding));
             positions.Add(position);
         }
         return positions;
