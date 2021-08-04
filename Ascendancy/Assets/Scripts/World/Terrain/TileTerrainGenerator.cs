@@ -17,7 +17,7 @@ public class TileTerrainGenerator : MonoBehaviour
     public Rivers rivers;
     public MountainRanges mountains;
     public TerrainTypeFinalization typeFinalization;
-
+    public Islandification islandification;
 
     public Tile[,] GenerateTileMap()
     {
@@ -42,12 +42,13 @@ public class TileTerrainGenerator : MonoBehaviour
                 tilemap[x, y] = t;
             }
 
-        // add the hills
-        mountains.AddFeature(ref tilemap);
-        hills.AddFeature(ref tilemap);
-        lakes.AddFeature(ref tilemap);
-        rivers.AddFeature(ref tilemap);
-        typeFinalization.AddFeature(ref tilemap);
+        // add the features
+        mountains.Apply(ref tilemap);
+        hills.Apply(ref tilemap);
+        lakes.Apply(ref tilemap);
+        rivers.Apply(ref tilemap);
+        typeFinalization.Apply(ref tilemap);
+        islandification.Apply(ref tilemap);
 
         return tilemap;
         //float[,] noisemap = heightmapGen.GenerateNoiseMap(world.worldSize, world.worldSize, world.)

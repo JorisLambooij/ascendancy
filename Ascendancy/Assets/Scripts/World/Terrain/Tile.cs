@@ -28,6 +28,20 @@ public class Tile
 
     public float worldX, worldZ;
     #endregion
+    
+    public Tile(Tile t)
+    {
+        this.face = t.face;
+        this.face2 = t.face2;
+        this.flippedTriangles = t.flippedTriangles;
+        this.gradient = t.gradient;
+        this.height = t.height;
+        this.rawHeight = t.rawHeight;
+        this.terrainType = t.terrainType;
+        this.worldX = t.worldX;
+        this.worldZ = t.worldZ;
+    }
+    
     public Tile(float worldX, float worldZ, int height, float rawHeight)
     {
         this.worldX = worldX;

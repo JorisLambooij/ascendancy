@@ -8,15 +8,27 @@ public abstract class TerrainFeature
 
     public static HeightMapGenerator heightMapGenerator;
 
-    public virtual void AddFeature(ref Tile[,] tilemap)
+    public void Apply(ref Tile[,] originalTilemap)
     {
         if (!enabled)
             return;
 
-        for (int x = 0; x < tilemap.GetLength(0); x++)
-            for (int y = 0; y < tilemap.GetLength(1); y++)
+        Tile[,] newTilemap = new Tile[originalTilemap.GetLength(0), originalTilemap.GetLength(1)];
+        for (int x = 0; x < originalTilemap.GetLength(0); x++)
+            for (int y = 0; y < originalTilemap.GetLength(1); y++)
+                newTilemap[x, y] = new Tile(originalTilemap[x, y]);
+        
+        AddFeature(originalTilemap, ref newTilemap);
+
+        originalTilemap = newTilemap;
+    }
+
+    protected virtual void AddFeature(Tile[,] originalTilemap, ref Tile[,] newTilemap)
+    {
+        for (int x = 0; x < originalTilemap.GetLength(0); x++)
+            for (int y = 0; y < originalTilemap.GetLength(1); y++)
             {
-                tilemap[x, y] = ChangeTile(tilemap[x, y]);
+                newTilemap[x, y] = ChangeTile(originalTilemap[x, y]);
             }
     }
 

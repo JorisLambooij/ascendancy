@@ -9,23 +9,20 @@ public class Hills : TerrainFeature
     public float size;
     public bool depressions;
 
-    public override void AddFeature(ref Tile[,] tilemap)
+    protected override void AddFeature(Tile[,] originalTilemap, ref Tile[,] newTilemap)
     {
-        if (!enabled)
-            return;
-
-        int width = tilemap.GetLength(0);
-        int height = tilemap.GetLength(1);
+        int width = originalTilemap.GetLength(0);
+        int height = originalTilemap.GetLength(1);
         //float[,] noisemap = heightMapGenerator.GenerateNoiseMap(width, height, heightMapGenerator.perlinOffset, 3, frequency, 0.7f, 10f / frequency);
         float heightThreshold = Mathf.Lerp(20, -3, size / 10) / 20;
 
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
             {
-                Tile t = tilemap[x, y];
+                Tile t = originalTilemap[x, y];
                 int h = Mathf.RoundToInt(t.rawHeight * World.Instance.heightResolution);
-                t.Height = depressions ? h : Mathf.Max(h, 0);// h > heightThreshold ? h : 0;
-                t.terrainType = t.Height > 1 ? TerrainType.ROCK : t.Height > 0 ? TerrainType.DIRT : TerrainType.GRASS;
+                newTilemap[x, y].Height = depressions ? h : Mathf.Max(h, 0);// h > heightThreshold ? h : 0;
+                newTilemap[x, y].terrainType = newTilemap[x, y].Height > 1 ? TerrainType.ROCK : newTilemap[x, y].Height > 0 ? TerrainType.DIRT : TerrainType.GRASS;
             }
 
         for (int x = 0; x < width; x++)
@@ -41,18 +38,10 @@ public class Hills : TerrainFeature
                         if (u < 0 || u >= width || v < 0 || v >= height)
                             continue;
 
-                        if (tilemap[u, v].rawHeight < tilemap[lowestNeighbor.x, lowestNeighbor.y].rawHeight)
+                        if (originalTilemap[u, v].rawHeight < originalTilemap[lowestNeighbor.x, lowestNeighbor.y].rawHeight)
                             lowestNeighbor = new Vector2Int(u, v);
                     }
-                tilemap[x, y].gradient = lowestNeighbor - new Vector2Int(x, y);
+                newTilemap[x, y].gradient = lowestNeighbor - new Vector2Int(x, y);
             }
-    }
-                
-    protected override Tile ChangeTile(Tile t)
-    {
-        Tile newT = new Tile(t.worldX, t.worldZ, t.Height);
-        
-        newT.terrainType = t.Height > 1 ? TerrainType.ROCK : TerrainType.GRASS;
-        return newT;
     }
 }

@@ -13,15 +13,15 @@ public class MountainRanges : TerrainFeature
 
     public HeightMapParameters heightmapParameters;
 
-    public override void AddFeature(ref Tile[,] tilemap)
+    protected override void AddFeature(Tile[,] originalTilemap, ref Tile[,] newTilemap)
     {
-        if (!enabled)
-            return;
+        int w = originalTilemap.GetLength(0);
+        int h = originalTilemap.GetLength(1);
 
-        float[,] mountainNoise = heightMapGenerator.GenerateNoiseMap(tilemap.GetLength(0), tilemap.GetLength(1), heightMapGenerator.perlinOffset, heightmapParameters.octaves, heightmapParameters.frequency, heightmapParameters.persistance, heightmapParameters.noiseScale);
+        float[,] mountainNoise = heightMapGenerator.GenerateNoiseMap(w, h, heightMapGenerator.perlinOffset, heightmapParameters.octaves, heightmapParameters.frequency, heightmapParameters.persistance, heightmapParameters.noiseScale);
 
-        List<Vector2Int> continentPoints = RandomPositions(continents, tilemap.GetLength(0), tilemap.GetLength(1));
-        List<Vector2Int> subContinentPoints = RandomPositions(continents * subContinents, tilemap.GetLength(0), tilemap.GetLength(1));
+        List<Vector2Int> continentPoints = RandomPositions(continents, w, h);
+        List<Vector2Int> subContinentPoints = RandomPositions(continents * subContinents, w, h);
         Dictionary<Vector2Int, Vector2Int> subcontinentAssignments = new Dictionary<Vector2Int, Vector2Int>(continents * subContinents);
 
         // split continents into subcontinents, then assign the subcontinents to the closest continent-point
@@ -41,8 +41,8 @@ public class MountainRanges : TerrainFeature
         Dictionary<Vector2Int, float> mountainRangeTiles = new Dictionary<Vector2Int, float>();
 
         // find the borders of continents
-        for (int x = 0; x < tilemap.GetLength(0); x++)
-            for (int y = 0; y < tilemap.GetLength(1); y++)
+        for (int x = 0; x < w; x++)
+            for (int y = 0; y < h; y++)
             {
                 KeyValuePair<Vector2Int, float> closestContinent = new KeyValuePair<Vector2Int, float>(Vector2Int.zero, Mathf.Infinity);
                 KeyValuePair<Vector2Int, float> secondContinent = new KeyValuePair<Vector2Int, float>(Vector2Int.zero, Mathf.Infinity);
@@ -76,11 +76,11 @@ public class MountainRanges : TerrainFeature
             float strength = 1 - (kvp.Value / width);
             float noiseValue = Mathf.Abs(mountainNoise[x, y]);
             //if (tilemap[x, y].rawHeight >= 0)
-            tilemap[x, y].rawHeight += strength * noiseValue * maxHeight;
-            tilemap[x, y].Height = Mathf.RoundToInt(tilemap[x, y].rawHeight);
+            newTilemap[x, y].rawHeight = originalTilemap[x, y].rawHeight + strength * noiseValue * maxHeight;
+            newTilemap[x, y].Height = Mathf.RoundToInt(originalTilemap[x, y].rawHeight);
 
-            if (tilemap[x, y].Height > maxHeight)
-                tilemap[x, y].terrainType = TerrainType.NONE;
+            if (newTilemap[x, y].Height > maxHeight)
+                newTilemap[x, y].terrainType = TerrainType.NONE;
 
         }
     }
