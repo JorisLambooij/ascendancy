@@ -69,17 +69,16 @@ public class LSystemScript : MonoBehaviour
 
         Debug.Log("Generate Tree: " + currentString);
 
-        Vector3 initialPosition = transform.position;
-        Vector3 branchPosition;
-        Vector3 branchOrientation;
+        //Vector3 initialPosition = transform.position;
+        Vector3 branchPosition = transform.position;
+        Quaternion branchOrientation = transform.rotation;
 
         foreach (char c in currentString)
         {
             switch (c)
             {
                 case 'F':   //draw line
-                    branchPosition = initialPosition;
-                    branchPosition += Vector3.up * length;
+                    Vector3 targetPosition = branchPosition + (branchOrientation * transform.up) * length;
 
                     GameObject treeSegment = Instantiate(branch);
                     treeSegment.transform.parent = this.transform;
@@ -90,28 +89,30 @@ public class LSystemScript : MonoBehaviour
                     //lineRenderer.endWidth = currentSize;
 
                     Vector3 scaler = treeSegment.transform.localScale;
-                    scaler.z = Vector3.Distance(initialPosition, branchPosition) / 2;
+                    scaler.y = Vector3.Distance(branchPosition, targetPosition) / 2;
                     treeSegment.transform.localScale = scaler;
-
+                    treeSegment.transform.rotation = branchOrientation;
+                    
                     treeSegment.transform.position = branchPosition;        // place bond here
-                    treeSegment.transform.LookAt(initialPosition);            // aim bond at atom
-                    initialPosition = branchPosition;
+                    //treeSegment.transform.LookAt(targetPosition);            // aim bond at atom
+                    branchPosition = targetPosition;
 
 
             break;
                 case 'X':   //generate more 'F's
                     break;
                 case '+':   //rotate clockwise Up/Down
-                    transform.Rotate(Vector3.back * angle);
+                    branchOrientation *= Quaternion.AngleAxis(angle, transform.right);
+                    //transform.Rotate(Vector3.back * angle);
                     break;
                 case '-':   //rotate anti-clockwise Up/Down
-                    transform.Rotate(Vector3.forward * angle);
+                    branchOrientation *= Quaternion.AngleAxis(-angle, transform.right);
                     break;
                 case '*':   //rotate clockwise Left/Right
-                    transform.Rotate(Vector3.right * angle);
+                    branchOrientation *= Quaternion.AngleAxis(angle, transform.forward);
                     break;
                 case '/':   //rotate anti-clockwise Left/Right
-                    transform.Rotate(Vector3.left * angle);
+                    branchOrientation *= Quaternion.AngleAxis(-angle, transform.forward);
                     break;
                 case '<':   //smaller
                     currentSize -= 0.01f;
@@ -119,15 +120,15 @@ public class LSystemScript : MonoBehaviour
                 case '[':   //save current transform info
                     transformStack.Push(new LSystemTransformInfo()
                     {
-                        position = transform.position,
-                        rotation = transform.rotation
+                        position = branchPosition,
+                        rotation = branchOrientation
                     }
                     );
                     break;
                 case ']':   //return to previous transform info
                     LSystemTransformInfo tfInfo = transformStack.Pop();
-                    transform.position = tfInfo.position;
-                    transform.rotation = tfInfo.rotation;
+                    branchPosition = tfInfo.position;
+                    branchOrientation = tfInfo.rotation;
                     break;
                 default:
                     throw new InvalidOperationException("Invalid L-Tree Operation: Character \"" + c + "\"");
