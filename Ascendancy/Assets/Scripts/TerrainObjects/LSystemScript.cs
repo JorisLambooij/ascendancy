@@ -15,6 +15,10 @@ public class LSystemScript : MonoBehaviour
     [SerializeField] private string axiom = "X";
     [SerializeField] private List<LSystemRule> rulesInput;
 
+
+    [SerializeField]
+    private string resultingString;
+
     private Dictionary<char, string> rules;
 
 
@@ -61,18 +65,21 @@ public class LSystemScript : MonoBehaviour
             currentString = sb.ToString();
             sb.Length = 0;
         }
+        resultingString = currentString;
 
         Debug.Log("Generate Tree: " + currentString);
 
-        Vector3 initialPosition;
+        Vector3 initialPosition = transform.position;
+        Vector3 branchPosition;
+        Vector3 branchOrientation;
 
         foreach (char c in currentString)
         {
             switch (c)
             {
                 case 'F':   //draw line
-                    initialPosition = transform.position;
-                    transform.Translate(Vector3.up * length);
+                    branchPosition = initialPosition;
+                    branchPosition += Vector3.up * length;
 
                     GameObject treeSegment = Instantiate(branch);
                     treeSegment.transform.parent = this.transform;
@@ -83,12 +90,12 @@ public class LSystemScript : MonoBehaviour
                     //lineRenderer.endWidth = currentSize;
 
                     Vector3 scaler = treeSegment.transform.localScale;
-                    scaler.z = Vector3.Distance(initialPosition, transform.position) / 2;
+                    scaler.z = Vector3.Distance(initialPosition, branchPosition) / 2;
                     treeSegment.transform.localScale = scaler;
 
-                    treeSegment.transform.position = initialPosition;        // place bond here
-                    treeSegment.transform.LookAt(transform.position);            // aim bond at atom
-            
+                    treeSegment.transform.position = branchPosition;        // place bond here
+                    treeSegment.transform.LookAt(initialPosition);            // aim bond at atom
+                    initialPosition = branchPosition;
 
 
             break;
