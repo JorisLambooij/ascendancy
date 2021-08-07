@@ -47,10 +47,13 @@ MonoBehaviour:
   startSize: 1
   length: 0.04
   angle: 30
+  stem: {fileID: 6685390985752849082, guid: 0420948e2254088419bd92224bbf4525, type: 3}
   branch: {fileID: 5127705697142858809, guid: da0748029d61eb943b3477c5f2c22cbb, type: 3}
-  axiom: FX
+  leafs: {fileID: 2290649999546831119, guid: 6af4ca3fb5d67874b86df9bd9db7e2e9, type: 3}
+  axiom: SGX
   rulesInput:
   - character: 88
-    stringContent: '[F-/[[X]+X]+*F[+FX]-X]'
+    stringContent: '[*F-/[[X]+/X]+*G[+/FX]-X]'
   - character: 70
-    stringContent: FF
+    stringContent: GG
+  resultingString: 

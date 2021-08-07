@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9766,13 +9766,8 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
-      propertyPath: axiom
-      value: FX
-      objectReference: {fileID: 0}
-    - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
-        type: 3}
       propertyPath: length
-      value: 2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
@@ -9787,21 +9782,26 @@ PrefabInstance:
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
       propertyPath: rulesInput.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
       propertyPath: rulesInput.Array.data[2].character
+      value: 89
+      objectReference: {fileID: 0}
+    - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
+        type: 3}
+      propertyPath: rulesInput.Array.data[3].character
       value: 69
       objectReference: {fileID: 0}
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
-      propertyPath: rulesInput.Array.data[0].stringContent
-      value: '[*F-/[[X]+/X]+*F[+/FX]-X]'
+      propertyPath: rulesInput.Array.data[2].stringContent
+      value: '[*F-/[[G]+/G]+*F[+/FX]-X]'
       objectReference: {fileID: 0}
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
-      propertyPath: rulesInput.Array.data[2].stringContent
+      propertyPath: rulesInput.Array.data[3].stringContent
       value: F[+FF][+*F]F
       objectReference: {fileID: 0}
     - target: {fileID: 2905824717390366926, guid: c4f464dbbe826214a8c1548f2c54a8b0,
