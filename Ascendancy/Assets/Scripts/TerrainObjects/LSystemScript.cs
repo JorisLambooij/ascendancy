@@ -7,7 +7,7 @@ using UnityEngine;
 public class LSystemScript : MonoBehaviour
 {
     [SerializeField] private int iterations = 4;
-    [SerializeField] private float startSize = 10f;
+    [SerializeField] private float startSize = 1f;
     [SerializeField] private float length = 10f;
     [SerializeField] private float angle = 30f;
     [SerializeField] private GameObject branch;
@@ -76,13 +76,22 @@ public class LSystemScript : MonoBehaviour
 
                     GameObject treeSegment = Instantiate(branch);
                     treeSegment.transform.parent = this.transform;
-                    LineRenderer lineRenderer = treeSegment.GetComponent<LineRenderer>();
-                    lineRenderer.SetPosition(0, initialPosition);
-                    lineRenderer.SetPosition(1, transform.position);
-                    lineRenderer.startWidth = currentSize;
-                    lineRenderer.endWidth = currentSize;
+                    //LineRenderer lineRenderer = treeSegment.GetComponent<LineRenderer>();
+                    //lineRenderer.SetPosition(0, initialPosition);
+                    //lineRenderer.SetPosition(1, transform.position);
+                    //lineRenderer.startWidth = currentSize;
+                    //lineRenderer.endWidth = currentSize;
 
-                    break;
+                    Vector3 scaler = treeSegment.transform.localScale;
+                    scaler.z = Vector3.Distance(initialPosition, transform.position) / 2;
+                    treeSegment.transform.localScale = scaler;
+
+                    treeSegment.transform.position = initialPosition;        // place bond here
+                    treeSegment.transform.LookAt(transform.position);            // aim bond at atom
+            
+
+
+            break;
                 case 'X':   //generate more 'F's
                     break;
                 case '+':   //rotate clockwise Up/Down
