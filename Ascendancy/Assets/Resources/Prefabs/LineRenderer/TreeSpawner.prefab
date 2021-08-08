@@ -44,12 +44,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iterations: 3
-  startSize: 1
   length: 0.04
   angle: 30
   stem: {fileID: 6685390985752849082, guid: 0420948e2254088419bd92224bbf4525, type: 3}
-  branch: {fileID: 5127705697142858809, guid: da0748029d61eb943b3477c5f2c22cbb, type: 3}
-  leafs: {fileID: 2290649999546831119, guid: 6af4ca3fb5d67874b86df9bd9db7e2e9, type: 3}
+  branch:
+  - {fileID: 5127705697142858809, guid: da0748029d61eb943b3477c5f2c22cbb, type: 3}
+  - {fileID: 2008652539656194116, guid: 3726606f4346d8b438e0e9f34db468e2, type: 3}
+  leaves:
+  - {fileID: 2290649999546831119, guid: 6af4ca3fb5d67874b86df9bd9db7e2e9, type: 3}
+  - {fileID: 6574458043368846320, guid: ddd579ada83e6d84f840b3d47d4e8187, type: 3}
+  - {fileID: 7808504509652616137, guid: 350ae613f8c07044a9357a7edda8a322, type: 3}
   axiom: SGX
   rulesInput:
   - character: 88

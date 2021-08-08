@@ -9781,6 +9781,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
+      propertyPath: leaves.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
+        type: 3}
+      propertyPath: leaves.Array.data[0]
+      value: 
+      objectReference: {fileID: 919132149155446097, guid: 0a66e9237dad51348a9eae9c4eadf502,
+        type: 3}
+    - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
+        type: 3}
+      propertyPath: leaves.Array.data[1]
+      value: 
+      objectReference: {fileID: 919132149155446097, guid: 04d4eb65f9e1216448a1739befe5e440,
+        type: 3}
+    - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
+        type: 3}
+      propertyPath: leaves.Array.data[2]
+      value: 
+      objectReference: {fileID: 919132149155446097, guid: e159c9eb183bff941bb513014f7dba6d,
+        type: 3}
+    - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
+        type: 3}
       propertyPath: rulesInput.Array.size
       value: 2
       objectReference: {fileID: 0}
