@@ -41,17 +41,32 @@ public class LSystemScript : MonoBehaviour
 
     private void Generate()
     {
-        UnityEngine.Random.InitState((int)(World.Instance.GetComponent<HeightMapGenerator>().perlinOffset.x * World.Instance.GetComponent<HeightMapGenerator>().perlinOffset.y));
+        ///UnityEngine.Random.InitState((int)(World.Instance.GetComponent<HeightMapGenerator>().perlinOffset.x * World.Instance.GetComponent<HeightMapGenerator>().perlinOffset.y));
         //float currentSize = 0.04f;
 
         currentString = axiom;
         StringBuilder sb = new StringBuilder();
-
+        int stringID = 0;
+        String[] stringsBranch = { "[F]", "##[GF]###[GF]", "" };
+        String[] stringsTilt = { "*", "/", "+", "-" };
+ 
         for (int i = 0; i < iterations; i++)
         {
+            //wildcards
+            
             foreach (char c in currentString)
             {
-                if (rules.ContainsKey(c))
+                if (c == '~')
+                {
+                    stringID = UnityEngine.Random.Range(0, stringsBranch.Length - 1);
+                    sb.Append(stringsBranch[stringID]);
+                }
+                if (c == '#')
+                {
+                    stringID = UnityEngine.Random.Range(0, stringsTilt.Length - 1);
+                    sb.Append(stringsTilt[stringID]);
+                }
+                else if (rules.ContainsKey(c))
                 {
                     sb.Append(rules[c]);
                 }
@@ -75,12 +90,14 @@ public class LSystemScript : MonoBehaviour
         Vector3 targetPosition;
         GameObject treeSegment;
         Vector3 scaler;
-        float scaleFactor = 0.1f * iterations/2;
+        float scaleFactor = 0.2f * iterations/2;
+        scaleFactor = Mathf.Clamp(scaleFactor, 0.05f, 5f);
+        Debug.Log("ScaleFactor is " + scaleFactor);
 
         foreach (char c in currentString)
         {
             if (scaleFactor > 0f)
-                scaleFactor -= 0.0005f;
+                scaleFactor -= 0.005f;
 
             int model = 0;
 
@@ -98,8 +115,8 @@ public class LSystemScript : MonoBehaviour
                     
                     scaler.y = scale;
 
-                    scaler.x = Mathf.Clamp(scaleFactor, 0.05f, 0.1f);
-                    scaler.z = Mathf.Clamp(scaleFactor, 0.05f, 0.1f);
+                    scaler.x = Mathf.Clamp(scaleFactor, 0.2f, 1f);
+                    scaler.z = Mathf.Clamp(scaleFactor, 0.2f, 1f);
 
                     treeSegment.transform.localScale = scaler;
                     treeSegment.transform.rotation = branchOrientation;
@@ -116,8 +133,8 @@ public class LSystemScript : MonoBehaviour
                     scaler = treeSegment.transform.localScale;
                     scaler.y = Vector3.Distance(branchPosition, targetPosition) / 1.5f;
 
-                    scaler.x = scaleFactor;
-                    scaler.z = scaleFactor;
+                    scaler.x = Mathf.Clamp(scaleFactor, 0.05f, 2f);
+                    scaler.z = Mathf.Clamp(scaleFactor, 0.05f, 2f);
 
                     treeSegment.transform.localScale = scaler;
                     treeSegment.transform.rotation = branchOrientation;
@@ -137,8 +154,8 @@ public class LSystemScript : MonoBehaviour
                     scaler = treeSegment.transform.localScale;
                     scaler.y = Vector3.Distance(branchPosition, targetPosition) / 1.5f;
 
-                    scaler.x = Mathf.Clamp(scaleFactor, 0.05f, 1f);
-                    scaler.z = Mathf.Clamp(scaleFactor, 0.05f, 1f);
+                    scaler.x = Mathf.Clamp(scaleFactor, 0.05f, 2f);
+                    scaler.z = Mathf.Clamp(scaleFactor, 0.05f, 2f);
 
                     treeSegment.transform.localScale = scaler;
                     treeSegment.transform.rotation = branchOrientation;
@@ -159,6 +176,14 @@ public class LSystemScript : MonoBehaviour
                 case '/':   //rotate anti-clockwise Left/Right
                     branchOrientation *= Quaternion.AngleAxis(-angle, transform.forward);
                     break;
+                case '~':
+                    stringID = UnityEngine.Random.Range(0, stringsBranch.Length - 1);
+                    sb.Append(stringsBranch[stringID]);
+                    break;
+                case '#':
+                    stringID = UnityEngine.Random.Range(0, stringsTilt.Length - 1);
+                    sb.Append(stringsTilt[stringID]);
+                    break;
                 case '[':   //save current transform info
                     transformStack.Push(new LSystemTransformInfo()
                     {
@@ -176,6 +201,7 @@ public class LSystemScript : MonoBehaviour
                     throw new InvalidOperationException("Invalid L-Tree Operation: Character \"" + c + "\"");
             }
         }
+        Debug.Log("ScaleFactor is now " + scaleFactor);
     }
 
 }
