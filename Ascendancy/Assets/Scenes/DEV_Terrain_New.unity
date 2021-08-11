@@ -197,7 +197,7 @@ PrefabInstance:
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
       propertyPath: rulesInput.Array.data[0].stringContent
-      value: GG
+      value: GF
       objectReference: {fileID: 0}
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
@@ -905,7 +905,7 @@ PrefabInstance:
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
       propertyPath: rulesInput.Array.data[0].stringContent
-      value: GG
+      value: GF
       objectReference: {fileID: 0}
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
@@ -1721,7 +1721,7 @@ PrefabInstance:
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
       propertyPath: rulesInput.Array.data[0].stringContent
-      value: GG
+      value: GF
       objectReference: {fileID: 0}
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
@@ -1982,7 +1982,7 @@ PrefabInstance:
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}
       propertyPath: rulesInput.Array.data[0].stringContent
-      value: GG
+      value: GF
       objectReference: {fileID: 0}
     - target: {fileID: 2905824717390366925, guid: c4f464dbbe826214a8c1548f2c54a8b0,
         type: 3}

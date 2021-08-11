@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class LSystemScript : MonoBehaviour
 {
+
+    [Header("Generation Stuff")]
     [SerializeField] private int iterations = 4;
     [SerializeField] private float length = 10f;
     [SerializeField] private float angle = 30f;
@@ -19,6 +21,12 @@ public class LSystemScript : MonoBehaviour
 
     [SerializeField]
     private string resultingString;
+
+    [Space(10)]
+
+    [Header("Tree Stuff")]
+    [SerializeField] private bool noLeaves = false;
+
 
     private Dictionary<char, string> rules;
 
@@ -49,11 +57,11 @@ public class LSystemScript : MonoBehaviour
         int stringID = 0;
         String[] stringsBranch = { "[F]", "##[GF]###[GF]", "" };
         String[] stringsTilt = { "*", "/", "+", "-" };
- 
+
         for (int i = 0; i < iterations; i++)
         {
             //wildcards
-            
+
             foreach (char c in currentString)
             {
                 if (c == '~')
@@ -90,7 +98,7 @@ public class LSystemScript : MonoBehaviour
         Vector3 targetPosition;
         GameObject treeSegment;
         Vector3 scaler;
-        float scaleFactor = 0.2f * iterations/2;
+        float scaleFactor = 0.2f * iterations / 2;
         scaleFactor = Mathf.Clamp(scaleFactor, 0.05f, 5f);
         Debug.Log("ScaleFactor is " + scaleFactor);
 
@@ -99,20 +107,20 @@ public class LSystemScript : MonoBehaviour
             if (scaleFactor > 0f)
                 scaleFactor -= 0.005f;
 
-            int model = 0;
+            int id = 0;
 
             switch (c)
             {
                 case 'F':   //leaves
                     targetPosition = branchPosition + (branchOrientation * transform.up) * length;
 
-                    model = UnityEngine.Random.Range(0, leaves.Count - 1);
-                    treeSegment = Instantiate(leaves[model]);
+                    id = UnityEngine.Random.Range(0, leaves.Count - 1);
+                    treeSegment = Instantiate(leaves[id]);
                     treeSegment.transform.parent = this.transform;
 
                     scaler = treeSegment.transform.localScale;
                     float scale = Vector3.Distance(branchPosition, targetPosition) / 1.5f;
-                    
+
                     scaler.y = scale;
 
                     scaler.x = Mathf.Clamp(scaleFactor, 0.2f, 1f);
@@ -123,6 +131,8 @@ public class LSystemScript : MonoBehaviour
 
                     treeSegment.transform.position = branchPosition;        // place bond here
                     branchPosition = targetPosition;
+
+                    treeSegment.name = "LEAVES_" + id;
                     break;
                 case 'S':   //generate stem
                     targetPosition = branchPosition + (branchOrientation * transform.up) * length;
@@ -141,14 +151,15 @@ public class LSystemScript : MonoBehaviour
 
                     treeSegment.transform.position = branchPosition;        // place bond here
                     branchPosition = targetPosition;
+                    treeSegment.name = "STEM";
                     break;
                 case 'X':   //generate more 'F's
                     break;
                 case 'G':   //generate branches
                     targetPosition = branchPosition + (branchOrientation * transform.up) * length;
 
-                    model = UnityEngine.Random.Range(0, leaves.Count - 1);
-                    treeSegment = Instantiate(branch[model]);
+                    id = UnityEngine.Random.Range(0, leaves.Count - 1);
+                    treeSegment = Instantiate(branch[id]);
                     treeSegment.transform.parent = this.transform;
 
                     scaler = treeSegment.transform.localScale;
@@ -162,6 +173,7 @@ public class LSystemScript : MonoBehaviour
 
                     treeSegment.transform.position = branchPosition;        // place bond here
                     branchPosition = targetPosition;
+                    treeSegment.name = "BRANCH_" + id;
                     break;
                 case '+':   //rotate clockwise Up/Down
                     branchOrientation *= Quaternion.AngleAxis(angle, transform.right);
@@ -204,4 +216,32 @@ public class LSystemScript : MonoBehaviour
         Debug.Log("ScaleFactor is now " + scaleFactor);
     }
 
+
+    public void SetLeaves(bool leavesState)
+    {
+        noLeaves = !leavesState;
+
+
+        if (noLeaves)
+        {
+            foreach (Transform child in transform)
+            {
+                if (child.gameObject.name.Contains("LEAVES"))
+                    child.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            foreach (Transform child in transform)
+            {
+                if (child.gameObject.name.Contains("LEAVES"))
+                    child.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    private void OnValidate()
+    {
+        SetLeaves(!noLeaves);
+    }
 }
