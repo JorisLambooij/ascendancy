@@ -194,6 +194,8 @@ public class World : MonoBehaviour
                 map = cliffDiagonals.Run(map, parallelizationBatchSize);
         }
 
+        // set spawn points
+        GetComponentInChildren<SpawnPoints>().SetSpawnPoints();
 
         //2nd map iteration with methods
         for (int x = 0; x < map.GetLength(0); x++)
@@ -205,6 +207,9 @@ public class World : MonoBehaviour
                 {
                     case DisplayMode.Color:
                         colormap[x, y] = GetColorForType(map[x, y].terrainType);
+                        break;
+                    case DisplayMode.Height:
+                        colormap[x, y] = Color32.Lerp(Color.black, Color.white, map[x, y].Height / 10f + 0.25f);
                         break;
                     default:
                         colormap[x, y] = Color32.Lerp(Color.black, Color.white, map[x, y].Height + 1 / heightResolution);
@@ -255,6 +260,7 @@ public class World : MonoBehaviour
         TerrainColorTexture = new Texture2D(colormap.GetLength(0), colormap.GetLength(1));
         TerrainColorTexture.SetPixels(colors);
         TerrainColorTexture.Apply();
+
     }
 
     Chunk GenerateChunk(int startX, int startZ)
@@ -412,13 +418,17 @@ public class World : MonoBehaviour
         return true;
     }
 
-    public Tile GetTile(Vector3 pos)
+    public Tile GetTile(Vector2Int v)
     {
-        Vector2Int v = IntVector(pos);
-        if (v.x < 0 || v.x >= map.GetLength(0) || v.y < 0 ||  v.y >= map.GetLength(1))
+        if (v.x < 0 || v.x >= map.GetLength(0) || v.y < 0 || v.y >= map.GetLength(1))
             return null;
 
         return map[v.x, v.y];
+    }
+    public Tile GetTile(Vector3 pos)
+    {
+        Vector2Int v = IntVector(pos);
+        return GetTile(v);
     }
 
     public Vector2Int IntVector(Vector3 v)
@@ -430,6 +440,67 @@ public class World : MonoBehaviour
         int y_int = Mathf.RoundToInt(y);
 
         return new Vector2Int(x_int, y_int);
+    }
+    public Vector2Int IntVector(Vector2 v)
+    {
+        float x = v.x / tileSize;
+        float y = v.y / tileSize;
+
+        int x_int = Mathf.RoundToInt(x);
+        int y_int = Mathf.RoundToInt(y);
+
+        return new Vector2Int(x_int, y_int);
+    }
+
+    public Vector2Int MoveAlongGradient(Vector2Int v)
+    {
+        Debug.Assert(v.x >= 0 && v.x < map.GetLength(0), "World.MoveAlongGradient: Tile Index out of range (X=" + v.x + ")");
+        Debug.Assert(v.y >= 0 && v.y < map.GetLength(1), "World.MoveAlongGradient: Tile Index out of range (Y=" + v.y + ")");
+
+        Vector2Int gradient = map[v.x, v.y].gradient;
+        if (gradient == Vector2Int.zero)
+        {
+            Vector2Int towardsCenter = new Vector2Int(v.x - map.GetLength(0) / 2, v.y - map.GetLength(1) / 2);
+            gradient = new Vector2Int(Mathf.Clamp(-towardsCenter.x, -1, 1), Mathf.Clamp(-towardsCenter.y, -1, 1));
+        }
+        Vector2Int newV = v + gradient;
+
+        if (newV.x < 0)
+            newV.x = 0;
+        if (newV.x >= map.GetLength(0))
+            newV.x = map.GetLength(0) - 1;
+
+        if (newV.y < 0)
+            newV.y = 0;
+        if (newV.y >= map.GetLength(1))
+            newV.y = map.GetLength(1) - 1;
+
+        return newV;
+    }
+    public Vector2Int MoveAgainstGradient(Vector2Int v)
+    {
+        Debug.Assert(v.x >= 0 && v.x < map.GetLength(0), "World.MoveAlongGradient: Tile Index out of range (X=" + v.x + ")");
+        Debug.Assert(v.y >= 0 && v.y < map.GetLength(1), "World.MoveAlongGradient: Tile Index out of range (Y=" + v.y + ")");
+
+        Vector2Int gradient = map[v.x, v.y].antiGradient;
+        if (gradient == Vector2Int.zero)
+        {
+            Vector2Int towardsCenter = new Vector2Int(v.x - map.GetLength(0) / 2, v.y - map.GetLength(1) / 2);
+            gradient = new Vector2Int(Mathf.Clamp(-towardsCenter.x, -1, 1), Mathf.Clamp(-towardsCenter.y, -1, 1));
+        }
+        Vector2Int newV = v + gradient;
+
+        if (newV.x < 0)
+            newV.x = 0;
+        if (newV.x >= map.GetLength(0))
+            newV.x = map.GetLength(0) - 1;
+
+        if (newV.y < 0)
+            newV.y = 0;
+        if (newV.y >= map.GetLength(1))
+            newV.y = map.GetLength(1) - 1;
+
+        return newV;
     }
 
     public void ToggleGrid(bool on)

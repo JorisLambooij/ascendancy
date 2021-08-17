@@ -29,6 +29,7 @@ public class Hills : TerrainFeature
             for (int y = 0; y < height; y++)
             {
                 Vector2Int lowestNeighbor = new Vector2Int(x, y);
+                Vector2Int highestNeighbor = new Vector2Int(x, y);
                 for (int dx = -1; dx <= 1; dx++)
                     for (int dy = -1; dy <= 1; dy++)
                     {
@@ -40,8 +41,12 @@ public class Hills : TerrainFeature
 
                         if (originalTilemap[u, v].rawHeight < originalTilemap[lowestNeighbor.x, lowestNeighbor.y].rawHeight)
                             lowestNeighbor = new Vector2Int(u, v);
+
+                        else if (originalTilemap[u, v].rawHeight > originalTilemap[highestNeighbor.x, highestNeighbor.y].rawHeight)
+                            highestNeighbor = new Vector2Int(u, v);
                     }
-                newTilemap[x, y].gradient = lowestNeighbor - new Vector2Int(x, y);
+                newTilemap[x, y].gradient     = lowestNeighbor  - new Vector2Int(x, y);
+                newTilemap[x, y].antiGradient = highestNeighbor - new Vector2Int(x, y);
             }
     }
 }

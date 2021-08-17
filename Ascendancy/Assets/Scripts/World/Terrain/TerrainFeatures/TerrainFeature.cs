@@ -37,12 +37,12 @@ public abstract class TerrainFeature
         return t;
     }
 
-    protected List<Vector2Int> RandomPositions(int number, int size)
+    public static List<Vector2Int> RandomPositions(int number, int size)
     {
         return RandomPositions(number, size, size);
     }
 
-    protected List<Vector2Int> RandomPositions(int number, int width, int height, int padding = 0)
+    public static List<Vector2Int> RandomPositions(int number, int width, int height, int padding = 0)
     {
         List<Vector2Int> positions = new List<Vector2Int>();
 

@@ -25,6 +25,7 @@ public class Tile
 
     public float rawHeight;
     public Vector2Int gradient;
+    public Vector2Int antiGradient;
 
     public float worldX, worldZ;
     #endregion
