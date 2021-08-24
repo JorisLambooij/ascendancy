@@ -10,7 +10,7 @@ Material:
   m_Name: CartoonWater_Material
   m_Shader: {fileID: -6465566751694194690, guid: c5f086a90a2a3fb4a8565eded3c77b8c,
     type: 3}
-  m_ShaderKeywords: FOW_TOGGLE_OFF
+  m_ShaderKeywords: FOW_TOGGLE_OFF TOGGLEFOW_OFF TOGGLEFOW_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -60,6 +60,7 @@ Material:
     m_Floats:
     - Boolean_7B328EE6: 0
     - FOW_TOGGLE: 1
+    - TOGGLEFOW: 0
     - Vector1_151E3CC0: 6
     - Vector1_175CCE8F: 1
     - Vector1_348AB627: 0.315

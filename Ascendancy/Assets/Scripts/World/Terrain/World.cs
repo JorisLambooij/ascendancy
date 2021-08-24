@@ -127,6 +127,7 @@ public class World : MonoBehaviour
         waterAlpha.filterMode = FilterMode.Point;
         #endregion
 
+        Debug.Log("Creating World");
         System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
         sw.Start();
         CreateWorld();

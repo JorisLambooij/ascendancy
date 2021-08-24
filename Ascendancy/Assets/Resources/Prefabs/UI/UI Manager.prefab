@@ -1681,6 +1681,8 @@ GameObject:
   - component: {fileID: 1916473246239644272}
   - component: {fileID: 1916473246239644279}
   - component: {fileID: 6092668821912329931}
+  - component: {fileID: 2142659368591599776}
+  - component: {fileID: 6125213245112396122}
   m_Layer: 5
   m_Name: Image_Minimap
   m_TagString: Untagged
@@ -1762,6 +1764,75 @@ MonoBehaviour:
   terrainImage: {fileID: 4951412839384097672}
   maskImage: {fileID: 5127594768500392156}
   maskRenderTexture: {fileID: 0}
+--- !u!114 &2142659368591599776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1916473246239644277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1916473246239644279}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6125213245112396122}
+        m_TargetAssemblyTypeName: MinimapControls, Assembly-CSharp
+        m_MethodName: GoToClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &6125213245112396122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1916473246239644277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3705e99e43e6f374c991348735f50421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollSensitivity: 0
 --- !u!1 &1916473246269961162
 GameObject:
   m_ObjectHideFlags: 0
@@ -2576,6 +2647,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5beb6969568aedc4a8e5c57010321ba3, type: 3}
+--- !u!224 &2910941767385403138 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 388812971662583963, guid: 5beb6969568aedc4a8e5c57010321ba3,
+    type: 3}
+  m_PrefabInstance: {fileID: 3242848240623282073}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2397963208385513488 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 884868946663026569, guid: 5beb6969568aedc4a8e5c57010321ba3,
@@ -2588,12 +2665,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64179fa110be461499bf411bb19f6fb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &2910941767385403138 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 388812971662583963, guid: 5beb6969568aedc4a8e5c57010321ba3,
-    type: 3}
-  m_PrefabInstance: {fileID: 3242848240623282073}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5013217388350172852
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2875,7 +2946,7 @@ PrefabInstance:
     - target: {fileID: 4520512126559110743, guid: aa128f96655c7c64c9228c52197ba8c4,
         type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4720820605161839449, guid: aa128f96655c7c64c9228c52197ba8c4,
         type: 3}

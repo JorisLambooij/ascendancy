@@ -38,7 +38,11 @@ public class CameraScript : MonoBehaviour
         ZoomLevel();
     }
 
-    public void MoveCam(Vector3 pos, bool lerp = true)
+    public void FocusOn(Vector2 pos)
+    {
+        FocusOn(new Vector3(pos.x, 0, pos.y), false);
+    }
+    public void FocusOn(Vector3 pos, bool lerp = true)
     {
         Tile t = World.Instance.GetTile(pos);
         if (t != null)
@@ -48,7 +52,7 @@ public class CameraScript : MonoBehaviour
         float tileHeight = lastTileHeight;
         float desiredY = (targetHeight + tileHeight) * 0.5f;
 
-        pos.y = Mathf.Lerp(pos.y, desiredY, 10 * Time.deltaTime);
+        pos.y = lerp ? Mathf.Lerp(pos.y, desiredY, 10 * Time.deltaTime) : desiredY;
 
         center.position = pos;
     }
@@ -78,7 +82,7 @@ public class CameraScript : MonoBehaviour
         Vector3 movement = Vector3.ProjectOnPlane(transform.right, Vector3.up) * horizontal + Vector3.ProjectOnPlane(transform.forward, Vector3.up) * vertical;
         pos += movement * Time.deltaTime * cameraSpeed;
 
-        MoveCam(pos);
+        FocusOn(pos);
 
         //Vector3 r = transform.rotation.eulerAngles;
         //r.x += rotational * Time.deltaTime * cameraRotationSpeed;
