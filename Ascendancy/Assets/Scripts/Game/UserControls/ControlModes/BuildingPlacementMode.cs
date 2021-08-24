@@ -59,7 +59,7 @@ public class BuildingPlacementMode : ControlMode
                 return;
 
             int x = (int)tile.worldX, y = (int)tile.worldZ;
-            Vector3 position = new Vector3(x, tile.height - floorClipthrough, y);
+            Vector3 position = new Vector3(x, tile.Height - floorClipthrough, y);
             preview.transform.position = position;
 
             bool validLocation = CheckPlacementValid(buildingInfo, position);

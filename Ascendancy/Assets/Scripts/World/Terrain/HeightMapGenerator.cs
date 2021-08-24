@@ -4,6 +4,10 @@ using UnityEngine;
 using System.Threading.Tasks;
 using System;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class HeightMapGenerator : MonoBehaviour
 {
     public float[,] noise;
@@ -12,14 +16,9 @@ public class HeightMapGenerator : MonoBehaviour
     public Texture2D debugHeightmap;
 
     public Vector2 perlinOffset;
-    
-    [Header("Hill Parameters")]
-    [Tooltip("Number of Noise functions to sample.")]
-    public int octaves = 3;
-    [Tooltip("The relative scale of each subsequent function.")]
-    public float lucanarity = 2;
-    [Tooltip("The amount of influence each subsequent function has in the grand total.")]
-    public float persistance = 0.5f;
+
+    [Header("Parameters")]
+    public HeightMapParameters parameters;
     [Tooltip("The amount that the terrain is raised by.")]
     public float heightOffset = 1f;
 
@@ -31,67 +30,38 @@ public class HeightMapGenerator : MonoBehaviour
     public Gradient terrainHeightGradient;
 
     private int mapWidth, mapHeight;
-    private float noiseScale;
 
-    public float[,] GenerateHeightMap()
-    {
-        return GenerateHeightMap(mapWidth, mapHeight, noiseScale);
-    }
-
-    public float[,] GenerateHeightMap(int width, int height, float noiseScale)
+    public float[,] GenerateHeightMap(int width, int height)
     {
         mapWidth = width;
         mapHeight = height;
-        this.noiseScale = noiseScale;
 
         if (useDebugHeightmap)
-        {
-            noise = new float[width, height];
-
-            for (int x = 0; x < width; x++)
-                for (int y = 0; y < height; y++)
-                {
-                    int u = (int)Mathf.Lerp(0, debugHeightmap.width, (float)x/width);
-                    int v = (int)Mathf.Lerp(0, debugHeightmap.height, (float)y/height);
-                    if (debugHeightmap.GetPixel(u, v) == null)
-                        Debug.Log("UV: " + u + " " + v);
-                    noise[x, y] = debugHeightmap.GetPixel(u, v).grayscale;
-                }
-            return noise;
-        }
-
+            return DebugHeightMap(width, height);
+        
         noise = new float[width, height];
+        noise = GenerateNoiseMap(width, height, perlinOffset, parameters.octaves, parameters.frequency, parameters.persistance, parameters.noiseScale);
+        return noise;
+    }
 
-        // Hills
-        noise = GenerateNoiseMap(width, height, perlinOffset, octaves, lucanarity, persistance, noiseScale);
-
-        for (int x = 0; x < width; x++)
-            for (int y = 0; y < height; y++)
-                noise[x, y] = Mathf.Max(heightOffset, noise[x, y]);
-
-        // Lakes
-        float[,] lakemap = GenerateNoiseMap(width, height, perlinOffset, 2, 0.8f, 0.6f, noiseScale / 4);
+    #region Heightmap Functions
+    private float[,] DebugHeightMap(int width, int height)
+    {
+        noise = new float[width, height];
 
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
             {
-                lakemap[x, y] += 0.4f;
-                if (noise[x, y] <= 0)
-                    noise[x, y] -= noise[x, y] * lakemap[x, y];
+                int u = (int)Mathf.Lerp(0, debugHeightmap.width, (float)x / width);
+                int v = (int)Mathf.Lerp(0, debugHeightmap.height, (float)y / height);
+                if (debugHeightmap.GetPixel(u, v) == null)
+                    Debug.Log("UV: " + u + " " + v);
+                noise[x, y] = debugHeightmap.GetPixel(u, v).grayscale;
             }
-
-        // Mountains
-        float[,] mountains = GenerateNoiseMap(width, height, perlinOffset, 3, 1, 1, noiseScale / 2);
-        
-        for (int x = 0; x < width; x++)
-            for (int y = 0; y < height; y++)
-                if (mountains[x, y] > 0.1f && noise[x, y] > 0.2f)
-                    noise[x, y] *= Mathf.Min(1.5f, 1 + mountains[x, y]);
-
         return noise;
     }
 
-    public float[,] GenerateNoiseMap(int width, int height, Vector2 offset, int _octaves, float _lucanarity, float _persistance, float noiseScale)
+    public float[,] GenerateNoiseMap(int width, int height, Vector2 offset, int _octaves, float _frequency, float _persistance, float noiseScale)
     {
         float[,] noisemap = new float[width, height];
 
@@ -101,13 +71,13 @@ public class HeightMapGenerator : MonoBehaviour
                 float x = (float)i * noiseScale / width + offset.x;
                 float y = (float)j * noiseScale / height + offset.y;
                 
-                noisemap[i, j] = PerlinHeightAt(x, y, _octaves, _lucanarity, _persistance);
+                noisemap[i, j] = PerlinHeightAt(x, y, _octaves, _frequency, _persistance);
             }
 
         return noisemap;
     }
 
-        public Texture2D WorldTexture(float[,] noiseMap, World.DisplayMode displayMode)
+    public Texture2D WorldTexture(float[,] noiseMap, World.DisplayMode displayMode)
     {
         Texture2D texture = new Texture2D(mapWidth, mapHeight);
 
@@ -195,28 +165,13 @@ public class HeightMapGenerator : MonoBehaviour
         return texture;
     }
 
-    private void FillHeightmap()
-    {
-        
-    }
-    
-    /// <summary>
-    /// Samples a generic Perlin Noise map
-    /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <returns></returns>
-    private float PerlinHeightAt(float x, float y)
-    {
-        return PerlinHeightAt(x, y, octaves, lucanarity, persistance);
-    }
-    private float PerlinHeightAt(float x, float y, int _octaves, float _lucanarity, float _persistance)
+    private float PerlinHeightAt(float x, float y, int _octaves, float _frequency, float _persistance)
     {
         float perlin = 0;
         for (int i = 0; i < _octaves; i++)
         {
-            float u = x * Mathf.Pow(_lucanarity, i) + perlinOffset.x;
-            float v = y * Mathf.Pow(_lucanarity, i) + perlinOffset.y;
+            float u = x * Mathf.Pow(_frequency, i) + perlinOffset.x;
+            float v = y * Mathf.Pow(_frequency, i) + perlinOffset.y;
 
             float noise = Mathf.PerlinNoise(u, v) * 2 - 1;
             perlin += noise * Mathf.Pow(_persistance, i);
@@ -228,6 +183,18 @@ public class HeightMapGenerator : MonoBehaviour
 
         return perlin;
     }
+
+    public float[,] AddHeightmap(float[,] hm2)
+    {
+        Debug.Assert(noise.GetLength(0) == hm2.GetLength(0), "Heightmaps not of identical Width!");
+        Debug.Assert(noise.GetLength(1) == hm2.GetLength(1), "Heightmaps not of identical Height!");
+
+        for (int x = 0; x < noise.GetLength(0); x++)
+            for (int y = 0; y < noise.GetLength(1); y++)
+                noise[x, y] += hm2[x, y];
+        return noise;
+    }
+    #endregion
 
     #region derivatives
     public float[,] AmplifyCliffs()
@@ -304,14 +271,4 @@ public class HeightMapGenerator : MonoBehaviour
     }
     #endregion
 
-    public float[,] AddHeightmap(float[,] hm2)
-    {
-        Debug.Assert(noise.GetLength(0) == hm2.GetLength(0), "Heightmaps not of identical Width!");
-        Debug.Assert(noise.GetLength(1) == hm2.GetLength(1), "Heightmaps not of identical Height!");
-
-        for (int x = 0; x < noise.GetLength(0); x++)
-            for (int y = 0; y < noise.GetLength(1); y++)
-                noise[x, y] += hm2[x, y];
-        return noise;
-    }
 }

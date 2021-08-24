@@ -56,4 +56,13 @@ public abstract class TerrainOperation
         newTilemap[x, y] = originalTilemap[x, y];
     }
 
+    protected Tile GetTileAt(Tile[,] tilemap, int x, int y)
+    {
+        if (x < 0 || x >= tilemap.GetLength(0))
+            return null;
+        if (y < 0 || y >= tilemap.GetLength(1))
+            return null;
+
+        return tilemap[x, y];
+    }
 }

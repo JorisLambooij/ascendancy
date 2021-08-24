@@ -52,10 +52,12 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -80,6 +82,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!64 &379759340
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -90,10 +93,40 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 0
-  serializedVersion: 3
+  serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &3845355756194192159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1236876723630920527}
+  m_Layer: 9
+  m_Name: SpawnPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1236876723630920527
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3845355756194192159}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4013592521898558202}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4013592521617630387
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,6 +180,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4013592521898558202}
+  - component: {fileID: 5472536235399919628}
   - component: {fileID: 4013592521898558203}
   - component: {fileID: 220739975}
   - component: {fileID: 220739976}
@@ -172,9 +206,66 @@ Transform:
   - {fileID: 4013592521617630385}
   - {fileID: 4013592522798339917}
   - {fileID: 379759339}
+  - {fileID: 1236876723630920527}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5472536235399919628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4013592521898558204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b6047f1d4d34e84081edb6f35a59366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noiseScale: 0
+  hills:
+    enabled: 0
+    frequency: 0
+    size: 0
+    depressions: 0
+  lakes:
+    enabled: 0
+    numberOfLakes: 0
+    maximumSize: 0
+  rivers:
+    enabled: 0
+    numberOfRivers: 0
+    padding: 0
+    minimumLength: 0
+    maximumLength: 0
+    riverWidth: 0
+    meanderingCoefficient: 0
+    correctingCoefficient: 0
+  mountains:
+    enabled: 0
+    continents: 0
+    subContinents: 0
+    width: 0
+    maxHeight: 0
+    heightmapParameters:
+      noiseScale: 0
+      octaves: 0
+      frequency: 0
+      persistance: 0
+  typeFinalization:
+    enabled: 0
+    snowHeight: 0
+    snowThreshold: 0
+  islandification:
+    enabled: 0
+    padding: 0
+    beachWidth: 0
+    beachStrength: 0
+    heightmapParameters:
+      noiseScale: 0
+      octaves: 0
+      frequency: 0
+      persistance: 0
 --- !u!114 &4013592521898558203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,7 +306,15 @@ MonoBehaviour:
   - serializedVersion: 2
     rgba: 0
   tintFlippedTiles: 0
+  disableFogOfWar: 0
+  smoothingIterations: 0
+  doAdditiveSmoothing: 0
+  doTerrainTypeEqualization: 0
+  doCliffFilling: 0
+  doCliffDiagonals: 0
+  showGradient: 0
   highlightedTiles: 
+  TerrainColorTexture: {fileID: 0}
 --- !u!114 &220739975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,9 +342,11 @@ MonoBehaviour:
   useDebugHeightmap: 0
   debugHeightmap: {fileID: 2800000, guid: 1c5093e5eb635e846ba8d5417fd6dd8a, type: 3}
   perlinOffset: {x: 0, y: 0}
-  octaves: 3
-  lucanarity: 1
-  persistance: 0.5
+  parameters:
+    noiseScale: 0
+    octaves: 0
+    frequency: 0
+    persistance: 0
   heightOffset: -0.5
   cliffIntensity: 0
   terrainHeightGradient:

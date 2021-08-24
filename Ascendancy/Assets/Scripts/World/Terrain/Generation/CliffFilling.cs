@@ -12,7 +12,7 @@ public class CliffFilling : TerrainOperation
         TileCliff cliff;
 
         me = originalTilemap[x, y];
-
+        
         //check left
         if (x > 0)
         {
@@ -33,10 +33,11 @@ public class CliffFilling : TerrainOperation
                 cliff.leftCliff.botRight = neighbor.face.botRight; //down right
                 cliff.leftCliff.botLeft = neighbor.face.topRight; //down left
 
+                //cliff.face.topLeft = cliff.face.topLeft + Vector3.up;
                 newTilemap[x, y] = cliff;
             }
         }
-
+        
         //check above
         if (y < newTilemap.GetLength(1) - 1)
         {

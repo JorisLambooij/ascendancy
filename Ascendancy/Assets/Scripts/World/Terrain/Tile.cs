@@ -2,28 +2,76 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public enum TerrainType { NONE, NONE_WALL, GRASS, GRASS_WALL, ROCK, ROCK_WALL, DIRT, DIRT_WALL, SAND, SAND_WALL, WATER, WATER_WALL };
+public enum TerrainType { NONE, GRASS, ROCK, DIRT, SAND, SNOW, WATER};
 
 public class Tile
 {
     #region Internal data
     public Face face;
+    public Face face2;
     public bool flippedTriangles { get; private set; } = false;
+    public int Height { 
+        get => height;
+        set
+        {
+            height = value;
+            SetFace();
+        }
+    }
 
     public TerrainType terrainType = 0;
 
-    public float height;    //the idealized height of this tile
+    private int height;    //the idealized height of this tile
+
+    public float rawHeight;
+    public Vector2Int gradient;
+    public Vector2Int antiGradient;
 
     public float worldX, worldZ;
     #endregion
-
-    //basic constructor
-    public Tile(float worldX, float worldZ)
+    
+    public Tile(Tile t)
     {
-        face = new Face();
+        this.face = t.face;
+        this.face2 = t.face2;
+        this.flippedTriangles = t.flippedTriangles;
+        this.gradient = t.gradient;
+        this.height = t.height;
+        this.rawHeight = t.rawHeight;
+        this.terrainType = t.terrainType;
+        this.worldX = t.worldX;
+        this.worldZ = t.worldZ;
+    }
+    
+    public Tile(float worldX, float worldZ, int height, float rawHeight)
+    {
         this.worldX = worldX;
         this.worldZ = worldZ;
+        this.Height = height;
+        this.rawHeight = rawHeight;
+        SetFace();
     }
+
+    //basic constructor
+    public Tile(float worldX, float worldZ,  int height)
+    {
+        this.worldX = worldX;
+        this.worldZ = worldZ;
+        this.Height = height;
+        SetFace();
+    }
+
+    protected void SetFace()
+    {
+        face = new Face
+        {
+            topLeft = new Vector3(worldX - 0.5f, Height, worldZ + 0.5f), //top left
+            topRight = new Vector3(worldX + 0.5f, Height, worldZ + 0.5f), //up right
+            botRight = new Vector3(worldX + 0.5f, Height, worldZ - 0.5f), //down right
+            botLeft = new Vector3(worldX - 0.5f, Height, worldZ - 0.5f) //down left
+        };
+    }
+
 
     public virtual bool FlatLand()
     {
@@ -34,6 +82,11 @@ public class Tile
     {
         Face[] faces = new Face[1] { face };
         return faces;
+    }
+
+    public void SetHeightWithoutAffectingFace(int newHeight)
+    {
+        this.height = newHeight;
     }
 
     /// <summary>

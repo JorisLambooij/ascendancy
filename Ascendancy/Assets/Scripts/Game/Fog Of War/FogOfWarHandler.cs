@@ -15,7 +15,7 @@ public class FogOfWarHandler
         for (int x = 0; x < worldScript.worldSize; x++)
             for (int y = 0; y < worldScript.worldSize; y++)
             {
-                float h = worldScript.GetTile(new Vector3(x, 0, y)).height / worldScript.heightScale;
+                float h = worldScript.GetTile(new Vector3(x, 0, y)).Height / worldScript.heightScale;
                 terrainHeightmap[x + worldScript.worldSize * y] = new Color(h, h, h);
             }
 

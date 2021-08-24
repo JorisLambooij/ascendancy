@@ -29,7 +29,7 @@ public class World : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public int numberOfChunks = 2;
-    private int parallelizationBatchSize = 1024;
+    private int parallelizationBatchSize;
 
     public float waterLevel = -1.2f;
     public float noiseScale = 2;
@@ -51,6 +51,16 @@ public class World : MonoBehaviour
 
     [Header("DevTools")]
     public bool tintFlippedTiles = false;
+    public bool disableFogOfWar;
+
+    public int smoothingIterations;
+    public bool doAdditiveSmoothing;
+    public bool doTerrainTypeEqualization;
+    public bool doCliffFilling;
+    public bool doCliffDiagonals;
+
+    [Tooltip("Show the gradient of the terrain.\nCaution: Performance-heavy")]
+    public bool showGradient;
     public List<int> highlightedTiles;
 
 
@@ -96,7 +106,9 @@ public class World : MonoBehaviour
         Instance = this;
         Chunk[] existingChunks = ChunkCollector.GetComponentsInChildren<Chunk>();
         foreach (Chunk c in existingChunks)
-            Destroy(c.gameObject, 0.1f);
+            Destroy(c.gameObject);
+
+        parallelizationBatchSize = worldSize * worldSize;
 
         #region initialize mask textures
         //terrainMask
@@ -136,13 +148,13 @@ public class World : MonoBehaviour
         //First, delete old world
         DestroyWorld();
 
+        HeightMapGenerator heightMapGenerator = GetComponent<HeightMapGenerator>();
+        Random.InitState((int)(heightMapGenerator.perlinOffset.x + heightMapGenerator.perlinOffset.y));
 
         //TODO: Fix it so that chunks can be larger than 64
         numberOfChunks = Mathf.CeilToInt(worldSize / 64);
         Chunk.chunkSize = 64;
 
-        HeightMapGenerator heightMapGenerator = GetComponent<HeightMapGenerator>();
-        heightmap = heightMapGenerator.GenerateHeightMap(worldSize, worldSize, noiseScale);
         //heightmap = heightMapGenerator.AmplifyCliffs();
 
         //initiate things
@@ -153,31 +165,58 @@ public class World : MonoBehaviour
         chunks = new Chunk[numberOfChunks, numberOfChunks];
 
         //generate the terrain!
-        GenerateTerrain();
+        //GenerateTerrain();
+        TileTerrainGenerator tileGen = GetComponent<TileTerrainGenerator>();
+        map = tileGen.GenerateTileMap();
 
+        // Smoothing methods
         AdditiveSmoothing additiveSmoothing = new AdditiveSmoothing();
-        map = additiveSmoothing.Run(map, parallelizationBatchSize);
-
+        TerrainTypeEqualization terrainTypeEqualization = new TerrainTypeEqualization();
         FlipTriangleSmoothing triangleSmoothing = new FlipTriangleSmoothing();
-        map = triangleSmoothing.Run(map, parallelizationBatchSize);
-
         CliffFilling cliffFill = new CliffFilling();
-        map = cliffFill.Run(map, parallelizationBatchSize);
+        CliffDiagonals cliffDiagonals = new CliffDiagonals();
 
-        map = triangleSmoothing.Run(map, parallelizationBatchSize);
+        for (int i = 0; i < smoothingIterations; i++)
+        {
+            if (doAdditiveSmoothing)
+            {
+                map = additiveSmoothing.Run(map, parallelizationBatchSize);
+                map = triangleSmoothing.Run(map, parallelizationBatchSize);
+            }
+            if (doTerrainTypeEqualization)
+            {
+                map = terrainTypeEqualization.Run(map, parallelizationBatchSize);
+                map = terrainTypeEqualization.Run(map, parallelizationBatchSize);
+            }
+            if (doCliffFilling)
+                map = cliffFill.Run(map, parallelizationBatchSize);
+            if (doCliffDiagonals)
+                map = cliffDiagonals.Run(map, parallelizationBatchSize);
+        }
 
+        // set spawn points
+        GetComponentInChildren<SpawnPoints>().SetSpawnPoints();
 
         //2nd map iteration with methods
         for (int x = 0; x < map.GetLength(0); x++)
             for (int y = 0; y < map.GetLength(1); y++)
             {
-                GenerateTerrainTypes(x, y);
+                //GenerateTerrainTypes(x, y);
                 //generate texture
-                //terrainTexture.SetPixels(x * textureTilesize, y * textureTilesize, textureTilesize, textureTilesize, tileArray[(int)map[x, y].terrainType].GetPixels());
-                //vertex colors
-                //UpdateVertexColors(x, y);
-                colormap[x, y] = GetColorForType(map[x, y].terrainType);
+                switch(displayMode)
+                {
+                    case DisplayMode.Color:
+                        colormap[x, y] = GetColorForType(map[x, y].terrainType);
+                        break;
+                    case DisplayMode.Height:
+                        colormap[x, y] = Color32.Lerp(Color.black, Color.white, map[x, y].Height / 10f + 0.25f);
+                        break;
+                    default:
+                        colormap[x, y] = Color32.Lerp(Color.black, Color.white, map[x, y].Height + 1 / heightResolution);
+                        break;
 
+                }    
+                
             }
 
         //apply texture
@@ -188,24 +227,27 @@ public class World : MonoBehaviour
             for (int z = 0; z < chunks.GetLength(1); z++)
             {
                 chunks[x, z] = GenerateChunk(x, z);
-                chunks[x, z].GetComponent<Renderer>().material.SetTexture("_mask", terrainMaskTexture);
+
+                //chunks[x, z].GetComponent<Renderer>().sharedMaterial.SetTexture("_mask", terrainMaskTexture);
+                //chunks[x, z].GetComponent<Renderer>().sharedMaterial.EnableKeyword(disableFogOfWar ? "TOGGLEFOW_OFF" : "TOGGLEFOW_ON");
             }
+        chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_mask", terrainMaskTexture);
+        chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.EnableKeyword(disableFogOfWar ? "TOGGLEFOW_OFF" : "TOGGLEFOW_ON");
 
-        //chunks[0, 0].GetComponent<MeshRenderer>().sharedMaterial.SetTexture("Texture2D_AA075013", terrainTexture);
-
+        // water plane
         waterPlane.transform.position = new Vector3(worldSize * tileSize / 2, waterLevel, worldSize * tileSize / 2);
         float size = worldSize / 9.86f;
         waterPlane.transform.localScale = new Vector3(size * tileSize, 1, size * tileSize);
+        waterPlane.GetComponent<Renderer>().sharedMaterial.EnableKeyword(disableFogOfWar ? "TOGGLEFOW_OFF" : "TOGGLEFOW_ON");
 
         Color[] colors = new Color[colormap.GetLength(0) * colormap.GetLength(1)];
-
-        float height = 0f;
+        // create the tecture for the minimap
         for (int x = 0; x < map.GetLength(0); x++)
             for (int y = 0; y < map.GetLength(1); y++)
             {
-                height = map[x, y].height;
+                float height = map[x, y].Height;
                 colors[x + y * map.GetLength(0)] = colormap[x, y];
-                if (height < -1f)
+                if (height < waterLevel)
                 {
                     colors[x + y * map.GetLength(0)] = Color.blue;
                 }
@@ -213,13 +255,12 @@ public class World : MonoBehaviour
                 {
                     colors[x + y * map.GetLength(0)] = Color.Lerp(colors[x + y * map.GetLength(0)], Color.white, (height + 1f) / 10f);
                 }
-
-                //colors[x+y* map.GetLength(0)] = Color.Lerp(Color.white, Color.red, map[x, y].height - 1f);
             }
 
         TerrainColorTexture = new Texture2D(colormap.GetLength(0), colormap.GetLength(1));
         TerrainColorTexture.SetPixels(colors);
         TerrainColorTexture.Apply();
+
     }
 
     Chunk GenerateChunk(int startX, int startZ)
@@ -257,8 +298,7 @@ public class World : MonoBehaviour
     {
         TerrainType tileType;
 
-
-        switch (Mathf.RoundToInt(map[x, y].height))
+        switch (Mathf.RoundToInt(map[x, y].Height))
         {
             case int n when (n < -1):
                 tileType = TerrainType.WATER;
@@ -299,7 +339,7 @@ public class World : MonoBehaviour
         switch (t)
         {
             case TerrainType.WATER:
-                return terrainColors[5];
+                return terrainColors[6];
             case TerrainType.SAND:
                 return terrainColors[4];
             case TerrainType.GRASS:
@@ -308,6 +348,8 @@ public class World : MonoBehaviour
                 return terrainColors[3];
             case TerrainType.ROCK:
                 return terrainColors[2];
+            case TerrainType.SNOW:
+                return terrainColors[5];
             default:
                 return terrainColors[0];
         }
@@ -324,58 +366,29 @@ public class World : MonoBehaviour
 
     void GenerateTerrain()
     {
+        HeightMapGenerator heightMapGenerator = GetComponent<HeightMapGenerator>();
+        heightmap = heightMapGenerator.GenerateHeightMap(worldSize, worldSize);
+
         for (int dx = 0; dx < worldSize; dx++)
             for (int dy = 0; dy < worldSize; dy++)
             {
                 int u = Mathf.Min(heightmap.GetLength(0) - 1, dx);
                 int v = Mathf.Min(heightmap.GetLength(1) - 1, dy);
                 //get y and insert to int heightmap for later
-                int y = Mathf.RoundToInt(heightmap[u, v] * heightResolution);
+                int h = Mathf.RoundToInt(heightmap[u, v] * heightResolution);
+                //y /= heightResolution;
+                //y *= heightScale;
 
                 //Debug.Assert(wd < heightmap.GetLength(0) && hg < heightmap.GetLength(1), "Error. WD/HG: " + wd + " " + hg);
-                heightmap[dx, dy] = y;
+                heightmap[dx, dy] = h;
 
 
-                map[dx, dy] = new Tile(dx, dy);
-                map[dx, dy].face = new Face
-                {
-                    topLeft = new Vector3(dx - 0.5f, y, dy + 0.5f), //top left
-                    topRight = new Vector3(dx + 0.5f, y, dy + 0.5f), //up right
-                    botRight = new Vector3(dx + 0.5f, y, dy - 0.5f), //down right
-                    botLeft = new Vector3(dx - 0.5f, y, dy - 0.5f) //down left
-                };
-                map[dx, dy].height = y;
+                map[dx, dy] = new Tile(dx, dy, h);
             }
     }
 
 
     #region auxiliary functions
-    Vector3 AdjustVector(Vector3 input)
-    {
-        float newHeight = input.y;
-        newHeight = (int)Height(input.x, input.z) * heightScale / heightResolution;
-        return new Vector3(input.x, newHeight, input.z);
-    }
-
-    float Height(float x, float z)
-    {
-        int texX = (int)(x / worldSize * heightmap.GetLength(0));
-        int texY = (int)(z / worldSize * heightmap.GetLength(1));
-
-        texX = Mathf.RoundToInt(texX / tileSize);
-        texY = Mathf.RoundToInt(texY / tileSize);
-
-        texX = Mathf.Clamp(texX, 0, heightmap.GetLength(0) - 1);
-        texY = Mathf.Clamp(texY, 0, heightmap.GetLength(1) - 1);
-
-        return heightmap[texX, texY] * heightResolution;
-    }
-
-    public Collider GetCollider()
-    {
-        return chunks[0, 0].GetComponent<MeshCollider>();
-    }
-
     public float GetHeight(Vector2 pos)
     {
         Vector2Int v = IntVector(pos);
@@ -383,7 +396,7 @@ public class World : MonoBehaviour
         Debug.Assert(v.x >= 0 && v.x < map.GetLength(0), "World.GetHeight: Tile Index out of range (X=" + v.x + ")");
         Debug.Assert(v.y >= 0 && v.y < map.GetLength(1), "World.GetHeight: Tile Index out of range (Y=" + v.y + ")");
 
-        return map[v.x, v.y].height;
+        return map[v.x, v.y].Height;
     }
 
     public bool IsAreaFlat(Vector2Int pos, Vector2Int dimensions)
@@ -405,13 +418,17 @@ public class World : MonoBehaviour
         return true;
     }
 
-    public Tile GetTile(Vector3 pos)
+    public Tile GetTile(Vector2Int v)
     {
-        Vector2Int v = IntVector(pos);
-        if (v.x < 0 || v.x >= map.GetLength(0) || v.y < 0 ||  v.y >= map.GetLength(1))
+        if (v.x < 0 || v.x >= map.GetLength(0) || v.y < 0 || v.y >= map.GetLength(1))
             return null;
 
         return map[v.x, v.y];
+    }
+    public Tile GetTile(Vector3 pos)
+    {
+        Vector2Int v = IntVector(pos);
+        return GetTile(v);
     }
 
     public Vector2Int IntVector(Vector3 v)
@@ -423,6 +440,67 @@ public class World : MonoBehaviour
         int y_int = Mathf.RoundToInt(y);
 
         return new Vector2Int(x_int, y_int);
+    }
+    public Vector2Int IntVector(Vector2 v)
+    {
+        float x = v.x / tileSize;
+        float y = v.y / tileSize;
+
+        int x_int = Mathf.RoundToInt(x);
+        int y_int = Mathf.RoundToInt(y);
+
+        return new Vector2Int(x_int, y_int);
+    }
+
+    public Vector2Int MoveAlongGradient(Vector2Int v)
+    {
+        Debug.Assert(v.x >= 0 && v.x < map.GetLength(0), "World.MoveAlongGradient: Tile Index out of range (X=" + v.x + ")");
+        Debug.Assert(v.y >= 0 && v.y < map.GetLength(1), "World.MoveAlongGradient: Tile Index out of range (Y=" + v.y + ")");
+
+        Vector2Int gradient = map[v.x, v.y].gradient;
+        if (gradient == Vector2Int.zero)
+        {
+            Vector2Int towardsCenter = new Vector2Int(v.x - map.GetLength(0) / 2, v.y - map.GetLength(1) / 2);
+            gradient = new Vector2Int(Mathf.Clamp(-towardsCenter.x, -1, 1), Mathf.Clamp(-towardsCenter.y, -1, 1));
+        }
+        Vector2Int newV = v + gradient;
+
+        if (newV.x < 0)
+            newV.x = 0;
+        if (newV.x >= map.GetLength(0))
+            newV.x = map.GetLength(0) - 1;
+
+        if (newV.y < 0)
+            newV.y = 0;
+        if (newV.y >= map.GetLength(1))
+            newV.y = map.GetLength(1) - 1;
+
+        return newV;
+    }
+    public Vector2Int MoveAgainstGradient(Vector2Int v)
+    {
+        Debug.Assert(v.x >= 0 && v.x < map.GetLength(0), "World.MoveAlongGradient: Tile Index out of range (X=" + v.x + ")");
+        Debug.Assert(v.y >= 0 && v.y < map.GetLength(1), "World.MoveAlongGradient: Tile Index out of range (Y=" + v.y + ")");
+
+        Vector2Int gradient = map[v.x, v.y].antiGradient;
+        if (gradient == Vector2Int.zero)
+        {
+            Vector2Int towardsCenter = new Vector2Int(v.x - map.GetLength(0) / 2, v.y - map.GetLength(1) / 2);
+            gradient = new Vector2Int(Mathf.Clamp(-towardsCenter.x, -1, 1), Mathf.Clamp(-towardsCenter.y, -1, 1));
+        }
+        Vector2Int newV = v + gradient;
+
+        if (newV.x < 0)
+            newV.x = 0;
+        if (newV.x >= map.GetLength(0))
+            newV.x = map.GetLength(0) - 1;
+
+        if (newV.y < 0)
+            newV.y = 0;
+        if (newV.y >= map.GetLength(1))
+            newV.y = map.GetLength(1) - 1;
+
+        return newV;
     }
 
     public void ToggleGrid(bool on)
@@ -458,6 +536,31 @@ public class World : MonoBehaviour
     {
         Vector2Int v = IntVector(pos);
         SetTileVisible(v.x, v.y, visible);
+    }
+
+    /// <summary>
+    /// Draws the gradient of the terrain (the direction in which water would flow)
+    /// Performance-heavy, only use for debugging
+    /// </summary>
+    private void OnDrawGizmos()
+    {
+        if (showGradient)
+        {
+            for (int x = 0; x < worldSize; x++)
+                for (int y = 0; y < worldSize; y++)
+                {
+                    if (map == null)
+                        return;
+
+                    if (map[x, y].gradient == Vector2Int.zero)
+                        continue;
+
+                    Vector2 gradient = map[x, y].gradient;
+                    Vector3 arrowOrigin = new Vector3(x, map[x, y].Height, y);
+                    Vector3 arrowDirection = new Vector3(gradient.x, 0, gradient.y) * 0.5f;
+                    DrawArrow.ForGizmo(arrowOrigin, arrowDirection, Color.white);
+                }
+        }
     }
     #endregion
 }

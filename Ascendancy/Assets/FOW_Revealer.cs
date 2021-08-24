@@ -17,7 +17,7 @@ public class FOW_Revealer : MonoBehaviour
     private void Update()
     {
         Vector3 pos = transform.position;
-        pos.y = 10;
+        pos.y = 50;
         transform.position = pos;
         transform.rotation = Quaternion.Euler(90, 0, 0);
     }

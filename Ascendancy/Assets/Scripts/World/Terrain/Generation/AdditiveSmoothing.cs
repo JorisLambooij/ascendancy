@@ -76,10 +76,10 @@ public class AdditiveSmoothing : TerrainOperation
         {
             neighbor = originalTilemap[x - 1, y + 1];
 
-            if (neighbor.face.botRight.y > me.face.topLeft.y)
+            if (neighbor.face.botRight.y == me.face.topLeft.y + 1)
                 tl = true;
 
-            if (neighbor.face.botRight.y - 1 > me.face.topLeft.y)
+            if (neighbor.face.botRight.y - 1 == me.face.topLeft.y + 1)
                 tl2 = true;
         }
 
@@ -88,10 +88,10 @@ public class AdditiveSmoothing : TerrainOperation
         {
             neighbor = originalTilemap[x + 1, y + 1];
 
-            if (neighbor.face.botLeft.y > me.face.topRight.y)
+            if (neighbor.face.botLeft.y == me.face.topRight.y + 1)
                 tr = true;
 
-            if (neighbor.face.botLeft.y - 1 > me.face.topRight.y)
+            if (neighbor.face.botLeft.y - 1 == me.face.topRight.y + 1)
                 tr2 = true;
         }
 
@@ -100,10 +100,10 @@ public class AdditiveSmoothing : TerrainOperation
         {
             neighbor = originalTilemap[x + 1, y - 1];
 
-            if (neighbor.face.topLeft.y > me.face.botRight.y)
+            if (neighbor.face.topLeft.y == me.face.botRight.y + 1)
                 br = true;
 
-            if (neighbor.face.topLeft.y - 1 > me.face.botRight.y)
+            if (neighbor.face.topLeft.y - 1 == me.face.botRight.y + 1)
                 br2 = true;
         }
 
@@ -112,10 +112,10 @@ public class AdditiveSmoothing : TerrainOperation
         {
             neighbor = originalTilemap[x - 1, y - 1];
 
-            if (neighbor.face.topRight.y > me.face.botLeft.y)
+            if (neighbor.face.topRight.y == me.face.botLeft.y + 1)
                 bl = true;
 
-            if (neighbor.face.topRight.y - 1 > me.face.botLeft.y)
+            if (neighbor.face.topRight.y - 1 == me.face.botLeft.y + 1)
                 bl2 = true;
         }
 
@@ -136,14 +136,14 @@ public class AdditiveSmoothing : TerrainOperation
             newTilemap[x, y].face.botLeft.y += 1;
         
 
-        int tileType = (originalTilemap[x, y].GetTileType());
+        int tileType = originalTilemap[x, y].GetTileType();
 
         if (tl2)
         {
             if (tileType == 1101 || tileType == 2212)
                 if (me.face.topRight.y + 1 == originalTilemap[x - 1, y + 1].face.botLeft.y || originalTilemap[x - 1, y].face.topRight.y > me.face.topLeft.y || originalTilemap[x, y + 1].face.botLeft.y > me.face.topLeft.y)
                     newTilemap[x, y].face.topLeft.y += 1;
-                
+
         }
         if (tr2)
         {
@@ -208,7 +208,26 @@ public class AdditiveSmoothing : TerrainOperation
                 break;
         }
 
+        Face f = newTilemap[x, y].face;
+        // condition: if at least one corner has been lifted, resulting in all corners being the same height
+        if (tileType == 1111 && f.botLeft.y == f.topLeft.y && f.topLeft.y == f.topRight.y && f.topRight.y == f.botRight.y && (tr || br || tl || tr))
+            newTilemap[x, y].SetHeightWithoutAffectingFace((int)f.botRight.y);
 
+        if (originalTilemap[x, y] is TileCliff)
+        {
+            TileCliff cliff = originalTilemap[x, y] as TileCliff;
+
+            // the diagonal cliff has been modified so that it is not a cliff anymore
+            if ((cliff.diagonal == 1 && cliff.face2.botLeft.y  >= cliff.Height + 1)
+             || (cliff.diagonal == 21 && cliff.face2.topLeft.y  >= cliff.Height + 1)
+             || (cliff.diagonal == 31 && cliff.face2.topRight.y >= cliff.Height + 1)
+             || (cliff.diagonal == 41 && cliff.face2.botRight.y >= cliff.Height + 1))
+            {
+                Tile newTile = new Tile(x, y, newTilemap[x, y].Height + 1);
+                newTile.terrainType = newTilemap[x, y].terrainType;
+                newTilemap[x, y] = newTile;
+            }
+        }
     }
 
     public void RaisePointAt(int x, int y, int corner)
@@ -216,16 +235,16 @@ public class AdditiveSmoothing : TerrainOperation
         switch (corner)
         {
             case 1000:
-                newTilemap[x, y].face.topLeft.y += 1;
+                newTilemap[x, y].face.topLeft = new Vector3(x - 0.5f, newTilemap[x, y].face.topLeft.y + 1, y + 0.5f);
                 break;
             case 100:
-                newTilemap[x, y].face.topRight.y += 1;
+                newTilemap[x, y].face.topRight = new Vector3(x + 0.5f, newTilemap[x, y].face.topRight.y + 1, y + 0.5f);
                 break;
             case 10:
-                newTilemap[x, y].face.botRight.y += 1;
+                newTilemap[x, y].face.botRight = new Vector3(x + 0.5f, newTilemap[x, y].face.botRight.y + 1, y - 0.5f);
                 break;
             case 1:
-                newTilemap[x, y].face.botLeft.y += 1;
+                newTilemap[x, y].face.botLeft = new Vector3(x - 0.5f, newTilemap[x, y].face.botLeft.y + 1, y - 0.5f);
                 break;
             default:
                 Debug.LogError("Call of RaisePointAt() at " + x + "," + y + " with wrong integer " + corner);

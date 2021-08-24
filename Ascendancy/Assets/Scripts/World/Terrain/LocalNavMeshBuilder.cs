@@ -10,6 +10,8 @@ public class LocalNavMeshBuilder : MonoBehaviour
     // The center of the build
     public Transform m_Tracked;
 
+    //public NavMeshBuildSettings settings;
+
     // The size of the build bounds
     private Vector3 m_Size;
 

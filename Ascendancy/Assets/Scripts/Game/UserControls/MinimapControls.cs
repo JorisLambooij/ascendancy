@@ -48,7 +48,7 @@ public class MinimapControls : MonoBehaviour
         Vector2 worldPos = localPoint * World.Instance.worldSize * World.Instance.tileSize;
 
         Vector3 cameraPos = new Vector3(worldPos.x, 0, worldPos.y);
-        cameraPos.y = World.Instance.GetTile(cameraPos)?.height ?? 0;
+        cameraPos.y = World.Instance.GetTile(cameraPos)?.Height ?? 0;
         cameraPos.y += cam.targetHeight;
         cameraPos.y *= 0.5f;
 
