@@ -86,14 +86,20 @@ public class Player : NetworkBehaviour
         FindObjectOfType<GameManager>().Initialize(playerID);
         GetComponent<CheatCodes>().Initialize();
 
-        SpawnStartUnit(new Vector2(10 + 5 * RoomPlayer.index, 10));
+        SpawnStartUnit();
     }
 
-    private void SpawnStartUnit(Vector2 startPosition)
+    private void SpawnStartUnit()
     {
-        float tileSize = (World.Instance as World)?.tileSize ?? 1;
-        Vector2 position = new Vector3(startPosition.x * tileSize + (tileSize / 2), startPosition.y * tileSize + (tileSize / 2));
-        float height = (World.Instance as World)?.GetHeight(position) ?? 1;
+        // wait until the world has finished initialization, and spawnpoints are set
+        // this should in theory be redundant, but i decided to leave it in just in case
+        //yield return new WaitWhile(() => !(World.Instance?.GetComponentInChildren<SpawnPoints>()?.spawnPoints != null));
+        
+        float tileSize = World.Instance.tileSize;
+        Vector2 p = World.Instance.GetComponentInChildren<SpawnPoints>().spawnPoints[playerID];
+        Vector2 position = new Vector2(p.x * tileSize + (tileSize / 2), p.y * tileSize + (tileSize / 2));
+        CameraScript.instance.FocusOn(position + Vector2.down * 2);
+        float height = World.Instance.GetHeight(position);
         height -= 0.05f;
 
         CmdSpawnUnit("E.S.V.", new Vector3(position.x, height, position.y));
