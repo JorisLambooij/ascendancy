@@ -51,8 +51,9 @@ public class MinimapControls : MonoBehaviour
         cameraPos.y = World.Instance.GetTile(cameraPos)?.Height ?? 0;
         cameraPos.y += cam.targetHeight;
         cameraPos.y *= 0.5f;
+        cameraPos.z -= 2;
 
-        cam.MoveCam(cameraPos, false);
+        cam.FocusOn(cameraPos);
     }
 
     private void Update()
