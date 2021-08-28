@@ -25,7 +25,7 @@ public class TechnologyLevel : NetworkBehaviour
     public override void OnStartServer()
     {
         base.OnStartServer();
-        Debug.Log("tech level server");
+        Debug.Log("tech level " + gameObject.name);
         storedResearch = 0;
         techTree = TechTreeReader.Instance.LoadTechTree();
 
@@ -36,10 +36,15 @@ public class TechnologyLevel : NetworkBehaviour
     // Start is called before the first frame update
     public override void OnStartClient()
     {
-        techTree = TechTreeReader.Instance.LoadTechTree();
-        CmdSetFocus(-1);
+        SetupTechs();
+    }
 
-        entitiesUnlocked  = new SubscribableList<EntityInfo>();
+    protected void SetupTechs()
+    {
+        techTree = TechTreeReader.Instance.LoadTechTree();
+        SetFocus(-1);
+
+        entitiesUnlocked = new SubscribableList<EntityInfo>();
         buildingsUnlocked = new SubscribableList<BuildingInfo>();
         resourcesUnlocked = new SubscribableList<Resource>();
 
@@ -84,8 +89,16 @@ public class TechnologyLevel : NetworkBehaviour
         }
     }
 
+    public void SetFocus(int newFocus)
+    {
+        if (isServer)
+            currentFocus = newFocus;
+        else
+            CmdSetFocus(newFocus);
+    }
+
     [Command]
-    public void CmdSetFocus(int newFocus)
+    protected void CmdSetFocus(int newFocus)
     {
         currentFocus = newFocus;
     }
@@ -126,7 +139,7 @@ public class TechnologyLevel : NetworkBehaviour
             foreach (Resource resource in tech.resourcesUnlocked)
             {
                 resourcesUnlocked.Add(resource);
-                GetComponent<Economy>().CmdNewAvailableResource(resource.name);
+                GetComponent<Economy>().NewAvailableResource(resource);
             }
 
     }

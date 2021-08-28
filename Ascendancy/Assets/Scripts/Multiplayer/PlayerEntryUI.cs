@@ -64,8 +64,8 @@ public class PlayerEntryUI : NetworkBehaviour
 
     public void UpdateColor()
     {
-        if (player.isLocalPlayer)
-            player.CmdColorChange(PlayerColorIndex);
+        if (player.isLocalPlayer || player is AI_PlayerRoomScript)
+            player.ColorChange(PlayerColorIndex);
     }
     public void OnColorChange()
     {

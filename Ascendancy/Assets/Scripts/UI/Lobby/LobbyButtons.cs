@@ -10,10 +10,16 @@ public class LobbyButtons : MonoBehaviour
     public MP_Lobby lobby;
 
     public Button startButton;
+    public Button readyButton;
+    public Button addPlayerButton;
 
     private void Start()
     {
         StartCoroutine(FindLobby());
+
+        startButton?.onClick.AddListener(ButtonStart);
+        readyButton?.onClick.AddListener(ButtonReady);
+        addPlayerButton?.onClick.AddListener(ButtonAddAI);
     }
 
     IEnumerator FindLobby()
@@ -41,5 +47,11 @@ public class LobbyButtons : MonoBehaviour
             lobby = FindObjectOfType<MP_Lobby>();
 
         lobby.LoadGame();
+    }
+
+    public void ButtonAddAI()
+    {
+        Debug.Log("AI added");
+        lobby.AddAI();
     }
 }

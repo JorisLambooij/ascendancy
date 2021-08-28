@@ -28,23 +28,22 @@ public class Economy : NetworkBehaviour
             resourceSyncDictionary["Wood"] = 20;
     }
 
+
     public void NewAvailableResource(Resource resource)
     {
-        //Debug.Log("New Resource: " + resource.name);
-        availableResources.Add(resource.name);
-        resourceSyncDictionary.Add(resource.name, 0f);
-
-        CmdNewAvailableResource(resource.name);
-
-        foreach (ResourceAmount resAm in GameSettingsManager.instance.startResources)
-        {
-            if (resAm.resource.Equals(resource))
-                AddResourceAmount(resAm);
-        }
+        if (isServer)
+            NewAvailableResource(resource.name);
+        else
+            CmdNewAvailableResource(resource.name);
     }
 
     [Command]
     public void CmdNewAvailableResource(string resource)
+    {
+        NewAvailableResource(resource);
+    }
+
+    private void NewAvailableResource(string resource)
     {
         if (!availableResources.Contains(resource))
             availableResources.Add(resource);

@@ -10,7 +10,7 @@ public class MP_Lobby : NetworkBehaviour
     public int maxPlayers;
     public List<Color> playerColors;
     public GameObject playerEntryPrefab;
-    public GameObject testPrefab;
+    public GameObject aiPlayerPrefab;
 
     public List<PlayerInfo> PlayersInLobby { get => playersInLobby; }
     public bool isServer = false;
@@ -22,7 +22,7 @@ public class MP_Lobby : NetworkBehaviour
     private int playerCount;
     public Dictionary<int, PlayerRoomScript> playerDict;
 
-    public static MP_Lobby singleton { get; private set; }
+    public static MP_Lobby instance { get; private set; }
 
     private MPMenu_NetworkRoomManager roomMngr;
 
@@ -31,16 +31,16 @@ public class MP_Lobby : NetworkBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        if (singleton != null)
+        if (instance != null)
         {
             Debug.Log("Destroying second MP_Lobby");
-            singleton.messageWindow = messageWindow;
-            singleton.Initialize();
+            instance.messageWindow = messageWindow;
+            instance.Initialize();
             Destroy(gameObject);
         }
         else
         {
-            singleton = this;
+            instance = this;
             Initialize();
         }
     }
@@ -89,6 +89,18 @@ public class MP_Lobby : NetworkBehaviour
             return;
     }
 
+    public void AddAI()
+    {
+        if (playerCount >= maxPlayers)
+            return;
+
+        PlayerRoomScript ai = Instantiate(aiPlayerPrefab).GetComponent<PlayerRoomScript>();
+        ai.playerName = "Bot " + playerCount;
+
+        NetworkServer.Spawn(ai.gameObject);
+
+        //NetworkPlayerInitialization(ai);
+    }
     
     public void NetworkPlayerInitialization(PlayerRoomScript player)
     {
@@ -122,8 +134,10 @@ public class MP_Lobby : NetworkBehaviour
             else
                 Destroy(kickPlayerButton.gameObject);
 
-            //you should only be able to change your own color
-            entryUI.GetComponentInChildren<Dropdown>().interactable = false;
+            //you should only be able to change your own color or that of bots, if you are host
+            if (!(isServer && player is AI_PlayerRoomScript))
+                entryUI.GetComponentInChildren<Dropdown>().interactable = false;
+
 
             //if (isServer)
             //    player.RpcLookupName();

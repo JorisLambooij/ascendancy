@@ -11,12 +11,13 @@ public class Player : NetworkBehaviour
     [SyncVar(hook = nameof(PlayerIDHook))]
     public int playerID = -1;
 
-    private PlayerRoomScript roomPlayer;
+    protected PlayerRoomScript roomPlayer;
 
-    private Economy economy;
-    private TechnologyLevel techLevel;
-    private Transform buildingsGO;
-    private Transform unitsGO;
+    protected Economy economy;
+    protected TechnologyLevel techLevel;
+    protected Transform buildingsGO;
+    protected Transform unitsGO;
+    protected MP_Lobby lobby;
 
     public Economy PlayerEconomy { get => economy; set => economy = value; }
     public TechnologyLevel TechLevel { get => techLevel; set => techLevel = value; }
@@ -36,8 +37,6 @@ public class Player : NetworkBehaviour
         }
     }
 
-    private MP_Lobby lobby;
-
     public override void OnStartServer()
     {
         base.OnStartServer();
@@ -55,8 +54,9 @@ public class Player : NetworkBehaviour
         Setup();
     }
 
-    private void Setup()
+    protected void Setup()
     {
+        Debug.Log("Setup for " + gameObject.name);
         PlayerEconomy = GetComponent<Economy>();
         TechLevel = GetComponent<TechnologyLevel>();
 
@@ -69,16 +69,16 @@ public class Player : NetworkBehaviour
         lobby.AddPlayer(this);
         transform.SetParent(FindObjectOfType<MPMenu_NetworkRoomManager>().transform);
 
-        if (isLocalPlayer)
+        if (isLocalPlayer || isServer && this is AI_Player)
             RpcLocalInitialize();
     }
 
-    public void RpcLocalInitialize()
+    protected virtual void RpcLocalInitialize()
     {
-        Debug.Log("Local initialization");
         lobby = FindObjectOfType<MP_Lobby>();
         RoomPlayer = lobby.localPlayer;
         playerID = RoomPlayer.index;
+        Debug.Log("Local initialization for " + RoomPlayer.playerName);
         CmdChangeID(playerID);
 
         //PlayerEconomy.Initialize();
@@ -89,38 +89,39 @@ public class Player : NetworkBehaviour
         SpawnStartUnit();
     }
 
-    private void SpawnStartUnit()
+    public void SpawnStartUnit()
     {
         // wait until the world has finished initialization, and spawnpoints are set
         // this should in theory be redundant, but i decided to leave it in just in case
         //yield return new WaitWhile(() => !(World.Instance?.GetComponentInChildren<SpawnPoints>()?.spawnPoints != null));
-        
         float tileSize = World.Instance.tileSize;
-        Vector2 p = World.Instance.GetComponentInChildren<SpawnPoints>().spawnPoints[playerID];
-        Vector2 position = new Vector2(p.x * tileSize + (tileSize / 2), p.y * tileSize + (tileSize / 2));
-        CameraScript.instance.FocusOn(position + Vector2.down * 2);
-        float height = World.Instance.GetHeight(position);
-        height -= 0.05f;
+        Vector2 spawnPoint = World.Instance.GetComponentInChildren<SpawnPoints>().spawnPoints[playerID];
+        Vector2 worldPosition = new Vector2(spawnPoint.x * tileSize + (tileSize / 2), spawnPoint.y * tileSize + (tileSize / 2));
+        if (isLocalPlayer)
+            CameraScript.instance.FocusOn(worldPosition + Vector2.down * 2);
+        float height = World.Instance.GetHeight(worldPosition);
 
-        CmdSpawnUnit("E.S.V.", new Vector3(position.x, height, position.y));
+        Vector3 spawnPosition = new Vector3(worldPosition.x, height- 0.05f, worldPosition.y);
+
+        if (isServer)
+            SpawnUnit("E.S.V.", spawnPosition);
+        else
+            CmdSpawnUnit("E.S.V.", spawnPosition);
     }
 
-    [Command]
-    public void CmdSpawnUnit(string entityName, Vector3 position)
+    protected void SpawnUnit(string entityName, Vector3 position)
     {
-        //Debug.Log("Cmd Spawning unit for " + this.name + " " + this.connectionToClient);
         EntityInfo entityInfo = ResourceLoader.instance.entityInfoData[entityName];
         GameObject newUnit = entityInfo.CreateInstance(this, position);
 
         //spawn the GO across the network
         NetworkServer.Spawn(newUnit, this.connectionToClient);
-        //newUnit.GetComponent<Entity>().RpcSetOwner(transform);
+    }
 
-        //GameObject testUnit = Instantiate(lobby.testPrefab);
-        //testUnit.name = "Test Sphere";
-        //testUnit.GetComponent<NetworkSphereTest>().testValue = 2;
-        //NetworkServer.Spawn(testUnit);
-
+    [Command]
+    public void CmdSpawnUnit(string entityName, Vector3 position)
+    {
+        SpawnUnit(entityName, position);
     }
 
     [Command]

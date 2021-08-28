@@ -158,7 +158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0.000091552734}
   m_SizeDelta: {x: 1170, y: 820}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &15843542
@@ -406,7 +406,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 470103138}
   m_HandleRect: {fileID: 470103137}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 0.50000006
   m_NumberOfSteps: 1
   m_OnValueChanged:
@@ -1838,6 +1838,8 @@ MonoBehaviour:
   - {fileID: 7794026143633133344, guid: 8d6527d46a80b5c4f92bde663d87d85c, type: 3}
   - {fileID: 3457088166798531356, guid: 3f6eed198e7f3f04eb29ed22a7749416, type: 3}
   - {fileID: 3083382378717104310, guid: d5f70e457bf97044b850d533d0001ad8, type: 3}
+  - {fileID: 6118261737210275372, guid: 02af442f35dae7f488e90cdf3ca5d969, type: 3}
+  - {fileID: 3628385829824345410, guid: b9a3cac365bdca94ba070fe8a528bdc7, type: 3}
   showRoomGUI: 0
   minPlayers: 1
   roomPlayerPrefab: {fileID: 3628385829824345408, guid: e378a3946e3d3564793b7cbc737f6a91,

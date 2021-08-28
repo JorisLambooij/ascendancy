@@ -24,25 +24,44 @@ public class PlayerRoomScript : NetworkRoomPlayer
     {
         get
         {
-            return MP_Lobby.singleton.playerColors[playerColorIndex];
+            try
+            {
+                return MP_Lobby.instance.playerColors[playerColorIndex];
+            }
+            catch
+            {
+                throw new Exception("Index out of range: " + playerColorIndex);
+            }
         }
     }
 
     public override void OnClientEnterRoom()
     {
         base.OnClientEnterRoom();
+        Debug.Log("On client enter room: " + gameObject.name + "(" + playerName + ")");
         //gameObject.name = "Player - " + playerName + "";
+
         CmdBroadcastName(playerName);
         CmdColorChange(playerColorIndex);
     }
 
     #region playerColor
-    [Command]
-    public void CmdColorChange(int newColorindex)
+    public void ColorChange(int newColorIndex)
     {
-        this.playerColorIndex = newColorindex;
-        Debug.Log("Player " + playerName + " changes color to " + newColorindex);
-        RpcColorChange(newColorindex);
+        this.playerColorIndex = newColorIndex;
+        Debug.Log("Player " + playerName + " changes color index to " + newColorIndex);
+        CmdColorChange(newColorIndex);
+        if (isServer)
+            RpcColorChange(newColorIndex);
+        //OnColorChangeEvent.Invoke();
+    }
+
+    [Command]
+    public void CmdColorChange(int newColorIndex)
+    {
+        this.playerColorIndex = newColorIndex;
+        Debug.Log("Player " + playerName + " changes color to " + newColorIndex);
+        RpcColorChange(newColorIndex);
     }
 
     [ClientRpc]
@@ -58,8 +77,10 @@ public class PlayerRoomScript : NetworkRoomPlayer
     [Command]
     public void CmdBroadcastName(string pname)
     {
+        gameObject.name = "Player - " + pname;
         RpcChangeClientName(pname);
     }
+
     [ClientRpc]
     public void RpcChangeClientName(string pname)
     {
@@ -87,7 +108,6 @@ public class PlayerRoomScript : NetworkRoomPlayer
     }
     #endregion
 
-
     #region Chat
     [Command]
     public void CmdSend(ChatMessage message)
@@ -105,9 +125,8 @@ public class PlayerRoomScript : NetworkRoomPlayer
     public override void OnStartClient()
     {
         base.OnStartClient();
-        MP_Lobby lobby = FindObjectOfType<MP_Lobby>();
-        lobby.NetworkPlayerInitialization(this);
-        transform.SetParent(lobby.transform);//FindObjectOfType<MPMenu_NetworkRoomManager>().transform);
+        MP_Lobby.instance.NetworkPlayerInitialization(this);
+        transform.SetParent(MP_Lobby.instance.transform);//FindObjectOfType<MPMenu_NetworkRoomManager>().transform);
     }
 
     #endregion
