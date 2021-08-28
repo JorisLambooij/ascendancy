@@ -10,7 +10,7 @@ using System;
 
 public class Entity : NetworkBehaviour, OccupationType
 {
-    public const float UPDATE_FREQ = 3;
+    public const float UPDATE_FREQ = 10;
 
     [SyncVar]
     public int ownerID;

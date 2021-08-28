@@ -5,6 +5,21 @@ using Mirror;
 
 public class AI_Player : Player
 {
+    public AI_Personality personality;
+
+    public Resource wood;
+
+    private void Update()
+    {
+        EconomicUpdate();
+    }
+
+    private void EconomicUpdate()
+    {
+
+    }
+
+    #region Network Initialization
     public void SetRoomScript(PlayerRoomScript roomScript)
     {
         RoomPlayer = roomScript;
@@ -16,12 +31,8 @@ public class AI_Player : Player
         lobby = FindObjectOfType<MP_Lobby>();
         playerID = RoomPlayer.index;
         CmdChangeID(playerID);
-
-        //PlayerEconomy.Initialize();
-        //TechLevel.Initialize();
-        //FindObjectOfType<GameManager>().Initialize(playerID);
-        //GetComponent<CheatCodes>().Initialize();
-
         SpawnStartUnit();
     }
+
+    #endregion
 }

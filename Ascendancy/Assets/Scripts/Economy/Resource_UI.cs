@@ -11,6 +11,9 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
     private Player player;
     private Dictionary<Resource, Resource_UI_Entry> resourceEntries;
 
+    private const float rollingAverageUpdateFrequency = 0.5f;
+    private Dictionary<Resource, RollingAverage> rollingAverageProduction;
+
     /// <summary>
     /// Callback for when a resource has been updated.
     /// </summary>
@@ -43,7 +46,11 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
     {
         Resource r = ResourceLoader.instance.resourceData[resourcename];
         if (resourceEntries.ContainsKey(r))
+        {
+            float delta = newValue - resourceEntries[r].Count;
             resourceEntries[r].Count = newValue;
+            rollingAverageProduction[r].QueueDatapoint(delta);
+        }
         else
             InstantiateNewField(r, newValue);
     }
@@ -70,11 +77,27 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
 
         player.PlayerEconomy.resourceSyncDictionary.Callback += OnResourceChange;
         player.PlayerEconomy.availableResources.Callback += OnNewResource;
-        
+        rollingAverageProduction = new Dictionary<Resource, RollingAverage>();
+
         foreach (KeyValuePair<string, float> kvp in player.PlayerEconomy.resourceSyncDictionary)
         {
             Resource r = ResourceLoader.instance.resourceData[kvp.Key];
             InstantiateNewField(r, kvp.Value);
+        }
+        StartCoroutine(RollingAverage());
+    }
+
+    private IEnumerator RollingAverage()
+    {
+        while (true)
+        {
+            foreach (KeyValuePair<Resource, RollingAverage> kvp in rollingAverageProduction)
+            {
+                //rollingAverageProduction[kvp.Key].QueueDatapoint(resourceEntries[kvp.Key].Count);
+                float avg = kvp.Value.Calculate();
+                resourceEntries[kvp.Key].Production = avg;
+            }
+            yield return new WaitForSeconds(rollingAverageUpdateFrequency);
         }
     }
 
@@ -85,6 +108,7 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
         entry.Count = amount;
 
         resourceEntries.Add(resource, entry);
+        rollingAverageProduction.Add(resource, new RollingAverage());
     }
 
     // Update is called once per frame

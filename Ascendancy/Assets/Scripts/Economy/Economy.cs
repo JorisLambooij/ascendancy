@@ -8,11 +8,6 @@ public class Economy : NetworkBehaviour
     public readonly SyncDictionary<string, float> resourceSyncDictionary = new SyncDictionary<string, float>();
     public readonly SyncList<string> availableResources = new SyncList<string>();
 
-    //public SubscribableDictionary<Resource, float> resourceStorage;
-    //public SubscribableList<Resource> availableResources;
-
-    //private List<ResourceAmount> startResources;
-
     public void Initialize()
     {
         //adding start resources
@@ -20,12 +15,6 @@ public class Economy : NetworkBehaviour
 
         //resourceStorage = new SubscribableDictionary<Resource, float>();
         //availableResources = new SubscribableList<Resource>();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.K))
-            resourceSyncDictionary["Wood"] = 20;
     }
 
 
@@ -109,6 +98,7 @@ public class Economy : NetworkBehaviour
     {
         Debug.Assert(amount > 0, "Amount must be positive: " + amount);
 
+        //rollingAverageProduction[resource].QueueDatapoint(amount);
         float newAmount = GetResourceAmount(resource) + amount;
         SetResourceAmount(resource, newAmount);
     }

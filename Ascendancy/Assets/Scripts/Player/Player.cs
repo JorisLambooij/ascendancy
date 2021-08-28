@@ -81,8 +81,6 @@ public class Player : NetworkBehaviour
         Debug.Log("Local initialization for " + RoomPlayer.playerName);
         CmdChangeID(playerID);
 
-        //PlayerEconomy.Initialize();
-        //TechLevel.Initialize();
         FindObjectOfType<GameManager>().Initialize(playerID);
         GetComponent<CheatCodes>().Initialize();
 
