@@ -11,9 +11,6 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
     private Player player;
     private Dictionary<Resource, Resource_UI_Entry> resourceEntries;
 
-    private const float rollingAverageUpdateFrequency = 0.5f;
-    private Dictionary<Resource, RollingAverage> rollingAverageProduction;
-
     /// <summary>
     /// Callback for when a resource has been updated.
     /// </summary>
@@ -42,14 +39,18 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
         // TODO: Reset the UI to match the new Resources.
     }
 
+    protected void OnProductionChange(Resource r, float value)
+    {
+        resourceEntries[r].Production = value;
+    }
+
     protected void OnResourceChange(SyncDictionary<string, float>.Operation op, string resourcename, float newValue)
     {
-        Resource r = ResourceLoader.instance.resourceData[resourcename];
+        Resource r = ResourceLoader.GetResourceFromString(resourcename);
         if (resourceEntries.ContainsKey(r))
         {
-            float delta = newValue - resourceEntries[r].Count;
             resourceEntries[r].Count = newValue;
-            rollingAverageProduction[r].QueueDatapoint(delta);
+            resourceEntries[r].Production = player.PlayerEconomy.AverageProduction(r);
         }
         else
             InstantiateNewField(r, newValue);
@@ -63,7 +64,7 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
             return;
         }
 
-        Resource r = ResourceLoader.instance.resourceData[newResource];
+        Resource r = ResourceLoader.GetResourceFromString(newResource);
         if (!resourceEntries.ContainsKey(r))
             InstantiateNewField(r);
     }
@@ -77,29 +78,15 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
 
         player.PlayerEconomy.resourceSyncDictionary.Callback += OnResourceChange;
         player.PlayerEconomy.availableResources.Callback += OnNewResource;
-        rollingAverageProduction = new Dictionary<Resource, RollingAverage>();
+        player.PlayerEconomy.OnProductionChange.AddListener(OnProductionChange);
 
         foreach (KeyValuePair<string, float> kvp in player.PlayerEconomy.resourceSyncDictionary)
         {
-            Resource r = ResourceLoader.instance.resourceData[kvp.Key];
+            Resource r = ResourceLoader.GetResourceFromString(kvp.Key);
             InstantiateNewField(r, kvp.Value);
         }
-        StartCoroutine(RollingAverage());
     }
 
-    private IEnumerator RollingAverage()
-    {
-        while (true)
-        {
-            foreach (KeyValuePair<Resource, RollingAverage> kvp in rollingAverageProduction)
-            {
-                //rollingAverageProduction[kvp.Key].QueueDatapoint(resourceEntries[kvp.Key].Count);
-                float avg = kvp.Value.Calculate();
-                resourceEntries[kvp.Key].Production = avg;
-            }
-            yield return new WaitForSeconds(rollingAverageUpdateFrequency);
-        }
-    }
 
     void InstantiateNewField(Resource resource, float amount = 0)
     {
@@ -108,7 +95,6 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
         entry.Count = amount;
 
         resourceEntries.Add(resource, entry);
-        rollingAverageProduction.Add(resource, new RollingAverage());
     }
 
     // Update is called once per frame

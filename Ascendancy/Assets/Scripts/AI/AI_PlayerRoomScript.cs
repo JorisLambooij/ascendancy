@@ -24,7 +24,7 @@ public class AI_PlayerRoomScript : PlayerRoomScript
 
     protected void OnSceneChange(Scene old, Scene current)
     {
-        Debug.Log(current.name);
+        //Debug.Log(current.name);
 
         if (current.name != "GameScene")
             return;

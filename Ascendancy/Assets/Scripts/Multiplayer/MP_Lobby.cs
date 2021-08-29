@@ -104,7 +104,7 @@ public class MP_Lobby : NetworkBehaviour
     
     public void NetworkPlayerInitialization(PlayerRoomScript player)
     {
-        Debug.Log("NetworkPlayerInit");
+        //Debug.Log("NetworkPlayerInit");
         Transform playerEntry = Instantiate(playerEntryPrefab, playerList).transform;
         PlayerEntryUI entryUI = playerEntry.GetComponent<PlayerEntryUI>();
 

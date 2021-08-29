@@ -53,4 +53,38 @@ public class ResourceLoader : MonoBehaviour
 
         return instance.entityInfoData[entityName];
     }
+
+    public static Resource GetResourceFromString(string s)
+    {
+        if (!instance.resourceData.ContainsKey(s))
+        {
+            Debug.LogError(s + " not present in ResourceLoader.ResourceData");
+            return null;
+        }
+        return instance.resourceData[s];
+    }
+
+    public static List<EntityInfo> BuildingsForProduction(Resource r)
+    {
+        Dictionary<EntityInfo, float> results = new Dictionary<EntityInfo, float>();
+        foreach(var kvp in instance.entityInfoData)
+        {
+            if (kvp.Value.construction_Method != ConstructionMethod.Building)
+                continue;
+
+            float score = 0;
+
+            // go through the features, and if one produces the desired resource, add it as a result
+            foreach (EntityFeature feature in kvp.Value.entityFeatures)
+                if (feature is ProductionFeature && (feature as ProductionFeature).producedResource == r)
+                    score += (feature as ProductionFeature).producedAmount;
+
+            if (score > 0)
+                results.Add(kvp.Value, score);
+        }
+
+        List<EntityInfo> sortedResults = new List<EntityInfo>(results.Keys);
+        sortedResults.Sort((a, b) => results[a].CompareTo(results[b]));
+        return sortedResults;
+    }
 }

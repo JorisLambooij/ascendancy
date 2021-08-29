@@ -21,7 +21,7 @@ public class RotateOrder : UnitOrder
     {
         get
         {
-            if (entity.entityInfo.construction_Method == ConstructionMethod.Building)
+            if (entity.entityInfo.construction_Method == ConstructionMethod.Building || entity.entityInfo.construction_Method == ConstructionMethod.SpecialBuilding)
             {
                 Debug.Log("Cancelling rotate order for building '" + entity.entityInfo.name + "'");
                 return true;

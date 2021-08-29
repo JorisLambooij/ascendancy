@@ -87,7 +87,7 @@ public class Entity : NetworkBehaviour, OccupationType
                 foreach (Player p in players)
                     if (p.playerID == ownerID)
                     {
-                        if (entityInfo.construction_Method == ConstructionMethod.Unit)
+                        if (entityInfo.construction_Method == ConstructionMethod.Unit || entityInfo.construction_Method == ConstructionMethod.SpecialUnit)
                             transform.SetParent(p.UnitsGO);
                         else
                             transform.SetParent(p.BuildingsGO);
