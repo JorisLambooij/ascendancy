@@ -113,23 +113,38 @@ public partial class Player
     [Command]
     public void CmdSpawnConstructionSite(string entityName, Vector3 position)
     {
-        GameObject constructionSite = Instantiate(ResourceLoader.instance.constructionSitePrefab);
-        constructionSite.transform.position = position;
-        constructionSite.GetComponent<ConstructionSite>().buildingName = entityName;
-        constructionSite.GetComponent<ConstructionSite>().ownerID = this.playerID;
-
-        NetworkServer.Spawn(constructionSite, this.connectionToClient);
+        SpawnConstructionSite(entityName, position);
     }
-
-
-    public void SpawnBuilding(string entityName, Vector3 position)
+    public void SpawnConstructionSite(string entityName, Vector3 position)
     {
-        CmdSpawnBuilding(entityName, position);
+        if (!isServer)
+        {
+            CmdSpawnConstructionSite(entityName, position);
+            return;
+        }
+        ConstructionSite constructionSite = Instantiate(ResourceLoader.instance.constructionSitePrefab).GetComponent<ConstructionSite>();
+        constructionSite.transform.position = position;
+        constructionSite.buildingName = entityName;
+        constructionSite.ownerID = this.playerID;
+
+        NetworkServer.Spawn(constructionSite.gameObject, this.connectionToClient);
+
+        GameManager.Instance.occupationMap.NewOccupation(position, constructionSite, TileOccupation.OccupationLayer.Building);
     }
 
     [Command]
     public void CmdSpawnBuilding(string entityName, Vector3 position)
     {
+        SpawnBuilding(entityName, position);
+    }
+
+    public void SpawnBuilding(string entityName, Vector3 position)
+    {
+        if (!isServer) 
+        {
+            CmdSpawnBuilding(entityName, position);
+            return;
+        }
         Debug.Log("Spawning building: " + entityName);
         EntityInfo entityInfo = ResourceLoader.instance.entityInfoData[entityName];
         GameObject newUnit = entityInfo.CreateInstance(this, position);

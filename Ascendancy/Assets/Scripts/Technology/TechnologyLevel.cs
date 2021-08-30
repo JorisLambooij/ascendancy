@@ -22,6 +22,8 @@ public class TechnologyLevel : NetworkBehaviour
     public SubscribableList<BuildingInfo> buildingsUnlocked { get; private set; }
     public SubscribableList<Resource> resourcesUnlocked { get; private set; }
 
+    public RollingAverage averageResearchProduction = new RollingAverage(false);
+
     public override void OnStartServer()
     {
         base.OnStartServer();
@@ -53,14 +55,20 @@ public class TechnologyLevel : NetworkBehaviour
             UnlockThingsFromTech(tech.id);
     }
 
-    public void AddResearchPoints(float amount)
-    {
-        CmdAddResearchPoints(amount);
-    }
-
     [Command]
     public void CmdAddResearchPoints(float amount)
     {
+        AddResearchPoints(amount);
+    }
+
+    public void AddResearchPoints(float amount)
+    {
+        if (!isServer)
+        {
+            CmdAddResearchPoints(amount);
+            return;
+        }
+        averageResearchProduction.QueueDatapoint(amount);
         // No current Research, so keep the points until a Focus is set.
         if (currentFocus == -1)
         {

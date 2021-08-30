@@ -15,14 +15,17 @@ public partial class Player
                     foreach (ResourceAmount res_amount in buildingInfo.resourceAmount)
                         economy.RemoveResourceAmount(res_amount);
 
-                GameManager.Instance.GetPlayer.CmdSpawnConstructionSite(buildingInfo.name, position);
+                SpawnConstructionSite(buildingInfo.name, position);
 
                 return true;
             }
+            //Debug.Log("Not enough Resources for " + buildingInfo.name);
         }
         else
+        {
             // invalid spot, do NOT place building
-            Debug.Log("Area not flat or other building here");
+            //Debug.Log("Area not flat or other building here");
+        }
 
         return false;
     }

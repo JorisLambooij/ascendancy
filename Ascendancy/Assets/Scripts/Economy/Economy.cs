@@ -33,13 +33,13 @@ public class Economy : NetworkBehaviour
     {
         while (true)
         {
-            foreach (KeyValuePair<Resource, RollingAverage> kvp in rollingAverageProduction)
-            {
-
-                rollingAverageProduction[kvp.Key].QueueDatapoint(resourceSyncDictionary[kvp.Key.name]);
-                float avg = kvp.Value.Calculate();
-                OnProductionChange.Invoke(kvp.Key, avg);
-            }
+            if (rollingAverageProduction != null)
+                foreach (KeyValuePair<Resource, RollingAverage> kvp in rollingAverageProduction)
+                {
+                    rollingAverageProduction[kvp.Key].QueueDatapoint(resourceSyncDictionary[kvp.Key.name]);
+                    float avg = kvp.Value.Calculate();
+                    OnProductionChange.Invoke(kvp.Key, avg);
+                }
             yield return new WaitForSeconds(rollingAverageUpdateFrequency);
         }
     }

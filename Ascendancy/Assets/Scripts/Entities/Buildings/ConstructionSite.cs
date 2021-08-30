@@ -24,27 +24,28 @@ public class ConstructionSite : NetworkBehaviour, OccupationType
 
     public EntityInfo GetEntityInfo()
     {
+        if (buildingInfo == null)
+        {
+            if (ResourceLoader.instance.entityInfoData.ContainsKey(buildingName))
+                buildingInfo = ResourceLoader.instance.entityInfoData[buildingName];
+            else
+                Debug.LogError("ConstructionSite has no building assigned!");
+
+            if (buildingInfo == null)
+            {
+                Debug.LogError("ConstructionSite has no BuildingInfo!");
+                return null;
+            }
+        }
         return buildingInfo;
     }
 
     // Update is called once per frame
     protected void Update()
     {
-        if (buildingInfo == null)
-        {
-            if (ResourceLoader.instance.entityInfoData.ContainsKey(buildingName))
-                buildingInfo = ResourceLoader.instance.entityInfoData[buildingName];
-            else
-            {
-                Debug.LogError("ConstructionSite has no building assigned!");
-            }    
-
-            if (buildingInfo == null)
-            {
-                Debug.LogError("ConstructionSite has no BuildingInfo!");
-                return;
-            }
-        }
+        if (GetEntityInfo() == null)
+            return;
+        
         constructionProgress += Time.deltaTime;
 
         float percentage = Mathf.Clamp01(constructionProgress / buildingInfo.buildTime);
@@ -70,7 +71,7 @@ public class ConstructionSite : NetworkBehaviour, OccupationType
             if (hasAuthority)
                 Destroy(this.gameObject);
             else
-                Destroy(this.gameObject, 0.5f);
+                Destroy(this.gameObject, 0.25f);
         }
     }
 

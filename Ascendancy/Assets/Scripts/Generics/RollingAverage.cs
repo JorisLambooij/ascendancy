@@ -32,8 +32,15 @@ public class RollingAverage
             RollingDatapoint rdp = averageList[i];
             if (Time.time - rdp.timestamp < rollingAverageTimespan)
             {
-                float delta = rdp.amount - (i > 0 ? averageList[i - 1].amount : 0);
-                total += delta;
+                if (useDelta)
+                {
+                    float delta = rdp.amount - (i > 0 ? averageList[i - 1].amount : 0);
+                    total += delta;
+                }
+                else
+                {
+                    total += rdp.amount;
+                }
                 newList.Add(rdp);
             }
         }

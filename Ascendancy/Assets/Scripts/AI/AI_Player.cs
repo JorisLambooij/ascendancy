@@ -8,44 +8,55 @@ public class AI_Player : Player
     public AI_Personality personality;
 
     private const float updateFrequency = 1f;
-
-    private IEnumerator UpdateRoutine()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(updateFrequency);
-
-            Debug.Log("update routine...");
-            EconomicUpdate();
-            TechnologyUpdate();
-        }
-    }
+    private const int cooldown = 4;
 
     #region Economy
-    private void EconomicUpdate()
+    private IEnumerator EconomicUpdate()
     {
-        if (economy.availableResources == null)
-            return;
+        if (economy?.availableResources == null)
+            yield return null;
 
-        foreach(string rs in economy.availableResources)
+        // to avoid spamming actions, set each resource update loop on cooldown when action is taken
+        Dictionary<string, int> resourceCooldowns = new Dictionary<string, int>();
+        while (true)
         {
-            Resource resource = ResourceLoader.GetResourceFromString(rs);
-            float currentSurplus = economy.AverageProduction(resource);
-            float targetSurplus = personality.ResourceTarget(resource);
-
-            if (currentSurplus < targetSurplus)
+            // for every resource unlocked, try to meet the production quota given by the AI personality
+            foreach (string rs in economy.availableResources)
             {
-                List<EntityInfo> potentialBuildings = ResourceLoader.BuildingsForProduction(resource);
-                if (potentialBuildings.Count > 0)
-                    TryBuild(potentialBuildings[0]);
+                if (!resourceCooldowns.ContainsKey(rs))
+                    resourceCooldowns.Add(rs, 0);
+
+                if (resourceCooldowns[rs] > 0)
+                {
+                    resourceCooldowns[rs]--;
+                    continue;
+                }
+
+                Resource resource = ResourceLoader.GetResourceFromString(rs);
+                float currentSurplus = economy.AverageProduction(resource);
+                float targetSurplus = personality.ResourceTarget(resource);
+
+                if (currentSurplus < targetSurplus)
+                {
+                    List<EntityInfo> potentialBuildings = ResourceLoader.GetBuildingsForResourceProduction(resource);
+                    // TODO: actually evaluate cost/benefits, not just the most powerful one
+
+                    for (int i = 0; i < potentialBuildings.Count; i++)
+                        if (TryBuild(potentialBuildings[i]))
+                        {
+                            resourceCooldowns[rs] = cooldown;
+                            break;
+                        }
+                }
             }
+            yield return new WaitForSeconds(updateFrequency);
         }
     }
 
-    private void TryBuild(EntityInfo entityInfo)
+    private bool TryBuild(EntityInfo entityInfo)
     {
         if (!techLevel.IsUnitUnlocked(entityInfo))
-            return;
+            return false;
 
         Debug.Log("Trying to build: " + entityInfo.name);
 
@@ -53,21 +64,39 @@ public class AI_Player : Player
         float randomDistance = Random.Range(2f, 10f);
         Vector3 randomPosition = spawnPosition + new Vector3(Mathf.Cos(randomAngle), 0, Mathf.Sin(randomAngle) * randomDistance);
 
-        AttemptPlaceBuilding(entityInfo, randomPosition);
+        return AttemptPlaceBuilding(entityInfo, randomPosition);
     }
     #endregion
 
     #region Technology
-    protected void TechnologyUpdate()
+    protected IEnumerator TechnologyUpdate()
     {
-        
-        ChangeTechFocus();
+        while (true)
+        {
+            ChangeTechFocus();
+
+            // research quota is not met, build research buildings
+            if (techLevel?.averageResearchProduction.Calculate() < personality.ResearchProductionTarget())
+            {
+                List<EntityInfo> potentialBuildings = ResourceLoader.GetBuildingsForResearchProduction();
+                //Debug.Log("Not enough research " + potentialBuildings[0].name);
+                // TODO: actually evaluate cost/benefits, not just the most powerful one
+
+                for (int i = 0; i < potentialBuildings.Count; i++)
+                    if (TryBuild(potentialBuildings[i]))
+                    {
+                        yield return new WaitForSeconds(cooldown * updateFrequency);
+                    }
+            }
+
+            yield return new WaitForSeconds(updateFrequency);
+        }
     }
 
     protected void ChangeTechFocus()
     {
         // only change focus if not already focussing on a tech
-        if (techLevel.currentFocus != -1)
+        if (techLevel?.currentFocus != -1)
             return;
 
         List<Technology> researchables = techLevel.GetTechsByResearchability(Researchability.Researchable);
@@ -75,6 +104,7 @@ public class AI_Player : Player
         int bestTech = -1;
         float bestCost = Mathf.Infinity;
 
+        // pick the cheapest tech currently available
         foreach (Technology tech in researchables)
         {
             if (tech.cost < bestCost)
@@ -108,7 +138,8 @@ public class AI_Player : Player
         base.OnStartServer();
 
         Debug.Log("Starting AI update routine");
-        StartCoroutine(UpdateRoutine());
+        StartCoroutine(EconomicUpdate());
+        StartCoroutine(TechnologyUpdate());
     }
 
     #endregion

@@ -12,6 +12,7 @@ public class StoredResearchPointsUpdater : MonoBehaviour
     {
         textField = GetComponent<Text>();
         GetComponentInParent<PlayerTechScreen>().playerTechLevel.storedResearchUpdate.AddListener(Callback);
+        textField.text = GetComponentInParent<PlayerTechScreen>().playerTechLevel.storedResearch.ToString();
     }
     
     void OnEnable()
