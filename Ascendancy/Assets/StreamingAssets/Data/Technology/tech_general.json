@@ -150,6 +150,21 @@
             "resourcesUnlocked": [
                 "ScriptableObjects/Resource/Iron.asset"
             ]
+        },
+        {
+            "name": "Ritualistic Harvesting",
+            "id": 10,
+            "iconPath": "button.png",
+            "dependencies": [
+                8
+            ],
+            "cost": 1000,
+            "startTech": false,
+            "unitsUnlocked": [
+                "ScriptableObjects/Buildings/Production Buildings/Mage Tower/Mage Tower.asset"
+            ],
+            "buildingsUnlocked": [],
+            "resourcesUnlocked": []
         }
     ]
 }
