@@ -144,7 +144,8 @@
             "startTech": false,
             "unitsUnlocked": [
                 "ScriptableObjects/Buildings/Military/Missile Silo/NuclearSilo.asset",
-                "ScriptableObjects/Units/Mortar/Mortar.asset"
+                "ScriptableObjects/Units/Mortar/Mortar.asset",
+                "ScriptableObjects/Buildings/Magic Academy/MagicAcademy.asset"
             ],
             "buildingsUnlocked": [],
             "resourcesUnlocked": [
