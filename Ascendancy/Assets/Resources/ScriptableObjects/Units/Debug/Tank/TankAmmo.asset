@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a23aa6abca0c075428bd951c9fc07abe, type: 3}
+  m_Name: TankAmmo
+  m_EditorClassIdentifier: 
+  horizontalVelocity: 0
+  arcHeight: 0
+  targetSeekingCoefficient: 0
+  lifeTime: 0
+  rangedDamage:
+    dmgComp: []
+  interceptable: 0
+  piercingPower: 0
+  projectileModel: {fileID: -2432090755550338912, guid: 8f6f00910d8546147b1e13423d84d5b1,
+    type: 3}

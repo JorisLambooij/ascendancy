@@ -44,7 +44,7 @@ public class BuildingConversionFeature : EntityFeature
     {
         while (!order.Fulfilled)
         {
-            Debug.Log("waiting for movement...");
+            //Debug.Log("waiting for movement...");
 
             //cancel order if entity receives new order
             if (entity.Controller.currentOrder != order)
@@ -84,7 +84,7 @@ public class BuildingConversionFeature : EntityFeature
     {
         while (!order.Fulfilled)
         {
-            Debug.Log("waiting for rotation...");
+            //Debug.Log("waiting for rotation...");
 
             //cancel order if entity receives new order
             if (entity.Controller.currentOrder != order)

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9cf974669d2fc41897d68bad847a3a, type: 3}
+  m_Name: ESV_landed
+  m_EditorClassIdentifier: 
+  name: ESV
+  description: Emergency Survival Vehicle (landed)
+  maxHealth: 1000
+  armor: 100
+  dimensions: {x: 2, y: 2}
+  prefab: {fileID: 4909156420730243876, guid: e3fb2cafb00b6924b9036742a4ff540d, type: 3}
+  thumbnail: {fileID: 21300000, guid: 1e72abb8d4f72b443abec3479e259e49, type: 3}
+  minimapMarker: {fileID: 0}
+  mass: 1000
+  viewDistance: 20
+  contextMenuOptions: 0
+  construction_Method: 3
+  category: {fileID: 11400000, guid: eae2dede5d2272543ae5a83f42986218, type: 2}
+  selectionPriority: 1
+  buildTime: 0
+  resourceAmount: []
+  entityFeatures:
+  - {fileID: 11400000, guid: 5b77b558a897c2545bed0648838aaa69, type: 2}
+  - {fileID: 11400000, guid: 23419dca235ed014690d809e27a86c11, type: 2}

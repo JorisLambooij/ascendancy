@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9cf974669d2fc41897d68bad847a3a, type: 3}
+  m_Name: Knight
+  m_EditorClassIdentifier: 
+  name: Knight
+  description: It's pronounced "K-nigget"
+  maxHealth: 200
+  armor: 10
+  dimensions: {x: 0, y: 0}
+  prefab: {fileID: 5049511135794470386, guid: 271132466cf11dd47934dff0b64da6ab, type: 3}
+  thumbnail: {fileID: 21300000, guid: a7116c588335d844a91d6edd78294527, type: 3}
+  minimapMarker: {fileID: 0}
+  mass: 0
+  viewDistance: 2
+  contextMenuOptions: 0
+  construction_Method: 0
+  category: {fileID: 11400000, guid: 4791d658dc2c1f243bd06b34650b31aa, type: 2}
+  selectionPriority: 1
+  buildTime: 2
+  resourceAmount:
+  - resource: {fileID: 11400000, guid: 73d299aab683abc428b8e867394aa0ce, type: 2}
+    amount: 50
+  entityFeatures:
+  - {fileID: 11400000, guid: 6d3ada17120958042927c4c854d7b5d1, type: 2}

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9cf974669d2fc41897d68bad847a3a, type: 3}
+  m_Name: Wooden Tower
+  m_EditorClassIdentifier: 
+  name: Wooden Tower
+  description: It's a tower
+  maxHealth: 200
+  armor: 30
+  dimensions: {x: 1, y: 1}
+  prefab: {fileID: 6374941540949239592, guid: f6966c5682bcddc4d984df2ed005b858, type: 3}
+  thumbnail: {fileID: 21300000, guid: 8962f081998cae745b19432ac38fe221, type: 3}
+  minimapMarker: {fileID: 0}
+  mass: 100
+  viewDistance: 15
+  contextMenuOptions: 0
+  construction_Method: 1
+  category: {fileID: 11400000, guid: 58d4cc2208a5b374bb32feb203cc58d3, type: 2}
+  selectionPriority: 0
+  buildTime: 2
+  resourceAmount:
+  - resource: {fileID: 11400000, guid: 12d5eb5b328016a40993a98535cbbd84, type: 2}
+    amount: 100
+  entityFeatures: []
