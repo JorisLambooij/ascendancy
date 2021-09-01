@@ -210,6 +210,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   playerID: -1
+  personality: {fileID: 11400000, guid: 1458f4e6c5c3c314a978adbea5633ea6, type: 2}
 --- !u!114 &6118261737210275379
 MonoBehaviour:
   m_ObjectHideFlags: 0

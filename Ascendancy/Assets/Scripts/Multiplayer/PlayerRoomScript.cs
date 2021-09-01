@@ -38,7 +38,7 @@ public class PlayerRoomScript : NetworkRoomPlayer
     public override void OnClientEnterRoom()
     {
         base.OnClientEnterRoom();
-        Debug.Log("On client enter room: " + gameObject.name + "(" + playerName + ")");
+        Debug.Log("Client entered room: " + gameObject.name + " (" + playerName + ")");
         //gameObject.name = "Player - " + playerName + "";
 
         CmdBroadcastName(playerName);
@@ -49,7 +49,7 @@ public class PlayerRoomScript : NetworkRoomPlayer
     public void ColorChange(int newColorIndex)
     {
         this.playerColorIndex = newColorIndex;
-        Debug.Log("Player " + playerName + " changes color index to " + newColorIndex);
+        //Debug.Log("Player " + playerName + " changes color index to " + newColorIndex);
         CmdColorChange(newColorIndex);
         if (isServer)
             RpcColorChange(newColorIndex);
@@ -60,7 +60,7 @@ public class PlayerRoomScript : NetworkRoomPlayer
     public void CmdColorChange(int newColorIndex)
     {
         this.playerColorIndex = newColorIndex;
-        Debug.Log("Player " + playerName + " changes color to " + newColorIndex);
+        //Debug.Log("Player " + playerName + " changes color to " + newColorIndex);
         RpcColorChange(newColorIndex);
     }
 
@@ -69,7 +69,7 @@ public class PlayerRoomScript : NetworkRoomPlayer
     {
         this.playerColorIndex = newColorIndex;
         OnColorChangeEvent.Invoke();
-        Debug.Log("HOOK: Player " + playerName + " color changed to " + newColorIndex);
+        //Debug.Log("HOOK: Player " + playerName + " color changed to " + newColorIndex);
     }
     #endregion
 

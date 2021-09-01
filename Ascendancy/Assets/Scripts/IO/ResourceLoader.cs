@@ -53,4 +53,52 @@ public class ResourceLoader : MonoBehaviour
 
         return instance.entityInfoData[entityName];
     }
+
+    public static Resource GetResourceFromString(string s)
+    {
+        if (!instance.resourceData.ContainsKey(s))
+        {
+            Debug.LogError(s + " not present in ResourceLoader.ResourceData");
+            return null;
+        }
+        return instance.resourceData[s];
+    }
+
+    public static List<EntityInfo> GetBuildingsForResourceProduction(Resource r)
+    {
+        return GetBuildingsFor(
+            (feature) => feature is ProductionFeature && (feature as ProductionFeature).producedResource == r,
+            (feature) => (feature as ProductionFeature).producedAmount
+            );
+    }
+    public static List<EntityInfo> GetBuildingsForResearchProduction()
+    {
+        return GetBuildingsFor(
+            (feature) => feature is ResearchFeature,
+            (feature) => (feature as ResearchFeature).researchProduced
+            );
+    }
+
+    private static List<EntityInfo> GetBuildingsFor(System.Func<EntityFeature, bool> condition, System.Func<EntityFeature, float> ranking)
+    {
+        Dictionary<EntityInfo, float> results = new Dictionary<EntityInfo, float>();
+        foreach (var kvp in instance.entityInfoData)
+        {
+            if (kvp.Value.construction_Method != ConstructionMethod.Building)
+                continue;
+
+            float score = 0;
+
+            // go through the features, and if one produces the desired resource, add it as a result
+            foreach (EntityFeature feature in kvp.Value.entityFeatures)
+                if (condition(feature))
+                    score += ranking(feature);
+
+            if (score > 0)
+                results.Add(kvp.Value, score);
+        }
+        List<EntityInfo> sortedResults = new List<EntityInfo>(results.Keys);
+        sortedResults.Sort((a, b) => results[a].CompareTo(results[b]));
+        return sortedResults;
+    }
 }

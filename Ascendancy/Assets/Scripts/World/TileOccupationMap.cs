@@ -126,7 +126,7 @@ public class TileOccupationMap : MonoBehaviour
                 Debug.Assert(0 <= u && u < occupationMap.GetLength(0), "OccupationMap: X out of bounds (" + u + ") " + dimensions);
                 Debug.Assert(0 <= v && v < occupationMap.GetLength(1), "OccupationMap: Y out of bounds (" + v + ") " + p);
                 //Debug.Assert(occupationMap[v.x + x - halfX, v.y + y - halfY].occupation[layer] == null, "Tile " + v.x + ":" + v.y + " already Occupied, please check.");
-                occupationMap[u, y].occupation[layer] = null;
+                occupationMap[u, v].occupation[layer] = null;
             }
     }
 

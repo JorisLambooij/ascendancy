@@ -39,11 +39,19 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
         // TODO: Reset the UI to match the new Resources.
     }
 
+    protected void OnProductionChange(Resource r, float value)
+    {
+        resourceEntries[r].Production = value;
+    }
+
     protected void OnResourceChange(SyncDictionary<string, float>.Operation op, string resourcename, float newValue)
     {
-        Resource r = ResourceLoader.instance.resourceData[resourcename];
+        Resource r = ResourceLoader.GetResourceFromString(resourcename);
         if (resourceEntries.ContainsKey(r))
+        {
             resourceEntries[r].Count = newValue;
+            resourceEntries[r].Production = player.PlayerEconomy.AverageProduction(r);
+        }
         else
             InstantiateNewField(r, newValue);
     }
@@ -56,7 +64,7 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
             return;
         }
 
-        Resource r = ResourceLoader.instance.resourceData[newResource];
+        Resource r = ResourceLoader.GetResourceFromString(newResource);
         if (!resourceEntries.ContainsKey(r))
             InstantiateNewField(r);
     }
@@ -70,13 +78,15 @@ public class Resource_UI : MonoBehaviour, DictionarySubscriber<Resource, float>,
 
         player.PlayerEconomy.resourceSyncDictionary.Callback += OnResourceChange;
         player.PlayerEconomy.availableResources.Callback += OnNewResource;
-        
+        player.PlayerEconomy.OnProductionChange.AddListener(OnProductionChange);
+
         foreach (KeyValuePair<string, float> kvp in player.PlayerEconomy.resourceSyncDictionary)
         {
-            Resource r = ResourceLoader.instance.resourceData[kvp.Key];
+            Resource r = ResourceLoader.GetResourceFromString(kvp.Key);
             InstantiateNewField(r, kvp.Value);
         }
     }
+
 
     void InstantiateNewField(Resource resource, float amount = 0)
     {

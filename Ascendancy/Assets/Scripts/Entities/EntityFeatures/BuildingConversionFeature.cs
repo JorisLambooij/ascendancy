@@ -166,7 +166,7 @@ public class BuildingConversionFeature : EntityFeature
         BuildingPlacementMode buildingMode = GameManager.Instance.controlModeDict[ControlModeEnum.buildingMode] as BuildingPlacementMode;
         buildingMode.Building = convertedEntity;
 
-        bool success = buildingMode.AttemptPlaceBuilding(convertedEntity, entity.transform.position);
+        bool success = entity.Owner.AttemptPlaceBuilding(convertedEntity, entity.transform.position);
         Debug.Log(entity.transform.position);
         if (success)
             Destroy(entity.gameObject);

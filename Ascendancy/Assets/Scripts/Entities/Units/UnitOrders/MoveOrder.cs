@@ -47,7 +47,7 @@ public class MoveOrder : UnitOrder
     {
         get 
         {
-            if (entity.entityInfo.construction_Method == ConstructionMethod.Building)
+            if (entity.entityInfo.construction_Method == ConstructionMethod.Building || entity.entityInfo.construction_Method == ConstructionMethod.SpecialBuilding)
             {
                 Debug.Log("Cancelling move order for building '" + entity.entityInfo.name + "'");
                 return true;

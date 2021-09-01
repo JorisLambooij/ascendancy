@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Mirror;
 
 public class Economy : NetworkBehaviour
@@ -8,13 +9,14 @@ public class Economy : NetworkBehaviour
     public readonly SyncDictionary<string, float> resourceSyncDictionary = new SyncDictionary<string, float>();
     public readonly SyncList<string> availableResources = new SyncList<string>();
 
-    //public SubscribableDictionary<Resource, float> resourceStorage;
-    //public SubscribableList<Resource> availableResources;
-
-    //private List<ResourceAmount> startResources;
+    private const float rollingAverageUpdateFrequency = 0.5f;
+    private Dictionary<Resource, RollingAverage> rollingAverageProduction;
+    [HideInInspector]
+    public UnityEvent<Resource, float> OnProductionChange;
 
     public void Initialize()
     {
+        rollingAverageProduction = new Dictionary<Resource, RollingAverage>();
         //adding start resources
         //startResources = GameSettingsManager.instance.startResources;
 
@@ -22,12 +24,30 @@ public class Economy : NetworkBehaviour
         //availableResources = new SubscribableList<Resource>();
     }
 
-    private void Update()
+    private void Start()
     {
-        if (Input.GetKeyDown(KeyCode.K))
-            resourceSyncDictionary["Wood"] = 20;
+        StartCoroutine(RollingAverage());
     }
 
+    private IEnumerator RollingAverage()
+    {
+        while (true)
+        {
+            if (rollingAverageProduction != null)
+                foreach (KeyValuePair<Resource, RollingAverage> kvp in rollingAverageProduction)
+                {
+                    rollingAverageProduction[kvp.Key].QueueDatapoint(resourceSyncDictionary[kvp.Key.name]);
+                    float avg = kvp.Value.Calculate();
+                    OnProductionChange.Invoke(kvp.Key, avg);
+                }
+            yield return new WaitForSeconds(rollingAverageUpdateFrequency);
+        }
+    }
+
+    public float AverageProduction(Resource resource)
+    {
+        return rollingAverageProduction[resource].average;
+    }
 
     public void NewAvailableResource(Resource resource)
     {
@@ -45,6 +65,8 @@ public class Economy : NetworkBehaviour
 
     private void NewAvailableResource(string resource)
     {
+        rollingAverageProduction.Add(ResourceLoader.GetResourceFromString(resource), new RollingAverage(true));
+
         if (!availableResources.Contains(resource))
             availableResources.Add(resource);
 
@@ -54,6 +76,7 @@ public class Economy : NetworkBehaviour
         foreach (ResourceAmount resAm in GameSettingsManager.instance.startResources)
             if (resAm.resource.name.Equals(resource))
                 AddResourceAmount(resAm);
+
     }
 
     /// <summary>

@@ -6,7 +6,7 @@ using UnityEngine.AI;
 /// <summary>
 /// Is this a unit that needs to be recruited, or a building that can be built directly?
 /// </summary>
-public enum ConstructionMethod { Unit, Building };
+public enum ConstructionMethod { Unit, Building, SpecialUnit, SpecialBuilding, None };
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "NewEntityInfo", menuName = "Entity")]
@@ -108,7 +108,7 @@ public class EntityInfo : ScriptableObject
     {
         GameObject entityPrefab;
         Transform targetParent;
-        if (construction_Method == ConstructionMethod.Building)
+        if (construction_Method == ConstructionMethod.Building || construction_Method == ConstructionMethod.SpecialBuilding)
         {
             targetParent = owner.BuildingsGO.transform;
             entityPrefab = Resources.Load("Prefabs/Entities/Building Prefab") as GameObject;

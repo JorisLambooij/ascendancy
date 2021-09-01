@@ -9,6 +9,7 @@ public class AI_PlayerRoomScript : PlayerRoomScript
     [SerializeField]
     protected GameObject aiPrefab;
 
+    #region Network Initialization
     public override void OnStartServer()
     {
         base.OnStartServer();
@@ -23,7 +24,7 @@ public class AI_PlayerRoomScript : PlayerRoomScript
 
     protected void OnSceneChange(Scene old, Scene current)
     {
-        Debug.Log(current.name);
+        //Debug.Log(current.name);
 
         if (current.name != "GameScene")
             return;
@@ -31,11 +32,5 @@ public class AI_PlayerRoomScript : PlayerRoomScript
         ai.GetComponent<AI_Player>().SetRoomScript(this);
         NetworkServer.Spawn(ai);
     }
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-    }
-
-    
+    #endregion
 }

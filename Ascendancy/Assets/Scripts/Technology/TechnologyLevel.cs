@@ -22,10 +22,12 @@ public class TechnologyLevel : NetworkBehaviour
     public SubscribableList<BuildingInfo> buildingsUnlocked { get; private set; }
     public SubscribableList<Resource> resourcesUnlocked { get; private set; }
 
+    public RollingAverage averageResearchProduction = new RollingAverage(false);
+
     public override void OnStartServer()
     {
         base.OnStartServer();
-        Debug.Log("tech level " + gameObject.name);
+        //Debug.Log("tech level " + gameObject.name);
         storedResearch = 0;
         techTree = TechTreeReader.Instance.LoadTechTree();
 
@@ -48,19 +50,25 @@ public class TechnologyLevel : NetworkBehaviour
         buildingsUnlocked = new SubscribableList<BuildingInfo>();
         resourcesUnlocked = new SubscribableList<Resource>();
 
-        List<Technology> unlockedTechs = UnlockedTechs();
+        List<Technology> unlockedTechs = GetTechsByResearchability(Researchability.Researched);
         foreach (Technology tech in unlockedTechs)
             UnlockThingsFromTech(tech.id);
-    }
-
-    public void AddResearchPoints(float amount)
-    {
-        CmdAddResearchPoints(amount);
     }
 
     [Command]
     public void CmdAddResearchPoints(float amount)
     {
+        AddResearchPoints(amount);
+    }
+
+    public void AddResearchPoints(float amount)
+    {
+        if (!isServer)
+        {
+            CmdAddResearchPoints(amount);
+            return;
+        }
+        averageResearchProduction.QueueDatapoint(amount);
         // No current Research, so keep the points until a Focus is set.
         if (currentFocus == -1)
         {
@@ -194,15 +202,15 @@ public class TechnologyLevel : NetworkBehaviour
 
         return true;
     }
-    public List<Technology> UnlockedTechs()
+    public List<Technology> GetTechsByResearchability(Researchability researchability)
     {
-        List<Technology> unlockedTechs = new List<Technology>();
+        List<Technology> matchingTechs = new List<Technology>();
 
         foreach (Technology tech in techTree.technologies)
-            if (IsTechResearched(tech.id))
-                unlockedTechs.Add(tech);
+            if (TechResearchability(tech.id) == researchability)
+                matchingTechs.Add(tech);
 
-        return unlockedTechs;
+        return matchingTechs;
     }
 
     /// <summary>

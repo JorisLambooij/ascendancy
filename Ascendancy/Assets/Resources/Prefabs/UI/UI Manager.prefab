@@ -2220,11 +2220,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 137328599, guid: 622b3ce687146d945ab1537398255da8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 10
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 137328599, guid: 622b3ce687146d945ab1537398255da8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -60
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 137328600, guid: 622b3ce687146d945ab1537398255da8, type: 3}
       propertyPath: m_FontData.m_Alignment
@@ -2244,6 +2244,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1744871257, guid: 622b3ce687146d945ab1537398255da8, type: 3}
       propertyPath: m_ReferencePixelsPerUnit
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1700429531226641269, guid: 622b3ce687146d945ab1537398255da8,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3655036189885745670, guid: 622b3ce687146d945ab1537398255da8,
@@ -2495,6 +2500,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -350
+      objectReference: {fileID: 0}
+    - target: {fileID: 6003385523457032574, guid: 622b3ce687146d945ab1537398255da8,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6003385523457032574, guid: 622b3ce687146d945ab1537398255da8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6003385523457032574, guid: 622b3ce687146d945ab1537398255da8,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 622b3ce687146d945ab1537398255da8, type: 3}

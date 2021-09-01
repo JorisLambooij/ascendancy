@@ -29,7 +29,7 @@ MonoBehaviour:
   buildTime: 2
   resourceAmount:
   - resource: {fileID: 11400000, guid: 73d299aab683abc428b8e867394aa0ce, type: 2}
-    amount: 200
+    amount: 100
   entityFeatures:
   - {fileID: 11400000, guid: 1567fcc3fd0c89948a0ca71c1b9a81dc, type: 2}
   - {fileID: 11400000, guid: 2cb341cd273e4c849b32cdd956586fcb, type: 2}
