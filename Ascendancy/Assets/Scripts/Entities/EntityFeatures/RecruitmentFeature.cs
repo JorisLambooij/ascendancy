@@ -36,7 +36,7 @@ public class RecruitmentFeature : EntityFeature
             else
             {
                 timer -= Time.deltaTime;
-                Debug.Log("TIMER: " + timer + "s / QUEUE: " + queue.Count + " $" + queue[0].BaseUnit.name);
+                //Debug.Log("TIMER: " + timer + "s / QUEUE: " + queue.Count + " $" + queue[0].BaseUnit.name);
             }
     }
 

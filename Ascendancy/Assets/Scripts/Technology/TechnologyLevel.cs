@@ -137,11 +137,11 @@ public class TechnologyLevel : NetworkBehaviour
 
         if (tech.unitsUnlocked != null)
             foreach (EntityInfo unitInfo in tech.unitsUnlocked)
-                UnlockEntity(unitInfo);
+                UnlockEntity(unitInfo, tech);
 
         if (tech.buildingsUnlocked != null)
             foreach (EntityInfo buildingInfo in tech.buildingsUnlocked)
-                UnlockEntity(buildingInfo);
+                UnlockEntity(buildingInfo, tech);
 
         if (tech.resourcesUnlocked != null)
             foreach (Resource resource in tech.resourcesUnlocked)
@@ -152,8 +152,14 @@ public class TechnologyLevel : NetworkBehaviour
 
     }
 
-    private void UnlockEntity(EntityInfo info)
+    private void UnlockEntity(EntityInfo info, Technology tech)
     {
+        if (info == null)
+        {
+            Debug.LogError("EntityInfo is null for technology " + tech.name);
+            return;
+        }
+            
         if (!entitiesUnlocked.Contains(info))
             entitiesUnlocked.Add(info);
     }

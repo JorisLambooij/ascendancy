@@ -17,5 +17,5 @@ MonoBehaviour:
   recruitableUnits:
   - {fileID: 11400000, guid: 0e0055ee303abc449b2adcdb18c4482a, type: 2}
   - {fileID: 11400000, guid: 609333c25d13a5d4cbf2b87cd2f331b0, type: 2}
-  - {fileID: 11400000, guid: de59617f5acff5949b7f93b2d528af4b, type: 2}
+  - {fileID: 11400000, guid: 117a456990f984440a8597b33166467d, type: 2}
   - {fileID: 11400000, guid: 853e77e6023a16c4e8c163ee2407c5fd, type: 2}
