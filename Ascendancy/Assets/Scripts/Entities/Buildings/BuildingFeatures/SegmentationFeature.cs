@@ -47,7 +47,7 @@ public class SegmentationFeature : EntityFeature
 
         worldCoordinates = World.Instance.IntVector(entity.transform.position);
 
-        entity.OnDestroyCallbacks.AddListener(OnEntityDestroyed);
+        entity.OnDestroyEvent.AddListener(OnEntityDestroyed);
         segmentsParent = new GameObject("Segments Parent").transform;
         segmentsParent.parent = entity.transform;
         segmentsParent.transform.localPosition = Vector3.zero;

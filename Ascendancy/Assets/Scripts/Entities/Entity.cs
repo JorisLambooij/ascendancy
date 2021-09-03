@@ -32,7 +32,8 @@ public class Entity : NetworkBehaviour, OccupationType
 
     protected Sprite minimapMarker;
 
-    public UnityEvent OnDestroyCallbacks;
+    public UnityEvent OnTakeDamageEvent;
+    public UnityEvent OnDestroyEvent;
 
     [ClientRpc]
     public void RpcSetOwner(Transform owner)
@@ -159,6 +160,8 @@ public class Entity : NetworkBehaviour, OccupationType
 
         if (currentHealth <= 0)
             Die();
+        else
+            OnTakeDamageEvent.Invoke();
     }
 
     public void TakeHealing(float amountRestored)
@@ -217,6 +220,9 @@ public class Entity : NetworkBehaviour, OccupationType
     {
         foreach (EntityFeature feature in features)
             feature.UpdateOverride();
+
+        if (Input.GetKeyDown(KeyCode.K))
+            TakeDamage(new DamageComposition(){ dmgComp = new List<DamageAmount>() { new DamageAmount() { APAmount = 50 } } });
     }
 
     protected virtual void Update10()
@@ -240,8 +246,8 @@ public class Entity : NetworkBehaviour, OccupationType
     /// </summary>
     protected virtual void Die()
     {
-        OnDestroyCallbacks.Invoke();
-        Destroy(this.gameObject);
+        OnDestroyEvent.Invoke();
+        Destroy(gameObject, 1.5f);
     }
 
     public T FindFeature<T>() where T : EntityFeature
