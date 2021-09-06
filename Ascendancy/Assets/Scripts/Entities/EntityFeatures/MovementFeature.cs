@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AI;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "NewMovementFeature", menuName = "Entity Features/Movement Feature", order = 0)]
@@ -16,6 +17,10 @@ public class MovementFeature : EntityFeature
     public override void Initialize(Entity entity)
     {
         base.Initialize(entity);
+
+        NavMeshAgent navAgent = entity.GetComponent<NavMeshAgent>();
+        navAgent.speed = speed;
+        navAgent.angularSpeed = turnSpeed;
     }
 
     public override void UpdateOverride()

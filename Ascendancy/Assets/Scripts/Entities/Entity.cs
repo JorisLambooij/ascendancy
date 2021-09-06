@@ -49,18 +49,22 @@ public class Entity : NetworkBehaviour, OccupationType
         if (entityInfo == null)
             entityInfo = ResourceLoader.GetEntityInfo(entityInfoString);
 
-        //Debug.Log("Creating model for " + entityInfo.name);
+        Debug.Log("Creating model for " + entityInfo.name);
 
         try
         {
-            //Debug.Log(ResourceLoader.instance.entityInfoData);
             GameObject e_model = Instantiate(ResourceLoader.instance.entityInfoData[entityInfoString].prefab, transform);
-            foreach (MeshRenderer mr in e_model.GetComponentsInChildren<MeshRenderer>())
-            {
+
+            // get both regular MeshRenderers and SkinnedMeshRenderers
+            Renderer[] meshRenderers = e_model.GetComponentsInChildren<MeshRenderer>();
+            SkinnedMeshRenderer[] skinnedRenderers = e_model.GetComponentsInChildren<SkinnedMeshRenderer>();
+            Renderer[] renderers = meshRenderers.Concat(skinnedRenderers).ToArray();
+
+            foreach (Renderer mr in renderers)
                 foreach (Material mat in mr.materials)
                     if (mat.name.ToLower().Contains("playercolor"))
                         mat.SetColor("_BaseColor", Owner.PlayerColor);
-            }
+                    
             modelParent = e_model.transform;
         }
         catch (Exception e)

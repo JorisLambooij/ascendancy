@@ -15,5 +15,5 @@ MonoBehaviour:
   clickPriority: 0
   contextMenuThumbnail: {fileID: 21300000, guid: 9ba595ab0c8b5954e88b6f6556af65bd,
     type: 3}
-  speed: 10
-  turnSpeed: 180
+  speed: 4.5
+  turnSpeed: 400

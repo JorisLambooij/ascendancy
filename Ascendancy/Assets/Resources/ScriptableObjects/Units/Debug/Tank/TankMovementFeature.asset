@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9c113e413379bc4ea39aa80d44387df, type: 3}
   m_Name: TankMovementFeature
   m_EditorClassIdentifier: 
-  speed: 10
-  turnSpeed: 10
+  clickPriority: 0
+  contextMenuThumbnail: {fileID: 0}
+  speed: 5
+  turnSpeed: 180

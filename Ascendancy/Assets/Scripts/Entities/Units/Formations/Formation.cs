@@ -30,7 +30,7 @@ public abstract class Formation
             while (unitsSorted.ContainsKey(projectedDistance))
             {
                 projectedDistance += 0.0001f;
-                Debug.Log("Double distance");
+                //Debug.Log("Double distance");
             }
 
             // sort by length of the projected vector

@@ -25,7 +25,7 @@ MonoBehaviour:
   contextMenuOptions: 0
   construction_Method: 0
   category: {fileID: 11400000, guid: 4791d658dc2c1f243bd06b34650b31aa, type: 2}
-  selectionPriority: 1
+  selectionPriority: 2
   buildTime: 2
   resourceAmount:
   - resource: {fileID: 11400000, guid: 73d299aab683abc428b8e867394aa0ce, type: 2}

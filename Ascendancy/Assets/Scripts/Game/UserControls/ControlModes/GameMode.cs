@@ -69,9 +69,8 @@ public class GameMode : ControlMode
 
     private void Mouse1()
     {
-        bool append = Input.GetKey(KeyCode.LeftControl);
-            
-
+        bool append = Input.GetKey(KeyCode.LeftShift);
+        
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             dragStartPosM1 = Input.mousePosition;
@@ -130,7 +129,8 @@ public class GameMode : ControlMode
                 foreach (EntitySelector e in player.GetComponentsInChildren<EntitySelector>())
                     if (PositionInSelection(e.transform.position))
                     {
-                        selectedEntities.Add(e);
+                        if (!selectedEntities.Contains(e))
+                            selectedEntities.Add(e);
 
                         Entity entity = e.GetComponentInParent<Entity>();
 
@@ -225,7 +225,7 @@ public class GameMode : ControlMode
                 foreach (EntitySelector e in selectedEntities.AsList)
                     selectedUnits.Add(e.ParentEntity);
 
-                Formation formation = new FormationSquare(dragStartPosM2, dragStopPosM2);
+                Formation formation = new FormationSquare(dragStartPosM2, dragStopPosM2, 1);
                 //Formation formation = new FormationLine(dragStartPosM2, dragStopPosM2);
                 formation.AssignPositions(selectedUnits);
 
