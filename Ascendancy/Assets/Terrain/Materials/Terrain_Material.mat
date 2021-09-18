@@ -10,7 +10,7 @@ Material:
   m_Name: Terrain_Material
   m_Shader: {fileID: -6465566751694194690, guid: 37a8247066036fc4e9cecc6b37484a7e,
     type: 3}
-  m_ShaderKeywords: TOGGLEFOW_OFF
+  m_ShaderKeywords: TOGGLEFOW_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -127,7 +127,7 @@ Material:
     - Boolean_A4093A0F: 1
     - Metallic: 0.1
     - Smoothness: 0
-    - TOGGLEFOW: 1
+    - TOGGLEFOW: 0
     - Vector1_1C40ABDE: 5.63
     - Vector1_46842222: 0.123
     - Vector1_ACCEAFF0: 0
